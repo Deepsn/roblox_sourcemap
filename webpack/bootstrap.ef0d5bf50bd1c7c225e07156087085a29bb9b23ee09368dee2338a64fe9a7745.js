@@ -1,0 +1,2 @@
+// The require scope
+var __webpack_require__ = {};
