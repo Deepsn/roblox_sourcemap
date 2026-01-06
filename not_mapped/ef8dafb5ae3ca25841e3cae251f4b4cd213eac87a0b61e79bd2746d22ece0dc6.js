@@ -423,6 +423,7 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 		"You can go back to playing now. You won’t be able to appeal this decision later.",
 	"Label.MessageToUser.AltConsequence.V2":
 		"This account is linked to an account banned for a severe violation of our Community Standards. The violation can be appealed using the banned account.",
+	"Label.AbuseType.ChildEndangerment.V3": "Harmful Content/Behavior",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
