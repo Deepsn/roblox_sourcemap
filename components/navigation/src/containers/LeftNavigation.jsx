@@ -4,6 +4,7 @@ import { withTranslations } from "@rbx/core-scripts/react";
 import layoutConstant from "../constants/layoutConstants";
 import { translations } from "../../component.json";
 import LeftNavigationComponent from "../components/LeftNavigation";
+import isAccountExperienceRevampEnabled from "../util/accountExperienceUtils";
 
 const { headerMenuIconClickEvent } = layoutConstant;
 
@@ -24,6 +25,11 @@ function LeftNavigation(props) {
 			);
 		};
 	}, [onClickMenuIcon]);
+
+	// Hide left navigation when account experience revamp is enabled
+	if (isAccountExperienceRevampEnabled()) {
+		return null;
+	}
 
 	return isAuthenticated ? (
 		<LeftNavigationComponent {...{ isLeftNavOpen, ...props }} />

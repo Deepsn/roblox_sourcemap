@@ -101,6 +101,7 @@ Roblox.LangDynamic["Authentication.OneTimePasscode"] = {
 		"Hello,{lineBreak}{lineBreak}{boldStart}{code}{boldEnd} is your child's Roblox Security Code. Enter it into the recovery page to recover. This code will be active for 15 mins.{lineBreak}{lineBreak} Do {boldStart}not{boldEnd} share this code. We will never contact you to ask for it.{lineBreak}{lineBreak}You are receiving this email as there was a request to reset your child's account password. If you didn't make this request, you can just ignore this email. Please review our help article for more information on {linkTagWithAccountSecurityHelpLinkStart}Account Security{linkTagEnd}. Do not reply to this email as it will not be received. If you need assistance, please visit us at {linkTagWithRobloxSupportLinkStart}Roblox Support{linkTagEnd}.{lineBreak}{lineBreak} This recovery request was received from {geolocation}.{lineBreak}{lineBreak} Thank you,{lineBreak}{lineBreak}The Roblox Team",
 	"Description.AccountRecoveryOneTimePasscodeSms.V1.Body":
 		"{code} is your Roblox security code.",
+	"Header.YourRobloxOTPCode": "Your Roblox One-Time Login Code",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

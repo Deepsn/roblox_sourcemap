@@ -157,6 +157,21 @@ var externals = {
 	"redux-thunk": "ReduxThunk",
 	"prop-types": "PropTypes",
 	"@tanstack/react-query": "TanstackQuery",
+	// Legacy packages.
+	"core-roblox-utilities": "CoreRobloxUtilities",
+	"core-utilities": "CoreUtilities",
+	"header-scripts": "HeaderScripts",
+	"react-style-guide": "ReactStyleGuide",
+	"react-utilities": "ReactUtilities",
+	Roblox: "Roblox",
+	"roblox-badges": "RobloxBadges",
+	"roblox-event-tracker": "RobloxEventTracker",
+	"roblox-item-purchase": "RobloxItemPurchase",
+	"roblox-presence": "RobloxPresence",
+	"roblox-thumbnail-3d": "RobloxThumbnail3d",
+	"roblox-thumbnails": "RobloxThumbnails",
+	"roblox-tracer": ["Roblox", "core-scripts", "tracing"],
+	"roblox-user-profiles": "RobloxUserProfiles",
 };
 var addLegacyExternal = (key, external, target = window) => {
 	if (typeof key === "string") {

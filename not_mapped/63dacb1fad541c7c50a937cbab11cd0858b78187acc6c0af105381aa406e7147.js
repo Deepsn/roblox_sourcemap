@@ -54,6 +54,27 @@ Roblox.LangDynamic["Authentication.AccountSwitch"] = {
 	"Header.SwitchAccountSentenceCase": "Switch accounts",
 	"Description.AccountLimit.2":
 		"You’ve reached your account limit. To add a new one, remove an account first.",
+	"Action.RemoveAllAccounts": "Remove all accounts?",
+	"Description.RemoveAllAccounts":
+		"Once you sign out, all accounts will be removed from this device.",
+	"Action.Continue": "Continue",
+	"Header.SignOutOtherAccounts": "Sign out of other accounts?",
+	"Description.ContinueSignOutOthers":
+		"Continuing as {username} will sign you out of your other accounts.",
+	"Header.CantSwitchAccountsSentenceCase": "Can't switch accounts",
+	"Header.ChooseAnAccount": "Choose an account",
+	"Label.Website": "Website",
+	"Label.App": "App",
+	"Header.TooManyAccounts": "Too many accounts",
+	"Action.ContinueAs": "Continue as {username}",
+	"Description.ContinuingAsAccount":
+		"Continuing as {username} will add it to the account switcher. You can switch anytime.",
+	"Description.AlwaysContinueAs":
+		"Always continue with the selected account and add it to the account switcher.",
+	"Description.ContinuingWith":
+		"Continuing with {username} will sign you out of all other accounts.",
+	"Description.HaveUpToAccountLimit":
+		"You can have up to {limit} accounts. Remove one to make space for the selected account.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

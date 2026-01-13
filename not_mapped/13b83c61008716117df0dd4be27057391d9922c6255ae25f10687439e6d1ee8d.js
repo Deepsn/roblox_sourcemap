@@ -246,7 +246,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestTrading":
 		"This allows your child to trade items in their inventory with friends on Roblox.",
 	"Description.VPCRequestInventoryVisibility":
-		"This allows others on Roblox to see your child's inventory. Inventory is a collection of items that belong to your child on Roblox such as virtual clothes or accessories.",
+		"This allows other people to see your child’s inventory, which contains items like virtual clothes or accessories.",
 	"Description.VPCRequestSpendingLimit":
 		"This will update the monthly limit on the amount your child can spend on Roblox.",
 	"Description.VPCRequestScreentime":
@@ -390,9 +390,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.EnterParentEmailWithoutParentalControlExpT3":
 		"Due to regional restrictions, you need parent permission to make this purchase.{lineBreak}You’ll need your parent’s help for a few minutes. Make sure you have a parent nearby.{lineBreak}Ask your parent to enter their email and link to your account. Your parent will need to verify their age with a government ID or credit card.{lineBreak}After linking, they’ll be able to approve certain actions for you.",
 	"Description.VPCRequestPrivateServersV2":
-		"This allows your child to join their Connections’ private servers, and to have Connections join their private servers. A private server is a Roblox experience with limits on who can join.",
+		"This allows your child to join or be joined by their Connections in private servers. A private server is a game or experience that only some people can join.",
 	"Description.VPCRequestCurrentExperienceSharingV2":
-		"This allows your child’s Connections to see which experience they are in and join them in that experience.",
+		"This allows your child’s Connections to see which experience they are in and join them.",
 	"Description.VPCRequestOnlineStatusV2":
 		"This allows Connections to see when your child is online.",
 	"Description.VPCRequestPhoneNumberDiscoverabilityV2":
@@ -489,7 +489,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.ShowCurrentExperience":
 		"Who can see what experience your child is in and join them?",
 	"Heading.ConversationalRequest.PrivateServers":
-		"Who can your child participate in private servers with on Roblox?",
+		"Who can your child join in private servers?",
 	"Heading.ConversationalRequest.TradePrivacy":
 		"Who can your child trade with?",
 	"Heading.ConversationalRequest.InventoryPrivacy":
@@ -540,6 +540,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.FacialAgeEstimationUpsell": "Let's review: age check",
 	"Description.FacialAgeEstimationUpsell":
 		"Your child needs one so they can chat with people of similar age.",
+	"Description.BirthdayConfirmationWithWarning":
+		"This gives them access to age-appropriate content and features. If you change their birthday, we’ll update their age in Settings. You can only confirm your child’s birthday once.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -294,6 +294,10 @@ Roblox.LangDynamic["Authentication.TwoStepVerification"] = {
 	"Description.QuickLogin":
 		"Passkeys and hardware security keys aren’t supported on this platform or device. Your account requires a passkey or security key to continue logging in. Select OK to close this window and return to the Log In page. Then, choose Log In With Another Device and follow the instructions to securely log in with another logged in device.",
 	"Action.Continue": "Continue",
+	"Description.TwoStepVerification.Email.Preheader":
+		"Do not share this code. We will never contact you to ask for it. If you did not make this request, you are strongly advised to change your password.",
+	"Label.HaveSecurityKeys": "Have security keys (optional)",
+	"Label.SecurityKeyAdded": "Security key added",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

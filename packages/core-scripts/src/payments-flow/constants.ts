@@ -54,6 +54,7 @@ export enum VIEW_NAME {
 	XSOLLA_SAVED_PAYMENT_METHOD = "Xsolla SavedCard",
 	PAYPAL_POST_PROCESS = "Paypal Post Process",
 	BRAINTREE_POST_PROCESS = "Braintree Post Process",
+	BRAINTREE_PAYPAL_SAVED_PAYMENT = "Braintree PayPal Checkout With Saved Profile",
 	ROBLOX_CREDIT = "Roblox Credit",
 	ROBLOX_CREDIT_CHECKOUT = "Roblox Credit Checkout",
 	ROBLOX_CREDIT_CHECKOUT_WITH_TAX = "Roblox Credit Checkout With Tax",

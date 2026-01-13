@@ -175,6 +175,7 @@ Roblox.LangDynamic["Purchasing.PurchaseDialog"] = {
 	"Title.BuyRobuxAndItem": "Buy Robux and item",
 	"Message.TermsOfUse":
 		"Your payment method will be charged. Roblox {aTagStart}Terms of Use{aTagEnd} apply.",
+	"Label.TimedOptionDaysAbbreviation": "{days}d",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

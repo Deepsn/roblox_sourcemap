@@ -160,6 +160,7 @@ heartbeatInit();
 try {
 	CoreRobloxUtilities.initializeGenericChallengeInterceptor();
 	directionalNavigation.initializeGamepadNavigation();
+	localStorageService.default.updateLocalStorageUsage();
 } catch {
 	// do nothing for now
 }

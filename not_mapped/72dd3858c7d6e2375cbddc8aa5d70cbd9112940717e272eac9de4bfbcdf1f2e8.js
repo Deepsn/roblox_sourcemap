@@ -199,6 +199,9 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Label.EmailOrPhone": "Email or phone",
 	"Label.UsernameOrPhone": "Username or phone",
 	"Label.UsernameOrEmail": "Username or email",
+	"Header.JumpBackIn": "Jump back into your experiences",
+	"Label.DontHaveAnAccountCreateOne":
+		"Don't have an account? {startTag}Create One{endTag}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
