@@ -142,7 +142,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Response.OtpNotAllowedV2": "You must log in with a different method",
 	"Response.OtpNotAllowedV3":
 		"Your account is ineligible to log in with a one-time code",
-	"Action.UseAnotherDevice": "Use Another Device",
+	"Action.UseAnotherDevice": "Quick Sign-in",
 	"Description.EnterOneTimeCodeHelpV2":
 		"Enter the code we just sent to: {email}",
 	"Heading.LoginRobloxAccountSwitching": "Login To Existing Account",
@@ -158,7 +158,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Heading.LoginRequired": "Login Required",
 	"Heading.YouHaveLoggedOut": "You've Logged Out",
 	"Label.ChooseAccountToUse": "Choose a new account to use",
-	"Heading.AddAccount": "Add Account",
+	"Heading.AddAccount": "Add account",
 	"Header.LogOutOfOtherAccounts": "Log Out of Other Accounts",
 	"Description.LogoutConfirmation":
 		"You’ll need to log out of your other Roblox accounts on this device before adding a new account",
@@ -185,6 +185,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Action.NeedHelp": "Need help?",
 	"Heading.AccountSelectorSignInTitle": "Choose account to sign in",
 	"Action.UsePasskey": "Use passkey",
+	"Action.EmailACode": "Email a code",
 	"Description.EmailCode": "Email a One-Time Code",
 	"Description.U13.GetOneTimeCodeHelp":
 		"Enter the email on your account to receive a one-time code.",
@@ -201,7 +202,13 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Label.UsernameOrEmail": "Username or email",
 	"Header.JumpBackIn": "Jump back into your experiences",
 	"Label.DontHaveAnAccountCreateOne":
-		"Don't have an account? {startTag}Create One{endTag}",
+		"Don't have an account? {startTag}Create one{endTag}",
+	"Action.EmailMeACode": "Email a code",
+	"Header.ChooseAnAccount": "Choose an account",
+	"Header.PickUpWhereYouLeftOff": "Pick up where you left off",
+	"Action.CreateAccountFromSwitcher": "Create account",
+	"Action.SignInToAnotherAccount": "Sign in to another account",
+	"Action.UseAnotherDeviceSentenceCase": "Use another device",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

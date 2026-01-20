@@ -58,7 +58,7 @@ var externals = {
 	"@rbx/core-scripts/legacy/react-utilities": "ReactUtilities",
 	"@rbx/core-scripts/legacy/Roblox": "Roblox",
 	"@rbx/legacy-webapp-types/Roblox": "Roblox",
-	"@rbx/legacy-webapp-types/roblox-event-tracker": "RobloxEventTracker",
+	"@rbx/legacy-webapp-types/roblox-event-tracker": "EventTracker",
 	"@rbx/legacy-webapp-types/roblox-item-purchase": "RobloxItemPurchase",
 	"@rbx/core-scripts/local-storage": [
 		"Roblox",
@@ -165,7 +165,7 @@ var externals = {
 	"react-utilities": "ReactUtilities",
 	Roblox: "Roblox",
 	"roblox-badges": "RobloxBadges",
-	"roblox-event-tracker": "RobloxEventTracker",
+	"roblox-event-tracker": "EventTracker",
 	"roblox-item-purchase": "RobloxItemPurchase",
 	"roblox-presence": "RobloxPresence",
 	"roblox-thumbnail-3d": "RobloxThumbnail3d",

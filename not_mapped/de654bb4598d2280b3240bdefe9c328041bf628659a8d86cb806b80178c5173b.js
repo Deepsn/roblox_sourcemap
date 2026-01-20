@@ -457,7 +457,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Not available for your child’s age group",
 	"Label.KeepAccountLocked": "Keep account locked",
 	"Description.StudioCollaborationConsent":
-		"studio collaboration dummy description",
+		"This allows your child to work in Roblox Studio with people in all age groups live, including creating and communicating together.",
 	"Description.FacialAgeEstimationConsent":
 		"Your child has requested an age check. Your child needs one so they can chat with people of similar age.",
 	"Heading.FacialAgeEstimationConsent":
@@ -532,6 +532,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Who can your child pair up with to join experiences?",
 	"Heading.ConversationalRequest.GroupParty":
 		"Who can your child group up with to join experiences?",
+	"Heading.ConversationalRequest.StudioCollaboration":
+		"Can your child collaborate live in Roblox Studio with people in all age groups?",
 	"Heading.EnablePurchasesUpsell": "Let's review: allow purchases",
 	"Description.VPCRequestDesktopNotifications":
 		"This allows your child to turn on desktop push notifications about activity on Roblox, such as Connection requests or chat messages. Your child can select which push notifications they want to receive within their settings.",

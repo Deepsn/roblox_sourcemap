@@ -116,7 +116,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.Connection": "Connection",
 	"Label.Connect": "Connect",
 	"Label.Sitemap": "Sitemap",
-	"Label.CreateAccount": "Create Account",
+	"Label.CreateAccount": "Create account",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

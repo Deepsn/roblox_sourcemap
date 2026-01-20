@@ -56,8 +56,12 @@ Roblox.LangDynamic["Amp.Upsell"] = {
 	"Description.PrologueTextFae": "To use this feature, complete an age check.",
 	"Description.CommsAgeCheck.VPCForExperienceDirectChatModal":
 		"You need parent permission to use experience direct chat.",
+	"Description.CommsAgeCheck.VPCForStudioCollaborationModal":
+		"You need permission to update your Live Collaboration in Studio setting.",
 	"Description.PrologueTextVpcNotEligible":
 		"Your birthday has already been confirmed.",
+	"Description.CommsAgeCheck.FaeForStudioCollaborationModal":
+		"To use Live Collaboration in Studio, complete an age check.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

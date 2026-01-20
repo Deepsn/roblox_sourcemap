@@ -68,6 +68,7 @@ Roblox.LangDynamic["Feature.GamePage"] = {
 	"Label.SponsoredDisclosure":
 		"Sponsored Items are paid for by Creators. For EU users, they may be shown to you based on general information about your device type, location, and demographics. Outside of the EU, ads may also be shown based on additional information.",
 	"Action.Apply": "Apply",
+	"Label.Ad": "Ad",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
