@@ -48,20 +48,22 @@ Roblox.LangDynamic["Amp.Upsell"] = {
 		"You need parent permission to use experience chat.",
 	"Title.CheckYourAge": "We need to check your age",
 	"Description.CommsAgeCheck.FaeForExperienceChatModal":
-		"To use experience chat, complete an age check.",
+		"To update your experience chat setting, complete an age check.",
 	"Description.CommsAgeCheck.FaeForExperienceWhisperChatModal":
-		"To use experience direct chat, complete an age check.",
+		"To update your experience direct chat setting, complete an age check.",
 	"Description.PrologueIdvAndVpcAgeCorrection":
 		"To update your birthday, first verify your ID. If you don't have an ID, ask your parent for permission.",
 	"Description.PrologueTextFae": "To use this feature, complete an age check.",
 	"Description.CommsAgeCheck.VPCForExperienceDirectChatModal":
 		"You need parent permission to use experience direct chat.",
 	"Description.CommsAgeCheck.VPCForStudioCollaborationModal":
-		"You need permission to update your Live Collaboration in Studio setting.",
+		"You need permission to update your Live collaboration in Studio setting.",
 	"Description.PrologueTextVpcNotEligible":
 		"Your birthday has already been confirmed.",
 	"Description.CommsAgeCheck.FaeForStudioCollaborationModal":
-		"To use Live Collaboration in Studio, complete an age check.",
+		"To update your Live collaboration in Studio setting, complete an age check.",
+	"Description.AgeCheckPrologueTemplate":
+		"To update your {settingName}, complete an age check.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

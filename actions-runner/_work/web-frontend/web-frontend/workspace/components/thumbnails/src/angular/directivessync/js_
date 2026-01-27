@@ -1,6 +1,6 @@
 var map = {
-  "./imageLoadDirective.js": "95",
-  "./thumbnailErrorDirective.js": "934"
+  "./imageLoadDirective.js": "243",
+  "./thumbnailErrorDirective.js": "666"
 };
 
 

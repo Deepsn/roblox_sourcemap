@@ -209,6 +209,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Action.CreateAccountFromSwitcher": "Create account",
 	"Action.SignInToAnotherAccount": "Sign in to another account",
 	"Action.UseAnotherDeviceSentenceCase": "Use another device",
+	"Authentication.QuickSignInLowercase": "Quick sign in",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

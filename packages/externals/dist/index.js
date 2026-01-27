@@ -57,6 +57,9 @@ var externals = {
 	"@rbx/core-scripts/legacy/header-scripts": "HeaderScripts",
 	"@rbx/core-scripts/legacy/react-utilities": "ReactUtilities",
 	"@rbx/core-scripts/legacy/Roblox": "Roblox",
+	"@rbx/legacy-webapp-types/Roblox": "Roblox",
+	"@rbx/legacy-webapp-types/roblox-event-tracker": "EventTracker",
+	"@rbx/legacy-webapp-types/roblox-item-purchase": "RobloxItemPurchase",
 	"@rbx/core-scripts/local-storage": [
 		"Roblox",
 		"core-scripts",
@@ -77,7 +80,6 @@ var externals = {
 		"environment",
 	],
 	"@rbx/core-scripts/meta/user": ["Roblox", "core-scripts", "meta", "user"],
-	"@rbx/core-scripts/metrics": ["Roblox", "core-scripts", "metrics"],
 	"@rbx/core-scripts/payments-flow": ["Roblox", "core-scripts", "paymentsFlow"],
 	"@rbx/core-scripts/react": ["Roblox", "core-scripts", "react"],
 	"@rbx/core-scripts/realtime": ["Roblox", "core-scripts", "realtime"],
@@ -155,6 +157,21 @@ var externals = {
 	"redux-thunk": "ReduxThunk",
 	"prop-types": "PropTypes",
 	"@tanstack/react-query": "TanstackQuery",
+	// Legacy packages.
+	"core-roblox-utilities": "CoreRobloxUtilities",
+	"core-utilities": "CoreUtilities",
+	"header-scripts": "HeaderScripts",
+	"react-style-guide": "ReactStyleGuide",
+	"react-utilities": "ReactUtilities",
+	Roblox: "Roblox",
+	"roblox-badges": "RobloxBadges",
+	"roblox-event-tracker": "EventTracker",
+	"roblox-item-purchase": "RobloxItemPurchase",
+	"roblox-presence": "RobloxPresence",
+	"roblox-thumbnail-3d": "RobloxThumbnail3d",
+	"roblox-thumbnails": "RobloxThumbnails",
+	"roblox-tracer": ["Roblox", "core-scripts", "tracing"],
+	"roblox-user-profiles": "RobloxUserProfiles",
 };
 var addLegacyExternal = (key, external, target = window) => {
 	if (typeof key === "string") {

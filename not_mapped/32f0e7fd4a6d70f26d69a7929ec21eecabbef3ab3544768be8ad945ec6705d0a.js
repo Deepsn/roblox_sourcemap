@@ -258,7 +258,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestRobloxConnectGroupChat":
 		"This allows your child to add friends and be added by friends to group chats. They may be in group chats with friends of friends.",
 	"Description.VPCRequestExperienceChat":
-		"This allows your child to chat with others while in the same Roblox experience server.",
+		"This allows your child to chat with people in similar age groups while playing.",
 	"Description.VPCRequestExperienceDirectChat":
 		"This allows your child to chat one-on-one with other users in the same Roblox experience server.",
 	"Description.VPCRequestContentMaturityMild":
@@ -270,17 +270,17 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestSocialLinksVisibility":
 		"This allows others on Roblox to see links to your child's profile on social networks. Your child can manage these links in their settings.",
 	"Description.VPCRequestEnablePurchases":
-		"This allows your child to make purchases, such as buying Robux or subscriptions. This setting does not impact gift card redemption or use of Robux.{breakLine}Disabling purchases will not cancel existing subscriptions. Learn more about how to manage your child’s {premiumSubLinkStart}Premium subscriptions{premiumSubLinkEnd} or {subInExpLinkStart}subscriptions within experiences{subInExpLinkEnd}.",
+		"This allows your child to buy Robux or subscriptions. It doesn’t include redeeming gift cards or spending Robux. {breakLine}Selecting ‘off’ won’t cancel existing subscriptions. View details about your child’s {premiumSubLinkStart}Premium subscriptions{premiumSubLinkEnd} or {subInExpLinkStart}subscriptions within experiences{subInExpLinkEnd}.",
 	"Description.VPCRequestThirdPartyApplications":
-		"This allows your child to access third-party applications using their Roblox account and give permission for apps to take actions on their behalf. Disabling this setting will revoke your child’s existing third-party app permissions.",
+		"This allows your child to access third-party applications with their Roblox account and give apps permission to take actions for them. Turning this off will revoke your child’s existing third-party app permissions.",
 	"Description.VPCRequestEmailNotifications":
-		"This allows your child to opt in to receive announcements, updates, and offers from Roblox.",
+		"This allows your child to choose to receive Roblox emails with announcements, updates, and offers.",
 	"Description.VPCRequestGroupNotifications":
-		"This allows your child to turn on notifications from communities.",
+		"This allows your child to turn on notifications from communities on Roblox.",
 	"Description.VPCRequestPushNotifications":
 		"This allows your child to turn on push notifications about activity on Roblox, such as friend requests or chat messages. Your child can select which push notifications they want to receive within their settings.",
 	"Description.VPCRequestExperienceNotifications":
-		"This allows your child to turn on activity update notifications from experiences.",
+		"This allows your child to turn on activity notifications from games and experiences on Roblox.",
 	"Title.EnablePurchaseAction": "make purchases on Roblox",
 	"Action.VerifyViaCardVerification": "Verify with credit card",
 	"Description.VPCRequestContentMaturityRestricted":
@@ -372,15 +372,15 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Message.UnblockUserDenied": "{displayName} has not been unblocked",
 	"Message.UnblockExperienceDenied": "{experienceName} has not been unblocked",
 	"Description.ManageExperienceConsentV2":
-		"Depending on its content maturity level, unblocking this experience may mean your child will be able to join this experience.",
+		"Unblocking this experience means your child will be able to join it if the content maturity level is appropriate for them.",
 	"Description.VPCRequestExperienceDirectChatV2":
-		"This allows your child to direct message with other users in the same Roblox experience server. “Everyone” may include users outside of your child’s friends list.",
+		"This allows your child to chat directly with another person in a similar age group while playing, including people not in their Connections.",
 	"Description.ManageConnectionConsent":
 		"This allows {displayName} to send your child a Connection request.",
 	"Description.VPCRequestOneOnOnePartyV2":
-		"This allows your child to group up to join experiences with a Connection.",
+		"This allows your child to join an experience together with a Connection.",
 	"Description.VPCRequestGroupPartyV2":
-		"This allows your child to add Connections and be added by Connections to Parties with more than two users. A Party is a way to group up to join experiences together. Your child may be in Parties with shared Connections (friends of friends).",
+		"This allows your child to join an experience together with more than one Connection. This could include people not in their Connections added by others.",
 	"Description.EnterParentEmailExpT1":
 		"Parents, enter your email to link to your child’s account. You will need to verify your age with a government ID or credit card. {lineBreak}After linking, you’ll get access to parental controls and insights.",
 	"Description.EnterParentEmailExpT3":
@@ -396,28 +396,28 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestOnlineStatusV2":
 		"This allows Connections to see when your child is online.",
 	"Description.VPCRequestPhoneNumberDiscoverabilityV2":
-		"This helps people who already have your child's phone number add them as a Connection on Roblox.",
+		"This allows people who have your child's phone number to send them a Connection invite.",
 	"Description.VPCRequestPushNotificationsV2":
-		"This allows your child to turn on push notifications about activity on Roblox, such as Connection requests or chat messages. Your child can select which push notifications they want to receive within their settings.",
+		"This allows your child to turn on mobile push notifications from Roblox about activity like Connection requests or chat messages. Your child can choose which notifications to receive in Settings.",
 	"Description.VPCRequestRobloxConnectV2":
 		"This allows your child to chat with Connections across Roblox.",
 	"Description.VPCRequestRobloxConnectGroupChatV2":
 		"This allows your child to add Connections and be added by Connections to group chats. They may be in group chats with shared Connections (friends of friends).",
 	"Description.VPCRequestShareActivityUpdatesV2":
-		"This allows your child’s Connections to receive updates about their recent activity in experiences.",
+		"This allows your child’s Connections to receive updates about your child’s activity in games and experiences.",
 	"Description.VPCRequestShowCurrentExperienceV2":
-		"This allows your child's Connections to see which experience they are in and join them in that experience.",
+		"This allows your child’s Connections to see the current experience your child is in and join them.",
 	"Description.VPCRequestStandaloneLinkingV2":
 		"This will give you access to parental controls and insights on your child's screen time, Connections, spending, and more.",
 	"Description.VPCRequestTradingV2":
-		"This allows your child to trade items in their inventory with Connections on Roblox.",
+		"This allows your child to trade items with other people.",
 	"Label.UnlockAccountV2": "unlock your child’s Roblox account",
 	"Description.EnterParentEmailWithoutParentalControlV2":
 		"Ask your parents to help you with this step.{lineBreak}We’ll send an email to your parent to verify their age and link them to your account.{lineBreak}Parents, after linking, you’ll get access to insights on your teen’s screen time, spending, and more.",
 	"Description.LinkToChildV2":
 		"Link accounts to get insights about your teen’s Roblox activity",
 	"Description.VPCRequestVoiceDataForProductImprovements":
-		"Roblox uses voice data for safety and moderation. This setting also allows Roblox to use your child’s voice data for product improvements.",
+		"Roblox always uses voice data for safety and moderation. This setting also allows Roblox to use your child’s voice data for product improvements. {linkStart}View details{linkEnd}.",
 	"Description.VoiceDataForProductImprovementsSettingNameInContext":
 		"voice data for product improvements setting",
 	"Description.EnterParentEmailV5":
@@ -432,7 +432,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"sensitive issues content setting",
 	"Description.ChangeBirthdateConsentWithExplaination":
 		"You child's birthday is not visible to others. The birthday you select for your child may impact the features available to them and your ability to manage their account. You can only change your child's birthday once. {linkStart}Learn more{linkEnd}",
-	"Heading.BirthdayConfirmation": "We need to verify your child’s birthday",
+	"Heading.BirthdayConfirmation":
+		"Before we continue, we need to confirm your child’s birthday",
 	"Description.BirthdayConfirmation":
 		"Verifying your child’s age ensures that they have access to content appropriate to their maturity level and features like chat.",
 	"Label.YourChildsRequest": "Your child's request",
@@ -445,19 +446,19 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.CombinedChatSettingsUpsell":
 		"This setting manages who your child can chat with in an experience.",
 	"Description.ExperienceChatAndWhisper":
-		"Your child can use both the general experience chat and direct chats with individual people.",
+		"Your child can chat with everyone in an experience or directly with people in similar age groups.",
 	"Label.ExperienceChatAndWhisper":
 		"Experience chat and experience direct chat",
 	"Description.ExperienceChatOnly":
-		"Your child can only use the general experience chat.",
+		"Your child can chat with everyone in similar age groups playing the same experience.",
 	"Label.ExperienceChatOnly": "Experience chat only",
 	"Description.NoChat": "Your child cannot use chat in an experience.",
-	"Label.NoChat": "No chat",
+	"Label.NoChat": "Chat off",
 	"Description.NotAvailableForAgeGroup":
 		"Not available for your child’s age group",
 	"Label.KeepAccountLocked": "Keep account locked",
 	"Description.StudioCollaborationConsent":
-		"This allows your child to work in Roblox Studio with people in all age groups live, including creating and communicating together.",
+		"This controls who your child can work with live in Roblox Studio, including creating and communicating together.",
 	"Description.FacialAgeEstimationConsent":
 		"Your child has requested an age check. Your child needs one so they can chat with people of similar age.",
 	"Heading.FacialAgeEstimationConsent":
@@ -470,14 +471,14 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Message.FacialAgeEstimationSuccess":
 		"Your child can now complete an age check",
 	"Description.VPCRequestExperienceChatV2":
-		"This allows your child to chat with people in similar age groups who are playing the same experience.",
+		"This allows your child to chat with people in similar age groups while playing.",
 	"Description.VPCRequestExperienceDirectChatV3":
 		"This allows your child to chat directly with people of similar age playing the same experience – including people who are not their Connections.",
 	"Message.ChildNoLongerEligible":
 		"This request doesn't need parental review because your child's age, location, or account information has been updated.",
 	"Title.ChildNoLongerEligible": "This review is no longer necessary",
 	"Description.FacialAgeEstimationConsentV2":
-		"Your child needs one so they can chat with people in similar age groups.",
+		"Your child needs an age check to chat with people in similar age groups.",
 	"Heading.ConversationalRequest.CommunityNotifications":
 		"Do you want to allow your child to enable push notifications from communities on Roblox?",
 	"Heading.ConversationalRequest.SensitiveIssues":
@@ -533,17 +534,19 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.GroupParty":
 		"Who can your child group up with to join experiences?",
 	"Heading.ConversationalRequest.StudioCollaboration":
-		"Can your child collaborate live in Roblox Studio with people in all age groups?",
+		"Who can your child collaborate live with in Roblox Studio?",
 	"Heading.EnablePurchasesUpsell": "Let's review: allow purchases",
 	"Description.VPCRequestDesktopNotifications":
-		"This allows your child to turn on desktop push notifications about activity on Roblox, such as Connection requests or chat messages. Your child can select which push notifications they want to receive within their settings.",
+		"This allows your child to turn on desktop push notifications from Roblox about activity like Connection requests or chat messages. Your child can choose which notifications to receive in Settings.",
 	"Description.VpcPrologueTemplate":
 		"You need permission to update your {settingName}.",
-	"Heading.FacialAgeEstimationUpsell": "Let's review: age check",
+	"Heading.FacialAgeEstimationUpsell":
+		"For added safety, can your child complete an age check?",
 	"Description.FacialAgeEstimationUpsell":
 		"Your child needs one so they can chat with people of similar age.",
 	"Description.BirthdayConfirmationWithWarning":
 		"This gives them access to age-appropriate content and features. If you change their birthday, we’ll update their age in Settings. You can only confirm your child’s birthday once.",
+	"Heading.BirthdayConsentRequest": "Confirm your child’s birthday",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

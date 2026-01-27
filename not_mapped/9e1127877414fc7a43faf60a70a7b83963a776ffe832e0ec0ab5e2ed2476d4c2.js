@@ -2271,9 +2271,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Body.Enrolled": "Enrolled",
 	"Body.Unenrolled": "Unenrolled",
 	"Heading.AgeCheck": "Age check",
-	"Heading.StudioCollaboration": "Live Collaboration in Studio",
-	"Heading.StudioCollaborationSetting": "Live Collaboration in Studio setting",
-	"Label.StudioCollaborationSetting": "Live Collaboration in Studio setting",
+	"Heading.StudioCollaboration": "Live collaboration in Studio",
+	"Heading.StudioCollaborationSetting": "Live collaboration in Studio setting",
+	"Label.StudioCollaborationSetting": "Live collaboration in Studio setting",
 	"Description.StudioCollaboration":
 		"Choose who you can work with live in Roblox Studio, including creating and communicating together. {linkStart}View details{linkEnd}.",
 	"Description.ParentSide.StudioCollaboration":
@@ -2361,10 +2361,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.StudioCollabOneMoreStepModal":
 		"One more step to collaborate with others outside your age group",
 	"Description.StudioCollabOneMoreStepModal":
-		"You can use chat and Party features with people in similar age groups.{lineBreak}To use live collaboration in Studio with others outside of your age group, establish Trusted Connections or get parental consent.",
+		"You can use chat and Party features with people in similar age groups.{lineBreak}To use live collaboration in Studio with others outside of your age group, establish Trusted Connections or get parent permission.",
 	"Action.LearnAboutTrustedConnections":
 		"Learn how to establish Trusted Connections",
-	"Action.GetParentalConsent": "Get Parental Consent",
+	"Action.GetParentalConsent": "Ask my parent",
 	"Label.AddChildBirthday": "Please add your child's birthday.",
 	"Description.StudioCollabOneMoreStepModalFooter":
 		"Access to features depends on your account settings and region. {linkStart}View details.{linkEnd}",

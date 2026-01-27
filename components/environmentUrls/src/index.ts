@@ -83,6 +83,7 @@ const environmentUrls = {
 	authApi: `https://auth.${rootDomain}`,
 	avatarApi: `https://avatar.${rootDomain}`,
 	badgesApi: `https://badges.${rootDomain}`,
+	beaconApi: `https://apis.${rootDomain}/beacon-api`,
 	billingApi: `https://billing.${rootDomain}`,
 	captchaApi: `https://captcha.${rootDomain}`,
 	catalogApi: `https://catalog.${rootDomain}`,
@@ -171,3 +172,7 @@ const environmentUrls = {
 };
 
 export default environmentUrls;
+
+// For backwards compatibility.
+
+export const EnvironmentUrls = environmentUrls;
