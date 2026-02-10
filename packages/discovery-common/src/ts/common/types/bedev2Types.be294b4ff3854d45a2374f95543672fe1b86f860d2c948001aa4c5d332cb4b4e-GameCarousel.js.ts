@@ -15,7 +15,6 @@ export enum TTreatmentType {
 	Pills = "Pills",
 	Sdui = "sdui",
 	SongCarousel = "SongCarousel",
-	SearchPillCarousel = "SearchPillCarousel",
 }
 
 export enum TSduiTreatmentType {
@@ -181,18 +180,6 @@ export type TExploreApiFiltersSortResponse = TSharedExploreApiSortResponse & {
 	filters: TFiltersData[];
 };
 
-export type TQueryData = {
-	query: string;
-	contentType: string;
-	itemLayoutData: Record<string, string>;
-};
-
-export type TExploreApiSearchPillsSortResponse =
-	TSharedExploreApiSortResponse & {
-		treatmentType: TTreatmentType.SearchPillCarousel;
-		queries: TQueryData[];
-	};
-
 export type TSongData = {
 	assetId: number;
 	title: string;
@@ -210,8 +197,7 @@ export type TExploreApiSongsSortResponse = TSharedExploreApiSortResponse & {
 export type TExploreApiSortResponse =
 	| TExploreApiGameSortResponse
 	| TExploreApiFiltersSortResponse
-	| TExploreApiSongsSortResponse
-	| TExploreApiSearchPillsSortResponse;
+	| TExploreApiSongsSortResponse;
 
 export type TExploreApiSortsResponse = {
 	sorts: TExploreApiSortResponse[];
@@ -240,17 +226,6 @@ export type TExploreApiFiltersSort = {
 	gameSetTargetId?: number;
 };
 
-export type TExploreApiSearchPillsSort = {
-	topic: string;
-	topicId: number;
-	treatmentType: TTreatmentType.SearchPillCarousel;
-	topicLayoutData?: TTopicLayoutData;
-	queries: TQueryData[];
-	sortId: string;
-	contentType: string;
-	nextPageToken: string;
-};
-
 export type TExploreApiSongsSort = {
 	topic: string;
 	topicId: number;
@@ -268,8 +243,7 @@ export type TSongSort = TExploreApiSongsSort;
 export type TExploreApiSort =
 	| TExploreApiGameSort
 	| TExploreApiFiltersSort
-	| TExploreApiSongsSort
-	| TExploreApiSearchPillsSort;
+	| TExploreApiSongsSort;
 
 export type TExploreApiSorts = {
 	sorts: TExploreApiSort[];
@@ -290,8 +264,7 @@ export type TSort =
 	| TOmniRecommendationFriendSort
 	| TExploreApiFiltersSort
 	| TOmniRecommendationSduiSort
-	| TSongSort
-	| TExploreApiSearchPillsSort;
+	| TSongSort;
 
 export type TGetOmniRecommendationsMetadataResponse = {
 	contentMetadata: TOmniRecommendationsContentMetadata;

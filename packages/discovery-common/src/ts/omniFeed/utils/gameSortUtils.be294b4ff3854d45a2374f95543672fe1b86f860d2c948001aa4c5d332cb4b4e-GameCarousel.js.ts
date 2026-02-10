@@ -11,8 +11,6 @@ import {
 	TExploreApiSortResponse,
 	TExploreApiSorts,
 	TExploreApiSortsResponse,
-	TExploreApiSearchPillsSort,
-	TExploreApiSearchPillsSortResponse,
 	TGameSort,
 	TOmniRecommendationGame,
 	TOmniRecommendationGameSort,
@@ -129,15 +127,6 @@ const isExploreApiSongSortResponse = (
 	return "songs" in sort;
 };
 
-const isExploreApiSearchPillsSortResponse = (
-	sort: TExploreApiSortResponse,
-): sort is TExploreApiSearchPillsSortResponse => {
-	return (
-		"queries" in sort &&
-		sort.treatmentType === TTreatmentType.SearchPillCarousel
-	);
-};
-
 export const mapExploreApiGameSortResponse = (
 	sort: TExploreApiGameSortResponse,
 ): TExploreApiGameSort => {
@@ -179,21 +168,6 @@ const mapExploreApiFiltersSortResponse = (
 	};
 };
 
-const mapExploreApiSearchPillsSortResponse = (
-	sort: TExploreApiSearchPillsSortResponse,
-): TExploreApiSearchPillsSort => {
-	return {
-		topic: sort.sortDisplayName,
-		topicId: sort.gameSetTypeId,
-		treatmentType: sort.treatmentType,
-		queries: sort.queries,
-		sortId: sort.sortId,
-		contentType: sort.contentType,
-		nextPageToken: sort.nextPageToken || "",
-		topicLayoutData: sort.topicLayoutData,
-	};
-};
-
 const mapExploreApiSongSortResponse = (
 	sort: TExploreApiSongsSortResponse,
 ): TExploreApiSongsSort => {
@@ -213,10 +187,6 @@ const mapExploreApiSongSortResponse = (
 export const mapExploreApiSortResponse = (
 	sort: TExploreApiSortResponse,
 ): TExploreApiSort => {
-	if (isExploreApiSearchPillsSortResponse(sort)) {
-		return mapExploreApiSearchPillsSortResponse(sort);
-	}
-
 	if (isExploreApiGameSortResponse(sort)) {
 		return mapExploreApiGameSortResponse(sort);
 	}
@@ -230,21 +200,9 @@ export const mapExploreApiSortResponse = (
 
 export const mapExploreApiSortsResponse = (
 	data: TExploreApiSortsResponse,
-	isSearchQueryPillsEnabled?: boolean,
 ): TExploreApiSorts => {
 	return {
-		sorts: data.sorts
-			.filter((sort) => {
-				// Filter out search pills sorts if the isSearchQueryPillsEnabled IXP variable is not true
-				if (
-					isExploreApiSearchPillsSortResponse(sort) &&
-					isSearchQueryPillsEnabled !== true
-				) {
-					return false;
-				}
-				return true;
-			})
-			.map((sort) => mapExploreApiSortResponse(sort)),
+		sorts: data.sorts.map((sort) => mapExploreApiSortResponse(sort)),
 		nextSortsPageToken: data.nextSortsPageToken,
 	};
 };

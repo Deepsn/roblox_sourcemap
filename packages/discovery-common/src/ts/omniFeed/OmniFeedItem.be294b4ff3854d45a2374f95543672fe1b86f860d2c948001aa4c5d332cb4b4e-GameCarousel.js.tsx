@@ -13,7 +13,6 @@ import FriendCarouselFeedItem from "./FriendCarouselFeedItem";
 import FiltersFeedItem from "./FiltersFeedItem";
 import SduiFeedItem from "./SduiFeedItem";
 import SongCarouselFeedItem from "./SongCarouselFeedItem";
-import SearchPillCarouselFeedItem from "./SearchPillCarouselFeedItem";
 import { TGetFriendsResponse } from "../common/types/bedev1Types";
 import {
 	TOmniRecommendationSduiTree,
@@ -162,16 +161,6 @@ export const OmniFeedItem = ({
 					sort={sort}
 					sduiRoot={sduiRoot}
 					currentPage={currentPage}
-				/>
-			);
-		case TTreatmentType.SearchPillCarousel:
-			return (
-				<SearchPillCarouselFeedItem
-					sort={sort}
-					positionId={positionId}
-					isNewScrollArrowsEnabled={isNewScrollArrowsEnabled}
-					isNewSortHeaderEnabled={isNewSortHeaderEnabled}
-					translate={translate}
 				/>
 			);
 		default:

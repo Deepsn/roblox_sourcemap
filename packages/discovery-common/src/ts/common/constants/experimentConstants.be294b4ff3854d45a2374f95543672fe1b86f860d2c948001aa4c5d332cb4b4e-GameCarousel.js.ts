@@ -26,7 +26,6 @@ const layerNames = {
 	discoverPage: "Website.GamesPage",
 	tileLayer: "Website.TileLayer",
 	playButton: "Website.PlayButton",
-	searchLandingPage: "Website.SearchLandingPage",
 };
 
 const defaultValues = {
@@ -50,9 +49,6 @@ const defaultValues = {
 	},
 	tileLayer: {},
 	playButton: {},
-	searchLandingPage: {
-		IsSearchQueryPillsEnabled: false,
-	},
 };
 
 export default {

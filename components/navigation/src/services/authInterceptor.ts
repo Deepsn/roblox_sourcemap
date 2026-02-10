@@ -48,6 +48,9 @@ const setupAuthInterceptor = (): void => {
 						bodyCtaKey: MODAL_BODY_CTA,
 						buttonKey: MODAL_SIGN_IN_KEY,
 					});
+					return new Promise(() => {
+						// Promise never resolves or rejects to prevent caller error handlers from running
+					});
 				}
 			}
 

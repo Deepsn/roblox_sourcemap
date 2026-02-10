@@ -22,8 +22,6 @@ export const getEventContext = (
 			return EventContext.Games;
 		case PageContext.SpotlightPage:
 			return EventContext.Spotlight;
-		case PageContext.SearchLandingPage:
-			return EventContext.SearchLanding;
 		default:
 			window.EventTracker?.fireEvent(
 				common.NoMatchingEventContextFoundCounterEvent,
@@ -99,13 +97,10 @@ export enum EventStreamMetadata {
 	PlaceId = "placeId",
 	PlayContext = "playContext",
 	Position = "position",
-	Pos = "pos",
 	PreviousOptionId = "previousOptionId",
 	PreviousIndex = "previousIndex",
 	PromptId = "promptId",
 	PromptText = "promptText",
-	QueryText = "queryText",
-	QueryTexts = "queryTexts",
 	ResourceId = "resourceId",
 	ResponseOptionIds = "responseOptionIds",
 	ResponseOptionTexts = "responseOptionTexts",
@@ -170,8 +165,6 @@ export enum EventType {
 	GameTileOverflowMenuAction = "gameTileOverflowMenuAction",
 	NotInterestedFeedbackFormAction = "notInterestedFeedbackFormAction",
 	MediaGalleryMediaChanged = "mediaGalleryMediaChanged",
-	QuerySuggestionClicked = "querySuggestionClicked",
-	QueryImpressions = "queryImpressions",
 }
 
 export enum SessionInfoType {
@@ -510,26 +503,6 @@ export type TMediaGalleryAction = {
 	[EventStreamMetadata.IsYoutubeVideo]: boolean;
 };
 
-export type TQuerySuggestionClicked = {
-	[EventStreamMetadata.Context]: EventContext | string;
-	[EventStreamMetadata.ComponentType]?: string;
-	[EventStreamMetadata.SortId]: string;
-	[EventStreamMetadata.SortPos]: number;
-	[EventStreamMetadata.QueryText]: string;
-	[EventStreamMetadata.Pos]: number;
-	[SessionInfoType.SearchLandingPageSessionInfo]?: string;
-};
-
-export type TQueryImpressions = {
-	[EventStreamMetadata.Context]: EventContext | string;
-	[EventStreamMetadata.ComponentType]?: string;
-	[EventStreamMetadata.SortId]: string;
-	[EventStreamMetadata.SortPos]: number;
-	[EventStreamMetadata.QueryTexts]: string[];
-	[EventStreamMetadata.AbsPositions]: number[];
-	[SessionInfoType.SearchLandingPageSessionInfo]?: string;
-};
-
 export default {
 	[EventType.GameImpressions]: ({ ...params }: TGameImpressions): TEvent => [
 		{
@@ -678,28 +651,6 @@ export default {
 		{
 			name: EventType.MediaGalleryMediaChanged,
 			type: EventType.MediaGalleryMediaChanged,
-			context: formInteraction,
-		},
-		parseEventParamsUnifiedLogging({
-			...params,
-		}),
-	],
-	[EventType.QuerySuggestionClicked]: (
-		params: TQuerySuggestionClicked,
-	): TEvent => [
-		{
-			name: EventType.QuerySuggestionClicked,
-			type: EventType.QuerySuggestionClicked,
-			context: formInteraction,
-		},
-		parseEventParamsUnifiedLogging({
-			...params,
-		}),
-	],
-	[EventType.QueryImpressions]: (params: TQueryImpressions): TEvent => [
-		{
-			name: EventType.QueryImpressions,
-			type: EventType.QueryImpressions,
 			context: formInteraction,
 		},
 		parseEventParamsUnifiedLogging({

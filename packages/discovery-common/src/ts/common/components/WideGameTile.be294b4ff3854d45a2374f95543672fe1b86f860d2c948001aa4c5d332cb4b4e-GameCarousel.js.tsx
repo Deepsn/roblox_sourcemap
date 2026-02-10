@@ -182,34 +182,11 @@ const WideGameTile = React.forwardRef(
 
 		const gameLayoutData = useGetGameLayoutData(gameData, topicId);
 
-		const showPlayButton = (): boolean => {
-			if (
-				wideTileType === TComponentType.GridTile &&
-				// HACK: This is a temporary fix to disable the play button on grid tiles by default
-				// More info here: https://roblox.atlassian.net/browse/CLIGROW-2386.
-				playButtonStyle !== TPlayButtonStyle.Enabled
-			) {
-				return false;
-			}
-			if (
-				wideTileType === TComponentType.EventTile &&
-				playButtonStyle !== TPlayButtonStyle.Enabled
-			) {
-				return false;
-			}
-			// InterestTiles are only presentational, so we hide the play button
-			if (wideTileType === TComponentType.InterestTile) {
-				return false;
-			}
-			return true;
-		};
-
 		const getHoverTileMetadata = (): JSX.Element | null => {
 			if (
 				gameData.minimumAge &&
 				gameData.ageRecommendationDisplayName &&
-				wideTileType !== TComponentType.EventTile &&
-				showPlayButton()
+				wideTileType !== TComponentType.EventTile
 			) {
 				return (
 					<div
@@ -299,6 +276,28 @@ const WideGameTile = React.forwardRef(
 					<div className="hover-metadata">{getHoverTileMetadata()}</div>
 				</div>
 			);
+		};
+
+		const showPlayButton = (): boolean => {
+			if (
+				wideTileType === TComponentType.GridTile &&
+				// HACK: This is a temporary fix to disable the play button on grid tiles by default
+				// More info here: https://roblox.atlassian.net/browse/CLIGROW-2386.
+				playButtonStyle !== TPlayButtonStyle.Enabled
+			) {
+				return false;
+			}
+			if (
+				wideTileType === TComponentType.EventTile &&
+				playButtonStyle !== TPlayButtonStyle.Enabled
+			) {
+				return false;
+			}
+			// InterestTiles are only presentational, so we hide the play button
+			if (wideTileType === TComponentType.InterestTile) {
+				return false;
+			}
+			return true;
 		};
 
 		const gameTitle = useMemo((): string => {

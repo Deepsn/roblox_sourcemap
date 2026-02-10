@@ -84,8 +84,6 @@ export const searchLandingPage = {
 	searchLandingMissingSortIdError: "SearchLandingMissingSortIdError",
 	missingSortIdDefault: -1,
 	numberOfTilesPerCarousel: 5,
-	SearchPillCarouselImpressionsUndefinedError:
-		"SearchPillCarouselImpressionsUndefinedError",
 };
 
 export const sortDetailPage = {
