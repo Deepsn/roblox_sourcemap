@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
 import { useSystemFeedback } from "@rbx/core-ui";
 import bedev2Services from "../services/bedev2Services";
+import { usePageSession } from "../utils/PageSessionContext";
 import {
 	TUserSignalEntity,
 	TUserSignalAssetType,
@@ -18,7 +19,7 @@ const NotInterestedFeedbackFormId = {
 };
 
 const NotInterestedFeedbackFormTitleId = {
-	WhyHideExperience: "Why are you hiding this experience?",
+	WhyHideExperience: "WhyHideExperience",
 };
 
 // send a NotInterestedFeedback user signal that contains the answers from the not interested feedback form
@@ -30,6 +31,7 @@ const useSendNotInterestedFeedbackUserSignalCallback = (
 	topicId?: string,
 ): ((selectedValues: { [key: string]: boolean }, text: string) => void) => {
 	const { systemFeedbackService } = useSystemFeedback();
+	const pageSession = usePageSession();
 
 	const onSignalFailure = useCallback(() => {
 		// revert the hidden state if signal fails
@@ -83,6 +85,7 @@ const useSendNotInterestedFeedbackUserSignalCallback = (
 					TUserSignalValueType.String,
 					signalEntity,
 					TUserSignalType.NotInterestedFeedback,
+					pageSession,
 				)
 				.catch(() => {
 					onSignalFailure();
@@ -91,7 +94,7 @@ const useSendNotInterestedFeedbackUserSignalCallback = (
 					);
 				});
 		},
-		[universeId, page, topicId, onSignalFailure],
+		[universeId, page, topicId, pageSession, onSignalFailure],
 	);
 };
 

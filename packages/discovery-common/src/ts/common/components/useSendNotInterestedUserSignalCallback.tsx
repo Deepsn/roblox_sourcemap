@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
 import { useSystemFeedback } from "@rbx/core-ui";
 import bedev2Services from "../services/bedev2Services";
+import { usePageSession } from "../utils/PageSessionContext";
 import {
 	TUserSignalEntity,
 	TUserSignalAssetType,
@@ -22,6 +23,7 @@ const useSendNotInterestedUserSignalCallback = (
 	toggleIsHidden?: () => void,
 ): ((isNotInterested: boolean) => void) => {
 	const { systemFeedbackService } = useSystemFeedback();
+	const pageSession = usePageSession();
 
 	const onSignalFailure = useCallback(() => {
 		// revert the hidden state if signal fails
@@ -67,6 +69,7 @@ const useSendNotInterestedUserSignalCallback = (
 					TUserSignalValueType.Bool,
 					signalEntity,
 					TUserSignalType.NotInterested,
+					pageSession,
 				)
 				.catch(() => {
 					onSignalFailure();
@@ -75,7 +78,7 @@ const useSendNotInterestedUserSignalCallback = (
 					);
 				});
 		},
-		[universeId, page, topicId, onSignalFailure],
+		[universeId, page, topicId, pageSession, onSignalFailure],
 	);
 };
 

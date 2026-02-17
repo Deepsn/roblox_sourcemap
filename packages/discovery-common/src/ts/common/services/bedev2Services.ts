@@ -292,12 +292,20 @@ const postUserSignal = async (
 	signalValueType: TUserSignalValueType,
 	signalEntity: TUserSignalEntity,
 	signalType: TUserSignalType,
+	omniSessionId: string,
 ): Promise<TPostUserSignalResponse> => {
 	const timestampMs = Date.now().toString();
 
 	const requestBody: TPostUserSignalRequestBody = {
 		userSignalEvents: [
-			{ signalValue, timestampMs, signalValueType, signalEntity, signalType },
+			{
+				signalValue,
+				timestampMs,
+				signalValueType,
+				signalEntity,
+				signalType,
+				omniSessionId,
+			},
 		],
 	};
 

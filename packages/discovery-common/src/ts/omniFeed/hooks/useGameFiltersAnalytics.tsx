@@ -19,6 +19,7 @@ export type TSendFilterClickEvent = (
 	buttonName: TGamesFilterButton,
 	selectedOptionId: string,
 	previousOptionId?: string,
+	isActive?: boolean,
 ) => void;
 
 /**
@@ -101,6 +102,7 @@ const useGameFiltersAnalytics = (
 			buttonName: TGamesFilterButton,
 			selectedOptionId: string,
 			previousOptionId?: string,
+			isActive?: boolean,
 		): TGamesFilterClick | undefined => {
 			return {
 				[EventStreamMetadata.ButtonName]: buttonName,
@@ -114,6 +116,7 @@ const useGameFiltersAnalytics = (
 				...(previousOptionId && {
 					[EventStreamMetadata.PreviousOptionId]: previousOptionId,
 				}),
+				[EventStreamMetadata.IsActive]: isActive,
 			};
 		},
 		[sort.topicId, sort.gameSetTargetId, positionId, discoverPageSessionInfo],
@@ -125,12 +128,14 @@ const useGameFiltersAnalytics = (
 			buttonName: TGamesFilterButton,
 			selectedOptionId: string,
 			previousOptionId?: string,
+			isActive?: boolean,
 		) => {
 			const eventProperties = buildFilterClickEventProperties(
 				filterId,
 				buttonName,
 				selectedOptionId,
 				previousOptionId,
+				isActive,
 			);
 			const eventParams =
 				eventStreamConstants.gamesFilterClick(eventProperties);

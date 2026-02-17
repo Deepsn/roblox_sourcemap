@@ -43,6 +43,7 @@ export type TUserSignalEventData = {
 	signalValueType: TUserSignalValueType;
 	signalEntity: TUserSignalEntity;
 	signalType: TUserSignalType;
+	omniSessionId: string;
 };
 
 export type TPostUserSignalRequestBody = {

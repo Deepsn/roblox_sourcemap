@@ -79,7 +79,7 @@ export function isCancelPressed(
 export function simulateEscapeKeyEvent(
 	type: "keydown" | "keyup",
 	target: Element | Document,
-): void {
+): boolean {
 	const event = new KeyboardEvent(type, {
 		key: "Escape",
 		code: "Escape",
@@ -89,7 +89,7 @@ export function simulateEscapeKeyEvent(
 		cancelable: true,
 	});
 
-	target.dispatchEvent(event);
+	return target.dispatchEvent(event);
 }
 
 function informParentOfCancelEvent(): void {
@@ -126,22 +126,18 @@ function informParentOfInputFieldFocusedEvent(): void {
 // Then, decide if we should inform the parent that "Cancel" was pressed.
 export function handleCancelPressed() {
 	const overlayedElement = getCurrentOverlayedElement();
-	let keydownHandled = true;
-	const keydownHandler = (e: KeyboardEvent) => {
-		if (e.key === "Escape") {
-			keydownHandled = false;
-		}
-	};
 	const focusTrap = detectActiveFocusTrap();
 	const targetForEscape = overlayedElement ?? focusTrap ?? document.body;
-	document.addEventListener("keydown", keydownHandler);
-	simulateEscapeKeyEvent("keydown", targetForEscape);
+	// Use dispatch return to detect if Escape was handled by the target (e.g., dropdown).
+	const keydownNotCancelled = simulateEscapeKeyEvent(
+		"keydown",
+		targetForEscape,
+	);
 	simulateEscapeKeyEvent("keyup", targetForEscape);
-	document.removeEventListener("keydown", keydownHandler);
 
 	setTimeout(() => {
 		// If the escape key was not handled by the target and we are not in a focus trap, inform the parent.
-		if (!keydownHandled && !focusTrap) {
+		if (keydownNotCancelled && !focusTrap) {
 			informParentOfCancelEvent();
 		}
 	}, 50);

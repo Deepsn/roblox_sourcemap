@@ -47,6 +47,8 @@ enum QueryParameterKey {
 	GENERIC_CHALLENGE_ID = "generic-challenge-id",
 	ORIGIN = "origin",
 	BIOMETRIC_TYPE = "biometric-type",
+	CLIENT_SUPPORTS_2SV_RECOVERY = "client-supports-2sv-recovery",
+	RECOVERY_SESSION_ID = "recovery-session-id",
 }
 
 /**
@@ -165,6 +167,11 @@ const QueryParametersForTwoStepVerificationValidator = z.object({
 	allowRememberDevice: z
 		.union([z.literal("false"), z.literal("true")])
 		.transform((value) => value === "true"),
+	clientSupports2svRecovery: z
+		.union([z.literal("false"), z.literal("true")])
+		.optional()
+		.transform((value) => value === "true"),
+	recoverySessionId: z.string().optional(),
 });
 
 export type QueryParametersForTwoStepVerification = z.infer<
@@ -186,6 +193,10 @@ export const readQueryParametersForTwoStepVerification =
 			actionType: queryParameters[QueryParameterKey.ACTION_TYPE]!,
 			allowRememberDevice:
 				queryParameters[QueryParameterKey.ALLOW_REMEMBER_DEVICE]!,
+			clientSupports2svRecovery:
+				queryParameters[QueryParameterKey.CLIENT_SUPPORTS_2SV_RECOVERY]!,
+			recoverySessionId:
+				queryParameters[QueryParameterKey.RECOVERY_SESSION_ID]!,
 		};
 
 		const result = QueryParametersForTwoStepVerificationValidator.safeParse(

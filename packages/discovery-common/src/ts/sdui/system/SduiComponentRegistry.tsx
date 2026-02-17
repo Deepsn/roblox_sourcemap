@@ -108,6 +108,7 @@ export const SduiComponentMapping: Record<
 			onActivated: SduiParsers.parseCallback,
 			textColor: SduiParsers.parseColorValue,
 			fontStyle: SduiParsers.parseFoundationTypographyToken,
+			webTextElement: SduiParsers.parseWebTextElement,
 			gap: SduiParsers.parseFoundationNumberToken,
 			icon: SduiParsers.parseIcon,
 			iconWidth: SduiParsers.parseFoundationNumberToken,
@@ -130,6 +131,9 @@ export const SduiComponentMapping: Record<
 
 			rightIcon: SduiParsers.parseIcon,
 			rightIconComponent: SduiParsers.parseUiComponent,
+
+			leftWebTextElement: SduiParsers.parseWebTextElement,
+			rightWebTextElement: SduiParsers.parseWebTextElement,
 		},
 	},
 	[SduiRegisteredComponents.GameTileActiveFriendsFooter]: {
@@ -148,6 +152,7 @@ export const SduiComponentMapping: Record<
 			onActivated: SduiParsers.parseCallback,
 			titleColor: SduiParsers.parseColorValue,
 			titleFont: SduiParsers.parseFoundationTypographyToken,
+			titleWebTextElement: SduiParsers.parseWebTextElement,
 			titleComponent: SduiParsers.parseUiComponent,
 			containmentPadding: SduiParsers.parseFoundationNumberToken,
 			cornerRadius: SduiParsers.parseFoundationNumberToken,
@@ -184,6 +189,7 @@ export const SduiComponentMapping: Record<
 			titleGap: SduiParsers.parseFoundationNumberToken,
 			titleIcon: SduiParsers.parseIcon,
 			titleIconWidth: SduiParsers.parseFoundationNumberToken,
+			titleWebTextElement: SduiParsers.parseWebTextElement,
 			titleComponent: SduiParsers.parseUiComponent,
 			onSubtitleActivated: SduiParsers.parseCallback,
 			subtitleColor: SduiParsers.parseColorValue,
@@ -191,6 +197,7 @@ export const SduiComponentMapping: Record<
 			subtitleGap: SduiParsers.parseFoundationNumberToken,
 			subtitleIcon: SduiParsers.parseIcon,
 			subtitleIconWidth: SduiParsers.parseFoundationNumberToken,
+			subtitleWebTextElement: SduiParsers.parseWebTextElement,
 			subtitleComponent: SduiParsers.parseUiComponent,
 			verticalGap: SduiParsers.parseFoundationNumberToken,
 			onInfoIconActivated: SduiParsers.parseCallback,
@@ -287,6 +294,8 @@ export const SduiComponentMapping: Record<
 			image: SduiParsers.parseAssetUrlIntoComponent,
 			titleFontStyle: SduiParsers.parseFoundationTypographyToken,
 			subtitleFontStyle: SduiParsers.parseFoundationTypographyToken,
+			titleWebTextElement: SduiParsers.parseWebTextElement,
+			subtitleWebTextElement: SduiParsers.parseWebTextElement,
 			titleSubtitleGap: SduiParsers.parseFoundationNumberToken,
 			height: SduiParsers.parseFoundationNumberToken,
 		},
@@ -315,6 +324,7 @@ export const SduiComponentMapping: Record<
 		propParsers: {
 			textFontStyle: SduiParsers.parseFoundationTypographyToken,
 			textColor: SduiParsers.parseColorValue,
+			webTextElement: SduiParsers.parseWebTextElement,
 		},
 	},
 };

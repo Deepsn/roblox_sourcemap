@@ -22,6 +22,7 @@ export const getResources = (translate: TranslateFunction) =>
 		Action: {
 			ChangeMediaType: translate("Action.ChangeMediaType"),
 			Okay: translate("Action.Okay"),
+			Recover: translate("Action.Recover"),
 			Reload: translate("Action.Reload"),
 			Resend: translate("Action.Resend"),
 			Retry: translate("Action.Retry"),
@@ -34,6 +35,7 @@ export const getResources = (translate: TranslateFunction) =>
 			LoginDenied: translate("Description.LoginDenied"),
 			LoginExpired: translate("Description.LoginExpired"),
 			QuickLogin: translate("Description.QuickLogin"),
+			QuickLoginUA: translate("Description.QuickLoginUA"),
 			SecurityWarningShort: translate("Description.SecurityWarningShort", {
 				// No bolding of `IMPORTANT:` for now.
 				boldStart: "",
@@ -61,6 +63,22 @@ export const getResources = (translate: TranslateFunction) =>
 				translate("Label.CharacterCodeInputPlaceholderText", { codeLength }),
 			CodeInputPlaceholderText: (codeLength: number) =>
 				translate("Label.CodeInputPlaceholderText", { codeLength }),
+			DayWait: (numberOfDays: number) =>
+				translate("Label.DayWait", { numberOfDays }) ||
+				`${numberOfDays}-day wait`,
+			DelayedVerification: {
+				WaitDays: (numberOfDays: number) =>
+					translate("Label.DelayedVerification.WaitDays", { numberOfDays }) ||
+					`You'll have to wait ${numberOfDays} days after verification.`,
+				WaitHours: (numberOfHours: number) =>
+					translate("Label.DelayedVerification.WaitHours", { numberOfHours }) ||
+					`You'll have to wait ${numberOfHours} hours after verification.`,
+				WaitMinutes: (numberOfMinutes: number) =>
+					translate("Label.DelayedVerification.WaitMinutes", {
+						numberOfMinutes,
+					}) ||
+					`You'll have to wait ${numberOfMinutes} minutes after verification.`,
+			},
 			EmailMediaType: translate("Label.EmailMediaType"),
 			EnterAuthenticatorCode: translate("Label.EnterAuthenticatorCode"),
 			EnterEmailCode: translate("Label.EnterEmailCode"),
@@ -85,6 +103,12 @@ export const getResources = (translate: TranslateFunction) =>
 				translate("Label.HelpCenterLink", {
 					helpCenterLink: helpCenterLinkHtml,
 				}),
+			MinuteWait: (numberOfMinutes: number) =>
+				translate("Label.MinuteWait", { numberOfMinutes }) ||
+				`${numberOfMinutes}-minute wait`,
+			HourWait: (numberOfHours: number) =>
+				translate("Label.HourWait", { numberOfHours }) ||
+				`${numberOfHours}-hour wait`,
 			// IMPORTANT: Do not inject user input into this variable; this content is
 			// rendered as HTML.
 			NeedHelpContactSupport: (supportLinkHtml: string) =>
@@ -92,6 +116,7 @@ export const getResources = (translate: TranslateFunction) =>
 					supportLink: supportLinkHtml,
 				}),
 			NewLogin: translate("Label.NewLogin"),
+			NoWait: translate("Label.NoWait") || "No wait",
 			PasskeyDirections: translate("Label.PasskeyDirections"),
 			PasskeyMediaType: translate("Label.PasskeyMediaType"),
 			PasswordMediaType: translate("Label.Password"),
@@ -103,6 +128,7 @@ export const getResources = (translate: TranslateFunction) =>
 			SmsMediaType: translate("Label.SmsMediaType"),
 			TrustThisDevice: translate("Label.TrustThisDevice"),
 			TwoStepVerification: translate("Label.TwoStepVerification"),
+			UnableToCalculateDelay: translate("Label.UnableToCalculateDelay"),
 			VerifyWithPasskey: translate("Label.VerifyWithPasskey"),
 			VerifyWithSecurityKey: translate("Label.VerifyWithSecurityKey"),
 		},

@@ -44,6 +44,7 @@ type THomePageGridDiscoveryApiProps = {
 	itemsPerRow?: number;
 	startingRow: number | undefined;
 	isSponsoredFooterAllowed?: boolean;
+	isSponsoredRatingFooterAllowed?: boolean;
 	hideTileMetadata?: boolean;
 	isDynamicLayoutSizingEnabled?: boolean;
 	isNewSortHeaderEnabled?: boolean;
@@ -68,6 +69,7 @@ export const HomePageGrid = ({
 	itemsPerRow,
 	startingRow,
 	isSponsoredFooterAllowed,
+	isSponsoredRatingFooterAllowed,
 	hideTileMetadata,
 	isDynamicLayoutSizingEnabled,
 	isNewSortHeaderEnabled,
@@ -229,6 +231,7 @@ export const HomePageGrid = ({
 				playerCountStyle={playerCountStyle}
 				playButtonStyle={playButtonStyle}
 				isSponsoredFooterAllowed={isSponsoredFooterAllowed}
+				isSponsoredRatingFooterAllowed={isSponsoredRatingFooterAllowed}
 				hideTileMetadata={hideTileMetadata}
 				hoverStyle={hoverStyle}
 				topicId={sort.topicId?.toString()}
@@ -252,6 +255,7 @@ HomePageGrid.defaultProps = {
 	hoverStyle: undefined,
 	itemsPerRow: undefined,
 	isSponsoredFooterAllowed: undefined,
+	isSponsoredRatingFooterAllowed: undefined,
 	hideTileMetadata: undefined,
 	isDynamicLayoutSizingEnabled: undefined,
 	isNewSortHeaderEnabled: undefined,

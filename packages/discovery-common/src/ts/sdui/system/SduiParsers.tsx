@@ -14,6 +14,8 @@ import {
 	TAutomaticSize,
 	TVector2,
 	TGradient,
+	TWebTextElement,
+	WebTextElementValidSet,
 } from "@rbx/discovery-sdui-components";
 import {
 	buttonSizes,
@@ -1258,6 +1260,23 @@ export const parseFoundationButtonVariant = (
 	return input as TButtonVariant;
 };
 
+export const parseWebTextElement = (
+	input: unknown,
+	_analyticsContext: TAnalyticsContext,
+	sduiContext: TSduiContext,
+): TWebTextElement | undefined => {
+	if (typeof input !== "string" || !WebTextElementValidSet.has(input)) {
+		logSduiError(
+			SduiErrorNames.SduiParseWebTextElementInvalidInput,
+			`Invalid input ${JSON.stringify(input)} for web text element. Input must be a valid string and web text element.`,
+			sduiContext.pageContext,
+		);
+		return undefined;
+	}
+
+	return input as TWebTextElement;
+};
+
 export default {
 	parseUiComponent,
 	parseCallback,
@@ -1274,4 +1293,5 @@ export default {
 	parseIcon,
 	parseFoundationButtonSize,
 	parseFoundationButtonVariant,
+	parseWebTextElement,
 };

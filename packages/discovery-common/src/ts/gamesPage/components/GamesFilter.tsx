@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Button } from "@rbx/core-ui";
 import { TranslateFunction } from "@rbx/core-scripts/react";
 import { TFiltersData } from "../../common/types/bedev2Types";
@@ -11,6 +11,7 @@ type TGamesFilterProps = {
 	updateFilterValue: (newValue: string) => void;
 	sendFilterClickEvent: TSendFilterClickEvent;
 	translate: TranslateFunction;
+	inactiveOptionIds?: string[];
 };
 
 const GamesFilter = ({
@@ -18,6 +19,7 @@ const GamesFilter = ({
 	updateFilterValue,
 	sendFilterClickEvent,
 	translate,
+	inactiveOptionIds,
 }: TGamesFilterProps): JSX.Element => {
 	const dropdownContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -35,7 +37,19 @@ const GamesFilter = ({
 		return selectedOption?.optionDisplayName;
 	}, [filter.selectedOptionId, filter.filterOptions]);
 
-	const handleDropdownEntryClick = () => {
+	// Set the button to active (primary) variant if the dropdown is open, or if the
+	// currently selected option is not one of the default options (that do not filter)
+	const isFilterActive = useMemo(() => {
+		if (isDropdownOpen) {
+			return true;
+		}
+		if (!inactiveOptionIds) {
+			return false;
+		}
+		return !inactiveOptionIds.includes(selectedOptionId);
+	}, [isDropdownOpen, inactiveOptionIds, selectedOptionId]);
+
+	const handleDropdownEntryClick = useCallback(() => {
 		setIsDropdownOpen((prevIsDropdownOpen) => {
 			const clickType = prevIsDropdownOpen
 				? TGamesFilterButton.CloseDropdown
@@ -50,18 +64,25 @@ const GamesFilter = ({
 				clickType,
 				filter.selectedOptionId,
 				previousOptionId,
+				isFilterActive,
 			);
 
 			return !prevIsDropdownOpen;
 		});
-	};
+	}, [
+		isFilterActive,
+		sendFilterClickEvent,
+		selectedOptionId,
+		filter.filterId,
+		filter.selectedOptionId,
+	]);
 
 	return (
 		<div ref={dropdownContainerRef}>
 			<Button
-				onClick={() => handleDropdownEntryClick()}
+				onClick={handleDropdownEntryClick}
 				variant={
-					isDropdownOpen ? Button.variants.primary : Button.variants.secondary
+					isFilterActive ? Button.variants.primary : Button.variants.secondary
 				}
 				size={Button.sizes.medium}
 				className="filter-select"
@@ -69,7 +90,7 @@ const GamesFilter = ({
 				<span className="filter-display-text">{filterDisplayText}</span>
 				<span
 					className={
-						isDropdownOpen ? "icon-expand-arrow-selected" : "icon-expand-arrow"
+						isFilterActive ? "icon-expand-arrow-selected" : "icon-expand-arrow"
 					}
 				/>
 			</Button>
@@ -83,6 +104,7 @@ const GamesFilter = ({
 					updateFilterValue={updateFilterValue}
 					sendFilterClickEvent={sendFilterClickEvent}
 					translate={translate}
+					isFilterActive={isFilterActive} // always true when dropdown is open
 				/>
 			)}
 		</div>

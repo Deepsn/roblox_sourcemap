@@ -3,7 +3,6 @@ import { Modal } from "react-style-guide";
 import * as TwoStepVerification from "../../../../common/request/types/twoStepVerification";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import { TIMEOUT_BEFORE_CALLBACK_MILLISECONDS } from "../app.config";
-import SupportHelp from "../components/supportHelp";
 import {
 	mapTwoStepVerificationErrorToChallengeErrorCode,
 	mapTwoStepVerificationErrorToResource,
@@ -11,6 +10,7 @@ import {
 import { useActiveMediaType } from "../hooks/useActiveMediaType";
 import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContext";
 import { TwoStepVerificationActionType } from "../store/action";
+import { useDelayedVerificationBodyText } from "../delay/text";
 
 const HELP_PAGE_URL = "https://www.roblox.com/info/2sv";
 const DEBOUNCE_INTERVAL_MILLISECONDS = 3000;
@@ -298,56 +298,60 @@ const CD2SVInput: React.FC<Props> = ({
 	 * Component Markup
 	 */
 
+	const maybeDelayedText = useDelayedVerificationBodyText(
+		metadata?.isDelayedUiEnabled ?? false,
+	);
+
 	return (
 		metadata && (
-			<React.Fragment>
-				<BodyElement>
-					<div className={lockIconClassName} />
-					<p className={marginBottomClassName}>{modalDescription}</p>
-					{showRetryButton ? (
-						<button
-							type="button"
-							className={actionButtonClassName}
-							aria-label={resources.Action.Retry}
-							disabled={requestInFlight}
-							onClick={retryPrompt}
-						>
-							{requestInFlight || shouldDebounceRetry ? (
-								<span className="spinner spinner-xs spinner-no-margin" />
-							) : (
-								resources.Action.Retry
-							)}
-						</button>
-					) : (
-						<button
-							type="button"
-							className={ackErrorButtonClassName}
-							aria-label={resources.Action.Okay}
-							disabled={requestInFlight}
-							onClick={closeModal}
-						>
-							{requestInFlight ? (
-								<span className="spinner spinner-xs spinner-no-margin" />
-							) : (
-								resources.Action.Okay
-							)}
-						</button>
-					)}
-					{showRetryButton ? children : null}
-					{showRetryButton || showHelpCenterLink ? (
-						<p
-							className={`text-footer ${marginBottomClassName}`}
-							// eslint-disable-next-line react/no-danger
-							dangerouslySetInnerHTML={{
-								__html: resources.Label.HelpCenterLink(
-									`<a class="text-name text-footer contact" href="${HELP_PAGE_URL}" target="_blank" rel="noopener noreferrer">${resources.Label.HelpCenter}</a>`,
-								),
-							}}
-						/>
-					) : null}
-					<p className={textErrorClassName}>{requestError}</p>
-				</BodyElement>
-			</React.Fragment>
+			<BodyElement>
+				<div className={lockIconClassName} />
+				<p className={marginBottomClassName}>
+					{modalDescription} {maybeDelayedText ?? ""}
+				</p>
+				{showRetryButton ? (
+					<button
+						type="button"
+						className={actionButtonClassName}
+						aria-label={resources.Action.Retry}
+						disabled={requestInFlight}
+						onClick={retryPrompt}
+					>
+						{requestInFlight || shouldDebounceRetry ? (
+							<span className="spinner spinner-xs spinner-no-margin" />
+						) : (
+							resources.Action.Retry
+						)}
+					</button>
+				) : (
+					<button
+						type="button"
+						className={ackErrorButtonClassName}
+						aria-label={resources.Action.Okay}
+						disabled={requestInFlight}
+						onClick={closeModal}
+					>
+						{requestInFlight ? (
+							<span className="spinner spinner-xs spinner-no-margin" />
+						) : (
+							resources.Action.Okay
+						)}
+					</button>
+				)}
+				{showRetryButton ? children : null}
+				{showRetryButton || showHelpCenterLink ? (
+					<p
+						className={`text-footer ${marginBottomClassName}`}
+						// eslint-disable-next-line react/no-danger
+						dangerouslySetInnerHTML={{
+							__html: resources.Label.HelpCenterLink(
+								`<a class="text-name text-footer contact" href="${HELP_PAGE_URL}" target="_blank" rel="noopener noreferrer">${resources.Label.HelpCenter}</a>`,
+							),
+						}}
+					/>
+				) : null}
+				<p className={textErrorClassName}>{requestError}</p>
+			</BodyElement>
 		)
 	);
 };

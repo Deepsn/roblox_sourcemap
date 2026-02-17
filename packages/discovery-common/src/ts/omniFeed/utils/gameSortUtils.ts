@@ -176,6 +176,7 @@ const mapExploreApiFiltersSortResponse = (
 		nextPageToken: sort.nextPageToken || "",
 		subtitle: sort.subtitle,
 		topicLayoutData: sort.topicLayoutData,
+		inactiveOptionIds: sort.inactiveOptionIds,
 	};
 };
 

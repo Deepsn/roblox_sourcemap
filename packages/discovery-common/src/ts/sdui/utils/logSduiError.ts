@@ -85,6 +85,7 @@ export enum SduiErrorNames {
 	SduiParseUDim2InvalidInput = "SduiParseUDim2InvalidInput",
 	SduiParseVector2InvalidInput = "SduiParseVector2InvalidInput",
 	SduiParseUiComponentInvalidConfig = "SduiParseUiComponentInvalidConfig",
+	SduiParseWebTextElementInvalidInput = "SduiParseWebTextElementInvalidInput",
 	ServerDrivenFeedItemMissingFeedOrFeedItems = "ServerDrivenFeedItemMissingFeedOrFeedItems",
 	ServerDrivenFeedItemMissingItem = "ServerDrivenFeedItemMissingItem",
 	SessionInfoKeyNotFound = "SessionInfoKeyNotFound",

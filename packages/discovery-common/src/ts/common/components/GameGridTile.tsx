@@ -18,6 +18,7 @@ type TGameGridTileProps = TSharedGameTileProps & {
 	playerCountStyle?: TPlayerCountStyle;
 	playButtonStyle?: TPlayButtonStyle;
 	isSponsoredFooterAllowed?: boolean;
+	isSponsoredRatingFooterAllowed?: boolean;
 	hideTileMetadata?: boolean;
 	hoverStyle?: THoverStyle;
 	isInterestedUniverse?: boolean;
@@ -41,6 +42,7 @@ export const GameGridTile = forwardRef<HTMLDivElement, TGameGridTileProps>(
 			playerCountStyle,
 			playButtonStyle,
 			isSponsoredFooterAllowed,
+			isSponsoredRatingFooterAllowed,
 			hideTileMetadata,
 			hoverStyle,
 			topicId,
@@ -72,6 +74,7 @@ export const GameGridTile = forwardRef<HTMLDivElement, TGameGridTileProps>(
 				playerCountStyle={playerCountStyle}
 				playButtonStyle={playButtonStyle}
 				isSponsoredFooterAllowed={isSponsoredFooterAllowed}
+				isSponsoredRatingFooterAllowed={isSponsoredRatingFooterAllowed}
 				hideTileMetadata={hideTileMetadata}
 				hoverStyle={hoverStyle}
 				topicId={topicId}
@@ -98,6 +101,7 @@ GameGridTile.defaultProps = {
 	playerCountStyle: undefined,
 	playButtonStyle: undefined,
 	isSponsoredFooterAllowed: undefined,
+	isSponsoredRatingFooterAllowed: undefined,
 	hideTileMetadata: undefined,
 	hoverStyle: undefined,
 	isInterestedUniverse: undefined,

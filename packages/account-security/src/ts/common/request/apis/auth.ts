@@ -64,12 +64,14 @@ export const finishPasskeyRegistration = (
 
 export const deletePasskeyBatch = (
 	credentialNicknames: string[],
+	passkeyCount: number,
 ): Promise<
 	Result<AuthApi.DeleteCredentialBatchReturnType, AuthApi.AuthApiError | null>
 > =>
 	toResult(
 		httpService.post(AuthApi.DELETE_CREDENTIAL_BATCH_CONFIG, {
 			credentialNicknames,
+			passkeyCount,
 		}),
 		AuthApi.AuthApiError,
 	);
@@ -116,4 +118,16 @@ export const resetPassword = (
 			newEmail,
 		}),
 		AuthApi.PasswordResetError,
+	);
+
+/**
+ * Invalidates all account security tickets / revert links for the authenticated user.
+ * This should be called before enrolling in EPP to ensure old revert links cannot be used.
+ */
+export const invalidateTicketsForEppEnrollment = (): Promise<
+	Result<AuthApi.InvalidateTicketsReturnType, AuthApi.AuthApiError | null>
+> =>
+	toResult(
+		httpService.post(AuthApi.INVALIDATE_TICKETS_CONFIG, {}),
+		AuthApi.AuthApiError,
 	);

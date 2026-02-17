@@ -22,6 +22,7 @@ type TGamesFilterDropdownProps = {
 	updateFilterValue: (newValue: string) => void;
 	sendFilterClickEvent: TSendFilterClickEvent;
 	translate: TranslateFunction;
+	isFilterActive: boolean;
 };
 
 /**
@@ -38,6 +39,7 @@ const GamesFilterDropdown = ({
 	updateFilterValue,
 	sendFilterClickEvent,
 	translate,
+	isFilterActive,
 }: TGamesFilterDropdownProps): JSX.Element => {
 	const handleApplyClick = useCallback(() => {
 		updateFilterValue(selectedOptionId);
@@ -48,6 +50,7 @@ const GamesFilterDropdown = ({
 			TGamesFilterButton.Apply,
 			selectedOptionId,
 			filter.selectedOptionId,
+			isFilterActive,
 		);
 	}, [
 		selectedOptionId,
@@ -56,6 +59,7 @@ const GamesFilterDropdown = ({
 		filter.filterId,
 		filter.selectedOptionId,
 		sendFilterClickEvent,
+		isFilterActive,
 	]);
 
 	const closeAndResetDropdown = useCallback(() => {
@@ -69,6 +73,7 @@ const GamesFilterDropdown = ({
 			TGamesFilterButton.CloseDropdown,
 			filter.selectedOptionId,
 			selectedOptionIdBeforeClose,
+			isFilterActive,
 		);
 	}, [
 		filter.selectedOptionId,
@@ -77,6 +82,7 @@ const GamesFilterDropdown = ({
 		filter.filterId,
 		setSelectedOptionId,
 		selectedOptionId,
+		isFilterActive,
 	]);
 
 	const handleMouseClick = useCallback(

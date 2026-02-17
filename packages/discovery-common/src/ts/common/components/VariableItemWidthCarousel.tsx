@@ -154,7 +154,7 @@ const VariableItemWidthCarousel = <TItem,>({
 				data-testid="variable-item-width-scroll-container"
 				className={classNames(
 					itemGapClassName,
-					"flex scroll-x [scroll-snap-type:x_mandatory] [-webkit-overflow-scrolling:touch] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [@media(pointer:coarse)_and_(not_(any-pointer:fine))]:[scroll-snap-type:none]",
+					"flex scroll-x [scroll-snap-type:x_mandatory] [-webkit-overflow-scrolling:touch] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden [@media(pointer:coarse)_and_(not_(any-pointer:fine))]:[scroll-snap-type:none] [scrollbar-width:none]",
 				)}
 				style={{
 					// When using old scroll arrows, offset snap points to account for arrow space

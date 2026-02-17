@@ -4,6 +4,7 @@ import {
 	SectionHeader,
 	TGuiObjectProps,
 	TTypographyToken,
+	TWebTextElement,
 } from "@rbx/discovery-sdui-components";
 import { TSduiCommonProps } from "../system/SduiTypes";
 import { TSduiParsedAction } from "../system/SduiActionParserRegistry";
@@ -28,6 +29,8 @@ type TSduiSectionHeaderProps = {
 	titleIcon?: string;
 	// Width and height of title icon. Defaults to Size.Size_600
 	titleIconWidth?: number;
+	// Web text element to render for the title
+	titleWebTextElement?: TWebTextElement;
 	// Replaces title
 	// Overrides titleText, titleTextColor, titleFontStyle, titleGap,
 	// titleIcon, and titleIconWidth
@@ -50,6 +53,8 @@ type TSduiSectionHeaderProps = {
 	subtitleIcon?: string;
 	// Width and height of subtitle icon. Defaults to Size.Size_400
 	subtitleIconWidth?: number;
+	// Web text element to render for the subtitle
+	subtitleWebTextElement?: TWebTextElement;
 	// Replaces subtitle
 	// Overrides subtitle, subtitleTextColor, subtitleFontStyle, subtitleGap,
 	// subtitleIcon, subtitleIconWidth, and onSubtitleActivated
@@ -84,6 +89,7 @@ const SduiSectionHeader = ({
 	titleGap,
 	titleIcon,
 	titleIconWidth,
+	titleWebTextElement,
 	titleComponent,
 
 	onSubtitleActivated,
@@ -93,6 +99,7 @@ const SduiSectionHeader = ({
 	subtitleGap,
 	subtitleIcon,
 	subtitleIconWidth,
+	subtitleWebTextElement,
 	subtitleComponent,
 
 	verticalGap,
@@ -150,6 +157,7 @@ const SduiSectionHeader = ({
 			titleGap={titleGap ?? tokens.Gap.XXSmall}
 			titleIconClassName={titleIcon}
 			titleIconWidth={titleIconWidth ?? tokens.Size.Size_600}
+			titleWebTextElement={titleWebTextElement}
 			titleComponent={titleComponent}
 			onSubtitleActivated={onSubtitleActivated?.onActivated}
 			subtitleLinkPath={onSubtitleActivated?.linkPath}
@@ -159,6 +167,7 @@ const SduiSectionHeader = ({
 			subtitleGap={subtitleGap ?? tokens.Gap.XXSmall}
 			subtitleIconClassName={subtitleIcon}
 			subtitleIconWidth={subtitleIconWidth ?? tokens.Size.Size_400}
+			subtitleWebTextElement={subtitleWebTextElement}
 			subtitleComponent={subtitleComponent}
 			verticalGap={verticalGap ?? tokens.Gap.XXSmall}
 			iconComponent={icon}

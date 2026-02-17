@@ -150,6 +150,7 @@ export enum EventStreamMetadata {
 	TileBadgeContexts = "tileBadgeContexts",
 	ButtonName = "buttonName",
 	IsInterested = "isInterested",
+	IsActive = "isActive",
 	InterestedUniverseIds = "interestedUniverseIds",
 	MenuItem = "menuItem",
 	AvailableMenuItems = "availableMenuItems",
@@ -457,6 +458,7 @@ export type TGamesFilterClick =
 			[EventStreamMetadata.PreviousOptionId]?: string;
 			[SessionInfoType.DiscoverPageSessionInfo]: string;
 			[EventStreamMetadata.Page]: PageContext.GamesPage;
+			[EventStreamMetadata.IsActive]?: boolean;
 	  }
 	| {};
 

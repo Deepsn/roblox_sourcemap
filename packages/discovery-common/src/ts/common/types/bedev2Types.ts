@@ -95,6 +95,7 @@ export type TTopicLayoutData = {
 	hideSeeAll?: "true" | "false";
 	navigationRootPlaceId?: string;
 	isSponsoredFooterAllowed?: "true" | "false";
+	isSponsoredRatingFooterAllowed?: "true" | "false";
 	linkPath?: string;
 	subtitleLinkPath?: string;
 	endTimestamp?: string;
@@ -179,6 +180,7 @@ export type TExploreApiGameSortResponse = TSharedExploreApiSortResponse & {
 export type TExploreApiFiltersSortResponse = TSharedExploreApiSortResponse & {
 	treatmentType: TTreatmentType.Pills;
 	filters: TFiltersData[];
+	inactiveOptionIds?: string[];
 };
 
 export type TQueryData = {
@@ -238,6 +240,7 @@ export type TExploreApiFiltersSort = {
 	sortId: string;
 	contentType: string;
 	gameSetTargetId?: number;
+	inactiveOptionIds?: string[];
 };
 
 export type TExploreApiSearchPillsSort = {

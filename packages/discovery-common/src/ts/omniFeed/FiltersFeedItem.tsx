@@ -51,6 +51,7 @@ const FiltersFeedItem = ({
 						}
 						sendFilterClickEvent={sendFilterClickEvent}
 						translate={translate}
+						inactiveOptionIds={sort.inactiveOptionIds}
 					/>
 				))}
 			</div>

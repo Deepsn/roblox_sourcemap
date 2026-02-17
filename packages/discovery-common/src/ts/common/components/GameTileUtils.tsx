@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 import { Modal, Link } from "@rbx/core-ui";
 import {
 	TranslateFunction,
@@ -12,7 +13,6 @@ import {
 	ThumbnailGameIconSize,
 	ThumbnailAvatarHeadshotSize,
 } from "@rbx/thumbnails";
-import classNames from "classnames";
 import parsingUtils, {
 	GAME_STATS_PLACEHOLDER_STRING,
 } from "../utils/parsingUtils";
@@ -157,7 +157,8 @@ export const GameTileStats = ({
 	);
 };
 
-export const GameTileRatingFooter = ({
+// Shared rating content component used by GameTileRatingFooter and WideGameTileSponsoredFooter
+export const GameTileRatingContent = ({
 	totalDownVotes,
 	totalUpVotes,
 	translate,
@@ -174,12 +175,24 @@ export const GameTileRatingFooter = ({
 	);
 	const voteDisplayValue = votes?.toString() || GAME_STATS_PLACEHOLDER_STRING;
 	return (
-		<div className="game-card-info" data-testid="game-tile-stats-rating">
+		<React.Fragment>
 			<span className="info-label icon-votes-gray" />
 			<span className="info-label vote-percentage-label">
 				{translate(RatingPercentageText, { percentRating: voteDisplayValue }) ||
 					`${voteDisplayValue}% Rating`}
 			</span>
+		</React.Fragment>
+	);
+};
+
+export const GameTileRatingFooter = ({
+	ratingElement,
+}: {
+	ratingElement: JSX.Element;
+}): JSX.Element => {
+	return (
+		<div className="game-card-info" data-testid="game-tile-stats-rating">
+			{ratingElement}
 		</div>
 	);
 };
@@ -269,38 +282,6 @@ const GameTileAvatarThumbnail = ({
 			format={ThumbnailFormat.webp}
 			altName={user.displayName}
 		/>
-	);
-};
-
-export const WideGameTileSponsoredFooter = ({
-	enableSponsoredFeedback = false,
-	translate,
-}: {
-	enableSponsoredFeedback?: boolean;
-	translate: WithTranslationsProps["translate"];
-}): JSX.Element => {
-	const adLabel = enableSponsoredFeedback
-		? FeatureGamePage.LabelAd
-		: FeatureGamePage.LabelSponsoredAd;
-	return (
-		<div
-			className="game-card-info"
-			data-testid="wide-game-tile-sponsored-footer"
-		>
-			<span className="info-label interleaved-sponsored">
-				{translate(adLabel)}
-			</span>
-			{!enableSponsoredFeedback && (
-				<GamesInfoTooltip
-					tooltipText={
-						translate(CommonGameSorts.LabelSponsoredAdsDisclosureStatic) ||
-						"Sponsored experiences are paid for by Creators. They may be shown to you based on general information about your device type, location, and demographics."
-					}
-					placement="right"
-					sizeInPx={16}
-				/>
-			)}
-		</div>
 	);
 };
 

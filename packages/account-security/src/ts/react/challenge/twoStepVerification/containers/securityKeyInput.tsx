@@ -13,6 +13,7 @@ import {
 import { useActiveMediaType } from "../hooks/useActiveMediaType";
 import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContext";
 import { TwoStepVerificationActionType } from "../store/action";
+import { useDelayedVerificationBodyText } from "../delay/text";
 
 type Props = {
 	requestInFlight: boolean;
@@ -260,44 +261,46 @@ const SecurityKeyInput: React.FC<Props> = ({
 	 * Component Markup
 	 */
 
+	const maybeDelayedText = useDelayedVerificationBodyText(
+		metadata?.isDelayedUiEnabled ?? false,
+	);
+
 	return (
 		metadata && (
-			<React.Fragment>
-				<BodyElement>
-					<div className={lockIconClassName} />
-					<p className={marginBottomSmallClassName}>
-						{resources.Label.VerifyWithSecurityKey}
-					</p>
-					<p className={marginBottomClassName}>
-						{resources.Label.SecurityKeyDirections}
-					</p>
-					<button
-						ref={buttonRef}
-						type="button"
-						className={actionButtonClassName}
-						aria-label={resources.Action.Verify}
-						disabled={requestInFlight}
-						onClick={verifyCode}
-					>
-						{requestInFlight ? (
-							<span className="spinner spinner-xs spinner-no-margin" />
-						) : (
-							resources.Action.Verify
-						)}
-					</button>
-					{shouldShowRememberDeviceCheckbox && (
-						<RememberDeviceCheckBox
-							disabled={requestInFlight}
-							rememberDevice={rememberDevice}
-							setRememberDevice={setRememberDevice}
-							className={marginBottomClassName}
-						/>
+			<BodyElement>
+				<div className={lockIconClassName} />
+				<p className={marginBottomSmallClassName}>
+					{resources.Label.VerifyWithSecurityKey}
+				</p>
+				<p className={marginBottomClassName}>
+					{resources.Label.SecurityKeyDirections} {maybeDelayedText ?? ""}
+				</p>
+				<button
+					ref={buttonRef}
+					type="button"
+					className={actionButtonClassName}
+					aria-label={resources.Action.Verify}
+					disabled={requestInFlight}
+					onClick={verifyCode}
+				>
+					{requestInFlight ? (
+						<span className="spinner spinner-xs spinner-no-margin" />
+					) : (
+						resources.Action.Verify
 					)}
-					{children}
-					<SupportHelp className={marginBottomClassName} />
-					<p className={textErrorClassName}>{requestError}</p>
-				</BodyElement>
-			</React.Fragment>
+				</button>
+				{shouldShowRememberDeviceCheckbox && (
+					<RememberDeviceCheckBox
+						disabled={requestInFlight}
+						rememberDevice={rememberDevice}
+						setRememberDevice={setRememberDevice}
+						className={marginBottomClassName}
+					/>
+				)}
+				{children}
+				<SupportHelp className={marginBottomClassName} />
+				<p className={textErrorClassName}>{requestError}</p>
+			</BodyElement>
 		)
 	);
 };

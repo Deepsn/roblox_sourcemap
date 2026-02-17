@@ -16,12 +16,14 @@ import {
 	OnChallengeCompletedCallback,
 	OnChallengeInvalidatedCallback,
 	OnModalChallengeAbandonedCallback,
+	RecoveryParameters,
 } from "../interface";
 import { EventService } from "../services/eventService";
 import { MetricsService } from "../services/metricsService";
 import { TwoStepVerificationAction } from "./action";
 import { TwoStepVerificationState } from "./state";
 import TwoStepVerificationStateReducer from "./stateReducer";
+import { DelayParameters } from "../delay";
 
 export type TwoStepVerificationContext = {
 	state: TwoStepVerificationState;
@@ -57,6 +59,8 @@ type Props = {
 	onChallengeCompleted: OnChallengeCompletedCallback;
 	onChallengeInvalidated: OnChallengeInvalidatedCallback;
 	onModalChallengeAbandoned: OnModalChallengeAbandonedCallback | null;
+	delayParameters?: DelayParameters;
+	recoveryParameters?: RecoveryParameters;
 	children: ReactChild;
 };
 
@@ -78,6 +82,8 @@ export const TwoStepVerificationContextProvider = ({
 	onChallengeCompleted,
 	onChallengeInvalidated,
 	onModalChallengeAbandoned,
+	delayParameters,
+	recoveryParameters,
 	children,
 }: Props): ReactElement => {
 	// We declare these variables as lazy-initialized state variables since they
@@ -90,6 +96,7 @@ export const TwoStepVerificationContextProvider = ({
 		actionType,
 		renderInline,
 		shouldShowRememberDeviceCheckbox,
+		recoveryParameters,
 
 		// Immutable state:
 		resources,
@@ -97,8 +104,10 @@ export const TwoStepVerificationContextProvider = ({
 		metricsService,
 		requestService,
 		onModalChallengeAbandoned,
+		delayParameters,
 
 		// Mutable state:
+		userInfo: null,
 		metadata: null,
 		userConfiguration: null,
 		enabledMediaTypes: [],

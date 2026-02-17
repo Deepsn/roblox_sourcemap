@@ -31,6 +31,7 @@ export type TGameGridProps = {
 	isHomeGameGrid?: boolean;
 	isSearchGameGrid?: boolean;
 	isSponsoredFooterAllowed?: boolean;
+	isSponsoredRatingFooterAllowed?: boolean;
 	hideTileMetadata?: boolean;
 	hoverStyle?: THoverStyle;
 	isDynamicLayoutSizingEnabled?: boolean;
@@ -62,6 +63,7 @@ export const GameGrid = forwardRef<HTMLDivElement, TGameGridProps>(
 			isHomeGameGrid,
 			isSearchGameGrid,
 			isSponsoredFooterAllowed,
+			isSponsoredRatingFooterAllowed,
 			hideTileMetadata,
 			hoverStyle,
 			topicId,
@@ -160,6 +162,7 @@ export const GameGrid = forwardRef<HTMLDivElement, TGameGridProps>(
 						playerCountStyle={playerCountStyle}
 						playButtonStyle={playButtonStyle}
 						isSponsoredFooterAllowed={isSponsoredFooterAllowed}
+						isSponsoredRatingFooterAllowed={isSponsoredRatingFooterAllowed}
 						hideTileMetadata={hideTileMetadata}
 						hoverStyle={hoverStyle}
 						topicId={topicId}
@@ -191,6 +194,7 @@ GameGrid.defaultProps = {
 	playButtonStyle: undefined,
 	isHomeGameGrid: false,
 	isSponsoredFooterAllowed: undefined,
+	isSponsoredRatingFooterAllowed: undefined,
 	hideTileMetadata: undefined,
 	hoverStyle: undefined,
 	topicId: undefined,

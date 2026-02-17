@@ -145,8 +145,12 @@ export function BatchBuyItems({
 		if (isItemPurchasable(item)) {
 			shouldDisplayBuyButton = true;
 		}
-
-		if (item.collectibleItemDetails !== undefined) {
+		const itemPurchaseInfo = items.find(
+			(i) => i.id === item.id && i.itemType === item.itemType,
+		);
+		if (itemPurchaseInfo?.timedOption) {
+			price += itemPurchaseInfo.timedOption.price;
+		} else if (item.collectibleItemDetails !== undefined) {
 			if (item.collectibleItemDetails.lowestPrice) {
 				price += item.collectibleItemDetails.lowestPrice;
 			} else if (item.collectibleItemId.price) {
@@ -293,6 +297,10 @@ BatchBuyItems.propTypes = {
 		PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			itemType: PropTypes.string.isRequired,
+			timedOption: PropTypes.shape({
+				days: PropTypes.number.isRequired,
+				price: PropTypes.number.isRequired,
+			}),
 		}),
 	).isRequired,
 	purchaseMetadata: PropTypes.instanceOf(Map).isRequired,

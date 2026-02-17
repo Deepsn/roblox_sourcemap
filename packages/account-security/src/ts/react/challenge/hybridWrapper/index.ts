@@ -242,8 +242,14 @@ const renderTwoStepVerificationChallengeFromQueryParameters = (
 		{ parsed: true },
 	);
 
-	const { userId, challengeId, actionType, allowRememberDevice } =
-		queryParameters;
+	const {
+		userId,
+		challengeId,
+		actionType,
+		allowRememberDevice,
+		clientSupports2svRecovery,
+		recoverySessionId,
+	} = queryParameters;
 	const result = TwoStepVerification.renderChallenge({
 		containerId,
 		userId,
@@ -255,6 +261,10 @@ const renderTwoStepVerificationChallengeFromQueryParameters = (
 		// the back button works correctly in Lua.
 		shouldModifyBrowserHistory: true,
 		shouldShowRememberDeviceCheckbox: allowRememberDevice,
+		recoveryParameters: {
+			clientSupports2svRecovery,
+			recoverySessionId,
+		},
 		onChallengeCompleted: (data) =>
 			dispatchNavigateToFeatureHybridEvent(
 				ChallengeType.TWO_STEP_VERIFICATION,

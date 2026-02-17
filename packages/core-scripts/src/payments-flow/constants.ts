@@ -36,6 +36,7 @@ export enum VIEW_NAME {
 	LEAVE_ROBLOX_WARNING = "LeaveRobloxWarning",
 	PREMIUM_DISCLOSURES = "PremiumDisclosures",
 	PRODUCT_PURCHASE = "ProductPurchase",
+	PRODUCT_PURCHASE_IMPRESSION = "ProductPurchaseImpression",
 	PRODUCT_PURCHASE_LOADING = "ProductPurchaseLoading",
 	PRODUCT_PURCHASE_QUICK_PAY = "ProductPurchaseQuickPay",
 	QUICK_PAY_3DS = "QuickPay3DS",

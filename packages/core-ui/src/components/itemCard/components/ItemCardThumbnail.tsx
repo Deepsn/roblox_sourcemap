@@ -1,27 +1,16 @@
 import React, { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
+import { Badge } from "@rbx/foundation-ui";
 import ItemCardStatus from "./ItemCardStatus";
 import ItemCardRestrictions from "./ItemCardRestrictions";
 import ItemCardPrice from "./ItemCardPrice";
+import {
+	ItemCardShoppingCardProps,
+	TTimedOption,
+} from "../constants/itemCardTypes";
 
-export type ItemCardShoppingCardProps = {
-	isItemInCart: boolean;
-	addItemToCart: (
-		itemInfo: {
-			itemId: number;
-			collectibleItemId?: string | null;
-			itemType: string;
-			itemName: string;
-			addedToCardAt?: number;
-		},
-		displaySystemFeedback?: boolean,
-	) => Promise<void>;
-	removeItemFromCart: (
-		itemId: number,
-		itemType: string,
-		displaySystemFeedback?: boolean,
-	) => Promise<void>;
-};
+// Re-export for backward compatibility
+export type { ItemCardShoppingCardProps };
 
 export type ItemCardThumbnailProps = {
 	itemId: number;
@@ -40,6 +29,7 @@ export type ItemCardThumbnailProps = {
 	priceStatus?: string;
 	unitsAvailableForConsumption?: number;
 	enableThumbnailPrice?: boolean;
+	timedOptions?: TTimedOption[] | undefined;
 };
 
 function ItemCardThumbnail({
@@ -59,8 +49,10 @@ function ItemCardThumbnail({
 	creatorTargetId,
 	priceStatus,
 	unitsAvailableForConsumption,
+	timedOptions,
 }: ItemCardThumbnailProps): JSX.Element {
 	let shoppingCartButtons = null;
+	const selectedTimedOption = timedOptions?.find((option) => option.selected);
 	if (shoppingCartProps && isHovered) {
 		const { isItemInCart, addItemToCart, removeItemFromCart } =
 			shoppingCartProps;
@@ -76,7 +68,10 @@ function ItemCardThumbnail({
 								evt.stopPropagation();
 
 								// eslint-disable-next-line @typescript-eslint/no-floating-promises
-								addItemToCart({ itemId, itemType, itemName }, true);
+								addItemToCart(
+									{ itemId, itemType, itemName, timedOptions },
+									true,
+								);
 							}}
 						>
 							{translate("Action.Add")}
@@ -107,6 +102,22 @@ function ItemCardThumbnail({
 	return (
 		<div className="item-card-link">
 			<div className="item-card-thumb-container">
+				{timedOptions && timedOptions.length > 0 && (
+					<div className="timed-options-container">
+						<Badge
+							variant="Neutral"
+							icon="icon-regular-clock"
+							className="bg-surface-0"
+							label={
+								selectedTimedOption?.days
+									? translate("Label.TimedOptionDaysAbbreviation", {
+											days: selectedTimedOption.days,
+										})
+									: ""
+							}
+						/>
+					</div>
+				)}
 				{enableThumbnailPrice && (
 					<ItemCardPrice
 						price={price}
@@ -124,6 +135,7 @@ function ItemCardThumbnail({
 					type={itemType}
 					itemRestrictions={itemRestrictions}
 				/>
+
 				{shoppingCartButtons}
 			</div>
 		</div>

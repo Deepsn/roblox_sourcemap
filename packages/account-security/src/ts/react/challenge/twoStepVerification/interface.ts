@@ -3,6 +3,8 @@
 // the types for the public interface separate in order to avoid compilation
 // errors arising from the strict mode mismatch.
 
+import { DelayParameters } from "./delay";
+
 /*
  * Enums
  */
@@ -86,6 +88,14 @@ type ChallengeParametersWithNoModal = {
 	onModalChallengeAbandoned: null;
 };
 
+/*
+ * Recovery Parameters
+ */
+export type RecoveryParameters = {
+	clientSupports2svRecovery: boolean;
+	recoverySessionId?: string;
+};
+
 /**
  * The parameters required to render a 2SV challenge.
  */
@@ -97,6 +107,8 @@ export type ChallengeParameters = {
 	actionType: ActionType;
 	shouldModifyBrowserHistory?: boolean;
 	shouldShowRememberDeviceCheckbox: boolean;
+	delayParameters?: DelayParameters;
+	recoveryParameters?: RecoveryParameters;
 	onChallengeCompleted: OnChallengeCompletedCallback;
 	onChallengeInvalidated: OnChallengeInvalidatedCallback;
 } & (ChallengeParametersWithModal | ChallengeParametersWithNoModal);

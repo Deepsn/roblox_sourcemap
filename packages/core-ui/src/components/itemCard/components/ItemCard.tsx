@@ -3,12 +3,14 @@ import {
 	withTranslations,
 	WithTranslationsProps,
 } from "@rbx/core-scripts/react";
-import ItemCardThumbnail, {
-	ItemCardShoppingCardProps,
-} from "./ItemCardThumbnail";
+import ItemCardThumbnail from "./ItemCardThumbnail";
 import ItemCardCaption from "./ItemCardCaption";
 import translationConfig from "../translation.config";
 import { getItemLink } from "../utils";
+import {
+	TTimedOption,
+	ItemCardShoppingCardProps,
+} from "../constants/itemCardTypes";
 
 export type Props = {
 	id: number;
@@ -29,6 +31,7 @@ export type Props = {
 	shoppingCartProps?: ItemCardShoppingCardProps;
 	containerClassName?: string;
 	enableThumbnailPrice?: boolean;
+	timedOptions?: TTimedOption[] | undefined;
 };
 
 export function ItemCard({
@@ -51,6 +54,7 @@ export function ItemCard({
 	shoppingCartProps,
 	containerClassName,
 	enableThumbnailPrice,
+	timedOptions,
 }: Props & WithTranslationsProps): JSX.Element {
 	const [isHovered, setIsHovered] = useState(false);
 	return (
@@ -88,6 +92,7 @@ export function ItemCard({
 						priceStatus={priceStatus ?? undefined}
 						premiumPricing={premiumPricing ?? undefined}
 						enableThumbnailPrice={enableThumbnailPrice}
+						timedOptions={timedOptions}
 					/>
 					<ItemCardCaption
 						name={name}

@@ -33,13 +33,14 @@ import GameTilePlayButton from "./GameTilePlayButton";
 import GameTileOverflowMenu from "./GameTileOverflowMenu";
 import {
 	GameTileIconWithTextFooter,
+	GameTileRatingContent,
 	GameTileRatingFooter,
 	GameTileStats,
 	GameTileTextFooter,
 	TBuildEventProperties,
 	WideGameTileFacepileFooter,
-	WideGameTileSponsoredFooter,
 } from "./GameTileUtils";
+import WideGameTileSponsoredFooter from "./WideGameTileSponsoredFooter";
 import WideGameThumbnail from "./WideGameThumbnail";
 import useGetGameLayoutData from "../hooks/useGetGameLayoutData";
 import { getGameTileTextFooterData } from "../utils/gameTileLayoutUtils";
@@ -84,6 +85,7 @@ export type TWideGameTileProps = {
 	playButtonStyle?: TPlayButtonStyle;
 	navigationRootPlaceId?: string;
 	isSponsoredFooterAllowed?: boolean;
+	isSponsoredRatingFooterAllowed?: boolean;
 	hideTileMetadata?: boolean;
 	wideTileType: TWideTileComponentType;
 	hoverStyle?: THoverStyle;
@@ -112,6 +114,7 @@ const WideGameTile = React.forwardRef(
 			playButtonStyle,
 			navigationRootPlaceId,
 			isSponsoredFooterAllowed = false,
+			isSponsoredRatingFooterAllowed = false,
 			hideTileMetadata = false,
 			wideTileType,
 			hoverStyle,
@@ -238,6 +241,15 @@ const WideGameTile = React.forwardRef(
 			if (hideTileMetadata) {
 				return <React.Fragment />;
 			}
+
+			const ratingElement = (
+				<GameTileRatingContent
+					totalUpVotes={gameData.totalUpVotes}
+					totalDownVotes={gameData.totalDownVotes}
+					translate={translate}
+				/>
+			);
+
 			if (
 				gameData.isShowSponsoredLabel ||
 				(gameData.isSponsored && isSponsoredFooterAllowed)
@@ -245,6 +257,11 @@ const WideGameTile = React.forwardRef(
 				return (
 					<WideGameTileSponsoredFooter
 						enableSponsoredFeedback={enableSponsoredFeedback}
+						trailingContent={
+							isSponsoredRatingFooterAllowed && enableSponsoredFeedback
+								? ratingElement
+								: undefined
+						}
 						translate={translate}
 					/>
 				);
@@ -283,13 +300,7 @@ const WideGameTile = React.forwardRef(
 					/>
 				);
 			}
-			return (
-				<GameTileRatingFooter
-					totalUpVotes={gameData.totalUpVotes}
-					totalDownVotes={gameData.totalDownVotes}
-					translate={translate}
-				/>
-			);
+			return <GameTileRatingFooter ratingElement={ratingElement} />;
 		};
 
 		const getGameTileMetadata = (): JSX.Element => {

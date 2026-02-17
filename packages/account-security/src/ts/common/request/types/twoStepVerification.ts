@@ -71,6 +71,8 @@ export type GetMetadataReturnType = {
 	twoStepCopyTextEnrollmentStatus: number;
 	isUserU13: boolean;
 	maskedUserEmail: string;
+	isDelayedUiEnabled: boolean;
+	is2svRecoveryEnabled: boolean;
 };
 
 /**

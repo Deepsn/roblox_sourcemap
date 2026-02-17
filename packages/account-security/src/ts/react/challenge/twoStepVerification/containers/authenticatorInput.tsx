@@ -18,6 +18,7 @@ import {
 import { useActiveMediaType } from "../hooks/useActiveMediaType";
 import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContext";
 import { TwoStepVerificationActionType } from "../store/action";
+import { useDelayedVerificationBodyText } from "../delay/text";
 
 type Props = {
 	requestInFlight: boolean;
@@ -157,13 +158,17 @@ const AuthenticatorInput: React.FC<Props> = ({
 	 * Component Markup
 	 */
 
+	const maybeDelayedText = useDelayedVerificationBodyText(
+		metadata?.isDelayedUiEnabled ?? false,
+	);
+
 	return (
 		metadata && (
 			<React.Fragment>
 				<BodyElement>
 					<div className={lockIconClassName} />
 					<p className={marginBottomXLargeClassName}>
-						{resources.Label.EnterAuthenticatorCode}
+						{resources.Label.EnterAuthenticatorCode} {maybeDelayedText ?? ""}
 					</p>
 
 					<InputControl

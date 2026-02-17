@@ -106,6 +106,9 @@ export const GameGridFeedItem = ({
 			isSponsoredFooterAllowed={
 				sort.topicLayoutData?.isSponsoredFooterAllowed === "true"
 			}
+			isSponsoredRatingFooterAllowed={
+				sort.topicLayoutData?.isSponsoredRatingFooterAllowed === "true"
+			}
 			hideTileMetadata={sort.topicLayoutData?.hideTileMetadata === "true"}
 			isDynamicLayoutSizingEnabled={isDynamicLayoutSizingEnabled}
 			isNewSortHeaderEnabled={isNewSortHeaderEnabled}

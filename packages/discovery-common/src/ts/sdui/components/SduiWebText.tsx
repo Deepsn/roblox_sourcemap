@@ -1,11 +1,16 @@
 import React from "react";
-import { WebText, TTypographyToken } from "@rbx/discovery-sdui-components";
+import {
+	WebText,
+	TTypographyToken,
+	TWebTextElement,
+} from "@rbx/discovery-sdui-components";
 import { TSduiCommonProps } from "../system/SduiTypes";
 
 type TSduiWebTextProps = TSduiCommonProps & {
 	text: string;
 	textFontStyle?: TTypographyToken;
 	textColor?: string;
+	webTextElement?: TWebTextElement;
 };
 
 /**
@@ -17,6 +22,7 @@ const SduiWebText = ({
 	text,
 	textFontStyle,
 	textColor,
+	webTextElement,
 	sduiContext,
 }: TSduiWebTextProps): JSX.Element => {
 	const { tokens } = sduiContext.dependencies;
@@ -26,6 +32,7 @@ const SduiWebText = ({
 			text={text}
 			textFontStyle={textFontStyle ?? tokens.Typography.BodyMedium}
 			textColor={textColor ?? tokens.Color.Content.Default}
+			webTextElement={webTextElement}
 		/>
 	);
 };

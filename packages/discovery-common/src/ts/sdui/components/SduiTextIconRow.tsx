@@ -3,6 +3,7 @@ import {
 	TextIconRow,
 	TGuiObjectProps,
 	TTypographyToken,
+	TWebTextElement,
 } from "@rbx/discovery-sdui-components";
 import { TSduiCommonProps } from "../system/SduiTypes";
 import { TSduiParsedAction } from "../system/SduiActionParserRegistry";
@@ -18,6 +19,8 @@ type TSduiTextIconRowProps = {
 	// Font styles (Font, LetterSpacing, FontFamily, FontWeight, FontSize, and
 	// LineHeight). Defaults to Typography.HeadingSmall
 	fontStyle?: TTypographyToken;
+	// Web text element to render. Defaults to span
+	webTextElement?: TWebTextElement;
 
 	// Gap between text and icon. Has no effect if icon is not provided. Defaults
 	// to no gap
@@ -53,6 +56,7 @@ const SduiTextIconRow = ({
 	text,
 	textColor,
 	fontStyle,
+	webTextElement,
 
 	gap,
 
@@ -86,6 +90,7 @@ const SduiTextIconRow = ({
 			text={text}
 			textColor={textColor ?? tokens.Color.Content.Emphasis}
 			fontStyle={fontStyle ?? tokens.Typography.HeadingSmall}
+			webTextElement={webTextElement}
 			gap={gap}
 			iconClassName={icon}
 			iconWidth={iconWidth}

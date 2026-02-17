@@ -1,5 +1,9 @@
 import React from "react";
-import { TileFooter, TTypographyToken } from "@rbx/discovery-sdui-components";
+import {
+	TileFooter,
+	TTypographyToken,
+	TWebTextElement,
+} from "@rbx/discovery-sdui-components";
 import { TSduiCommonProps } from "../system/SduiTypes";
 import { TSduiParsedAction } from "../system/SduiActionParserRegistry";
 
@@ -24,6 +28,11 @@ type SduiTileFooterProps = {
 	rightIcon?: string;
 	// Optional component to override the rightIcon
 	rightIconComponent?: React.ReactNode;
+
+	// Web text element to render for the left text
+	leftWebTextElement?: TWebTextElement;
+	// Web text element to render for the right text
+	rightWebTextElement?: TWebTextElement;
 } & TSduiCommonProps;
 
 const SduiTileFooter = ({
@@ -39,6 +48,8 @@ const SduiTileFooter = ({
 	rightText,
 	rightIcon,
 	rightIconComponent,
+	leftWebTextElement,
+	rightWebTextElement,
 }: SduiTileFooterProps): JSX.Element => {
 	const { tokens } = sduiContext.dependencies;
 
@@ -58,6 +69,8 @@ const SduiTileFooter = ({
 			rightText={rightText}
 			rightIcon={rightIcon}
 			rightIconComponent={rightIconComponent}
+			leftWebTextElement={leftWebTextElement}
+			rightWebTextElement={rightWebTextElement}
 		/>
 	);
 };
