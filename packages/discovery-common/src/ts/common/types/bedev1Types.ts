@@ -81,6 +81,7 @@ export type TFriendVisits = {
 type TMediaAssetInfo = {
 	wideImageAssetId?: string;
 	wideImageListId?: string;
+	wideVideoAssetId?: string;
 };
 
 export type TMediaLayoutData = {

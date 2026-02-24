@@ -1,5 +1,10 @@
 import React, { useCallback, useMemo } from "react";
 import {
+	usePlayabilityStatus,
+	PlayabilityStatus,
+	PlayButton,
+} from "@rbx/game-play-button";
+import {
 	EventStreamMetadata,
 	TPlayGameClicked,
 } from "../../common/constants/eventStreamConstants";
@@ -45,9 +50,7 @@ const SduiPlayButton = ({
 	playableText,
 	hidePlayableIcon,
 }: TSduiPlayButtonProps): JSX.Element => {
-	const { usePlayabilityStatus, PlayabilityStatuses, PlayButton } =
-		window.Roblox.PlayButton;
-	const [playabilityStatus] = usePlayabilityStatus(universeId.toString());
+	const { playabilityStatus } = usePlayabilityStatus(universeId.toString());
 
 	const reportActionEvent = useCallback(() => {
 		const actionConfig: TSduiActionConfig = {
@@ -90,7 +93,7 @@ const SduiPlayButton = ({
 	// Handle unplayable and unplayable loading states
 	if (
 		playabilityStatus === undefined ||
-		playabilityStatus !== PlayabilityStatuses.Playable
+		playabilityStatus !== PlayabilityStatus.Playable
 	) {
 		return <React.Fragment />;
 	}

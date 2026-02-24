@@ -20,6 +20,7 @@ const useSendNotInterestedUserSignalCallback = (
 	translate: TranslateFunction,
 	page?: PageContext,
 	topicId?: string,
+	isSponsored?: boolean,
 	toggleIsHidden?: () => void,
 ): ((isNotInterested: boolean) => void) => {
 	const { systemFeedbackService } = useSystemFeedback();
@@ -53,9 +54,13 @@ const useSendNotInterestedUserSignalCallback = (
 				return;
 			}
 
+			const assetType = isSponsored
+				? TUserSignalAssetType.SponsoredGame
+				: TUserSignalAssetType.Game;
+
 			const signalEntity: TUserSignalEntity = {
 				id: universeId.toString(),
-				assetType: TUserSignalAssetType.Game,
+				assetType,
 				signalOrigin: {
 					productSurface,
 					topicId,
@@ -78,7 +83,7 @@ const useSendNotInterestedUserSignalCallback = (
 					);
 				});
 		},
-		[universeId, page, topicId, pageSession, onSignalFailure],
+		[universeId, page, topicId, isSponsored, pageSession, onSignalFailure],
 	);
 };
 

@@ -11,6 +11,7 @@ import eventStreamConstants, {
 } from "../../common/constants/eventStreamConstants";
 import { usePageSession } from "../../common/utils/PageSessionContext";
 import { PageContext } from "../../common/types/pageContext";
+import getOptionContextTag from "../utils/getOptionContextTag";
 
 import { common } from "../../common/constants/configConstants";
 
@@ -20,6 +21,8 @@ export type TSendFilterClickEvent = (
 	selectedOptionId: string,
 	previousOptionId?: string,
 	isActive?: boolean,
+	selectedOptionContextTag?: string,
+	previousOptionContextTag?: string,
 ) => void;
 
 /**
@@ -53,6 +56,13 @@ const useGameFiltersAnalytics = (
 				[EventStreamMetadata.SortPos]: positionId,
 				[SessionInfoType.DiscoverPageSessionInfo]: discoverPageSessionInfo,
 				[EventStreamMetadata.Page]: PageContext.GamesPage,
+				[EventStreamMetadata.SelectedOptionContextTags]: sort.filters.map(
+					(filter) =>
+						getOptionContextTag(
+							filter.selectedOptionId,
+							filter.filterOptions,
+						) ?? "0",
+				),
 			};
 		}, [
 			sort.filters,
@@ -103,6 +113,8 @@ const useGameFiltersAnalytics = (
 			selectedOptionId: string,
 			previousOptionId?: string,
 			isActive?: boolean,
+			selectedOptionContextTag?: string,
+			previousOptionContextTag?: string,
 		): TGamesFilterClick | undefined => {
 			return {
 				[EventStreamMetadata.ButtonName]: buttonName,
@@ -113,8 +125,12 @@ const useGameFiltersAnalytics = (
 				[EventStreamMetadata.Page]: PageContext.GamesPage,
 				[EventStreamMetadata.FilterId]: filterId,
 				[EventStreamMetadata.SelectedOptionId]: selectedOptionId,
+				[EventStreamMetadata.SelectedOptionContextTag]:
+					selectedOptionContextTag,
 				...(previousOptionId && {
 					[EventStreamMetadata.PreviousOptionId]: previousOptionId,
+					[EventStreamMetadata.PreviousOptionContextTag]:
+						previousOptionContextTag,
 				}),
 				[EventStreamMetadata.IsActive]: isActive,
 			};
@@ -129,6 +145,8 @@ const useGameFiltersAnalytics = (
 			selectedOptionId: string,
 			previousOptionId?: string,
 			isActive?: boolean,
+			selectedOptionContextTag?: string,
+			previousOptionContextTag?: string,
 		) => {
 			const eventProperties = buildFilterClickEventProperties(
 				filterId,
@@ -136,6 +154,8 @@ const useGameFiltersAnalytics = (
 				selectedOptionId,
 				previousOptionId,
 				isActive,
+				selectedOptionContextTag,
+				previousOptionContextTag,
 			);
 			const eventParams =
 				eventStreamConstants.gamesFilterClick(eventProperties);

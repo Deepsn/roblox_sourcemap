@@ -97,6 +97,7 @@ const GameTileOverflowMenu = ({
 		if (
 			!hasFiredExplicitFeedbackDisabledDueToMissingSetterEvent.current &&
 			enableExplicitFeedback &&
+			(!isSponsored || enableSponsoredFeedback) &&
 			!setIsHidden
 		) {
 			window.EventTracker?.fireEvent(
@@ -104,7 +105,12 @@ const GameTileOverflowMenu = ({
 			);
 			hasFiredExplicitFeedbackDisabledDueToMissingSetterEvent.current = true;
 		}
-	}, [enableExplicitFeedback, setIsHidden]);
+	}, [
+		enableExplicitFeedback,
+		enableSponsoredFeedback,
+		isSponsored,
+		setIsHidden,
+	]);
 
 	useEffect(() => {
 		if (
@@ -125,6 +131,7 @@ const GameTileOverflowMenu = ({
 		translate,
 		page,
 		topicId,
+		isSponsored,
 		toggleIsHidden,
 	);
 
@@ -143,7 +150,11 @@ const GameTileOverflowMenu = ({
 
 	const menuItemsToShow = useMemo(() => {
 		const items: GameTileOverflowMenuItems[] = [];
-		if (enableExplicitFeedback && setIsHidden && !isSponsored) {
+		if (
+			enableExplicitFeedback &&
+			(!isSponsored || enableSponsoredFeedback) &&
+			setIsHidden
+		) {
 			items.push(GameTileOverflowMenuItems.NotInterested);
 		}
 		if (enableSponsoredFeedback && isSponsored) {

@@ -1,8 +1,10 @@
 import ready from "@rbx/core-scripts/util/ready";
 import {
+	queryClient,
 	renderWithErrorBoundary,
 	TranslationProvider,
 } from "@rbx/core-scripts/react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import "@rbx/core-scripts/global";
 import {
 	SearchLandingPageOmniFeed,
@@ -25,7 +27,9 @@ function renderApp() {
 
 	renderWithErrorBoundary(
 		<TranslationProvider config={translations}>
-			<SearchLandingPageOmniFeed />
+			<QueryClientProvider client={queryClient}>
+				<SearchLandingPageOmniFeed />
+			</QueryClientProvider>
 		</TranslationProvider>,
 		container,
 	);

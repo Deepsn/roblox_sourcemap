@@ -21,6 +21,7 @@ export type THiddenGameTileProps = {
 	toggleIsHidden?: () => void;
 	universeId: number;
 	topicId?: string;
+	isSponsored?: boolean;
 	page?: PageContext;
 	translate: TranslateFunction;
 };
@@ -32,6 +33,7 @@ const HiddenGameTile = React.forwardRef(
 			toggleIsHidden,
 			universeId,
 			topicId,
+			isSponsored,
 			page,
 			translate,
 		}: THiddenGameTileProps,
@@ -86,6 +88,7 @@ const HiddenGameTile = React.forwardRef(
 			translate,
 			page,
 			topicId,
+			isSponsored,
 			toggleIsHidden,
 		);
 		const sendNotInterestedFeedbackUserSignal =
@@ -95,6 +98,7 @@ const HiddenGameTile = React.forwardRef(
 				toggleShowGiveFeedbackButton,
 				page,
 				topicId,
+				isSponsored,
 			);
 
 		const onUndoClick: () => void = useCallback(() => {

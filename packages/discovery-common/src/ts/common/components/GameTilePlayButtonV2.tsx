@@ -1,6 +1,11 @@
 import { ValidHttpUrl } from "@rbx/core-scripts/util/url";
 import React, { useMemo } from "react";
 import { Loading } from "@rbx/core-ui";
+import {
+	usePlayabilityStatus,
+	PlayabilityStatus,
+	DefaultPlayButton,
+} from "@rbx/game-play-button";
 import { ValueOf } from "../utils/typeUtils";
 import useGetAppPolicyData from "../hooks/useGetAppPolicyData";
 
@@ -17,9 +22,7 @@ export const GameTilePlayButtonV2 = ({
 	disableLoadingState?: boolean;
 	redirectPurchaseUrl?: ValidHttpUrl;
 }): JSX.Element => {
-	const { usePlayabilityStatus, PlayabilityStatuses, DefaultPlayButton } =
-		window.Roblox.PlayButton;
-	const [playabilityStatus, refetchPlayabilityStatus] =
+	const { playabilityStatus, refetchPlayabilityData } =
 		usePlayabilityStatus(universeId);
 
 	const { shouldShowVpcPlayButtonUpsells, isFetchingPolicy } =
@@ -30,12 +33,12 @@ export const GameTilePlayButtonV2 = ({
 			return false;
 		}
 		const allowedList = [
-			PlayabilityStatuses.PurchaseRequired,
-			PlayabilityStatuses.FiatPurchaseRequired,
-		] as ValueOf<typeof PlayabilityStatuses>[];
+			PlayabilityStatus.PurchaseRequired,
+			PlayabilityStatus.FiatPurchaseRequired,
+		] as ValueOf<typeof PlayabilityStatus>[];
 
 		return allowedList.includes(playabilityStatus);
-	}, [playabilityStatus, PlayabilityStatuses]);
+	}, [playabilityStatus]);
 
 	if (isFetchingPolicy) {
 		if (!disableLoadingState) {
@@ -46,8 +49,8 @@ export const GameTilePlayButtonV2 = ({
 			<DefaultPlayButton
 				placeId={placeId}
 				universeId={universeId}
-				refetchPlayabilityStatus={refetchPlayabilityStatus}
-				playabilityStatus={PlayabilityStatuses.Playable}
+				refetchPlayabilityStatus={refetchPlayabilityData}
+				playabilityStatus={PlayabilityStatus.Playable}
 				eventProperties={playButtonEventProperties}
 				hideButtonText
 				disableLoadingState={disableLoadingState}
@@ -59,7 +62,7 @@ export const GameTilePlayButtonV2 = ({
 		<DefaultPlayButton
 			placeId={placeId}
 			universeId={universeId}
-			refetchPlayabilityStatus={refetchPlayabilityStatus}
+			refetchPlayabilityStatus={refetchPlayabilityData}
 			playabilityStatus={playabilityStatus}
 			eventProperties={playButtonEventProperties}
 			disableLoadingState={disableLoadingState}
@@ -71,7 +74,7 @@ export const GameTilePlayButtonV2 = ({
 			hideButtonText={!isPurchaseRequired}
 			redirectPurchaseUrl={isPurchaseRequired ? redirectPurchaseUrl : undefined}
 			showDefaultPurchaseText={
-				playabilityStatus === PlayabilityStatuses.FiatPurchaseRequired
+				playabilityStatus === PlayabilityStatus.FiatPurchaseRequired
 			}
 			shouldShowVpcPlayButtonUpsells={shouldShowVpcPlayButtonUpsells}
 		/>

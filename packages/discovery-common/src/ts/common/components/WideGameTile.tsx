@@ -27,6 +27,7 @@ import {
 	getInGameFriends,
 	getSessionInfoTypeFromPageContext,
 	getThumbnailOverrideAssetId,
+	getVideoOverrideAssetId,
 } from "../utils/parsingUtils";
 import GameTileOverlayPill from "./GameTileOverlayPill";
 import GameTilePlayButton from "./GameTilePlayButton";
@@ -42,6 +43,7 @@ import {
 } from "./GameTileUtils";
 import WideGameTileSponsoredFooter from "./WideGameTileSponsoredFooter";
 import WideGameThumbnail from "./WideGameThumbnail";
+import GameTileVideoPlayer from "./GameTileVideoPlayer";
 import useGetGameLayoutData from "../hooks/useGetGameLayoutData";
 import { getGameTileTextFooterData } from "../utils/gameTileLayoutUtils";
 import { usePageSession } from "../utils/PageSessionContext";
@@ -132,6 +134,14 @@ const WideGameTile = React.forwardRef(
 		}: TWideGameTileProps,
 		ref: Ref<HTMLDivElement>,
 	) => {
+		const doesSupportHover =
+			window.matchMedia?.("(hover: hover)")?.matches ?? true;
+
+		// InterestTiles are only presentational, so we disable clicks and hover states
+		const isTileClickEnabled = wideTileType !== TComponentType.InterestTile;
+		const isHoverEnabled =
+			doesSupportHover && wideTileType !== TComponentType.InterestTile;
+
 		const isFirstTile = id === 0;
 		const isLastTile =
 			id === configConstants.homePage.maxWideGameTilesPerCarouselPage - 1;
@@ -184,6 +194,13 @@ const WideGameTile = React.forwardRef(
 		);
 
 		const gameLayoutData = useGetGameLayoutData(gameData, topicId);
+
+		const videoAssetId = useMemo(
+			() => getVideoOverrideAssetId(gameData, topicId),
+			[gameData, topicId],
+		);
+
+		const shouldShowVideo = videoAssetId && isFocused;
 
 		const showPlayButton = (): boolean => {
 			if (
@@ -320,10 +337,6 @@ const WideGameTile = React.forwardRef(
 			return gameData.name;
 		}, [gameData.name, gameLayoutData?.title]);
 
-		// InterestTiles are only presentational, so we disable clicks and hover states
-		const isTileClickEnabled = wideTileType !== TComponentType.InterestTile;
-		const isHoverEnabled = wideTileType !== TComponentType.InterestTile;
-
 		const onInterestButtonClick = useCallback(() => {
 			if (toggleInterest) {
 				toggleInterest();
@@ -421,6 +434,12 @@ const WideGameTile = React.forwardRef(
 									topicId={topicId}
 									wideTileType={wideTileType}
 								/>
+								{shouldShowVideo && (
+									<GameTileVideoPlayer
+										videoAssetId={videoAssetId}
+										universeId={gameData.universeId.toString()}
+									/>
+								)}
 								<GameTileOverlayPill
 									gameLayoutData={gameLayoutData}
 									playerCountStyle={playerCountStyle}

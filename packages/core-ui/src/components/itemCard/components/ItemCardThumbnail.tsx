@@ -1,6 +1,5 @@
 import React, { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
-import { Badge } from "@rbx/foundation-ui";
 import ItemCardStatus from "./ItemCardStatus";
 import ItemCardRestrictions from "./ItemCardRestrictions";
 import ItemCardPrice from "./ItemCardPrice";
@@ -52,7 +51,6 @@ function ItemCardThumbnail({
 	timedOptions,
 }: ItemCardThumbnailProps): JSX.Element {
 	let shoppingCartButtons = null;
-	const selectedTimedOption = timedOptions?.find((option) => option.selected);
 	if (shoppingCartProps && isHovered) {
 		const { isItemInCart, addItemToCart, removeItemFromCart } =
 			shoppingCartProps;
@@ -102,22 +100,6 @@ function ItemCardThumbnail({
 	return (
 		<div className="item-card-link">
 			<div className="item-card-thumb-container">
-				{timedOptions && timedOptions.length > 0 && (
-					<div className="timed-options-container">
-						<Badge
-							variant="Neutral"
-							icon="icon-regular-clock"
-							className="bg-surface-0"
-							label={
-								selectedTimedOption?.days
-									? translate("Label.TimedOptionDaysAbbreviation", {
-											days: selectedTimedOption.days,
-										})
-									: ""
-							}
-						/>
-					</div>
-				)}
 				{enableThumbnailPrice && (
 					<ItemCardPrice
 						price={price}
@@ -127,6 +109,8 @@ function ItemCardThumbnail({
 						premiumPricing={premiumPricing}
 						unitsAvailableForConsumption={unitsAvailableForConsumption}
 						enableThumbnailPrice={enableThumbnailPrice}
+						timedOptions={timedOptions}
+						translate={translate}
 					/>
 				)}
 				<div className="item-card-thumb-container-inner">{thumbnail2d}</div>

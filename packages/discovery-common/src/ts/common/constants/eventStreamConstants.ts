@@ -100,6 +100,7 @@ export enum EventStreamMetadata {
 	PlayContext = "playContext",
 	Position = "position",
 	Pos = "pos",
+	PreviousOptionContextTag = "previousOptionContextTag",
 	PreviousOptionId = "previousOptionId",
 	PreviousIndex = "previousIndex",
 	PromptId = "promptId",
@@ -116,6 +117,8 @@ export enum EventStreamMetadata {
 	ScreenSizeY = "screenSizeY",
 	ScrollAreaSize = "scrollAreaSize",
 	ScrollDepth = "scrollDepth",
+	SelectedOptionContextTag = "selectedOptionContextTag",
+	SelectedOptionContextTags = "selectedOptionContextTags",
 	SelectedOptionId = "selectedOptionId",
 	SelectedOptionIds = "selectedOptionIds",
 	SelectedIndex = "selectedIndex",
@@ -138,6 +141,7 @@ export enum EventStreamMetadata {
 	UniverseIds = "universeIds",
 	FriendId = "friendId",
 	VideoAssetId = "videoAssetId",
+	VideoAssetIds = "videoAssetIds",
 	ThumbnailAssetIds = "thumbnailAssetIds",
 	ThumbnailListIds = "thumbnailListIds",
 	LinkPath = "linkPath",
@@ -239,6 +243,7 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.AdIds]?: string[];
 	[EventStreamMetadata.ThumbnailAssetIds]?: string[];
 	[EventStreamMetadata.ThumbnailListIds]?: string[];
+	[EventStreamMetadata.VideoAssetIds]?: string[];
 	[EventStreamMetadata.NavigationUids]?: string[];
 	[EventStreamMetadata.TileBadgeContexts]?: string[];
 	[EventStreamMetadata.FooterTextLiterals]?: string[];
@@ -438,6 +443,7 @@ export type TFilterImpressions =
 			[EventStreamMetadata.SortPos]: number;
 			[SessionInfoType.DiscoverPageSessionInfo]: string;
 			[EventStreamMetadata.Page]: PageContext.GamesPage;
+			[EventStreamMetadata.SelectedOptionContextTags]: string[];
 	  }
 	| {};
 
@@ -458,6 +464,8 @@ export type TGamesFilterClick =
 			[EventStreamMetadata.PreviousOptionId]?: string;
 			[SessionInfoType.DiscoverPageSessionInfo]: string;
 			[EventStreamMetadata.Page]: PageContext.GamesPage;
+			[EventStreamMetadata.SelectedOptionContextTag]?: string;
+			[EventStreamMetadata.PreviousOptionContextTag]?: string;
 			[EventStreamMetadata.IsActive]?: boolean;
 	  }
 	| {};

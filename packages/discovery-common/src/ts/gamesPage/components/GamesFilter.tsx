@@ -5,13 +5,13 @@ import { TFiltersData } from "../../common/types/bedev2Types";
 import GamesFilterDropdown from "./GamesFilterDropdown";
 import { TGamesFilterButton } from "../../common/constants/eventStreamConstants";
 import { TSendFilterClickEvent } from "../../omniFeed/hooks/useGameFiltersAnalytics";
+import getOptionContextTag from "../../omniFeed/utils/getOptionContextTag";
 
 type TGamesFilterProps = {
 	filter: TFiltersData;
 	updateFilterValue: (newValue: string) => void;
 	sendFilterClickEvent: TSendFilterClickEvent;
 	translate: TranslateFunction;
-	inactiveOptionIds?: string[];
 };
 
 const GamesFilter = ({
@@ -19,7 +19,6 @@ const GamesFilter = ({
 	updateFilterValue,
 	sendFilterClickEvent,
 	translate,
-	inactiveOptionIds,
 }: TGamesFilterProps): JSX.Element => {
 	const dropdownContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -43,11 +42,11 @@ const GamesFilter = ({
 		if (isDropdownOpen) {
 			return true;
 		}
-		if (!inactiveOptionIds) {
+		if (!filter.inactiveOptionIds) {
 			return false;
 		}
-		return !inactiveOptionIds.includes(selectedOptionId);
-	}, [isDropdownOpen, inactiveOptionIds, selectedOptionId]);
+		return !filter.inactiveOptionIds.includes(selectedOptionId);
+	}, [isDropdownOpen, filter.inactiveOptionIds, selectedOptionId]);
 
 	const handleDropdownEntryClick = useCallback(() => {
 		setIsDropdownOpen((prevIsDropdownOpen) => {
@@ -65,6 +64,8 @@ const GamesFilter = ({
 				filter.selectedOptionId,
 				previousOptionId,
 				isFilterActive,
+				getOptionContextTag(filter.selectedOptionId, filter.filterOptions),
+				getOptionContextTag(previousOptionId, filter.filterOptions),
 			);
 
 			return !prevIsDropdownOpen;
@@ -75,6 +76,7 @@ const GamesFilter = ({
 		selectedOptionId,
 		filter.filterId,
 		filter.selectedOptionId,
+		filter.filterOptions,
 	]);
 
 	return (

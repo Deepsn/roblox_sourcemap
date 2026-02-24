@@ -10,6 +10,7 @@ import {
 import configConstants from "../../common/constants/configConstants";
 import { TGamesFilterButton } from "../../common/constants/eventStreamConstants";
 import { TSendFilterClickEvent } from "../../omniFeed/hooks/useGameFiltersAnalytics";
+import getOptionContextTag from "../../omniFeed/utils/getOptionContextTag";
 
 const { common } = configConstants;
 
@@ -51,6 +52,8 @@ const GamesFilterDropdown = ({
 			selectedOptionId,
 			filter.selectedOptionId,
 			isFilterActive,
+			getOptionContextTag(selectedOptionId, filter.filterOptions),
+			getOptionContextTag(filter.selectedOptionId, filter.filterOptions),
 		);
 	}, [
 		selectedOptionId,
@@ -59,6 +62,7 @@ const GamesFilterDropdown = ({
 		filter.filterId,
 		filter.selectedOptionId,
 		sendFilterClickEvent,
+		filter.filterOptions,
 		isFilterActive,
 	]);
 
@@ -74,6 +78,8 @@ const GamesFilterDropdown = ({
 			filter.selectedOptionId,
 			selectedOptionIdBeforeClose,
 			isFilterActive,
+			getOptionContextTag(filter.selectedOptionId, filter.filterOptions),
+			getOptionContextTag(selectedOptionIdBeforeClose, filter.filterOptions),
 		);
 	}, [
 		filter.selectedOptionId,
@@ -82,6 +88,7 @@ const GamesFilterDropdown = ({
 		filter.filterId,
 		setSelectedOptionId,
 		selectedOptionId,
+		filter.filterOptions,
 		isFilterActive,
 	]);
 
@@ -127,7 +134,7 @@ const GamesFilterDropdown = ({
 					<button
 						type="button"
 						className="header-close-button"
-						onClick={() => closeAndResetDropdown()}
+						onClick={closeAndResetDropdown}
 						aria-label={translate(CommonUIFeatures.ActionClose)}
 					>
 						<span className="icon-close" />

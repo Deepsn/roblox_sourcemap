@@ -1,4 +1,5 @@
 import axios, { AxiosPromise } from "axios";
+import { getClient, startInactiveSpan } from "@sentry/browser";
 import {
 	interceptChallenge,
 	Migrate,
@@ -34,7 +35,11 @@ const GENERIC_CHALLENGE_ID_HEADER = "rblx-challenge-id";
 const GENERIC_CHALLENGE_TYPE_HEADER = "rblx-challenge-type";
 const GENERIC_CHALLENGE_METADATA_HEADER = "rblx-challenge-metadata";
 const GENERIC_CHALLENGE_CONTAINER_ID = "generic-challenge-container";
+const TRACEPARENT_HEADER = "traceparent";
 const RETRY_ATTEMPT_HEADER = "x-retry-attempt";
+
+// Trace propagation targets for Sentry
+const tracePropagationTargets = [/roblox\.com/, /robloxlabs\.com/];
 
 // TODO: figure out how to get theres from data attr on page #http-retry-dat
 // const HTTP_RETRY_BASE_TIMEOUT = 1000;
@@ -78,6 +83,40 @@ axios.interceptors.request.use((config: UrlConfig) => {
 		if (acceptLanguageValue) {
 			newConfig.headers["Accept-Language"] = acceptLanguageValue;
 		}
+	}
+
+	newConfig.url = endpoints.appendUrlLocaleParam(newConfig.url, method);
+
+	// Add Sentry traceparent header for trace propagation
+	const shouldAddTraceparent = tracePropagationTargets.some((target) => {
+		if (typeof target === "string") {
+			return url.includes(target);
+		}
+		return url ? target.test(url) : false;
+	});
+
+	if (
+		shouldAddTraceparent &&
+		getClient() &&
+		!newConfig.headers[TRACEPARENT_HEADER]
+	) {
+		const sentrySpan = startInactiveSpan({
+			name: `${method?.toUpperCase() ?? "GET"} ${url}`,
+			op: "http.client",
+			attributes: {
+				"http.url": url,
+				"http.method": method?.toUpperCase() ?? "GET",
+			},
+		});
+
+		const { traceId, spanId, traceFlags } = sentrySpan.spanContext();
+		const sampled = traceFlags & 0x1 ? "01" : "00";
+		const traceparent = `00-${traceId}-${spanId}-${sampled}`;
+
+		newConfig.headers[TRACEPARENT_HEADER] = traceparent;
+
+		// Store the span to end it in response interceptor
+		newConfig.sentrySpan = sentrySpan;
 	}
 
 	// instrument roblox tracer
@@ -135,8 +174,15 @@ axios.interceptors.response.use(
 	(response: ResponseConfig) => {
 		const {
 			status,
-			config: { url, tracerConfig },
+			config: { url, tracerConfig, sentrySpan },
 		} = response;
+
+		// End Sentry span if it exists
+		if (sentrySpan) {
+			sentrySpan.setStatus({ code: 1 }); // OK status
+			sentrySpan.setAttribute("http.status_code", status);
+			sentrySpan.end();
+		}
 
 		// TODO: old, migrated code
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -161,6 +207,13 @@ axios.interceptors.response.use(
 			const { status, headers, config } = response;
 			config.headers ??= {};
 			const newToken = headers[CSRF_TOKEN_HEADER];
+
+			// End Sentry span with error status if it exists
+			if (config.sentrySpan) {
+				config.sentrySpan.setStatus({ code: 2 }); // ERROR status
+				config.sentrySpan.setAttribute("http.status_code", status);
+				config.sentrySpan.end();
+			}
 
 			if (status === CSRF_INVALID_RESPONSE_CODE.valueOf() && newToken) {
 				config.headers[CSRF_TOKEN_HEADER] = newToken;

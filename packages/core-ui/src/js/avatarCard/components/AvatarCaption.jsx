@@ -1,13 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { withTranslations } from "@rbx/core-scripts/react";
 import AvatarCaptionTitle from "./AvatarCaptionTitle";
 import AvatarCaptionFirstLine from "./AvatarCaptionFirstLine";
 import AvatarCaptionSecondLine from "./AvatarCaptionSecondLine";
 import AvatarCaptionFooter from "./AvatarCaptionFooter";
+import translationConfig from "../translation.config";
 
-function constructUsernameLabel(username) {
-	return username ? `@${username}` : "";
+function constructUsernameLabel(username, isTrustedConnection, translate) {
+	const trustedLabel = ` • ${translate("TrustedConnection.Label.Trusted")}`;
+	return username
+		? `@${username}${isTrustedConnection ? trustedLabel : ""}`
+		: "";
 }
 
 const AvatarCaption = ({
@@ -23,6 +28,8 @@ const AvatarCaption = ({
 	hasMenu,
 	truncateFirstLine,
 	verifiedBadgeData,
+	isTrustedConnection,
+	translate,
 }) => {
 	const cardLabelClassNames = classNames("avatar-card-label", {
 		shimmer: !name,
@@ -44,8 +51,7 @@ const AvatarCaption = ({
 							verifiedBadgeData={verifiedBadgeData}
 						/>
 						<div className={cardLabelClassNames}>
-							{" "}
-							{constructUsernameLabel(name)}{" "}
+							{constructUsernameLabel(name, isTrustedConnection, translate)}
 						</div>
 					</React.Fragment>
 				) : (
@@ -88,6 +94,8 @@ AvatarCaption.defaultProps = {
 	hasMenu: false,
 	truncateFirstLine: false,
 	verifiedBadgeData: {},
+	isTrustedConnection: false,
+	translate: (key) => key,
 };
 AvatarCaption.propTypes = {
 	name: PropTypes.string,
@@ -105,6 +113,8 @@ AvatarCaption.propTypes = {
 		hasVerifiedBadge: PropTypes.bool,
 		titleText: PropTypes.string,
 	}),
+	isTrustedConnection: PropTypes.bool,
+	translate: PropTypes.func,
 };
 
-export default AvatarCaption;
+export default withTranslations(AvatarCaption, translationConfig);

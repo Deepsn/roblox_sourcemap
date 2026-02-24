@@ -1,5 +1,11 @@
 import React from "react";
 import classNames from "classnames";
+import {
+	usePlayabilityStatus,
+	PlayabilityStatus,
+	PlayButton as PlayButtonComponent,
+	PurchaseButton,
+} from "@rbx/game-play-button";
 import HoverTilePurchaseButton from "./HoverTilePurchaseButton";
 
 export const PlayButtonLoadingShimmer = (): JSX.Element => {
@@ -28,25 +34,18 @@ export const GameTilePlayButton = ({
 	clientReferralUrl?: string;
 	shouldPurchaseNavigateToDetails?: boolean;
 }): JSX.Element => {
-	const {
-		usePlayabilityStatus,
-		PlayabilityStatuses,
-		PlayButton: PlayButtonComponent,
-		PurchaseButton,
-	} = window.Roblox.PlayButton;
-
-	const [playabilityStatus, refetchPlayabilityStatus] =
+	const { playabilityStatus, refetchPlayabilityData } =
 		usePlayabilityStatus(universeId);
 
 	switch (playabilityStatus) {
 		case undefined:
-		case PlayabilityStatuses.GuestProhibited:
-		case PlayabilityStatuses.Playable:
+		case PlayabilityStatus.GuestProhibited:
+		case PlayabilityStatus.Playable:
 			return (
 				<PlayButtonComponent
 					universeId={universeId}
 					placeId={placeId}
-					status={playabilityStatus ?? PlayabilityStatuses.Playable}
+					status={playabilityStatus ?? PlayabilityStatus.Playable}
 					eventProperties={playButtonEventProperties}
 					buttonClassName={
 						buttonClassName
@@ -56,7 +55,7 @@ export const GameTilePlayButton = ({
 					disableLoadingState
 				/>
 			);
-		case PlayabilityStatuses.PurchaseRequired:
+		case PlayabilityStatus.PurchaseRequired:
 			if (shouldPurchaseNavigateToDetails) {
 				// Navigates to Game Details page for user to purchase
 				return (
@@ -76,11 +75,12 @@ export const GameTilePlayButton = ({
 					universeId={universeId}
 					placeId={placeId}
 					iconClassName={purchaseIconClassName ?? "icon-common-play"}
-					refetchPlayabilityStatus={refetchPlayabilityStatus}
+					refetchPlayabilityStatus={refetchPlayabilityData}
 					buttonClassName={buttonClassName}
+					playabilityStatus={PlayabilityStatus.PurchaseRequired}
 				/>
 			);
-		case PlayabilityStatuses.UniverseRootPlaceIsPrivate:
+		case PlayabilityStatus.UniverseRootPlaceIsPrivate:
 			return (
 				<div className={buttonClassName ?? "btn-growth-lg play-button"}>
 					<span className="icon-status-private" />

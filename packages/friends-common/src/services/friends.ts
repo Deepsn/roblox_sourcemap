@@ -82,22 +82,8 @@ const getFriends = async (
 		? (await getAllOnlineFriends(userId)).data
 		: [];
 	onlineFriendsResponse.sort(
-		(friend1: TOnlineFriendType, friend2: TOnlineFriendType): number => {
-			const presenceSortMapping: Record<string, number> = {
-				InGame: 0,
-				Online: 1,
-				InStudio: 2,
-			};
-			const presenceType1 =
-				presenceSortMapping[friend1.userPresence.UserPresenceType];
-			const presenceType2 =
-				presenceSortMapping[friend2.userPresence.UserPresenceType];
-			if (presenceType1 == null || presenceType2 == null) {
-				return -1;
-			}
-
-			return presenceType1 < presenceType2 ? -1 : 1;
-		},
+		(friend1: TOnlineFriendType, friend2: TOnlineFriendType): number =>
+			friend2.sortScore - friend1.sortScore,
 	);
 	const offlineFriends = (await getPaginatedFriends(userId, isOwnUser))
 		.PageItems;

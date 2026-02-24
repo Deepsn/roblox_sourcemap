@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { TranslateFunction } from "@rbx/core-scripts/react";
+import { Badge } from "@rbx/foundation-ui";
 import { TFilterOption } from "../../common/types/bedev2Types";
 import { CommonUIFeatures } from "../../common/constants/translationConstants";
 
@@ -35,11 +36,19 @@ const FilterDropdownOption = ({
 			}
 		>
 			<span className="filter-option-name">{option.optionDisplayName}</span>
-			{isSelected ? (
-				<span className="icon-radio-check-circle-filled" />
-			) : (
-				<span className="icon-radio-check-circle" />
-			)}
+			<span className="flex gap-small">
+				{option.optionContextTag && (
+					<Badge
+						label={option.optionContextTag}
+						className="max-width-2900 overflow-hidden"
+					/>
+				)}
+				{isSelected ? (
+					<span className="icon-radio-check-circle-filled" />
+				) : (
+					<span className="icon-radio-check-circle" />
+				)}
+			</span>
 		</button>
 	);
 };

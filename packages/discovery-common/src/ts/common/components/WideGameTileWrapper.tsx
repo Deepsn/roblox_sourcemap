@@ -18,6 +18,7 @@ export const WideGameTileWrapper = forwardRef<
 				toggleIsHidden={tileProps.toggleIsHidden}
 				universeId={tileProps.gameData.universeId}
 				topicId={tileProps.topicId}
+				isSponsored={tileProps.gameData.isSponsored}
 				page={tileProps.page}
 				translate={tileProps.translate}
 			/>

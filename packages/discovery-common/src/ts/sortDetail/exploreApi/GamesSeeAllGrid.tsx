@@ -40,6 +40,10 @@ const GamesSeeAllGrid = ({
 
 	const discoverPageSessionInfo = usePageSession();
 
+	// header can be pre-rendered on server-side. if so, we don't need to show it again.
+	const shouldShowHeader =
+		document.getElementsByClassName("header-section").length === 0;
+
 	useVerticalScrollTracker(PageContext.SortDetailPageDiscover);
 
 	const buildEventProperties: TBuildEventProperties = (
@@ -93,19 +97,21 @@ const GamesSeeAllGrid = ({
 
 	return (
 		<div className="game-sort-detail-container">
-			<h1>
-				{sort.topic}
-				{sort.topicId === gamesPage.adSortDiscoverId && (
-					<GamesInfoTooltip
-						tooltipText={
-							translate(CommonGameSorts.LabelSponsoredAdsDisclosureStatic) ||
-							"Sponsored experiences are paid for by Creators. They may be shown to you based on general information about your device type, location, and demographics."
-						}
-						placement="right"
-						sizeInPx={22}
-					/>
-				)}
-			</h1>
+			{shouldShowHeader && (
+				<h1>
+					{sort.topic}
+					{sort.topicId === gamesPage.adSortDiscoverId && (
+						<GamesInfoTooltip
+							tooltipText={
+								translate(CommonGameSorts.LabelSponsoredAdsDisclosureStatic) ||
+								"Sponsored experiences are paid for by Creators. They may be shown to you based on general information about your device type, location, and demographics."
+							}
+							placement="right"
+							sizeInPx={22}
+						/>
+					)}
+				</h1>
+			)}
 			<GameGrid
 				ref={gridRef}
 				emphasis={false}

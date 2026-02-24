@@ -150,6 +150,7 @@ export type TOmniRecommendationFriendSort = {
 export type TFilterOption = {
 	optionId: string;
 	optionDisplayName: string;
+	optionContextTag?: string;
 };
 
 export type TFiltersData = {
@@ -158,6 +159,7 @@ export type TFiltersData = {
 	filterType: string;
 	filterOptions: TFilterOption[];
 	selectedOptionId: string;
+	inactiveOptionIds?: string[];
 };
 
 type TSharedExploreApiSortResponse = {
@@ -180,7 +182,6 @@ export type TExploreApiGameSortResponse = TSharedExploreApiSortResponse & {
 export type TExploreApiFiltersSortResponse = TSharedExploreApiSortResponse & {
 	treatmentType: TTreatmentType.Pills;
 	filters: TFiltersData[];
-	inactiveOptionIds?: string[];
 };
 
 export type TQueryData = {
@@ -240,7 +241,6 @@ export type TExploreApiFiltersSort = {
 	sortId: string;
 	contentType: string;
 	gameSetTargetId?: number;
-	inactiveOptionIds?: string[];
 };
 
 export type TExploreApiSearchPillsSort = {

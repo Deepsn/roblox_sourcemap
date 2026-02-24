@@ -1,10 +1,12 @@
 import $ from "jquery";
 import { parseUrl, formatUrl } from "./util/url/url";
+import { isAuthenticated } from "./meta/user";
 
 export type AjaxOptions = {
 	url: string;
 	data: Record<string, string>;
 	crossDomain: boolean;
+	type?: string;
 	xhrFields?: {
 		withCredentials?: boolean;
 	};
@@ -40,6 +42,7 @@ let pageUrlLocale: string = metaTag?.dataset.urlLocale ?? "";
 let overrideLanguageHeader: boolean =
 	metaTag?.dataset.overrideLanguageHeader === "true";
 const supportLocalizedUrls = Boolean(pageUrlLocale);
+const pageLocaleCode: string = metaTag?.dataset.languageCode ?? "";
 
 const isAbsolute = (url: string): boolean => {
 	const re = /^([a-z]+:\/\/|\/\/)/;
@@ -264,6 +267,27 @@ const getAcceptLanguageValue = (url: string): string | null => {
 	return null;
 };
 
+// only allow virtual-events for testing, will remove after
+const urlLocaleAllowedPaths = ["/virtual-events/"];
+// only allow get and post requests
+const urlLocaleAllowedMethods = ["get", "post"];
+
+const appendUrlLocaleParam = (url: string, method?: string): string => {
+	if (
+		!pageLocaleCode ||
+		isAuthenticated() ||
+		isThirdPartyUrl(url) ||
+		!urlLocaleAllowedPaths.some((path) => url.includes(path)) ||
+		(method && !urlLocaleAllowedMethods.includes(method.toLowerCase()))
+	) {
+		return url;
+	}
+
+	// use correct query param separator
+	const separator = url.includes("?") ? "&" : "?";
+	return `${url}${separator}urlLocale=${encodeURIComponent(pageLocaleCode)}`;
+};
+
 const ajaxPrefilter = (
 	options: AjaxOptions,
 	_originalOptions: unknown,
@@ -289,6 +313,9 @@ const ajaxPrefilter = (
 	if (acceptLanguageValue) {
 		jqxhr.setRequestHeader("Accept-Language", acceptLanguageValue);
 	}
+
+	// append urlLocale query parameter
+	modifiedOptions.url = appendUrlLocaleParam(modifiedOptions.url, options.type);
 };
 
 const getSeoName = (assetName: string): string => {
@@ -344,6 +371,7 @@ export {
 	getOverrideLanguageHeader,
 	setOverrideLanguageHeader,
 	getAcceptLanguageValue,
+	appendUrlLocaleParam,
 	addCrossDomainOptionsToAllRequests,
 	supportLocalizedUrls,
 	Urls, // Eventually we can get rid of Endpoints.Urls, but existing JS in WWW depends on it.

@@ -5,6 +5,7 @@ export enum TUserSignalType {
 
 export enum TUserSignalAssetType {
 	Game = "Game",
+	SponsoredGame = "SponsoredGame",
 }
 
 export enum TUserSignalValueType {

@@ -215,9 +215,46 @@ const getThumbnailOverrideListId = (
 	return gameData.primaryMediaAsset?.wideImageListId;
 };
 
+const getVideoAssetIdFromMediaLayoutData = (
+	layoutData: TMediaLayoutData,
+): number | null => {
+	const assetId = layoutData?.primaryMediaAsset?.wideVideoAssetId;
+	if (assetId && assetId !== "0") {
+		return parseInt(assetId, 10);
+	}
+
+	return null;
+};
+
+/**
+ * Extract the video asset ID from game data, following the same priority chain
+ * as getThumbnailOverrideAssetId: sort-specific layout -> default layout -> root primaryMediaAsset.
+ */
+export const getVideoOverrideAssetId = (
+	gameData: TGameData,
+	topicId: string | undefined,
+): number | null => {
+	let assetId;
+
+	if (
+		gameData.layoutDataBySort &&
+		topicId &&
+		gameData.layoutDataBySort[topicId]
+	) {
+		assetId = getVideoAssetIdFromMediaLayoutData(
+			gameData.layoutDataBySort[topicId],
+		);
+	} else if (gameData.defaultLayoutData) {
+		assetId = getVideoAssetIdFromMediaLayoutData(gameData.defaultLayoutData);
+	}
+
+	return assetId || getVideoAssetIdFromMediaLayoutData(gameData);
+};
+
 export type TGameImpressionsEventThumbnailIdData = {
 	[EventStreamMetadata.ThumbnailAssetIds]: string[];
 	[EventStreamMetadata.ThumbnailListIds]: string[];
+	[EventStreamMetadata.VideoAssetIds]: string[];
 };
 
 export const getThumbnailAssetIdImpressionsData = (
@@ -227,16 +264,23 @@ export const getThumbnailAssetIdImpressionsData = (
 	componentType?: TComponentType,
 ): TGameImpressionsEventThumbnailIdData | {} => {
 	if (isWideTileComponentType(componentType)) {
+		const topicIdString = topicId.toString();
+
 		return {
 			[EventStreamMetadata.ThumbnailAssetIds]: impressedIndexes.map(
 				(index) =>
-					getThumbnailOverrideAssetId(gameData[index]!, topicId.toString()) ??
-					"0",
+					getThumbnailOverrideAssetId(gameData[index]!, topicIdString) ?? "0",
 			),
 			[EventStreamMetadata.ThumbnailListIds]: impressedIndexes.map(
 				(index) =>
-					getThumbnailOverrideListId(gameData[index]!, topicId.toString()) ??
-					"0",
+					getThumbnailOverrideListId(gameData[index]!, topicIdString) ?? "0",
+			),
+			[EventStreamMetadata.VideoAssetIds]: impressedIndexes.map(
+				(index) =>
+					getVideoOverrideAssetId(
+						gameData[index]!,
+						topicIdString,
+					)?.toString() ?? "0",
 			),
 		};
 	}
@@ -575,6 +619,7 @@ export default {
 	composeQueryString,
 	getSponsoredAdImpressionsData,
 	getThumbnailAssetIdImpressionsData,
+	getVideoOverrideAssetId,
 	getTileBadgeContextsImpressionsData,
 	getTileFooterImpressionsData,
 	getAbsoluteRowClickData,
