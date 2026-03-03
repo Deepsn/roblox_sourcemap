@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 // TODO: remove this and use built-in `Url` object in JS
-// @ts-ignore-error The type definitions below are according to https://github.com/defunctzombie/node-url
+// @ts-expect-error The type definitions below are according to https://github.com/defunctzombie/node-url
 import url from "npm-url";
 import { StringifiableRecord } from "query-string";
 

@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { isVideoPlayerSupportedByBrowser } from "@rbx/video-player";
 import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import { usePlayabilityStatus, PlayabilityStatus } from "@rbx/game-play-button";
-import bedev2Services from "../../common/services/bedev2Services";
+import useExperimentValues from "../../common/hooks/useExperimentValues";
 import experimentConstants from "../../common/constants/experimentConstants";
 
 const { layerNames, defaultValues } = experimentConstants;
@@ -11,7 +11,7 @@ const { layerNames, defaultValues } = experimentConstants;
  * Verify that the user:
  * - is authenticated
  * - is enrolled in the IXP experiment for Game Preview Video (unless bypassed)
- * - can play this experience (experience is playable for this user)
+ * - can play this experience (experience is playable or the unplayable reason is not in the ineligible list)
  *
  * All of these conditions must be true for the user to see the Video Preview.
  *
@@ -51,35 +51,13 @@ const useIsEligibleForVideoPreview = (
 	const { playabilityStatus, isPlayable, isFetchingPlayability } =
 		usePlayabilityStatus(universeId);
 
-	const [isGamePreviewVideoEnabledIxp, setIsGamePreviewVideoEnabledIxp] =
-		useState<boolean>(shouldBypassIxpCheck);
-	const [isLoadingIxp, setIsLoadingIxp] = useState<boolean>(false);
-
-	useEffect(() => {
-		if (shouldBypassIxpCheck) {
-			setIsGamePreviewVideoEnabledIxp(true);
-			setIsLoadingIxp(false);
-			return;
-		}
-
-		setIsLoadingIxp(true);
-		bedev2Services
-			.getExperimentationValues(
-				layerNames.gameDetails,
-				defaultValues.gameDetails,
-			)
-			.then((data) => {
-				setIsGamePreviewVideoEnabledIxp(!!data.IsGamePreviewVideoEnabled);
-			})
-			.catch(() => {
-				setIsGamePreviewVideoEnabledIxp(
-					defaultValues.gameDetails.IsGamePreviewVideoEnabled,
-				);
-			})
-			.finally(() => {
-				setIsLoadingIxp(false);
-			});
-	}, [shouldBypassIxpCheck]);
+	const { ixpData, isLoading } = useExperimentValues(
+		layerNames.gameDetails,
+		defaultValues.gameDetails,
+	);
+	const isLoadingIxp = shouldBypassIxpCheck ? false : isLoading;
+	const isGamePreviewVideoEnabledIxp =
+		shouldBypassIxpCheck || ixpData.IsGamePreviewVideoEnabled;
 
 	return useMemo(() => {
 		if (isLoadingIxp || isFetchingPlayability) {
@@ -89,11 +67,11 @@ const useIsEligibleForVideoPreview = (
 			};
 		}
 
-		// Experience must be playable and not have an ineligible playability status
+		// Experience is eligible if playable, or if not playable but the reason is not in the ineligible list
 		const isEligibleFromPlayabilityStatus =
-			isPlayable === true &&
-			playabilityStatus !== undefined &&
-			!ineligibleVideoPlayabilityStatuses.has(playabilityStatus);
+			isPlayable === true ||
+			(playabilityStatus !== undefined &&
+				!ineligibleVideoPlayabilityStatuses.has(playabilityStatus));
 
 		const isEligible =
 			Boolean(authenticatedUser()?.isAuthenticated) &&

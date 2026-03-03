@@ -11,7 +11,7 @@ import eventStreamConstants, {
 	GameTileOverflowMenuActionType,
 } from "../constants/eventStreamConstants";
 import useFocused from "../hooks/useFocused";
-import bedev1Services from "../services/bedev1Services";
+import useReferralPlaceId from "../hooks/useReferralPlaceId";
 import { TGameData, TGetFriendsResponse } from "../types/bedev1Types";
 import {
 	TComponentType,
@@ -148,27 +148,7 @@ const WideGameTile = React.forwardRef(
 		const [isFocused, onFocus, onFocusLost] = useFocused();
 		const pageSession = usePageSession();
 
-		const [referralPlaceId, setReferralPlaceId] = useState<number>(
-			gameData.placeId,
-		);
-
-		useEffect(() => {
-			if (navigationRootPlaceId && !Number.isNaN(navigationRootPlaceId)) {
-				setReferralPlaceId(parseInt(navigationRootPlaceId, 10));
-			} else if (gameData.navigationUid) {
-				// Fetch the place ID to navigate to for this universe ID
-				bedev1Services
-					.getGameDetails(gameData.navigationUid)
-					.then((data) => {
-						if (data?.rootPlaceId) {
-							setReferralPlaceId(data.rootPlaceId);
-						}
-					})
-					.catch(() => {
-						// non-blocking, as we will fallback to gameData.placeId
-					});
-			}
-		}, [navigationRootPlaceId, gameData.navigationUid]);
+		const referralPlaceId = useReferralPlaceId(gameData, navigationRootPlaceId);
 
 		const clientReferralUrl = useMemo(() => {
 			return browserUtils.buildGameDetailUrl(
@@ -438,6 +418,7 @@ const WideGameTile = React.forwardRef(
 									<GameTileVideoPlayer
 										videoAssetId={videoAssetId}
 										universeId={gameData.universeId.toString()}
+										page={page}
 									/>
 								)}
 								<GameTileOverlayPill
@@ -492,7 +473,7 @@ const WideGameTile = React.forwardRef(
 										>
 											<GameTilePlayButton
 												universeId={gameData.universeId.toString()}
-												placeId={gameData.placeId.toString()}
+												placeId={referralPlaceId.toString()}
 												playButtonEventProperties={playButtonEventProperties}
 												buttonClassName="btn-growth-xs play-button"
 												purchaseIconClassName="icon-robux-white"
@@ -512,7 +493,7 @@ const WideGameTile = React.forwardRef(
 								>
 									<GameTilePlayButton
 										universeId={gameData.universeId.toString()}
-										placeId={gameData.placeId.toString()}
+										placeId={referralPlaceId.toString()}
 										playButtonEventProperties={playButtonEventProperties}
 										buttonClassName="btn-growth-xs play-button"
 										purchaseIconClassName="icon-robux-white"

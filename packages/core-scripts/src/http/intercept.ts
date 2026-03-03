@@ -52,10 +52,11 @@ let currentToken = getToken();
 axios.interceptors.request.use((config: UrlConfig) => {
 	const { method, noCache, noPragma, headers, url } = config;
 	const newConfig = { headers: {}, ...config };
-	// if type is post or delete add XsrfToken to header.
+	// if type is post, put, patch, or delete add XsrfToken to header.
 	if (
 		method === HttpRequestMethods.POST ||
 		method === HttpRequestMethods.PATCH ||
+		method === HttpRequestMethods.PUT ||
 		method === HttpRequestMethods.DELETE
 	) {
 		if (!currentToken) {

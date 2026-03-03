@@ -19,7 +19,8 @@ import { searchLandingPage } from "../common/constants/configConstants";
 import OmniFeedItem from "../omniFeed/OmniFeedItem";
 import { PageContext } from "../common/types/pageContext";
 import useFriendsPresence from "../common/hooks/useFriendsPresence";
-import useIsSearchQueryPillsEnabled from "./hooks/useIsSearchQueryPillsEnabled";
+import useExperimentValues from "../common/hooks/useExperimentValues";
+import experimentConstants from "../common/constants/experimentConstants";
 
 function SearchLandingPageOmniFeed({
 	translate,
@@ -33,8 +34,13 @@ function SearchLandingPageOmniFeed({
 	const shouldNotifyHasContentRef = useRef(false);
 
 	const friendsPresenceData = useFriendsPresence();
-	const { isSearchQueryPillsEnabled, isIxpLoading } =
-		useIsSearchQueryPillsEnabled();
+	const { ixpData, isLoading: ixpLoading } = useExperimentValues(
+		experimentConstants.layerNames.searchLandingPage,
+		experimentConstants.defaultValues.searchLandingPage,
+	);
+	const isSearchQueryPillsEnabled = ixpData.IsSearchQueryPillsEnabled;
+	const isMigrateToNewSlpEndpointEnabled =
+		ixpData.IsMigrateToNewSlpEndpointEnabled;
 
 	useEffect(() => {
 		const isValidUpdateSessionInfoEvent = (
@@ -93,7 +99,10 @@ function SearchLandingPageOmniFeed({
 			return;
 		}
 		bedev2Services
-			.getSearchLandingRecommendations(sessionInfo)
+			.getSearchLandingRecommendations(
+				sessionInfo,
+				isMigrateToNewSlpEndpointEnabled,
+			)
 			.then((data) => {
 				window.EventTracker?.fireEvent(
 					searchLandingPage.searchLandingPageFetchRecommendationsSuccess,
@@ -136,12 +145,16 @@ function SearchLandingPageOmniFeed({
 				);
 				setRecommendations(undefined);
 			});
-	}, [sessionInfo, isSearchQueryPillsEnabled]);
+	}, [
+		sessionInfo,
+		isSearchQueryPillsEnabled,
+		isMigrateToNewSlpEndpointEnabled,
+	]);
 
 	useEffect(() => {
-		if (!showSearchLanding) return;
+		if (!showSearchLanding || ixpLoading) return;
 		fetchLandingRecommendations();
-	}, [fetchLandingRecommendations, showSearchLanding]);
+	}, [fetchLandingRecommendations, showSearchLanding, ixpLoading]);
 
 	useEffect(() => {
 		if (shouldNotifyHasContentRef.current) {
@@ -152,7 +165,7 @@ function SearchLandingPageOmniFeed({
 
 	// If the SLP is disabled or the recommendations are empty, don't render the SLP
 	if (
-		isIxpLoading ||
+		ixpLoading ||
 		!showSearchLanding ||
 		!prevHasRecommendations ||
 		!recommendations

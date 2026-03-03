@@ -31,7 +31,8 @@ import ErrorContainer from "../../common/components/ErrorContainer";
 import { CommonGameSorts } from "../../common/constants/translationConstants";
 import SongsSeeAllGrid from "./SongsSeeAllGrid";
 import { PageContext } from "../../common/types/pageContext";
-import useDiscoverExperimentValues from "../../common/hooks/useDiscoverExperimentValues";
+import useExperimentValues from "../../common/hooks/useExperimentValues";
+import experimentConstants from "../../common/constants/experimentConstants";
 
 type TSortDetailExploreApiProps = {
 	translate: TranslateFunction;
@@ -57,7 +58,11 @@ export const SortDetailExploreApi = ({
 		return getDeviceFeatures();
 	}, []);
 
-	const { isMusicChartsCarouselEnabled } = useDiscoverExperimentValues();
+	const { ixpData } = useExperimentValues(
+		experimentConstants.layerNames.discoverPage,
+		experimentConstants.defaultValues.discoverPage,
+	);
+	const isMusicChartsCarouselEnabled = ixpData.IsMusicChartsCarouselEnabled;
 
 	const fetchData = useCallback(
 		(filterParams: Map<string, string>, pageToken?: string) => {

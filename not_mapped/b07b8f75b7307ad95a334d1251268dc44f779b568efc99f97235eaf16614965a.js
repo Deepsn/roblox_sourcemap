@@ -2284,7 +2284,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.Toggle.AllowAgeCheck":
 		"Our partner company, Persona, will estimate your child’s age with a photo.",
 	"Description.FacialAgeEstimationDisclaimer":
-		"By clicking \"Allow\" I agree that Roblox and Roblox’s vendor, Persona, may process my child’s facial images for the purpose of estimating their age. See {facialCapturePrivacyLinkStart}Roblox's Facial Media Capture Privacy Notice{facialCapturePrivacyLinkEnd} and {personaLinkStart}Persona's Privacy Policy{personaLinkEnd}.",
+		"By selecting \"Allow\", I agree that Roblox and Roblox’s vendor, Persona, may process my child’s facial images for the purpose of estimating their age. See {facialCapturePrivacyLinkStart}Roblox's Facial Media Capture Privacy Notice{facialCapturePrivacyLinkEnd} and {personaLinkStart}Persona's Privacy Policy{personaLinkEnd}.",
 	"Title.AgeCheckRequiredForChild":
 		"Your child’s safety matters: we need to check their age",
 	"Description.AgeCheckRequiredForChild":
@@ -2398,6 +2398,17 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.BackupCodes": "Backup codes",
 	"Label.BackupCodesDescription": "Create and store codes.",
 	"Label.ChooseOneOfThese": "Choose one of these:",
+	"Label.DoNotShare": "Do not share your backup codes with anyone.",
+	"Action.CreateAgain": "Create again",
+	"Description.ClearRecoveryCodesWarning":
+		"Are you sure you want to clear your recovery codes?",
+	"Heading.ClearRecoveryCodes": "Clear Recovery Codes",
+	"Heading.AddTrustedConnection": "New Trusted Connection: {username}",
+	"Description.TrustedConnectionAddApproved":
+		"{displayName} will be added as a Trusted Connection for your child.",
+	"Description.TrustedConnectionAddDenied":
+		"{displayName} has not been added as a Trusted Connection for your child.",
+	"Label.AddTrustedConnection": "add {displayName} as a Trusted Connection",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -28,6 +28,10 @@ const url = {
 		url: `${apiGatewayUrl}/search-api/search-landing-page`,
 		withCredentials: true,
 	},
+	getSearchLandingPageV2: {
+		url: `${apiGatewayUrl}/search-landing-page-api/v1`,
+		withCredentials: true,
+	},
 	getSurvey: (locationName: string): UrlConfig => ({
 		url: `${apiGatewayUrl}/rocap/v1/locations/${locationName}/prompts`,
 		withCredentials: true,

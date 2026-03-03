@@ -93,7 +93,8 @@ export const HomePageCarousel = ({
 	const tileRef = useRef<HTMLDivElement>(null);
 	const homePageSessionInfo = usePageSession();
 	const buildEventProperties: TBuildEventProperties = (data, id) => ({
-		[EventStreamMetadata.PlaceId]: data.placeId,
+		[EventStreamMetadata.PlaceId]: data.placeIdOverride ?? data.placeId,
+		[EventStreamMetadata.PlaceIdOverride]: data.placeIdOverride,
 		[EventStreamMetadata.UniverseId]: data.universeId,
 		[EventStreamMetadata.IsAd]: data.isSponsored,
 		[EventStreamMetadata.NativeAdData]: data.nativeAdData,
@@ -105,6 +106,7 @@ export const HomePageCarousel = ({
 		[EventStreamMetadata.Page]: PageContext.HomePage,
 		[SessionInfoType.HomePageSessionInfo]: homePageSessionInfo,
 		[EventStreamMetadata.PlayContext]: PageContext.HomePage,
+		[EventStreamMetadata.LaunchData]: data.launchDataOverride,
 	});
 
 	const buildGameImpressionsProperties: TBuildCarouselGameImpressionsEventProperties =

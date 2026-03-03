@@ -233,6 +233,8 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 		"Enjoy up to {boldStart}25% more Robux{boldEnd} with your gift card credit",
 	"Heading.ConvertCreditToRobux": "Convert credit to Robux",
 	"Label.RemainingBalance": "Remaining balance",
+	"Label.LearnAboutRobloxSafety":
+		"Learn About Roblox Safety, Moderation, and Parental Controls",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

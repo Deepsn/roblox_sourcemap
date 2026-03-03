@@ -96,27 +96,16 @@ export const GameTileBase = ({
 				gameLayoutData={gameLayoutData}
 				isFocused={!!isFocused}
 			/>
-			{page === PageContext.GamesPage ? (
-				<div className="game-card-thumb-container">
-					<Thumbnail2d
-						type={ThumbnailTypes.gameIcon}
-						size={iconSize}
-						targetId={gameData.universeId}
-						containerClass="game-card-thumb"
-						format={ThumbnailFormat.jpeg}
-						altName={gameData.name}
-					/>
-				</div>
-			) : (
+			<div className="game-card-thumb-container">
 				<Thumbnail2d
 					type={ThumbnailTypes.gameIcon}
 					size={iconSize}
 					targetId={gameData.universeId}
-					containerClass="game-card-thumb-container"
+					containerClass="game-card-thumb"
 					format={ThumbnailFormat.jpeg}
 					altName={gameData.name}
 				/>
-			)}
+			</div>
 
 			<div className="game-card-name game-name-title" title={gameData.name}>
 				{gameData.name}

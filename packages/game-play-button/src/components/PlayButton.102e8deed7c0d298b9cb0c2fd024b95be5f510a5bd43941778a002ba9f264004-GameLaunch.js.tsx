@@ -126,11 +126,9 @@ const getShowIdentityVerificationFlow = async (
 	};
 };
 
-const getJoindata = (launchDataFromProps?: string) => {
-	// Allow launchData to be passed from props for direct joins
+const getJoindata = () => {
 	const launchData =
-		new URLSearchParams(window.location.search).get("launchData") ??
-		launchDataFromProps;
+		new URLSearchParams(window.location.search).get("launchData") ?? undefined;
 	const eventId =
 		new URLSearchParams(window.location.search).get("eventId") ?? undefined;
 	return {
@@ -311,11 +309,7 @@ const PlayButtonContents = ({
 
 						handleShareLinkEventLogging(placeId, universeId);
 
-						const joinData = getJoindata(
-							eventProperties.launchData != null
-								? String(eventProperties.launchData)
-								: undefined,
-						);
+						const joinData = getJoindata();
 
 						launchGame(
 							placeId,

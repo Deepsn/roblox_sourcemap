@@ -109,7 +109,8 @@ export const SortDetailGridV2DiscoveryApi = ({
 	const buildEventProperties: TBuildEventProperties = useCallback(
 		(data, id) => {
 			return {
-				placeId: data.placeId,
+				placeId: data.placeIdOverride ?? data.placeId,
+				placeIdOverride: data.placeIdOverride,
 				universeId: data.universeId,
 				isAd: gameData[id]?.isSponsored,
 				nativeAdData: gameData[id]?.nativeAdData,
@@ -118,6 +119,7 @@ export const SortDetailGridV2DiscoveryApi = ({
 				gameSetTypeId: sort.topicId,
 				homePageSessionInfo,
 				page: PageContext.SortDetailPageHome,
+				launchData: data.launchDataOverride,
 			};
 		},
 		[gameData, homePageSessionInfo, sort.topicId],

@@ -372,12 +372,13 @@ const getProfiles = async (
 
 const getSearchLandingRecommendations = async (
 	sessionId: string,
+	isMigrateToNewSlpEndpointEnabled?: boolean,
 ): Promise<TExploreApiSortsResponse> => {
+	const urlConfig = isMigrateToNewSlpEndpointEnabled
+		? bedev2Constants.url.getSearchLandingPageV2
+		: bedev2Constants.url.getSearchLandingPage;
 	const params = { sessionId };
-	const { data } = await http.get<TExploreApiSortsResponse>(
-		bedev2Constants.url.getSearchLandingPage,
-		params,
-	);
+	const { data } = await http.get<TExploreApiSortsResponse>(urlConfig, params);
 	return data;
 };
 

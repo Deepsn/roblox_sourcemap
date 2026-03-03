@@ -3,12 +3,14 @@ import GamePreviewVideoPlayer from "../../gameDetails/components/GamePreviewVide
 import useIsEligibleForVideoPreview from "../../gameDetails/hooks/useIsEligibleForVideoPreview";
 import { CacheProvider, createCache, UIThemeProvider } from "@rbx/ui";
 import { useTheme } from "@rbx/core-scripts/react";
+import { PageContext } from "../types/pageContext";
 
 const cache = createCache();
 
 type TGameTileVideoPlayerProps = {
 	videoAssetId: number;
 	universeId: string;
+	page?: PageContext;
 };
 
 /**
@@ -23,6 +25,7 @@ type TGameTileVideoPlayerProps = {
 const GameTileVideoPlayer = ({
 	videoAssetId,
 	universeId,
+	page,
 }: TGameTileVideoPlayerProps): JSX.Element | null => {
 	const theme = useTheme();
 
@@ -66,6 +69,7 @@ const GameTileVideoPlayer = ({
 					loadingComponent={shimmerComponent}
 					handleFailure={handleFailure}
 					disableControls
+					page={page}
 				/>
 			</UIThemeProvider>
 		</CacheProvider>

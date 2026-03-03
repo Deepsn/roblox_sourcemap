@@ -90,6 +90,7 @@ export enum EventStreamMetadata {
 	IsAd = "isAd",
 	IsVideo = "isVideo",
 	IsYoutubeVideo = "isYoutubeVideo",
+	LaunchData = "launchData",
 	MediaGalleryEventType = "evt",
 	NativeAdData = "nativeAdData",
 	AdIds = "adIds",
@@ -97,6 +98,7 @@ export enum EventStreamMetadata {
 	Page = "page",
 	PageSession = "pageSession",
 	PlaceId = "placeId",
+	PlaceIdOverride = "placeIdOverride",
 	PlayContext = "playContext",
 	Position = "position",
 	Pos = "pos",
@@ -141,7 +143,7 @@ export enum EventStreamMetadata {
 	UniverseIds = "universeIds",
 	FriendId = "friendId",
 	VideoAssetId = "videoAssetId",
-	VideoAssetIds = "videoAssetIds",
+	VideoThumbnailAssetIds = "videoThumbnailAssetIds",
 	ThumbnailAssetIds = "thumbnailAssetIds",
 	ThumbnailListIds = "thumbnailListIds",
 	LinkPath = "linkPath",
@@ -243,7 +245,7 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.AdIds]?: string[];
 	[EventStreamMetadata.ThumbnailAssetIds]?: string[];
 	[EventStreamMetadata.ThumbnailListIds]?: string[];
-	[EventStreamMetadata.VideoAssetIds]?: string[];
+	[EventStreamMetadata.VideoThumbnailAssetIds]?: number[];
 	[EventStreamMetadata.NavigationUids]?: string[];
 	[EventStreamMetadata.TileBadgeContexts]?: string[];
 	[EventStreamMetadata.FooterTextLiterals]?: string[];
@@ -359,6 +361,8 @@ export type TCommonReferralParams = {
 		| PageContext.PeopleListInHomePage
 		| PageContext.SearchLandingPage
 		| PageContext.SpotlightPage;
+	[EventStreamMetadata.PlaceIdOverride]?: number;
+	[EventStreamMetadata.LaunchData]?: string;
 };
 
 export type TGameDetailReferral =

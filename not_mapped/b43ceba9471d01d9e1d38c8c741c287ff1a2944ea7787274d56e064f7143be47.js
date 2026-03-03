@@ -464,7 +464,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.FacialAgeEstimationConsent": "Can your child complete an age check?",
 	"Title.AgeCheck": "How an age check works",
 	"Description.AgeCheck":
-		"Our partner company Persona will estimate their age with a selfie.",
+		"Our partner company Persona will estimate your child’s age using their device’s camera.",
 	"Message.FacialAgeEstimationDenied":
 		"Your child cannot complete an age check",
 	"Message.FacialAgeEstimationSuccess":
@@ -477,7 +477,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"This request doesn't need parental review because your child's age, location, or account information has been updated.",
 	"Title.ChildNoLongerEligible": "This review is no longer necessary",
 	"Description.FacialAgeEstimationConsentV2":
-		"Your child needs an age check to chat with people in similar age groups.",
+		"Your child can complete an age check to use features appropriate for their age group.",
 	"Heading.ConversationalRequest.CommunityNotifications":
 		"Do you want to allow your child to enable push notifications from communities on Roblox?",
 	"Heading.ConversationalRequest.SensitiveIssues":
@@ -549,6 +549,14 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestContentMaturity":
 		"This setting manages which experiences your child can join. {linkStart}Learn more{linkEnd}",
 	"Label.Trusted": "Trusted",
+	"Heading.ConversationalRequest.AddTrustedConnection":
+		"Can your child add {displayName} as a Trusted Connection?",
+	"Description.AddTrustedConnectionConsent":
+		"This allows your child to use chat, Party voice chat, and other features with this person. Make sure this is a person you know and trust. {linkStart}View Details{linkEnd}.",
+	"Message.AddTrustedConnectionSuccess":
+		"{displayName} will be added as a Trusted Connection for your child",
+	"Message.AddTrustedConnectionDenied":
+		"{displayName} has not been added as a Trusted Connection for your child.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

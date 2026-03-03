@@ -52,6 +52,7 @@ const defaultValues = {
 	playButton: {},
 	searchLandingPage: {
 		IsSearchQueryPillsEnabled: false,
+		IsMigrateToNewSlpEndpointEnabled: false,
 	},
 };
 

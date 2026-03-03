@@ -9,6 +9,8 @@ import useAutoPlayVideoCarouselItem from "../hooks/useAutoPlayVideoCarouselItem"
 import ErrorBoundary from "../../common/components/ErrorBoundary";
 import getCurrentEnvironment from "../utils/environmentUtils";
 import gamePreviewVideoConstants from "../constants/gamePreviewVideoConstants";
+import { getVideoEventPageContext } from "../../common/utils/videoAnalyticsUtils";
+import { PageContext } from "../../common/types/pageContext";
 
 const { gamePreviewVideoCounters } = gamePreviewVideoConstants;
 
@@ -30,6 +32,7 @@ type TGamePreviewVideoPlayerProps = {
 	onPaused?: () => void;
 	onEnd?: () => void;
 	disableControls?: boolean;
+	page?: PageContext;
 };
 
 /**
@@ -48,6 +51,7 @@ const GamePreviewVideoPlayer = ({
 	onPaused,
 	onEnd,
 	disableControls = false,
+	page,
 }: TGamePreviewVideoPlayerProps): JSX.Element => {
 	const videoRef = useRef<VideoPlayerRef | null>(null);
 
@@ -55,6 +59,10 @@ const GamePreviewVideoPlayer = ({
 	const [playingStatus, setPlayingStatus] = useState<VideoPlayingStatus>(
 		VideoPlayingStatus.Unstarted,
 	);
+
+	const environment = useMemo(() => {
+		return getCurrentEnvironment();
+	}, []);
 
 	const playVideo = useCallback(async () => {
 		const video = videoRef.current;
@@ -141,12 +149,13 @@ const GamePreviewVideoPlayer = ({
 		return {
 			target: "www",
 			assetId: videoAssetId.toString(),
-			environment: getCurrentEnvironment(),
+			environment: environment,
 			source: "universe",
 			sourceId: universeId,
 			completionThreshold: 100,
+			pageContext: getVideoEventPageContext(page),
 		};
-	}, [videoAssetId, universeId]);
+	}, [videoAssetId, universeId, environment, page]);
 
 	return (
 		<div className={className}>
@@ -162,7 +171,7 @@ const GamePreviewVideoPlayer = ({
 				>
 					<RobloxVideoPlayer
 						ref={videoRef}
-						environment="production"
+						environment={environment}
 						// Video defaults to muted, can be manually unmuted by the user
 						muted
 						videoAssetId={videoAssetId.toString()}

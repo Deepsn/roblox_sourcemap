@@ -45,6 +45,19 @@ export const hydrateOmniRecommendationGames = (
 					gameData.nativeAdData = nativeAdData;
 					gameData.payerName = recommendationContentMetadata?.PayerName;
 
+					if (
+						recommendationContentMetadata?.PlaceIdOverride &&
+						!isNaN(Number(recommendationContentMetadata.PlaceIdOverride))
+					) {
+						gameData.placeIdOverride = Number(
+							recommendationContentMetadata.PlaceIdOverride,
+						);
+					}
+					if (recommendationContentMetadata?.LaunchDataOverride) {
+						gameData.launchDataOverride =
+							recommendationContentMetadata.LaunchDataOverride;
+					}
+
 					return gameData;
 				}
 
@@ -188,6 +201,7 @@ const mapExploreApiSearchPillsSortResponse = (
 		treatmentType: sort.treatmentType,
 		queries: sort.queries,
 		sortId: sort.sortId,
+		gameSetTargetId: sort.gameSetTargetId,
 		contentType: sort.contentType,
 		nextPageToken: sort.nextPageToken || "",
 		topicLayoutData: sort.topicLayoutData,
@@ -203,6 +217,7 @@ const mapExploreApiSongSortResponse = (
 		treatmentType: sort.treatmentType,
 		songs: sort.songs,
 		sortId: sort.sortId,
+		gameSetTargetId: sort.gameSetTargetId,
 		contentType: sort.contentType,
 		nextPageToken: sort.nextPageToken || "",
 		subtitle: sort.subtitle,
@@ -233,6 +248,14 @@ export const mapExploreApiSortsResponse = (
 	isSearchQueryPillsEnabled?: boolean,
 ): TExploreApiSorts => {
 	return {
+		header: data.header?.sorts
+			? {
+					sorts: data.header.sorts.map((sort) =>
+						mapExploreApiSortResponse(sort),
+					),
+					layoutData: data.header.layoutData,
+				}
+			: undefined,
 		sorts: data.sorts
 			.filter((sort) => {
 				// Filter out search pills sorts if the isSearchQueryPillsEnabled IXP variable is not true
@@ -327,6 +350,27 @@ export const getSortTargetIdMetadata = (
 	}
 
 	return {};
+};
+
+/**
+ * Get all the header sorts from the previous sorts data and the new sorts data.
+ * Only add new sorts to header sorts if nothing has been added to body sorts yet, otherwise ignore incoming header sorts.
+ * This is because we don't want to suddenly add sorts to the sticky header as the user scrolls and loads more charts sorts.
+ */
+export const getAllHeaderSorts = (
+	prevSortsData: TExploreApiSorts | undefined,
+	newSortsData: TExploreApiSorts,
+): TExploreApiSort[] => {
+	const previousHeaderSorts = prevSortsData?.header?.sorts;
+	const previousBodySorts = prevSortsData?.sorts;
+
+	if (previousBodySorts && previousBodySorts.length > 0) {
+		return previousHeaderSorts ?? [];
+	}
+	return [
+		...(previousHeaderSorts ?? []),
+		...(newSortsData.header?.sorts ?? []),
+	];
 };
 
 /**

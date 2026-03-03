@@ -166,6 +166,8 @@ export type TGameData = {
 	isSponsored?: boolean;
 	nativeAdData?: string;
 	payerName?: string;
+	placeIdOverride?: number;
+	launchDataOverride?: string;
 	isShowSponsoredLabel?: boolean;
 	creatorName: string;
 	creatorType: string;

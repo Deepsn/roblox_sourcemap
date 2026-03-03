@@ -50,7 +50,8 @@ const GamesSeeAllGrid = ({
 		data: TGameData,
 		id: number,
 	) => ({
-		[EventStreamMetadata.PlaceId]: data.placeId,
+		[EventStreamMetadata.PlaceId]: data.placeIdOverride ?? data.placeId,
+		[EventStreamMetadata.PlaceIdOverride]: data.placeIdOverride,
 		[EventStreamMetadata.UniverseId]: data.universeId,
 		[EventStreamMetadata.IsAd]: data.isSponsored,
 		[EventStreamMetadata.NativeAdData]: data.nativeAdData,
@@ -61,6 +62,7 @@ const GamesSeeAllGrid = ({
 		...getSortAppliedFiltersMetadata(sort),
 		[EventStreamMetadata.Page]: PageContext.SortDetailPageDiscover,
 		[SessionInfoType.DiscoverPageSessionInfo]: discoverPageSessionInfo,
+		[EventStreamMetadata.LaunchData]: data.launchDataOverride,
 	});
 
 	const buildGameImpressionsProperties: TBuildGridGameImpressionsEventProperties =

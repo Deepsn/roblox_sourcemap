@@ -22,6 +22,7 @@ import {
 } from "../common/types/bedev2Types";
 import {
 	extractFiltersFromExploreSorts,
+	getAllHeaderSorts,
 	isGameSortFromExploreApi,
 	mapExploreApiGameSortResponse,
 	mapExploreApiSortsResponse,
@@ -39,7 +40,8 @@ import configConstants from "../common/constants/configConstants";
 import getDeviceFeatures from "../common/utils/deviceFeaturesUtils";
 import useFilterUrlParams from "../omniFeed/hooks/useFilterUrlParams";
 import useFriendsPresence from "../common/hooks/useFriendsPresence";
-import useDiscoverExperimentValues from "../common/hooks/useDiscoverExperimentValues";
+import useExperimentValues from "../common/hooks/useExperimentValues";
+import experimentConstants from "../common/constants/experimentConstants";
 
 const { carouselContainerBufferWidth } = configConstants.gamesPage;
 
@@ -62,8 +64,13 @@ const GamesOmniFeed = ({ translate }: TGamesOmniFeedProps): JSX.Element => {
 		Map<string, boolean>
 	>(new Map());
 
-	const { isMusicChartsCarouselEnabled, isNewScrollArrowsAndHeaderEnabled } =
-		useDiscoverExperimentValues();
+	const { ixpData } = useExperimentValues(
+		experimentConstants.layerNames.discoverPage,
+		experimentConstants.defaultValues.discoverPage,
+	);
+	const isMusicChartsCarouselEnabled = ixpData.IsMusicChartsCarouselEnabled;
+	const isNewScrollArrowsAndHeaderEnabled =
+		ixpData.IsNewScrollArrowsAndHeaderEnabled;
 
 	const discoverPageSessionInfo = usePageSession();
 
@@ -104,25 +111,43 @@ const GamesOmniFeed = ({ translate }: TGamesOmniFeedProps): JSX.Element => {
 					if (!sortsPageToken) {
 						setSortsData(newSortsData);
 
-						const newFilters = extractFiltersFromExploreSorts(
-							newSortsData.sorts,
-						);
+						const newFilters = extractFiltersFromExploreSorts([
+							...(newSortsData.header?.sorts ?? []),
+							...newSortsData.sorts,
+						]);
 						if (newFilters) {
 							setFilters(newFilters);
 						}
 					} else {
 						setSortsData((prevSortsData) => {
+							const allHeaderSorts = getAllHeaderSorts(
+								prevSortsData,
+								newSortsData,
+							);
+
 							const allSorts = [
 								...(prevSortsData?.sorts ?? []),
 								...newSortsData.sorts,
 							];
 
-							const newFilters = extractFiltersFromExploreSorts(allSorts);
+							const newFilters = extractFiltersFromExploreSorts([
+								...allHeaderSorts,
+								...allSorts,
+							]);
 							if (newFilters) {
 								setFilters(newFilters);
 							}
 
 							return {
+								header:
+									allHeaderSorts.length > 0
+										? {
+												sorts: allHeaderSorts,
+												layoutData:
+													newSortsData?.header?.layoutData ??
+													prevSortsData?.header?.layoutData,
+											}
+										: prevSortsData?.header,
 								sorts: allSorts,
 								nextSortsPageToken: newSortsData.nextSortsPageToken,
 							};
@@ -288,6 +313,8 @@ const GamesOmniFeed = ({ translate }: TGamesOmniFeedProps): JSX.Element => {
 		};
 	}, [updateItemsPerRow]);
 
+	const headerSortCount = sortsData?.header?.sorts?.length ?? 0;
+
 	return (
 		<div ref={gamesFeedRef} className="games-page-container">
 			<div className="section">
@@ -300,26 +327,48 @@ const GamesOmniFeed = ({ translate }: TGamesOmniFeedProps): JSX.Element => {
 						onRefresh={() => fetchGamesPageData(getInitialUrlParamFilters())}
 					/>
 				)}
-				{sortsData?.sorts.map((sort, positionId) => (
-					<OmniFeedItem
-						// eslint-disable-next-line react/no-array-index-key
-						key={positionId}
-						translate={translate}
-						sort={sort}
-						positionId={positionId}
-						currentPage={PageContext.GamesPage}
-						itemsPerRow={itemsPerRowMap.get(positionId)}
-						startingRow={undefined}
-						gridRecommendations={[]}
-						friendsPresenceData={friendsPresenceData}
-						loadMoreGames={() => loadMoreGamesForSort(sort.sortId)}
-						isLoadingMoreGames={isLoadingMoreBySort.get(sort.sortId) === true}
-						isMusicChartsCarouselEnabled={isMusicChartsCarouselEnabled}
-						fetchGamesPageData={fetchGamesPageData}
-						isNewScrollArrowsEnabled={isNewScrollArrowsAndHeaderEnabled}
-						isNewSortHeaderEnabled={isNewScrollArrowsAndHeaderEnabled}
-					/>
-				))}
+				{headerSortCount > 0 && (
+					<div className="sticky-header-sorts">
+						{sortsData?.header?.sorts.map((sort, positionId) => (
+							<OmniFeedItem
+								key={`${sort.sortId}-${sort.topicId}-${sort.gameSetTargetId}`}
+								translate={translate}
+								sort={sort}
+								positionId={positionId}
+								currentPage={PageContext.GamesPage}
+								itemsPerRow={undefined}
+								startingRow={undefined}
+								gridRecommendations={[]}
+								friendsPresenceData={friendsPresenceData}
+								isMusicChartsCarouselEnabled={isMusicChartsCarouselEnabled}
+								fetchGamesPageData={fetchGamesPageData}
+								isNewScrollArrowsEnabled={isNewScrollArrowsAndHeaderEnabled}
+								isNewSortHeaderEnabled={isNewScrollArrowsAndHeaderEnabled}
+							/>
+						))}
+					</div>
+				)}
+				<div className={headerSortCount > 0 ? "body-sorts" : ""}>
+					{sortsData?.sorts.map((sort, positionId) => (
+						<OmniFeedItem
+							key={`${sort.sortId}-${sort.topicId}-${sort.gameSetTargetId}`}
+							translate={translate}
+							sort={sort}
+							positionId={positionId + headerSortCount}
+							currentPage={PageContext.GamesPage}
+							itemsPerRow={itemsPerRowMap.get(positionId)}
+							startingRow={undefined}
+							gridRecommendations={[]}
+							friendsPresenceData={friendsPresenceData}
+							loadMoreGames={() => loadMoreGamesForSort(sort.sortId)}
+							isLoadingMoreGames={isLoadingMoreBySort.get(sort.sortId) === true}
+							isMusicChartsCarouselEnabled={isMusicChartsCarouselEnabled}
+							fetchGamesPageData={fetchGamesPageData}
+							isNewScrollArrowsEnabled={isNewScrollArrowsAndHeaderEnabled}
+							isNewSortHeaderEnabled={isNewScrollArrowsAndHeaderEnabled}
+						/>
+					))}
+				</div>
 				{!error && <SentinelTile loadData={checkLoadMoreSorts} />}
 				{isFetching && <Loading />}
 			</div>

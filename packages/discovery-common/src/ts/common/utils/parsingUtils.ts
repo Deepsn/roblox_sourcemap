@@ -254,7 +254,7 @@ export const getVideoOverrideAssetId = (
 export type TGameImpressionsEventThumbnailIdData = {
 	[EventStreamMetadata.ThumbnailAssetIds]: string[];
 	[EventStreamMetadata.ThumbnailListIds]: string[];
-	[EventStreamMetadata.VideoAssetIds]: string[];
+	[EventStreamMetadata.VideoThumbnailAssetIds]?: number[];
 };
 
 export const getThumbnailAssetIdImpressionsData = (
@@ -275,12 +275,9 @@ export const getThumbnailAssetIdImpressionsData = (
 				(index) =>
 					getThumbnailOverrideListId(gameData[index]!, topicIdString) ?? "0",
 			),
-			[EventStreamMetadata.VideoAssetIds]: impressedIndexes.map(
+			[EventStreamMetadata.VideoThumbnailAssetIds]: impressedIndexes.map(
 				(index) =>
-					getVideoOverrideAssetId(
-						gameData[index]!,
-						topicIdString,
-					)?.toString() ?? "0",
+					getVideoOverrideAssetId(gameData[index]!, topicIdString) ?? 0,
 			),
 		};
 	}

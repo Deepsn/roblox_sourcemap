@@ -216,7 +216,13 @@ export type TExploreApiSortResponse =
 	| TExploreApiSongsSortResponse
 	| TExploreApiSearchPillsSortResponse;
 
+export type TExploreApiHeaderSortResponse = {
+	sorts: TExploreApiSortResponse[];
+	layoutData?: TTopicLayoutData;
+};
+
 export type TExploreApiSortsResponse = {
+	header?: TExploreApiHeaderSortResponse;
 	sorts: TExploreApiSortResponse[];
 	nextSortsPageToken: string;
 };
@@ -246,6 +252,7 @@ export type TExploreApiFiltersSort = {
 export type TExploreApiSearchPillsSort = {
 	topic: string;
 	topicId: number;
+	gameSetTargetId?: number;
 	treatmentType: TTreatmentType.SearchPillCarousel;
 	topicLayoutData?: TTopicLayoutData;
 	queries: TQueryData[];
@@ -257,6 +264,7 @@ export type TExploreApiSearchPillsSort = {
 export type TExploreApiSongsSort = {
 	topic: string;
 	topicId: number;
+	gameSetTargetId?: number;
 	songs: TSongData[];
 	treatmentType: TTreatmentType.SongCarousel;
 	nextPageToken: string;
@@ -274,7 +282,13 @@ export type TExploreApiSort =
 	| TExploreApiSongsSort
 	| TExploreApiSearchPillsSort;
 
+export type TExploreApiHeaderSort = {
+	sorts: TExploreApiSort[];
+	layoutData?: TTopicLayoutData;
+};
+
 export type TExploreApiSorts = {
+	header?: TExploreApiHeaderSort;
 	sorts: TExploreApiSort[];
 	nextSortsPageToken: string;
 };

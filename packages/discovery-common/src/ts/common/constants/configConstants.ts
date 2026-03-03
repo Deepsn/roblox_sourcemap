@@ -57,7 +57,10 @@ export const common = {
 	},
 	RatingPercentageText: "Label.RatingPercentage",
 	NoMatchingEventContextFoundCounterEvent: "NoMatchingEventContextFound",
+	NoMatchingVideoEventPageContextFoundCounterEvent:
+		"NoMatchingVideoEventPageContextFound",
 	NoMatchingSessionInfoTypeFoundCounterEvent: "NoMatchingSessionInfoTypeFound",
+	FetchExperimentationLayerValuesError: "FetchExperimentationLayerValuesError",
 };
 
 export const gameSearchPage = {
