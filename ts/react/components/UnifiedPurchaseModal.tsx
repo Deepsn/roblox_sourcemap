@@ -7,21 +7,40 @@ import {
 	DialogContent,
 	DialogFooter,
 } from "@rbx/foundation-ui";
-
+import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
 import translationConfig from "../../../js/react/itemPurchase/translation.config";
+import SubscriptionUpsellBanner from "./Subscriptions/SubscriptionUpsellBanner";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import useModalShownTracking from "../hooks/useModalShownTracking";
+import DiscountPriceDetail from "./DiscountPriceDetail";
+
+export type DiscountInformation = {
+	originalPrice?: number;
+	totalDiscountAmount?: number;
+	totalDiscountPercentage?: number;
+	discounts?: Array<{
+		discountAmount?: number;
+		discountPercentage?: number;
+		discountCampaign?: string;
+		localizedDiscountAttribution?: string;
+	}>;
+};
 
 export type UnifiedPurchaseModalProps = {
 	translate: TranslateFunction;
 	expectedPrice: number;
+	displayPrice?: string;
 	thumbnail: React.ReactNode;
 	assetName: string;
 	assetType: string;
 	assetTypeDisplayName?: string;
 	sellerName: string;
 	onAction: () => void;
+	onSecondaryAction?: () => void;
+	secondaryActionButtonText?: string;
+	footerDisclaimerText?: React.ReactNode;
+	priceSuffix?: string;
 	onCancel?: () => void;
 	loading?: boolean;
 	currentRobuxBalance?: number;
@@ -29,6 +48,8 @@ export type UnifiedPurchaseModalProps = {
 	open?: boolean;
 	titleText: string;
 	actionButtonText: string;
+	subscriptionProductInfo?: SubscriptionProductInfo;
+	discountInformation?: DiscountInformation | null;
 };
 
 const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
@@ -36,17 +57,24 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 	titleText,
 	actionButtonText,
 	expectedPrice,
+	displayPrice,
 	thumbnail,
 	assetName,
 	assetType,
 	assetTypeDisplayName,
 	sellerName,
 	onAction,
+	onSecondaryAction,
+	secondaryActionButtonText,
+	footerDisclaimerText,
+	priceSuffix,
 	onCancel,
 	loading = false,
 	currentRobuxBalance,
 	rentalOptionDays = null,
 	open = false,
+	subscriptionProductInfo,
+	discountInformation,
 }) => {
 	useModalShownTracking("UnifiedPurchaseModal", open);
 	return (
@@ -60,37 +88,77 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 			isModal
 			size="Large"
 			type="Default"
-			ariaLabel={titleText}
+			closeLabel={translate("Action.Close") || "Close"}
 			hasCloseAffordance
 		>
-			<DialogContent className="relative width-full">
+			<DialogContent className="relative unified-purchase-dialog-content">
 				<DialogBody className="gap-xlarge flex flex-col">
-					<UnifiedPurchaseHeading
-						translate={translate}
-						titleText={titleText}
-						currentRobuxBalance={currentRobuxBalance}
-					/>
+					<div style={{ marginTop: 2 }}>
+						<UnifiedPurchaseHeading
+							translate={translate}
+							titleText={titleText}
+							currentRobuxBalance={
+								displayPrice ? undefined : currentRobuxBalance
+							}
+						/>
+					</div>
 					<UnifiedProductDetails
 						translate={translate}
 						thumbnail={thumbnail}
 						assetName={assetName}
 						expectedPrice={expectedPrice}
+						displayPrice={displayPrice}
+						priceSuffix={priceSuffix}
 						rentalOptionDays={rentalOptionDays}
+						discountInformation={discountInformation}
 					/>
+					{discountInformation && (
+						<DiscountPriceDetail
+							translate={translate}
+							discountInformation={discountInformation}
+						/>
+					)}
 				</DialogBody>
 
-				<DialogFooter className="gap-small flex flex-col mt-[40px]">
-					<div className="flex flex-row-reverse">
-						<Button
-							variant="Emphasis"
-							className="fill basis-0"
-							onClick={onAction}
-							isDisabled={loading}
-							data-testid="purchase-confirm-button"
-						>
-							{actionButtonText}
-						</Button>
+				<DialogFooter className="flex flex-col mt-[40px]">
+					<div className="gap-small flex flex-col">
+						<div className="flex flex-row-reverse">
+							<Button
+								variant="Emphasis"
+								className="fill basis-0"
+								onClick={onAction}
+								isDisabled={loading}
+								data-testid="purchase-confirm-button"
+							>
+								{actionButtonText}
+							</Button>
+						</div>
+						{onSecondaryAction && secondaryActionButtonText && (
+							<div className="flex flex-row-reverse">
+								<Button
+									variant="Standard"
+									className="fill basis-0"
+									onClick={onSecondaryAction}
+									isDisabled={loading}
+									data-testid="purchase-secondary-button"
+								>
+									{secondaryActionButtonText}
+								</Button>
+							</div>
+						)}
 					</div>
+					<SubscriptionUpsellBanner
+						translate={translate}
+						subscriptionProductInfo={subscriptionProductInfo ?? null}
+					/>
+					{footerDisclaimerText && (
+						<p
+							className="text-body-small content-default"
+							style={{ marginTop: 12 }}
+						>
+							{footerDisclaimerText}
+						</p>
+					)}
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

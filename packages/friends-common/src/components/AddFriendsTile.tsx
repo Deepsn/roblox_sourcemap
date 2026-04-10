@@ -3,14 +3,18 @@ import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
 import { PlusHeavyIcon, Badge } from "@rbx/ui";
 
 const ADD_FRIENDS_URL = "/users/friends#!/friend-requests";
-const ADD_CONNECTIONS_TRANSLATION_KEY = "Label.Connect";
+
+const ADD_FRIENDS_TRANSLATIONS_KEY = "Label.AddFriends";
+const ADD_CONNECTIONS_TRANSLATIONS_KEY = "Label.Connect";
 
 const AddFriendsTile = ({
 	translate,
 	badgeCount,
+	connectionsToFriendsRenameEnabled = false,
 }: {
 	translate: TranslateFunction;
 	badgeCount: number;
+	connectionsToFriendsRenameEnabled?: boolean;
 }): JSX.Element => (
 	<div className="friends-carousel-tile">
 		{/* TODO: old, migrated code */}
@@ -37,7 +41,11 @@ const AddFriendsTile = ({
 					<div className="friends-carousel-tile-label">
 						<div className="friends-carousel-tile-name">
 							<span className="friends-carousel-display-name">
-								{translate(ADD_CONNECTIONS_TRANSLATION_KEY)}
+								{translate(
+									connectionsToFriendsRenameEnabled
+										? ADD_FRIENDS_TRANSLATIONS_KEY
+										: ADD_CONNECTIONS_TRANSLATIONS_KEY,
+								)}
 							</span>
 						</div>
 					</div>

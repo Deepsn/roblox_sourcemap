@@ -227,7 +227,10 @@ function FAEContainer({
 				sessionIdentifier,
 				FAEEventConstants.field.webHostedFaeStart,
 			);
-			openVerificationLink(vendorVerificationData.verificationLink);
+			openVerificationLink(
+				vendorVerificationData.verificationLink,
+				theme || DEFAULT_THEME,
+			);
 		}
 	}
 

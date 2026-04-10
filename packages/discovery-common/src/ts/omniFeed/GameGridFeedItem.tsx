@@ -19,6 +19,7 @@ type THomePageDiscoveryApiProps = {
 	positionId: number;
 	itemsPerRow: number | undefined;
 	startingRow: number | undefined;
+	topicPositionOffset?: number;
 	recommendations: TOmniRecommendationGame[];
 	friendsPresenceData: TGetFriendsResponse[];
 	isDynamicLayoutSizingEnabled?: boolean;
@@ -35,6 +36,7 @@ export const GameGridFeedItem = ({
 	positionId,
 	itemsPerRow,
 	startingRow,
+	topicPositionOffset,
 	recommendations,
 	friendsPresenceData,
 	isDynamicLayoutSizingEnabled,
@@ -98,6 +100,7 @@ export const GameGridFeedItem = ({
 			positionId={positionId}
 			itemsPerRow={itemsPerRow}
 			startingRow={startingRow}
+			topicPositionOffset={topicPositionOffset}
 			friendsPresence={friendsPresenceData}
 			componentType={sort.topicLayoutData?.componentType}
 			playerCountStyle={sort.topicLayoutData?.playerCountStyle}
@@ -122,6 +125,15 @@ export const GameGridFeedItem = ({
 			}
 			sponsoredUserCohort={sort.topicLayoutData?.sponsoredUserCohort}
 			enableReportAd={sort.topicLayoutData?.enableReportAd === "true"}
+			sponsoredFooterAdLabelText={
+				sort.topicLayoutData?.sponsoredFooterAdLabelText
+			}
+			sponsoredFooterAdLabelFirst={
+				sort.topicLayoutData?.sponsoredFooterAdLabelFirst !== "false"
+			}
+			sponsoredFooterIncludeRatingContent={
+				sort.topicLayoutData?.sponsoredFooterIncludeRatingContent === "true"
+			}
 		/>
 	);
 };

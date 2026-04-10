@@ -32,6 +32,7 @@ type TOmniFeedItemProps = {
 		| PageContext.SearchLandingPage;
 	itemsPerRow: number | undefined;
 	startingRow: number | undefined;
+	topicPositionOffset?: number;
 	gridRecommendations?: TOmniRecommendationGame[];
 	friendsPresenceData: TGetFriendsResponse[];
 	loadMoreGames?: () => void;
@@ -54,6 +55,7 @@ export const OmniFeedItem = ({
 	currentPage,
 	itemsPerRow,
 	startingRow,
+	topicPositionOffset,
 	gridRecommendations,
 	friendsPresenceData,
 	loadMoreGames,
@@ -78,6 +80,7 @@ export const OmniFeedItem = ({
 					page={currentPage}
 					itemsPerRow={itemsPerRow}
 					startingRow={startingRow}
+					topicPositionOffset={topicPositionOffset}
 					friendsPresenceData={friendsPresenceData}
 					loadMoreGames={loadMoreGames}
 					isLoadingMoreGames={isLoadingMoreGames}
@@ -97,6 +100,7 @@ export const OmniFeedItem = ({
 					positionId={positionId}
 					itemsPerRow={itemsPerRow}
 					startingRow={startingRow}
+					topicPositionOffset={topicPositionOffset}
 					recommendations={gridRecommendations ?? []}
 					friendsPresenceData={friendsPresenceData}
 					isDynamicLayoutSizingEnabled={isDynamicLayoutSizingEnabled}

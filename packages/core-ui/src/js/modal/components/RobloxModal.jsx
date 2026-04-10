@@ -95,7 +95,6 @@ function FoundationRobloxModal({
 			hasCloseAffordance={false}
 			closeLabel=""
 			aria-labelledby={ariaLabelledBy}
-			id={id}
 			experimentalDisablePointerEventsStylingOnBody
 		>
 			<DialogContent
@@ -112,7 +111,9 @@ function FoundationRobloxModal({
 					!allowKeyboardClose ? (e) => e.preventDefault() : undefined
 				}
 			>
-				<div className="modal-content">{children}</div>
+				<div id={id} className="modal-content">
+					{children}
+				</div>
 			</DialogContent>
 		</Dialog>
 	);

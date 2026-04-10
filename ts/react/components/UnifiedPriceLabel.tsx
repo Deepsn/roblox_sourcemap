@@ -29,7 +29,7 @@ function UnifiedPriceLabel({
 	return (
 		<React.Fragment>
 			<span className={`icon-robux${color ? `-${color}` : ""}-16x16`} />
-			<span className="text-robux ml-1">
+			<span className="text-robux ml-1 text-body-medium">
 				{numberFormat.getNumberFormat(price)}
 			</span>
 		</React.Fragment>

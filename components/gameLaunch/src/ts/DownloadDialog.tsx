@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "@rbx/core-scripts/react";
-import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
+import { isMac } from "@rbx/core-scripts/meta/device";
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import { AppIcon } from "@rbx/branding-assets";
 import {
@@ -29,7 +29,9 @@ const splitAtPeriod = (text: string) => {
 	);
 };
 
-const joinLinkId = "download-join-experience";
+const LINK_START_MARKER = "\x01LINK_START\x01";
+const LINK_END_MARKER = "\x01LINK_END\x01";
+const linkMarkerPattern = new RegExp(`${LINK_START_MARKER}|${LINK_END_MARKER}`);
 
 const DownloadDialog = ({
 	download,
@@ -56,34 +58,6 @@ const DownloadDialog = ({
 		retryDelay: 2500,
 		cacheTime: 0,
 	});
-
-	// This is so cursed.
-	useEffect(() => {
-		if (launchGame != null && downloaded) {
-			let link: HTMLElement | null = null;
-
-			const observer = new MutationObserver(() => {
-				link = document.getElementById(joinLinkId);
-				if (link != null) {
-					// eslint-disable-next-line @typescript-eslint/no-misused-promises
-					link.addEventListener("click", launchGame);
-					observer.disconnect();
-				}
-			});
-
-			observer.observe(document.body, { childList: true, subtree: true });
-
-			return () => {
-				observer.disconnect();
-				if (link != null) {
-					// eslint-disable-next-line @typescript-eslint/no-misused-promises
-					link.removeEventListener("click", launchGame);
-				}
-			};
-		}
-
-		return undefined;
-	}, [downloaded, launchGame]);
 
 	if (!downloaded) {
 		const title = translate(
@@ -136,11 +110,11 @@ const DownloadDialog = ({
 		);
 	}
 
-	const device = getDeviceMeta();
-	const firstInstruction = device?.isIosDevice
+	const macOs = isMac();
+	const firstInstruction = macOs
 		? "Response.Dialog.MacFirstInstruction"
 		: "Response.Dialog.WindowsFirstInstruction";
-	const retryDownload = device?.isIosDevice
+	const retryDownload = macOs
 		? getAbsoluteUrl("/download/client?os=mac")
 		: getAbsoluteUrl("/download/client?os=win");
 
@@ -209,17 +183,36 @@ const DownloadDialog = ({
 									<li className="padding-left-medium">
 										{translate("Response.Dialog.ThirdInstruction")}
 									</li>
-									<li
-										className="padding-left-medium"
-										// TODO: we need a better translation system
-										// eslint-disable-next-line react/no-danger
-										dangerouslySetInnerHTML={{
-											__html: translate("Response.Dialog.FourthInstruction", {
-												startLink: `<a id="${joinLinkId}" class="download-link-underline">`,
-												endLink: "</a>",
-											}),
-										}}
-									/>
+									<li className="padding-left-medium">
+										{(() => {
+											const text = translate(
+												"Response.Dialog.FourthInstruction",
+												{
+													startLink: LINK_START_MARKER,
+													endLink: LINK_END_MARKER,
+												},
+											);
+											const parts = text.split(linkMarkerPattern);
+											if (parts.length < 3) {
+												return text;
+											}
+											const [before, linkText, after] = parts;
+											return (
+												<React.Fragment>
+													{before}
+													<button
+														type="button"
+														className="download-link-underline"
+														// eslint-disable-next-line @typescript-eslint/no-misused-promises
+														onClick={() => launchGame?.()}
+													>
+														{linkText}
+													</button>
+													{after}
+												</React.Fragment>
+											);
+										})()}
+									</li>
 								</ol>
 							</section>
 							<div />{" "}

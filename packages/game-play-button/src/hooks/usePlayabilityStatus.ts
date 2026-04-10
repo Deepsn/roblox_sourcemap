@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import playButtonService from "../services/playButtonService";
-import playButtonConstants, {
-	PlayabilityStatus,
-} from "../constants/playButtonConstants";
+import playButtonConstants from "../constants/playButtonConstants";
+import { PlayabilityStatus } from "../constants/playabilityStatus";
 import {
 	TGetPlayabilityStatus,
 	TPlayabilityStatus,
+	TPlayableUxTreatment,
 } from "../types/playButtonTypes";
 
 const { counterEvents } = playButtonConstants;
@@ -18,12 +18,14 @@ type TPlayabilityData = {
 	playabilityStatus: TPlayabilityStatus;
 	isPlayable: boolean | undefined;
 	unplayableDisplayText: string | undefined;
+	playableUxTreatment: TPlayableUxTreatment | undefined;
 };
 
 const failedPlayabilityData: TPlayabilityData = {
 	playabilityStatus: PlayabilityStatus.TemporarilyUnavailable,
 	isPlayable: undefined,
 	unplayableDisplayText: undefined,
+	playableUxTreatment: undefined,
 };
 
 /**
@@ -49,6 +51,7 @@ export const usePlayabilityStatus = (
 	playabilityStatus: TPlayabilityStatus | undefined;
 	isPlayable: boolean | undefined;
 	unplayableDisplayText: string | undefined;
+	playableUxTreatment: TPlayableUxTreatment | undefined;
 	isFetchingPlayability: boolean;
 	refetchPlayabilityData: () => void;
 } => {
@@ -85,6 +88,7 @@ export const usePlayabilityStatus = (
 				playabilityStatus: response.playabilityStatus,
 				isPlayable: response.isPlayable,
 				unplayableDisplayText: response.unplayableDisplayText,
+				playableUxTreatment: response.playableUxTreatment,
 			};
 		},
 		staleTime: STALE_TIME_MS,
@@ -116,6 +120,7 @@ export const usePlayabilityStatus = (
 				playabilityStatus: failedPlayabilityData.playabilityStatus,
 				isPlayable: failedPlayabilityData.isPlayable,
 				unplayableDisplayText: failedPlayabilityData.unplayableDisplayText,
+				playableUxTreatment: failedPlayabilityData.playableUxTreatment,
 				isFetchingPlayability: isFetching,
 				refetchPlayabilityData,
 			};
@@ -125,6 +130,7 @@ export const usePlayabilityStatus = (
 			playabilityStatus: data?.playabilityStatus,
 			isPlayable: data?.isPlayable,
 			unplayableDisplayText: data?.unplayableDisplayText,
+			playableUxTreatment: data?.playableUxTreatment,
 			isFetchingPlayability: isFetching,
 			refetchPlayabilityData,
 		};

@@ -53,6 +53,7 @@ type THomePageGameCarouselDiscoveryApiProps = {
 	seeAllLinkPath?: string;
 	subtitleLinkPath?: string;
 	itemsPerRow?: number;
+	topicPositionOffset?: number;
 	endTimestamp?: string;
 	countdownString?: string;
 	hideTileMetadata?: boolean;
@@ -79,6 +80,7 @@ export const HomePageCarousel = ({
 	seeAllLinkPath,
 	subtitleLinkPath,
 	itemsPerRow,
+	topicPositionOffset,
 	startingRow,
 	endTimestamp,
 	countdownString,
@@ -101,6 +103,7 @@ export const HomePageCarousel = ({
 		[EventStreamMetadata.Position]: id,
 		...getAbsoluteRowClickData(startingRow, itemsPerRow, id),
 		[EventStreamMetadata.SortPos]: positionId,
+		[EventStreamMetadata.SortSubId]: sort.subId,
 		[EventStreamMetadata.NumberOfLoadedTiles]: (gameData || []).length,
 		[EventStreamMetadata.GameSetTypeId]: sort.topicId,
 		[EventStreamMetadata.Page]: PageContext.HomePage,
@@ -152,7 +155,11 @@ export const HomePageCarousel = ({
 							(id) => gameData[id]!.navigationUid ?? "0",
 						),
 						[EventStreamMetadata.AbsPositions]: filteredViewedIndexes,
+						[EventStreamMetadata.PositionsInTopic]: filteredViewedIndexes.map(
+							(id) => (topicPositionOffset ?? 0) + id,
+						),
 						[EventStreamMetadata.SortPos]: positionId,
+						[EventStreamMetadata.SortSubId]: sort.subId,
 						[EventStreamMetadata.GameSetTypeId]: sort.topicId,
 						[EventStreamMetadata.Page]: PageContext.HomePage,
 						[SessionInfoType.HomePageSessionInfo]: homePageSessionInfo,
@@ -166,8 +173,10 @@ export const HomePageCarousel = ({
 				homePageSessionInfo,
 				positionId,
 				sort.topicId,
+				sort.subId,
 				componentType,
 				startingRow,
+				topicPositionOffset,
 			],
 		);
 
@@ -261,6 +270,7 @@ export const HomePageCarousel = ({
 						: undefined
 				}
 				isNewSortHeaderEnabled={isNewSortHeaderEnabled}
+				permitLinkClickPropagation // Let clicks bubble to the click interceptor in routing/helpers.tsx for client-side page transitions
 				translate={translate}
 			/>
 

@@ -33,4 +33,8 @@ export default {
 		`${environmentUrls.apiGatewayUrl}/vng-payments/v1/getVngShopUrl`,
 	getRobuxBadgeUrl: () =>
 		`${environmentUrls.apiGatewayUrl}/robuxbadge/v1/robuxbadge`,
+	getPasskeyStartRegistrationUrl: () =>
+		`${environmentUrls.authApi}/v1/passkey/StartRegistration`,
+	getPasskeyFinishRegistrationUrl: () =>
+		`${environmentUrls.authApi}/v1/passkey/FinishRegistration`,
 };

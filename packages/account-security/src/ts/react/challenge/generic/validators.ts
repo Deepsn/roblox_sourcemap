@@ -13,6 +13,18 @@ const SharedChallengeMetadataValidator = z.object({
 			shouldAnalyze: z.boolean().optional(),
 			useContinueMode: z.boolean().optional(),
 			genericChallengeId: z.string().optional(),
+			delayParameters: z
+				.object({
+					subject: z.string(),
+					delayUntil: z.string(),
+					eligibleMethods: z.array(
+						z.object({
+							method: z.string(),
+							bypassable: z.boolean(),
+						}),
+					),
+				})
+				.nullish(),
 		})
 		.optional(),
 });

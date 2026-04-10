@@ -23,7 +23,7 @@ export const LegallySensitiveContentContainer = ({
 					surface,
 				),
 		};
-	}, []);
+	}, [translate]);
 
 	return <div id="legally-sensitive-content-component" />;
 };

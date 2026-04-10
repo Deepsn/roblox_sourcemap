@@ -25,10 +25,6 @@ const url = {
 		withCredentials: true,
 	},
 	getSearchLandingPage: {
-		url: `${apiGatewayUrl}/search-api/search-landing-page`,
-		withCredentials: true,
-	},
-	getSearchLandingPageV2: {
 		url: `${apiGatewayUrl}/search-landing-page-api/v1`,
 		withCredentials: true,
 	},

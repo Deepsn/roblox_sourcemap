@@ -42,6 +42,7 @@ type THomePageGridDiscoveryApiProps = {
 	playButtonStyle?: TPlayButtonStyle;
 	hoverStyle?: THoverStyle;
 	itemsPerRow?: number;
+	topicPositionOffset?: number;
 	startingRow: number | undefined;
 	isSponsoredFooterAllowed?: boolean;
 	isSponsoredRatingFooterAllowed?: boolean;
@@ -55,6 +56,9 @@ type THomePageGridDiscoveryApiProps = {
 	enableSponsoredFeedback?: boolean;
 	sponsoredUserCohort?: string;
 	enableReportAd?: boolean;
+	sponsoredFooterAdLabelText?: string;
+	sponsoredFooterAdLabelFirst?: boolean;
+	sponsoredFooterIncludeRatingContent?: boolean;
 };
 
 export const HomePageGrid = ({
@@ -67,6 +71,7 @@ export const HomePageGrid = ({
 	playButtonStyle,
 	hoverStyle,
 	itemsPerRow,
+	topicPositionOffset,
 	startingRow,
 	isSponsoredFooterAllowed,
 	isSponsoredRatingFooterAllowed,
@@ -79,6 +84,9 @@ export const HomePageGrid = ({
 	enableSponsoredFeedback,
 	sponsoredUserCohort,
 	enableReportAd,
+	sponsoredFooterAdLabelText,
+	sponsoredFooterAdLabelFirst,
+	sponsoredFooterIncludeRatingContent,
 	translate,
 }: THomePageGridDiscoveryApiProps): JSX.Element => {
 	const gridRef = useRef<HTMLDivElement>(null);
@@ -94,6 +102,7 @@ export const HomePageGrid = ({
 		[EventStreamMetadata.Position]: id,
 		...getAbsoluteRowClickData(startingRow, itemsPerRow, id),
 		[EventStreamMetadata.SortPos]: positionId,
+		[EventStreamMetadata.SortSubId]: sort.subId,
 		[EventStreamMetadata.NumberOfLoadedTiles]: (gameData || []).length,
 		[EventStreamMetadata.GameSetTypeId]: sort.topicId,
 		[EventStreamMetadata.Page]: PageContext.HomePage,
@@ -138,6 +147,9 @@ export const HomePageGrid = ({
 							(id) => gameData[id]!.navigationUid ?? "0",
 						),
 						[EventStreamMetadata.AbsPositions]: parsedViewedIndex,
+						[EventStreamMetadata.PositionsInTopic]: parsedViewedIndex.map(
+							(id) => (topicPositionOffset ?? 0) + id,
+						),
 						...getSponsoredAdImpressionsData(gameData, parsedViewedIndex),
 						...getAbsoluteRowImpressionsData(
 							startingRow,
@@ -146,6 +158,7 @@ export const HomePageGrid = ({
 							parsedViewedIndex,
 						),
 						[EventStreamMetadata.SortPos]: positionId,
+						[EventStreamMetadata.SortSubId]: sort.subId,
 						[EventStreamMetadata.NumberOfLoadedTiles]: gameData?.length,
 						[EventStreamMetadata.GameSetTypeId]: sort.topicId,
 						[EventStreamMetadata.Page]: PageContext.HomePage,
@@ -160,9 +173,11 @@ export const HomePageGrid = ({
 				homePageSessionInfo,
 				positionId,
 				sort.topicId,
+				sort.subId,
 				componentType,
 				itemsPerRow,
 				startingRow,
+				topicPositionOffset,
 			],
 		);
 
@@ -245,6 +260,11 @@ export const HomePageGrid = ({
 				enableSponsoredFeedback={enableSponsoredFeedback}
 				sponsoredUserCohort={sponsoredUserCohort}
 				enableReportAd={enableReportAd}
+				sponsoredFooterAdLabelText={sponsoredFooterAdLabelText}
+				sponsoredFooterAdLabelFirst={sponsoredFooterAdLabelFirst}
+				sponsoredFooterIncludeRatingContent={
+					sponsoredFooterIncludeRatingContent
+				}
 			/>
 		</div>
 	);
@@ -259,6 +279,9 @@ HomePageGrid.defaultProps = {
 	isSponsoredFooterAllowed: undefined,
 	isSponsoredRatingFooterAllowed: undefined,
 	hideTileMetadata: undefined,
+	sponsoredFooterAdLabelText: undefined,
+	sponsoredFooterAdLabelFirst: undefined,
+	sponsoredFooterIncludeRatingContent: undefined,
 	isDynamicLayoutSizingEnabled: undefined,
 	isNewSortHeaderEnabled: undefined,
 };

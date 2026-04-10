@@ -31,6 +31,9 @@ export const isUnder13 = (): boolean => userDataset()?.isunder13 === "true";
 export const isPremiumUser = (): boolean =>
 	userDataset()?.ispremiumuser === "true";
 
+export const isBlackbirdUser = (): boolean =>
+	userDataset()?.membership === "blackbird";
+
 export type AuthenticatedUser = {
 	isAuthenticated: true;
 	id: number | null;

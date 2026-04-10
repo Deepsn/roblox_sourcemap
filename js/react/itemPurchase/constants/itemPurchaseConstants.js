@@ -114,6 +114,10 @@ export default {
 			"Heading.PendingDeveloperProductLimitReached",
 		additionalRobuxNeeded: "Message.AdditionalRobux",
 		economicRestrictionsErrorHeading: "Heading.EconomicRestrictionsError",
+		timedOptionDaysAbbreviation: "Label.TimedOptionDaysAbbreviation",
+		timedOptionDaysTimerStartsWhenYouBuy:
+			"Label.TimedOptionDaysTimerStartsWhenYouBuy",
+		unifiedPurchaseCompletionMessage: "Message.UnifiedPurchaseCompletion",
 	},
 	assetTypes: {
 		// library catagory type

@@ -39,8 +39,6 @@ function SearchLandingPageOmniFeed({
 		experimentConstants.defaultValues.searchLandingPage,
 	);
 	const isSearchQueryPillsEnabled = ixpData.IsSearchQueryPillsEnabled;
-	const isMigrateToNewSlpEndpointEnabled =
-		ixpData.IsMigrateToNewSlpEndpointEnabled;
 
 	useEffect(() => {
 		const isValidUpdateSessionInfoEvent = (
@@ -99,10 +97,7 @@ function SearchLandingPageOmniFeed({
 			return;
 		}
 		bedev2Services
-			.getSearchLandingRecommendations(
-				sessionInfo,
-				isMigrateToNewSlpEndpointEnabled,
-			)
+			.getSearchLandingRecommendations(sessionInfo)
 			.then((data) => {
 				window.EventTracker?.fireEvent(
 					searchLandingPage.searchLandingPageFetchRecommendationsSuccess,
@@ -145,11 +140,7 @@ function SearchLandingPageOmniFeed({
 				);
 				setRecommendations(undefined);
 			});
-	}, [
-		sessionInfo,
-		isSearchQueryPillsEnabled,
-		isMigrateToNewSlpEndpointEnabled,
-	]);
+	}, [sessionInfo, isSearchQueryPillsEnabled]);
 
 	useEffect(() => {
 		if (!showSearchLanding || ixpLoading) return;

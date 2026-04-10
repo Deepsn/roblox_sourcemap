@@ -70,19 +70,23 @@ export const mapItemRestrictionIcons = (
 			itemCardRestrictions.isCollectible = itemRestrictions.includes(
 				itemRestrictionTypes.collectible,
 			);
+			itemCardRestrictions.isLimitedUnique = itemRestrictions.includes(
+				itemRestrictionTypes.limitedUnique,
+			);
 			if (itemCardRestrictions.isLimited) {
-				itemCardRestrictions.itemRestrictionIcon = itemCardRestrictions.isRthro
-					? itemRestrictionIcons.rthroLimitedLabel
-					: itemRestrictionIcons.limited;
+				itemCardRestrictions.itemRestrictionIcon = itemRestrictionIcons.limited;
 			} else if (itemCardRestrictions.isRthro) {
 				itemCardRestrictions.itemRestrictionIcon =
 					itemRestrictionIcons.rthroLabel;
-			} else if (itemCardRestrictions.isDynamicHead) {
-				itemCardRestrictions.itemRestrictionIcon =
-					itemRestrictionIcons.dynamicHead;
 			} else if (itemCardRestrictions.isCollectible) {
 				itemCardRestrictions.itemRestrictionIcon =
 					itemRestrictionIcons.collectible;
+			} else if (itemCardRestrictions.isLimitedUnique) {
+				itemCardRestrictions.itemRestrictionIcon =
+					itemRestrictionIcons.limitedUnique;
+			} else if (itemCardRestrictions.isDynamicHead) {
+				itemCardRestrictions.itemRestrictionIcon =
+					itemRestrictionIcons.dynamicHead;
 			}
 		} else {
 			itemCardRestrictions.isThirteenPlus = itemRestrictions.includes(
@@ -113,12 +117,12 @@ export const mapItemRestrictionIcons = (
 			} else if (itemCardRestrictions.isThirteenPlus) {
 				itemCardRestrictions.itemRestrictionIcon =
 					itemRestrictionIcons.thirteenPlus;
-			} else if (itemCardRestrictions.isDynamicHead) {
-				itemCardRestrictions.itemRestrictionIcon =
-					itemRestrictionIcons.dynamicHead;
 			} else if (itemCardRestrictions.isCollectible) {
 				itemCardRestrictions.itemRestrictionIcon =
 					itemRestrictionIcons.collectible;
+			} else if (itemCardRestrictions.isDynamicHead) {
+				itemCardRestrictions.itemRestrictionIcon =
+					itemRestrictionIcons.dynamicHead;
 			}
 		}
 	}

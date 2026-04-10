@@ -11,6 +11,7 @@ import { TranslateFunction } from "react-utilities";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import { LANG_KEYS } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
+import useModalShownTracking from "../hooks/useModalShownTracking";
 
 export type UnifiedRobuxUpsellTooExpensiveModalProps = {
 	translate: TranslateFunction;
@@ -36,6 +37,8 @@ const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
 	currentRobuxBalance,
 	open = false,
 }) => {
+	useModalShownTracking("UnifiedRobuxUpsellTooExpensiveModal", open);
+
 	return (
 		<Dialog
 			open={open}
@@ -75,6 +78,7 @@ const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
 							className=" fill"
 							onClick={onAction}
 							isDisabled={loading}
+							data-testid="purchase-confirm-button"
 						>
 							<div className="fill basis-0 inline-flex items-center gap-medium leading-none">
 								<Icon

@@ -3,9 +3,8 @@ import {
 	withTranslations,
 } from "@rbx/core-scripts/legacy/react-utilities";
 import { translations } from "../constants/translations";
-import playButtonConstants, {
-	PlayabilityStatus,
-} from "../constants/playButtonConstants";
+import playButtonConstants from "../constants/playButtonConstants";
+import { PlayabilityStatus } from "../constants/playabilityStatus";
 import { TPlayabilityStatusWithUnplayableError } from "../types/playButtonTypes";
 
 const { playButtonErrorStatusTranslationMap } = playButtonConstants;

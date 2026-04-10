@@ -106,6 +106,9 @@ export type TTopicLayoutData = {
 	enableSponsoredFeedback?: "true" | "false";
 	sponsoredUserCohort?: string;
 	enableReportAd?: "true" | "false";
+	sponsoredFooterAdLabelText?: string;
+	sponsoredFooterAdLabelFirst?: "true" | "false";
+	sponsoredFooterIncludeRatingContent?: "true" | "false";
 };
 
 type TSharedGameSort = {
@@ -117,6 +120,7 @@ type TSharedGameSort = {
 		| TTreatmentType.InterestGrid;
 	subtitle?: string;
 	topicLayoutData?: TTopicLayoutData;
+	subId?: string;
 };
 
 export type TOmniRecommendationSduiSort = {
@@ -351,6 +355,7 @@ export type TOmniSearchGameDataModel = {
 	creatorType: string;
 	creatorId: number;
 	creatorHasVerifiedBadge?: boolean;
+	contentMetadata?: Record<string, string>;
 };
 
 export type TOmniSearchTextDataModel = {

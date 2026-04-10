@@ -5,9 +5,8 @@ import {
 } from "@rbx/core-scripts/util/url";
 import { Button } from "@rbx/core-ui/legacy/react-style-guide";
 import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
-import playButtonConstants, {
-	PlayabilityStatus,
-} from "../constants/playButtonConstants";
+import playButtonConstants from "../constants/playButtonConstants";
+import { PlayabilityStatus } from "../constants/playabilityStatus";
 import playButtonService from "../services/playButtonService";
 import { TGetProductDetails, ValueOf } from "../types/playButtonTypes";
 import { sendUnlockPlayIntentEvent } from "../utils/playButtonUtils";

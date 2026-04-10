@@ -25,6 +25,7 @@ const SelfUpdateSettingModal = ({
 			"UpdateMaturitySettingModal.Action.GoToSettings",
 		)}
 		secondaryButtonText={translate("UpdateMaturitySettingModal.Action.Cancel")}
+		closeLabelText={translate("Action.Close")}
 		onPrimaryButtonClick={navigateToAccountSettings}
 		onSecondaryButtonClick={closeModal}
 		isModalOpen={isModalOpen}

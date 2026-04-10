@@ -4,7 +4,7 @@ import {
 	TContentMaturityRating,
 	TSettingResponse,
 } from "../types/playButtonTypes";
-import { getContentMaturityRatingFromAgeRecommendationResponse } from "../utils/playButtonUtils";
+import useAgeRecommendationDataForUniverseId from "./useAgeRecommendationDataForUniverseId";
 
 type TParentalControlsUpsellData = {
 	contentAgeRestriction: TSettingResponse | undefined;
@@ -24,16 +24,11 @@ const useFetchParentalControlsUpsellData = (
 		TSettingResponse | undefined
 	>(undefined);
 	const [isFetchingSettings, setIsFetchingSettings] = useState<boolean>(false);
-
-	const [contentMaturityRating, setContentMaturityRating] = useState<
-		TContentMaturityRating | undefined
-	>(undefined);
-	const [isFetchingAgeRecommendation, setIsFetchingAgeRecommendation] =
+	const [hasSettingsAndOptionsError, setHasSettingsAndOptionsError] =
 		useState<boolean>(false);
 
-	const [hasError, setHasError] = useState<boolean>(false);
-
 	useEffect(() => {
+		setHasSettingsAndOptionsError(false);
 		setIsFetchingSettings(true);
 		playButtonService
 			.getUserSettingsAndOptions()
@@ -41,35 +36,26 @@ const useFetchParentalControlsUpsellData = (
 				setContentAgeRestrictionResponse(response.contentAgeRestriction);
 			})
 			.catch(() => {
-				setHasError(true);
+				setHasSettingsAndOptionsError(true);
 			})
 			.finally(() => {
 				setIsFetchingSettings(false);
 			});
 	}, []);
 
-	useEffect(() => {
-		setIsFetchingAgeRecommendation(true);
-		playButtonService
-			.getAgeRecommendation(universeId)
-			.then((response) => {
-				setContentMaturityRating(
-					getContentMaturityRatingFromAgeRecommendationResponse(response),
-				);
-			})
-			.catch(() => {
-				setHasError(true);
-			})
-			.finally(() => {
-				setIsFetchingAgeRecommendation(false);
-			});
-	}, [universeId]);
+	const {
+		ageRecommendationData,
+		hasError: hasAgeRecommendationError,
+		isLoading: isLoadingAgeRecommendation,
+	} = useAgeRecommendationDataForUniverseId(universeId);
 
 	return {
 		contentAgeRestriction,
-		contentMaturityRating,
-		isFetching: isFetchingSettings || isFetchingAgeRecommendation,
-		hasError,
+		contentMaturityRating:
+			ageRecommendationData?.ageRecommendationDetails?.summary.ageRecommendation
+				?.contentMaturity,
+		isFetching: isFetchingSettings || isLoadingAgeRecommendation,
+		hasError: hasSettingsAndOptionsError || hasAgeRecommendationError,
 	};
 };
 

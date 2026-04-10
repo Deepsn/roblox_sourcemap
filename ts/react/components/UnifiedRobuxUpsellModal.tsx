@@ -13,6 +13,7 @@ import UnifiedProductDetails from "./UnifiedProductDetails";
 import RobuxUpsellPackageDetails from "../../../js/react/itemPurchase/components/RobuxUpsellPackageDetails";
 import { LANG_KEYS } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import useTermsOfUseText from "../hooks/useTermsOfUseText";
+import useModalShownTracking from "../hooks/useModalShownTracking";
 
 export type UnifiedRobuxUpsellModalProps = {
 	translate: TranslateFunction;
@@ -29,6 +30,8 @@ export type UnifiedRobuxUpsellModalProps = {
 	robuxPackageAmount?: number;
 	robuxPackagePrice?: string;
 	intl: RobloxIntlInstance;
+	priceSuffix?: string;
+	title?: string;
 };
 const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 	translate,
@@ -45,8 +48,11 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 	robuxPackageAmount,
 	robuxPackagePrice,
 	intl,
+	priceSuffix,
+	title,
 }) => {
-	const titleText = translate(LANG_KEYS.buyRobuxAndItemAction);
+	useModalShownTracking("UnifiedRobuxUpsellModal", open);
+	const titleText = title ?? translate(LANG_KEYS.buyRobuxAndItemAction);
 	const actionButtonText = translate(LANG_KEYS.buy);
 	const termsOfUseText = useTermsOfUseText(translate, intl);
 
@@ -78,6 +84,7 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 						thumbnail={thumbnail}
 						assetName={assetName}
 						expectedPrice={expectedPrice}
+						priceSuffix={priceSuffix}
 					/>
 					{robuxPackageAmount != null && robuxPackagePrice != null && (
 						<RobuxUpsellPackageDetails
@@ -94,6 +101,7 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 							className="width-full shrink-0"
 							onClick={onAction}
 							isDisabled={loading}
+							data-testid="purchase-confirm-button"
 						>
 							{actionButtonText}
 						</Button>

@@ -22,6 +22,9 @@ const PreProcessThumbnailUrl = (
 			UPSELL_COUNTER_NAMES.UpsellFromGamesPage,
 			buyButtonElementDataset.assetType,
 		);
+		if (buyButtonElementDataset.assetType === "Subscription") {
+			return itemPurchaseAjaxData.imageurl;
+		}
 		const thumbnailUrl = getGamePassThumbnailUrl(buyButtonElementDataset);
 		if (!thumbnailUrl) {
 			reportCounter(

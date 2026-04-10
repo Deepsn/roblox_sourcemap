@@ -11,10 +11,7 @@ export type Theme = (typeof themes)[number];
 type ThemeData = [number, number][];
 
 type LocalStorageData =
-	| {
-			version: 0;
-			data: ThemeData;
-	  }
+	| { version: 0; data: ThemeData }
 	| { version: 1; data: unknown };
 
 const maxUsers = 100;
@@ -185,7 +182,9 @@ export const initialize = (currentUserId: number): void => {
 		arrayIncludes(
 			[
 				"Login",
+				"CreateAccount",
 				"Landing",
+				"MobileAppCreateAccount",
 				"MobileAppLanding",
 				"DownloadV2",
 				"ForgotCredentials",

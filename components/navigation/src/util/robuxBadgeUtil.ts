@@ -12,6 +12,8 @@ export const mapRobuxBadgeTypeToLocalStorageKey = (
 			return "hasSeenRobuxUpdate";
 		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
 			return "hasSeenRobuxPersonalizedBonusItems";
+		case RobuxBadgeType.BONUS_AVATAR_ITEM:
+			return "hasSeenRobuxBonusAvatarItem";
 		default:
 			return "";
 	}
@@ -21,6 +23,7 @@ export const mapRobuxBadgeTypeToStr = (robuxBadgeType: string): string => {
 	switch (robuxBadgeType) {
 		case RobuxBadgeType.VIRTUAL_ITEM:
 		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
+		case RobuxBadgeType.BONUS_AVATAR_ITEM:
 			return "Labels.NewItem";
 		case RobuxBadgeType.UPDATE:
 			return "Labels.NewUpdate";
@@ -41,6 +44,7 @@ export const setRobuxBadgeLocalStorage = (robuxBadgeType: string): void => {
 			break;
 		case RobuxBadgeType.UPDATE:
 		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
+		case RobuxBadgeType.BONUS_AVATAR_ITEM:
 			localStorageService.setLocalStorage(localStorageKey, "true");
 			break;
 		default:
@@ -55,6 +59,10 @@ export const getRobuxBadgeLocalStorage = (robuxBadgeType: string): any => {
 };
 
 export const shouldShowRobuxUpdateBadge = (): string => {
+	if (getRobuxBadgeLocalStorage(RobuxBadgeType.BONUS_AVATAR_ITEM) !== "true") {
+		return RobuxBadgeType.BONUS_AVATAR_ITEM;
+	}
+
 	if (
 		getRobuxBadgeLocalStorage(RobuxBadgeType.PERSONALIZED_BONUS_ITEMS) !==
 		"true"

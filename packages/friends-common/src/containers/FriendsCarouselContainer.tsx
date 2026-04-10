@@ -3,6 +3,7 @@ import ExperimentationService from "@rbx/experimentation";
 import { EventContext } from "@rbx/unified-logging";
 import { useTheme, useTranslation } from "@rbx/core-scripts/react";
 import RealTime from "@rbx/core-scripts/realtime";
+import { callBehaviour } from "@rbx/core-scripts/guac";
 import { CacheProvider, UIThemeProvider, createCache } from "@rbx/ui";
 import dataStores from "@rbx/core-scripts/data-store";
 import * as friendsService from "../services/friends";
@@ -63,6 +64,10 @@ const FriendsCarouselContainer = ({
 	>(null);
 	const [showFriendsCarousel, setShowFriendsCarousel] =
 		useState<boolean>(false);
+	const [
+		connectionsToFriendsRenameEnabled,
+		setConnectionsToFriendsRenameEnabled,
+	] = useState<boolean>(false);
 	const [experimentationConfig, setExperimentationConfig] =
 		useState<ExperimentationConfig>({
 			isBadgeEnabled: false,
@@ -115,6 +120,20 @@ const FriendsCarouselContainer = ({
 	// can be removed once local storage v2 is implemented (UBIQUITY-1456)
 	useEffect(() => {
 		userDataStore.clearUserDataStoreCache();
+	}, []);
+
+	useEffect(() => {
+		callBehaviour<{ connectionsToFriendsRenameEnabled: boolean }>(
+			"web-rename-friends",
+		)
+			.then((data) => {
+				setConnectionsToFriendsRenameEnabled(
+					data.connectionsToFriendsRenameEnabled,
+				);
+			})
+			.catch(() => {
+				setConnectionsToFriendsRenameEnabled(false);
+			});
 	}, []);
 
 	// Listen to friend events if carousel is visible
@@ -216,6 +235,9 @@ const FriendsCarouselContainer = ({
 							translate={translate}
 							profileUserId={profileUserId}
 							isOwnUser={isOwnUser}
+							connectionsToFriendsRenameEnabled={
+								connectionsToFriendsRenameEnabled
+							}
 						/>
 						<FriendsList
 							badgeCount={
@@ -234,6 +256,9 @@ const FriendsCarouselContainer = ({
 							sortPosition={sortPosition}
 							isAddFriendsTileEnabled={
 								experimentationConfig.isAddFriendsTileEnabledWeb
+							}
+							connectionsToFriendsRenameEnabled={
+								connectionsToFriendsRenameEnabled
 							}
 						/>
 					</div>

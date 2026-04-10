@@ -85,12 +85,10 @@ const getExperimentationValues = async <
 export const getLandingPageData = async (
 	pageSlug: string,
 	sessionId: string,
-	languageCode?: string,
 ): Promise<TLandingPageResponse> => {
 	const params = {
 		pageSlug,
 		sessionId,
-		languageCode,
 	};
 	const { data } = await http.get<TLandingPageResponse>(
 		bedev2Constants.url.getLandingPageData(),
@@ -372,13 +370,12 @@ const getProfiles = async (
 
 const getSearchLandingRecommendations = async (
 	sessionId: string,
-	isMigrateToNewSlpEndpointEnabled?: boolean,
 ): Promise<TExploreApiSortsResponse> => {
-	const urlConfig = isMigrateToNewSlpEndpointEnabled
-		? bedev2Constants.url.getSearchLandingPageV2
-		: bedev2Constants.url.getSearchLandingPage;
 	const params = { sessionId };
-	const { data } = await http.get<TExploreApiSortsResponse>(urlConfig, params);
+	const { data } = await http.get<TExploreApiSortsResponse>(
+		bedev2Constants.url.getSearchLandingPage,
+		params,
+	);
 	return data;
 };
 
@@ -422,6 +419,7 @@ const getPrivateServerSettings = async (
 	const urlConfig = {
 		url: `${environmentUrls.apiGatewayUrl}/private-servers-api/Universe-Private-Server-Settings`,
 		retryable: true,
+		withCredentials: true,
 	};
 
 	return http

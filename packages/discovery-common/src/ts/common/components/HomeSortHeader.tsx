@@ -1,6 +1,9 @@
-import React, { useMemo } from "react";
+import React, { ComponentType, useMemo } from "react";
 import { useTokens } from "@rbx/core-scripts/react";
-import { SectionHeader } from "@rbx/discovery-sdui-components";
+import {
+	SectionHeader,
+	TLinkComponentProps,
+} from "@rbx/discovery-sdui-components";
 import GamesInfoTooltip from "./GamesInfoTooltip";
 import "../../sdui/style/_sduiIcons.scss";
 
@@ -35,6 +38,12 @@ type THomeSortHeaderProps = {
 
 	// Whether to hide the See All button and seeAllLink
 	hideSeeAll: boolean | undefined;
+
+	// Custom link component (e.g. React Router's Link) that is renderred instead of a plain <a> tag when provided
+	linkComponent?: ComponentType<TLinkComponentProps>;
+
+	// When true, allows click event to bubble up from both title and subtitle links
+	permitLinkClickPropagation?: boolean;
 };
 
 /**
@@ -53,6 +62,8 @@ const HomeSortHeader = ({
 	hasBackgroundMural,
 	tooltipText,
 	hideSeeAll,
+	linkComponent,
+	permitLinkClickPropagation,
 }: THomeSortHeaderProps): JSX.Element => {
 	const tokens = useTokens();
 
@@ -96,6 +107,8 @@ const HomeSortHeader = ({
 				titleText={titleText}
 				onTitleActivated={hideSeeAll ? undefined : sendNavigateToSortLinkEvent}
 				titleLinkPath={hideSeeAll ? undefined : titleLink}
+				permitLinkClickPropagation={permitLinkClickPropagation}
+				linkComponent={linkComponent}
 				// Force text color to dark mode token (white) if there is a background mural
 				titleTextColor={
 					hasBackgroundMural

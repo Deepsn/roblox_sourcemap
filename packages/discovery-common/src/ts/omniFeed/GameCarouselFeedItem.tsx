@@ -21,6 +21,7 @@ type THomePageDiscoveryApiProps = {
 		| PageContext.SearchLandingPage;
 	itemsPerRow: number | undefined;
 	startingRow: number | undefined;
+	topicPositionOffset?: number;
 	friendsPresenceData: TGetFriendsResponse[];
 	loadMoreGames?: () => void;
 	isLoadingMoreGames?: boolean;
@@ -37,6 +38,7 @@ export const GameCarouselFeedItem = ({
 	page,
 	itemsPerRow,
 	startingRow,
+	topicPositionOffset,
 	friendsPresenceData,
 	loadMoreGames,
 	isLoadingMoreGames,
@@ -133,6 +135,7 @@ export const GameCarouselFeedItem = ({
 			friendsPresence={friendsPresenceData}
 			itemsPerRow={itemsPerRow}
 			startingRow={startingRow}
+			topicPositionOffset={topicPositionOffset}
 			componentType={sort.topicLayoutData?.componentType}
 			playerCountStyle={sort.topicLayoutData?.playerCountStyle}
 			playButtonStyle={sort.topicLayoutData?.playButtonStyle}

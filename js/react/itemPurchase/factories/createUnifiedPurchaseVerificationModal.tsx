@@ -1,9 +1,12 @@
 import React from "react";
 import { withTranslations, TranslateFunction } from "react-utilities";
 import { renderToString } from "react-dom/server";
-import { escapeHtml } from "core-utilities";
+import { escapeHtml, urlService } from "core-utilities";
+import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
+import type { DiscountInformation } from "../../../../ts/react/components/UnifiedPurchaseModal";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
+import { ROBLOX_TERMS_OF_USE_URL } from "../../../core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import PriceLabel from "../components/PriceLabel";
 import AssetName from "../components/AssetName";
 import UnifiedPurchaseModal from "../../../../ts/react/components/UnifiedPurchaseModal";
@@ -14,6 +17,7 @@ export interface UnifiedPurchaseVerificationModalProps {
 	translate: TranslateFunction;
 	title?: string;
 	expectedPrice: number;
+	displayPrice?: string;
 	thumbnail: React.ReactNode;
 	assetName: string;
 	assetType: string;
@@ -21,9 +25,16 @@ export interface UnifiedPurchaseVerificationModalProps {
 	sellerName: string;
 	isPlace?: boolean;
 	onAction: () => void;
+	onSecondaryAction?: () => void;
+	primaryActionButtonText?: string;
+	secondaryActionButtonText?: string;
+	footerDisclaimerText?: string;
+	priceSuffix?: string;
 	loading?: boolean;
 	currentRobuxBalance?: number;
 	rentalOptionDays?: number | null;
+	subscriptionProductInfo?: SubscriptionProductInfo | null;
+	discountInformation?: DiscountInformation | null;
 }
 export type ModalService = { open: () => void; close: () => void };
 
@@ -45,6 +56,7 @@ export default function createUnifiedPurchaseVerificationModal() {
 		translate,
 		title = "",
 		expectedPrice,
+		displayPrice = "",
 		thumbnail,
 		assetName,
 		assetType,
@@ -52,9 +64,16 @@ export default function createUnifiedPurchaseVerificationModal() {
 		sellerName,
 		isPlace = false,
 		onAction,
+		onSecondaryAction,
+		primaryActionButtonText = "",
+		secondaryActionButtonText = "",
+		footerDisclaimerText = "",
+		priceSuffix,
 		loading = false,
 		currentRobuxBalance,
 		rentalOptionDays = null,
+		subscriptionProductInfo = null,
+		discountInformation = null,
 	}: UnifiedPurchaseVerificationModalProps) {
 		const [open, setOpen] = React.useState(false);
 		React.useEffect(() => {
@@ -87,7 +106,12 @@ export default function createUnifiedPurchaseVerificationModal() {
 			bodyMessageResource = resources.promptBuySimplifiedMessage;
 		}
 
-		if (expectedPrice === 0) {
+		const isFiatSubscription = !!(assetType === "Subscription" && displayPrice);
+
+		if (isFiatSubscription) {
+			defaultTitle = translate(resources.buyItemHeading);
+			actionButtonText = translate(resources.buyAction);
+		} else if (expectedPrice === 0) {
 			defaultTitle = translate(resources.getItemHeading);
 			actionButtonText = translate(resources.getNowAction);
 		} else {
@@ -99,13 +123,46 @@ export default function createUnifiedPurchaseVerificationModal() {
 			defaultTitle = translate(resources.buyExperience);
 		}
 
+		let resolvedFooterText: React.ReactNode = footerDisclaimerText || undefined;
+		if (assetType === "Subscription") {
+			const locale = document.documentElement.lang || "en-us";
+			const termsUrl = urlService.getUrlWithLocale(
+				ROBLOX_TERMS_OF_USE_URL,
+				locale,
+			);
+			const linkStartMarker = "{{LINK_START}}";
+			const linkEndMarker = "{{LINK_END}}";
+			const rawText = translate("Description.SubscribeTermsAgreement", {
+				linkStart: linkStartMarker,
+				linkEnd: linkEndMarker,
+			});
+			const parts = rawText.split(
+				new RegExp(`${linkStartMarker}|${linkEndMarker}`),
+			);
+			resolvedFooterText = (
+				<React.Fragment>
+					{parts[0]}
+					<a
+						style={{ color: "inherit", textDecoration: "underline" }}
+						target="_blank"
+						rel="noreferrer"
+						href={termsUrl}
+					>
+						{parts[1]}
+					</a>
+					{parts[2]}
+				</React.Fragment>
+			);
+		}
+
 		return (
 			<UnifiedPurchaseModal
 				{...{
 					translate,
 					titleText: title || defaultTitle,
-					actionButtonText,
+					actionButtonText: primaryActionButtonText || actionButtonText,
 					expectedPrice,
+					displayPrice: isFiatSubscription ? displayPrice : undefined,
 					thumbnail,
 					assetName,
 					assetType,
@@ -113,11 +170,19 @@ export default function createUnifiedPurchaseVerificationModal() {
 					sellerName,
 					isPlace,
 					onAction,
+					onSecondaryAction,
+					secondaryActionButtonText: onSecondaryAction
+						? secondaryActionButtonText
+						: undefined,
+					footerDisclaimerText: resolvedFooterText,
+					priceSuffix,
 					loading,
 					currentRobuxBalance,
 					rentalOptionDays,
 					open,
 					onCancel: modalService.close,
+					subscriptionProductInfo: subscriptionProductInfo ?? undefined,
+					discountInformation: discountInformation ?? undefined,
 				}}
 			/>
 		);

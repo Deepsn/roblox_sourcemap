@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useQuery, QueryClientProvider } from "@tanstack/react-query";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import { Button, Loading } from "@rbx/core-ui/legacy/react-style-guide";
@@ -6,9 +6,8 @@ import { queryClient } from "@rbx/core-scripts/react";
 import * as NavigationService from "@rbx/navigation";
 import ExperimentationService from "@rbx/experimentation";
 import { ValidHttpUrl } from "@rbx/core-scripts/util/url";
-import playButtonConstants, {
-	PlayabilityStatus,
-} from "../constants/playButtonConstants";
+import playButtonConstants from "../constants/playButtonConstants";
+import { PlayabilityStatus } from "../constants/playabilityStatus";
 import playButtonService from "../services/playButtonService";
 import {
 	TAppsFlyerReferralProperties,
@@ -30,6 +29,7 @@ import ParentalControlsActionNeededButton from "./ParentalControlsActionNeededBu
 import PurchaseButton from "./PurchaseButtonContainer";
 import SeventeenPlusActionNeededButton from "./SeventeenPlusActionNeededButton";
 import UnplayableButton from "./UnplayableButton";
+import useLaunchGameWithPlayableUxTreatment from "../hooks/useLaunchGameWithPlayableUxTreatment";
 
 const { counterEvents, avatarChatUpsellLayer, avatarChatUpsellLayerU13 } =
 	playButtonConstants;
@@ -139,6 +139,8 @@ const getJoindata = (launchDataFromProps?: string) => {
 	};
 };
 
+const EMPTY_OBJECT = {} as const;
+
 export type TPlayButtonProps = {
 	universeId: string;
 	placeId: string;
@@ -166,8 +168,8 @@ const PlayButtonContents = ({
 	privateServerLinkCode,
 	gameInstanceId,
 	status,
-	eventProperties = {},
-	appsFlyerReferralProperties = {},
+	eventProperties = EMPTY_OBJECT,
+	appsFlyerReferralProperties = EMPTY_OBJECT,
 	iconClassName = "icon-common-play",
 	buttonWidth = Button.widths.full,
 	buttonClassName = "btn-common-play-game-lg",
@@ -255,6 +257,37 @@ const PlayButtonContents = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const doGameLaunch = useCallback(() => {
+		handleShareLinkEventLogging(placeId, universeId);
+
+		const joinData = getJoindata(
+			eventProperties.launchData != null
+				? String(eventProperties.launchData)
+				: undefined,
+		);
+
+		launchGame(
+			placeId,
+			rootPlaceId,
+			privateServerLinkCode,
+			gameInstanceId,
+			eventProperties,
+			joinData,
+			appsFlyerReferralProperties,
+		);
+	}, [
+		placeId,
+		universeId,
+		eventProperties,
+		appsFlyerReferralProperties,
+		rootPlaceId,
+		privateServerLinkCode,
+		gameInstanceId,
+	]);
+
+	const { doGameLaunchWithPlayableUxTreatment, playableUxTreatmentModal } =
+		useLaunchGameWithPlayableUxTreatment(universeId, doGameLaunch);
+
 	if (showVerification === undefined && !disableLoadingState) {
 		return <Loading />;
 	}
@@ -309,25 +342,11 @@ const PlayButtonContents = ({
 							}
 						}
 
-						handleShareLinkEventLogging(placeId, universeId);
-
-						const joinData = getJoindata(
-							eventProperties.launchData != null
-								? String(eventProperties.launchData)
-								: undefined,
-						);
-
-						launchGame(
-							placeId,
-							rootPlaceId,
-							privateServerLinkCode,
-							gameInstanceId,
-							eventProperties,
-							joinData,
-							appsFlyerReferralProperties,
-						);
+						doGameLaunchWithPlayableUxTreatment();
+					} else if (
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-					} else if (status === PlayabilityStatus.GuestProhibited) {
+						status === PlayabilityStatus.GuestProhibited
+					) {
 						// if it is vng, redirect user to login page directly
 						if (isVNGRedirectEnabled) {
 							// redirct to login page
@@ -346,6 +365,7 @@ const PlayButtonContents = ({
 				{buttonText && <span className="play-button-text">{buttonText}</span>}
 			</Button>
 			<div id="id-verification-container" />
+			{playableUxTreatmentModal}
 		</React.Fragment>
 	);
 };
@@ -383,8 +403,8 @@ export const DefaultPlayButton = ({
 	refetchPlayabilityStatus,
 	playabilityStatus,
 	hideButtonText,
-	eventProperties = {},
-	appsFlyerReferralProperties = {},
+	eventProperties = EMPTY_OBJECT,
+	appsFlyerReferralProperties = EMPTY_OBJECT,
 	disableLoadingState,
 	buttonClassName,
 	redirectPurchaseUrl,

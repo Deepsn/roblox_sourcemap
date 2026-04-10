@@ -169,19 +169,29 @@ function autoPurchaseFlow(
 	}
 
 	if (shouldShowUnifiedPurchaseModal) {
+		const isSubscription =
+			itemDetail.buyButtonElementDataset?.assetType === "Subscription";
+		const thumbnailNode =
+			isSubscription && itemDetail.thumbnail
+				? itemDetail.thumbnail
+				: ItemPreviewThumbnail({
+						thumbnailImageUrl: itemPurchaseAjaxData.thumbnailImageUrl ?? "",
+					});
 		openUnifiedRobuxUpsellModal({
 			variant: "standard",
 			expectedPrice: itemDetail.expectedItemPrice,
 			upsellProduct,
 			assetName: itemDetail.assetName,
 			assetType: itemDetail.buyButtonElementDataset?.assetType || "",
-			thumbnail: ItemPreviewThumbnail({
-				thumbnailImageUrl: itemPurchaseAjaxData.thumbnailImageUrl ?? "",
-			}),
+			thumbnail: thumbnailNode,
 			currentRobuxBalance: Number(itemPurchaseAjaxData.userBalanceRobux),
 			onAccept,
 			onCancel,
 			intl,
+			priceSuffix: isSubscription ? itemDetail.priceSuffix : undefined,
+			title: isSubscription
+				? translationResource.get(LANG_KEYS.buyRobuxAndSubscriptionAction, {})
+				: undefined,
 		});
 		return;
 	}

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { Ref, useCallback, useEffect, useMemo, useState } from "react";
+import React, { Ref, useCallback, useMemo, useState } from "react";
 import { Button, Link } from "@rbx/core-ui";
 import { TranslateFunction } from "@rbx/core-scripts/react";
 import { sendEvent } from "@rbx/core-scripts/event-stream";
@@ -42,6 +42,7 @@ import {
 	WideGameTileFacepileFooter,
 } from "./GameTileUtils";
 import WideGameTileSponsoredFooter from "./WideGameTileSponsoredFooter";
+import { SponsoredFooterAdLabelText } from "../types/sponsoredTileTypes";
 import WideGameThumbnail from "./WideGameThumbnail";
 import GameTileVideoPlayer from "./GameTileVideoPlayer";
 import useGetGameLayoutData from "../hooks/useGetGameLayoutData";
@@ -101,6 +102,9 @@ export type TWideGameTileProps = {
 	enableSponsoredFeedback?: boolean;
 	sponsoredUserCohort?: string;
 	enableReportAd?: boolean;
+	sponsoredFooterAdLabelText?: string;
+	sponsoredFooterAdLabelFirst?: boolean;
+	sponsoredFooterIncludeRatingContent?: boolean;
 	translate: TranslateFunction;
 };
 
@@ -130,6 +134,9 @@ const WideGameTile = React.forwardRef(
 			enableSponsoredFeedback = false,
 			sponsoredUserCohort,
 			enableReportAd = false,
+			sponsoredFooterAdLabelText,
+			sponsoredFooterAdLabelFirst = true,
+			sponsoredFooterIncludeRatingContent = false,
 			translate,
 		}: TWideGameTileProps,
 		ref: Ref<HTMLDivElement>,
@@ -158,10 +165,14 @@ const WideGameTile = React.forwardRef(
 			);
 		}, [gameData, buildEventProperties, id, referralPlaceId]);
 
-		const playButtonEventProperties = buildEventProperties(
-			gameData,
-			id,
-		) as Record<string, string | number | undefined>;
+		const playButtonEventProperties = useMemo(
+			() =>
+				buildEventProperties(gameData, id) as Record<
+					string,
+					string | number | undefined
+				>,
+			[buildEventProperties, gameData, id],
+		);
 
 		const friendsInGame = useMemo(
 			() => getInGameFriends(friendData, gameData.universeId),
@@ -182,7 +193,7 @@ const WideGameTile = React.forwardRef(
 
 		const shouldShowVideo = videoAssetId && isFocused;
 
-		const showPlayButton = (): boolean => {
+		const isPlayButtonVisible = useMemo((): boolean => {
 			if (
 				wideTileType === TComponentType.GridTile &&
 				// HACK: This is a temporary fix to disable the play button on grid tiles by default
@@ -197,19 +208,18 @@ const WideGameTile = React.forwardRef(
 			) {
 				return false;
 			}
-			// InterestTiles are only presentational, so we hide the play button
 			if (wideTileType === TComponentType.InterestTile) {
 				return false;
 			}
 			return true;
-		};
+		}, [wideTileType, playButtonStyle]);
 
-		const getHoverTileMetadata = (): JSX.Element | null => {
+		const hoverTileMetadata = useMemo((): JSX.Element | null => {
 			if (
 				gameData.minimumAge &&
 				gameData.ageRecommendationDisplayName &&
 				wideTileType !== TComponentType.EventTile &&
-				showPlayButton()
+				isPlayButtonVisible
 			) {
 				return (
 					<div
@@ -223,10 +233,14 @@ const WideGameTile = React.forwardRef(
 				);
 			}
 			return null;
-		};
+		}, [
+			gameData.minimumAge,
+			gameData.ageRecommendationDisplayName,
+			wideTileType,
+			isPlayButtonVisible,
+		]);
 
-		const getBaseTileMetadata = (): JSX.Element => {
-			const hoverTileMetadata = getHoverTileMetadata();
+		const baseTileMetadata = useMemo((): JSX.Element => {
 			if (
 				isFocused &&
 				hoverStyle === THoverStyle.imageOverlay &&
@@ -251,14 +265,23 @@ const WideGameTile = React.forwardRef(
 				gameData.isShowSponsoredLabel ||
 				(gameData.isSponsored && isSponsoredFooterAllowed)
 			) {
+				// isSponsoredRatingFooterAllowed is a legacy flag with override priority
+				// that corresponds to "Ad" text followed by rating content. If
+				// false, we pass through the values of sponsoredFooterAdLabelText,
+				// sponsoredFooterAdLabelFirst, and sponsoredFooterIncludeRatingContent.
+				const derivedAdLabelText = isSponsoredRatingFooterAllowed
+					? SponsoredFooterAdLabelText.Ad
+					: sponsoredFooterAdLabelText;
+				const derivedAdLabelFirst =
+					isSponsoredRatingFooterAllowed || sponsoredFooterAdLabelFirst;
+				const derivedIncludeRating =
+					isSponsoredRatingFooterAllowed || sponsoredFooterIncludeRatingContent;
+
 				return (
 					<WideGameTileSponsoredFooter
-						enableSponsoredFeedback={enableSponsoredFeedback}
-						trailingContent={
-							isSponsoredRatingFooterAllowed && enableSponsoredFeedback
-								? ratingElement
-								: undefined
-						}
+						sponsoredFooterAdLabelText={derivedAdLabelText}
+						sponsoredFooterAdLabelFirst={derivedAdLabelFirst}
+						secondaryContent={derivedIncludeRating ? ratingElement : undefined}
 						translate={translate}
 					/>
 				);
@@ -298,16 +321,38 @@ const WideGameTile = React.forwardRef(
 				);
 			}
 			return <GameTileRatingFooter ratingElement={ratingElement} />;
-		};
+		}, [
+			isFocused,
+			hoverStyle,
+			hoverTileMetadata,
+			hideTileMetadata,
+			gameData.totalUpVotes,
+			gameData.totalDownVotes,
+			gameData.isShowSponsoredLabel,
+			gameData.isSponsored,
+			gameData.friendVisitedString,
+			gameData.playerCount,
+			translate,
+			isSponsoredFooterAllowed,
+			isSponsoredRatingFooterAllowed,
+			sponsoredFooterAdLabelText,
+			sponsoredFooterAdLabelFirst,
+			sponsoredFooterIncludeRatingContent,
+			gameLayoutData,
+			friendsInGame,
+			friendVisits,
+			playerCountStyle,
+		]);
 
-		const getGameTileMetadata = (): JSX.Element => {
-			return (
+		const tileMetadata = useMemo(
+			() => (
 				<div className="wide-game-tile-metadata">
-					<div className="base-metadata">{getBaseTileMetadata()}</div>
-					<div className="hover-metadata">{getHoverTileMetadata()}</div>
+					<div className="base-metadata">{baseTileMetadata}</div>
+					<div className="hover-metadata">{hoverTileMetadata}</div>
 				</div>
-			);
-		};
+			),
+			[baseTileMetadata, hoverTileMetadata],
+		);
 
 		const gameTitle = useMemo((): string => {
 			if (gameLayoutData?.title) {
@@ -462,11 +507,11 @@ const WideGameTile = React.forwardRef(
 									>
 										{gameTitle}
 									</div>
-									{getGameTileMetadata()}
+									{tileMetadata}
 								</div>
 								{isFocused &&
 									hoverStyle === THoverStyle.imageOverlay &&
-									showPlayButton() && (
+									isPlayButtonVisible && (
 										<div
 											data-testid="game-tile-hover-game-tile-contents"
 											className="play-button-container"
@@ -486,7 +531,7 @@ const WideGameTile = React.forwardRef(
 						</WideGameTileLinkWrapper>
 						{isFocused &&
 							hoverStyle !== THoverStyle.imageOverlay &&
-							showPlayButton() && (
+							isPlayButtonVisible && (
 								<div
 									data-testid="game-tile-hover-game-tile-contents"
 									className="game-card-contents"

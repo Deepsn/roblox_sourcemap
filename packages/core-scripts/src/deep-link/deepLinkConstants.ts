@@ -37,6 +37,8 @@ export enum PathPart {
 	ExternalWebUrl = "external_web_link",
 	SecurityAlert = "security_alert",
 	Fae = "fae",
+	Messages = "messages",
+	BuyRobux = "buy_robux",
 }
 
 export enum ItemType {
@@ -95,6 +97,8 @@ export const DeepLinkNavigationMap: Record<string, string> = {
 		"/my/account#!/privacy/VisibilityAndPrivateServers/PrivateServerPrivacy",
 	[PathPart.VisibilitySubsettings]:
 		"/my/account#!/privacy/VisibilityAndPrivateServers/Visibility",
+	[PathPart.Messages]: "/my/messages/#!/inbox",
+	[PathPart.BuyRobux]: "/upgrades/robux",
 };
 
 export const UrlPart = {
@@ -152,6 +156,10 @@ export const CounterEvents = {
 	ContentPostResolutionFailed: "DeeplinkParserContentPostResolutionFailed",
 	ExperienceEventResolutionFailed:
 		"DeeplinkParserExperienceEventResolutionFailed",
+	UserTrustedConnectionResolutionFailed:
+		"DeeplinkParserUserTrustedConnectionResolutionFailed",
+	StudioTrustedConnectionResolutionFailed:
+		"DeeplinkParserStudioTrustedConnectionResolutionFailed",
 };
 
 export const buildDeepLinkLaunchGameEvent = (

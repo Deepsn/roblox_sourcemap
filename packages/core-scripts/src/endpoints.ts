@@ -267,8 +267,6 @@ const getAcceptLanguageValue = (url: string): string | null => {
 	return null;
 };
 
-// only allow virtual-events for testing, will remove after
-const urlLocaleAllowedPaths = ["/virtual-events/"];
 // only allow get and post requests
 const urlLocaleAllowedMethods = ["get", "post"];
 
@@ -277,7 +275,6 @@ const appendUrlLocaleParam = (url: string, method?: string): string => {
 		!pageLocaleCode ||
 		isAuthenticated() ||
 		isThirdPartyUrl(url) ||
-		!urlLocaleAllowedPaths.some((path) => url.includes(path)) ||
 		(method && !urlLocaleAllowedMethods.includes(method.toLowerCase()))
 	) {
 		return url;

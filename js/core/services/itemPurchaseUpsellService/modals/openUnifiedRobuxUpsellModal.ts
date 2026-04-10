@@ -29,6 +29,8 @@ export type OpenUnifiedRobuxUpsellProps =
 			assetTypeDisplayName?: string;
 			upsellProduct: UpsellProduct;
 			intl: RobloxIntlInstance;
+			priceSuffix?: string;
+			title?: string;
 	  } & BaseProps)
 	| ({
 			variant: "tooExpensive";
@@ -93,6 +95,8 @@ export function openUnifiedRobuxUpsellModal(
 		currentRobuxBalance: props.currentRobuxBalance,
 		robuxPackageAmount: props.upsellProduct?.robux_amount,
 		robuxPackagePrice: props.upsellProduct?.price,
+		priceSuffix: props.priceSuffix,
+		title: props.title,
 	} as UnifiedRobuxUpsellModalProps);
 
 	ReactDOM.render(element, container);

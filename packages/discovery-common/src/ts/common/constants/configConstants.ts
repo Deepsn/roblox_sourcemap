@@ -59,6 +59,8 @@ export const common = {
 	NoMatchingEventContextFoundCounterEvent: "NoMatchingEventContextFound",
 	NoMatchingVideoEventPageContextFoundCounterEvent:
 		"NoMatchingVideoEventPageContextFound",
+	NoMatchingVideoCmcdInstanceTypeFoundCounterEvent:
+		"NoMatchingVideoCmcdInstanceTypeFound",
 	NoMatchingSessionInfoTypeFoundCounterEvent: "NoMatchingSessionInfoTypeFound",
 	FetchExperimentationLayerValuesError: "FetchExperimentationLayerValuesError",
 };

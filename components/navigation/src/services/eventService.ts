@@ -53,6 +53,23 @@ export const sendAuth401ModalButtonClickEvent = (): void => {
 };
 
 /**
+ * Log authPageLoad event for silent passkey upgrade with optional state/origin.
+ */
+export const sendPasskeyUpgradeEvent = (
+	state?: string,
+	origin?: string,
+): void => {
+	eventStreamService.sendEventWithTarget(
+		EVENT_CONSTANTS.schematizedEventTypes.authPageLoad,
+		EVENT_CONSTANTS.context.silentPasskeyUpgrade,
+		{
+			state,
+			origin,
+		},
+	);
+};
+
+/**
  * Log whether account switcher blob is present or not. Should be logged on page load.
  * @param boolean isBlobPresent
  */

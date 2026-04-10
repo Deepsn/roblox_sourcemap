@@ -39,6 +39,7 @@ const loadThumbnailImage = (
 	token?: string,
 	clearCachedValue?: boolean,
 	version?: number,
+	headShape?: string,
 ) => {
 	if (!targetId && !token) {
 		return new Promise((_resolve, reject) => {
@@ -76,6 +77,7 @@ const loadThumbnailImage = (
 		format: formatOverride,
 		size,
 		version,
+		headShape,
 	};
 
 	const customHandler = [
@@ -121,6 +123,7 @@ const getThumbnailImage = (
 	targetId?: number,
 	token?: string,
 	version?: number,
+	headShape?: string,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -130,6 +133,7 @@ const getThumbnailImage = (
 		token,
 		false,
 		version,
+		headShape,
 	);
 
 const reloadThumbnailImage = (
@@ -148,7 +152,19 @@ const reloadThumbnailImage = (
 	format: ThumbnailFormat = ThumbnailFormat.webp,
 	targetId?: number,
 	token?: string,
-) => loadThumbnailImage(thumbnailType, size, format, targetId, token, true);
+	version?: number,
+	headShape?: string,
+) =>
+	loadThumbnailImage(
+		thumbnailType,
+		size,
+		format,
+		targetId,
+		token,
+		true,
+		version,
+		headShape,
+	);
 
 const getCssClass = (thumbnailState: ThumbnailStates) => ({
 	"icon-broken": thumbnailState === ThumbnailStates.error,

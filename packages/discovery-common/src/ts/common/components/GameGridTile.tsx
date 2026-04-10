@@ -31,6 +31,9 @@ type TGameGridTileProps = TSharedGameTileProps & {
 	enableSponsoredFeedback?: boolean;
 	sponsoredUserCohort?: string;
 	enableReportAd?: boolean;
+	sponsoredFooterAdLabelText?: string;
+	sponsoredFooterAdLabelFirst?: boolean;
+	sponsoredFooterIncludeRatingContent?: boolean;
 };
 
 export const GameGridTile = forwardRef<HTMLDivElement, TGameGridTileProps>(
@@ -56,6 +59,9 @@ export const GameGridTile = forwardRef<HTMLDivElement, TGameGridTileProps>(
 			enableSponsoredFeedback,
 			sponsoredUserCohort,
 			enableReportAd,
+			sponsoredFooterAdLabelText,
+			sponsoredFooterAdLabelFirst,
+			sponsoredFooterIncludeRatingContent,
 			...props
 		}: TGameGridTileProps,
 		ref,
@@ -88,6 +94,11 @@ export const GameGridTile = forwardRef<HTMLDivElement, TGameGridTileProps>(
 				enableSponsoredFeedback={enableSponsoredFeedback}
 				sponsoredUserCohort={sponsoredUserCohort}
 				enableReportAd={enableReportAd}
+				sponsoredFooterAdLabelText={sponsoredFooterAdLabelText}
+				sponsoredFooterAdLabelFirst={sponsoredFooterAdLabelFirst}
+				sponsoredFooterIncludeRatingContent={
+					sponsoredFooterIncludeRatingContent
+				}
 				{...props}
 			/>
 		);
@@ -103,6 +114,9 @@ GameGridTile.defaultProps = {
 	isSponsoredFooterAllowed: undefined,
 	isSponsoredRatingFooterAllowed: undefined,
 	hideTileMetadata: undefined,
+	sponsoredFooterAdLabelText: undefined,
+	sponsoredFooterAdLabelFirst: undefined,
+	sponsoredFooterIncludeRatingContent: undefined,
 	hoverStyle: undefined,
 	isInterestedUniverse: undefined,
 	toggleInterest: undefined,

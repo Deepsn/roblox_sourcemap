@@ -29,6 +29,9 @@ export enum UserSetting {
 	whoCanOneOnOnePartyWithMe = "whoCanOneOnOnePartyWithMe",
 	whoCanGroupPartyWithMe = "whoCanGroupPartyWithMe",
 	phoneNumberDiscoverabilityV2 = "phoneNumberDiscoverabilityV2",
+	whoCanPartyWithMe = "whoCanPartyWithMe",
+	whoCanUsePartyChatWithMe = "whoCanUsePartyChatWithMe",
+	whoCanUsePartyVoiceWithMe = "whoCanUsePartyVoiceWithMe",
 }
 
 export default UserSetting;

@@ -6,6 +6,7 @@ import * as AccountRecovery from "../types/accountRecovery";
 export const requestRecovery = (
 	identifier: string,
 	identifierType: AccountRecovery.IdentifierType,
+	requestedRecoveryTypes: AccountRecovery.RequestedRecoveryType[],
 	recoverySessionId?: string,
 ): Promise<
 	Result<
@@ -18,6 +19,7 @@ export const requestRecovery = (
 			identifier,
 			identifierType,
 			recoverySessionId,
+			requestedRecoveryTypes,
 		}),
 		AccountRecovery.AccountRecoveryError,
 	);
@@ -26,6 +28,7 @@ export const sendCode = (
 	contactMethod: string,
 	contactMethodType: AccountRecovery.ContactMethodType,
 	recoverySessionId: string,
+	contactMethodNumber?: number,
 ): Promise<
 	Result<
 		AccountRecovery.SendCodeReturnType,
@@ -37,12 +40,14 @@ export const sendCode = (
 			contactMethod,
 			contactMethodType,
 			recoverySessionId,
+			contactMethodNumber,
 		}),
 		AccountRecovery.AccountRecoveryError,
 	);
 
 export const resendCode = (
 	recoverySessionId: string,
+	contactMethodNumber?: number,
 ): Promise<
 	Result<
 		AccountRecovery.ResendCodeReturnType,
@@ -52,6 +57,7 @@ export const resendCode = (
 	toResult(
 		httpService.post(AccountRecovery.RESEND_CODE_CONFIG, {
 			recoverySessionId,
+			contactMethodNumber,
 		}),
 		AccountRecovery.AccountRecoveryError,
 	);
@@ -59,6 +65,7 @@ export const resendCode = (
 export const verifyCode = (
 	recoverySessionId: string,
 	code: string,
+	contactMethodNumber?: number,
 ): Promise<
 	Result<
 		AccountRecovery.VerifyCodeReturnType,
@@ -69,6 +76,7 @@ export const verifyCode = (
 		httpService.post(AccountRecovery.VERIFY_CODE_CONFIG, {
 			recoverySessionId,
 			code,
+			contactMethodNumber,
 		}),
 		AccountRecovery.AccountRecoveryError,
 	);
@@ -122,6 +130,38 @@ export const setEmail = (
 	toResult(
 		httpService.post(AccountRecovery.SET_EMAIL_CONFIG, {
 			recoverySessionId,
+		}),
+		AccountRecovery.AccountRecoveryError,
+	);
+
+export const getCurrentTwoStepMethod = (
+	recoverySessionId: string,
+): Promise<
+	Result<
+		AccountRecovery.GetCurrentTwoStepMethodReturnType,
+		AccountRecovery.AccountRecoveryError | null
+	>
+> =>
+	toResult(
+		httpService.get(AccountRecovery.GET_CURRENT_TWO_STEP_METHOD_CONFIG, {
+			recoverySessionId,
+		}),
+		AccountRecovery.AccountRecoveryError,
+	);
+
+export const disableTwoStepMethod = (
+	recoverySessionId: string,
+	twoStepMethod: string,
+): Promise<
+	Result<
+		AccountRecovery.DisableTwoStepMethodReturnType,
+		AccountRecovery.AccountRecoveryError | null
+	>
+> =>
+	toResult(
+		httpService.post(AccountRecovery.DISABLE_TWO_STEP_METHOD_CONFIG, {
+			recoverySessionId,
+			twoStepMethod,
 		}),
 		AccountRecovery.AccountRecoveryError,
 	);
