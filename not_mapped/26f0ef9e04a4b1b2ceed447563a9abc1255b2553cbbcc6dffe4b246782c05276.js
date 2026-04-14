@@ -470,6 +470,7 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 		"For someone who went through these things, seeing them recreated or joked about can be very upsetting.",
 	"Label.Sublabel.RomanceOrSex": "Romance or sex",
 	"Label.Sublabel.AdvertisingEconomicOpportunity": "Economic Opportunity",
+	"Label.LoadingImage": "Loading image",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

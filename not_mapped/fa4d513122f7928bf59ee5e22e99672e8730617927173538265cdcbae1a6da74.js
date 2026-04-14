@@ -2472,6 +2472,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Your child can chat with trusted friends and people in similar age groups playing the same experience. {linkStart}View details{linkEnd}.",
 	"Heading.AddTrustedFriend": "New trusted friend: {username}",
 	"Label.TrustedFriends": "Trusted friends",
+	"Label.ReceiveRobuxTransfer": "accept {amount} Robux from {username}",
+	"Label.SendRobuxTransfer": "send {amount} Robux to {username}",
+	"Heading.AcceptRobux": "Accept Robux",
 	"Description.AgeGroupUncapitalized": "Age group",
 	"Heading.PartyAndPartyChat": "Party and Party chat",
 	"Label.PartyChat": "Party chat",
@@ -2500,6 +2503,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.ChangeParentalRecoveryEmailPrivacyPolicy":
 		"Your parent may receive emails related to account recovery, security and payments. This account email will not change until the new email has been verified. {linkStart}Privacy policy.{linkEnd}",
 	"Label.NoOneLowercase": "no one",
+	"Description.Parent.TrustedFriendsAllFeaturesDisclaimer":
+		"Friends marked as trusted can use chat without filters, Party voice on Roblox and live collaboration in Studio with your child. {linkStart}View Details.{linkEnd}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

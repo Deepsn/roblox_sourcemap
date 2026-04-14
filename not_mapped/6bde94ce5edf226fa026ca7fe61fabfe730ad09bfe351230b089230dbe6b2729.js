@@ -118,9 +118,11 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.Connect": "Connect",
 	"Label.Sitemap": "Sitemap",
 	"Label.CreateAccount": "Create account",
+	"Label.X": "Roblox Plus",
 	"Label.AcceptFriend": "Accept Friend",
 	"Label.AddFriend": "Add Friend",
 	"Label.AddFriends": "Add Friends",
+	"Label.RobloxPlus": "Roblox Plus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

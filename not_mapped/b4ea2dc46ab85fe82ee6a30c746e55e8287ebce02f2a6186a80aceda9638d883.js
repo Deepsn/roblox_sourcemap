@@ -598,14 +598,34 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"This allows people who have your child's phone number to send them a friend invite.",
 	"Heading.ConversationalRequest.ShareActivityUpdates.TFRename":
 		"Do you want your child's friends to receive updates about their recent activity in experiences?",
+	"Heading.ConversationalRequest.SendTransfer.Robux":
+		"Can your child send {amount} Robux to {username}?",
+	"Heading.ConversationalRequest.ReceiveTransfer.Robux":
+		"Can your child accept {amount} Robux from {username}?",
+	"Message.ReceiveRobuxTransferSuccess":
+		"Your child’s request to accept Robux has been approved",
+	"Message.SendRobuxTransferSuccess":
+		"Your child’s request to send Robux has been approved",
 	"Description.TrustedConnectionConnectedForMonths":
 		"Friends for {numMonths} months",
+	"Message.ReceiveRobuxTransferDenied":
+		"Your child’s request to accept Robux has been denied",
+	"Message.SendRobuxTransferDenied":
+		"Your child’s request to send Robux has been denied",
 	"Description.TrustedConnectionConnectedForDays": "Friends for {numDays} days",
 	"Description.TrustedConnectionConnectedForYears":
 		"Friends for {numYears} years",
 	"Description.TrustedConnectionMutualFriends":
 		"{numMutualFriends} mutual friends",
 	"Description.TrustedConnectionJoinedIn": "Joined in {year}",
+	"Description.ReceiveRobuxTransfer":
+		"This allows your child to receive {robuxAmount} Robux from this person. This is a one-time transfer. Your child will need your permission to initiate or accept another transfer.",
+	"Description.SendRobuxTransfer":
+		"This allows your child to send {robuxAmount} Robux to this person. This is a one-time transfer.  Your child will need your permission to initiate or accept another Robux transfer.",
+	"Message.ExitReceiveRobuxTransferConsent":
+		"Please confirm you do not want to approve your child’s request to accept Robux",
+	"Message.ExitSendRobuxTransferConsent":
+		"Please confirm you do not want to approve your child’s request to send Robux",
 	"Description.TrustedConnectionConnectedForOneDay": "Friends for 1 day",
 	"Description.TrustedConnectionConnectedForOneMonth": "Friends for 1 month",
 	"Description.TrustedConnectionConnectedForOneYear": "Friends for 1 year",
@@ -625,6 +645,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Can your child use Voice Chat with {requestedSettingValue} in a Party?",
 	"Description.VPCNotRequired": "Please ask your child to try again",
 	"Title.VPCNotRequired": "Permission no longer required",
+	"Description.AddTrustedFriendConsent.AllFeatures":
+		"This allows your child to use chat without filters, Party voice on Roblox and live studio collaboration in Studio with this person. Make sure this is a person you know and trust. {linkStart}View Details{linkEnd}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
