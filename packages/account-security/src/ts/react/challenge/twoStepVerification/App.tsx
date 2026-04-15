@@ -1,6 +1,11 @@
 import React from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, MemoryRouter } from "react-router-dom";
-import { withTranslations, WithTranslationsProps } from "react-utilities";
+import {
+	withTranslations,
+	WithTranslationsProps,
+	queryClient,
+} from "react-utilities";
 import { RequestService } from "../../../common/request";
 import { TRANSLATION_CONFIG } from "./app.config";
 import TwoStepVerification from "./containers/twoStepVerification";
@@ -71,7 +76,7 @@ export const App: React.FC<Props> = ({
 		</TwoStepVerificationContextProvider>
 	);
 
-	return shouldModifyBrowserHistory ? (
+	const RouterElement = shouldModifyBrowserHistory ? (
 		<HashRouter hashType="noslash">{ContextProviderElement}</HashRouter>
 	) : (
 		// `MemoryRouter` maintains a path state just like a real router, but it
@@ -80,6 +85,12 @@ export const App: React.FC<Props> = ({
 		// state in a generic way (without requiring branching logic based on the
 		// `shouldModifyBrowserHistory` boolean).
 		<MemoryRouter>{ContextProviderElement}</MemoryRouter>
+	);
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			{RouterElement}
+		</QueryClientProvider>
 	);
 };
 

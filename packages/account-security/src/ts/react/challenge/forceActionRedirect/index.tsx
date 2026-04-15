@@ -27,6 +27,7 @@ export const renderChallenge: ForceActionRedirect.RenderChallenge = ({
 	actionTranslationKey,
 	onModalChallengeAbandoned,
 	onChallengeAbandoned,
+	delayParameters,
 }) => {
 	const container = document.getElementById(containerId);
 
@@ -37,6 +38,7 @@ export const renderChallenge: ForceActionRedirect.RenderChallenge = ({
 			headerTranslationKey,
 			bodyTranslationKey,
 			actionTranslationKey,
+			delayParameters,
 		});
 
 	if (container !== null) {

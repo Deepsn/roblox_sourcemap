@@ -1,5 +1,7 @@
 import { ForceActionRedirect } from "@rbx/generic-challenge-types";
 import { TranslationConfig } from "react-utilities";
+import { calculateDelayOffset } from "../twoStepVerification/delay/text";
+import { DelayParameters } from "../twoStepVerification/delay";
 
 export const FEATURE_NAME = "ForceActionRedirect" as const;
 export const LOG_PREFIX = "ForceActionRedirect:" as const;
@@ -55,6 +57,8 @@ export const BLOCK_SESSION_LANGUAGE_RESOURCES = [
 // server-vended code).
 export const translationsParametersByKey = (
 	translationKey: string,
+	delayParameters?: DelayParameters,
+	translate?: ForceActionRedirect.ForceActionRedirectTranslateFunction,
 ): Record<string, string> => {
 	switch (translationKey) {
 		case "Denied.AutomatedTampering.Body": {
@@ -89,6 +93,24 @@ export const translationsParametersByKey = (
 				appealLinkEnd: "</a>",
 			};
 		}
+		case "Denied.Delayed.Body": {
+			if (!delayParameters?.delayUntil || !translate) {
+				return {};
+			}
+			const offset = calculateDelayOffset({
+				timestamp: delayParameters.delayUntil,
+				dayTranslation: () => translate("Denied.Delayed.Header.Day"),
+				hourTranslation: () => translate("Denied.Delayed.Header.Hour"),
+				minuteTranslation: () => translate("Denied.Delayed.Header.Minute"),
+			});
+			if (!offset) {
+				return {};
+			}
+			return {
+				numberOfUnits: offset.numberOfUnits,
+				unitOfTime: offset.unitOfTime,
+			};
+		}
 		default: {
 			return {};
 		}
@@ -100,12 +122,14 @@ export const getForceActionRedirectChallengeConfig = ({
 	actionTranslationKey,
 	bodyTranslationKey,
 	headerTranslationKey,
+	delayParameters,
 }: Pick<
 	ForceActionRedirect.ChallengeParameters,
 	| "forceActionRedirectChallengeType"
 	| "actionTranslationKey"
 	| "bodyTranslationKey"
 	| "headerTranslationKey"
+	| "delayParameters"
 >): ForceActionRedirect.ForceActionRedirectChallengeConfig => {
 	switch (forceActionRedirectChallengeType) {
 		case ForceActionRedirect.ForceActionRedirectChallengeType
@@ -162,7 +186,11 @@ export const getForceActionRedirectChallengeConfig = ({
 						),
 						Body: translate(
 							maybeDynamicBodyKey,
-							translationsParametersByKey(maybeDynamicBodyKey),
+							translationsParametersByKey(
+								maybeDynamicBodyKey,
+								delayParameters,
+								translate,
+							),
 						),
 						Action: translate(
 							maybeDynamicActionKey,
