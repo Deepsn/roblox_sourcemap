@@ -103,6 +103,14 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.ExclusiveBenefitsV2":
 		"More fun for less Robux. Subscribe to Roblox Plus.",
 	"Description.StrikethroughPriceAndFree": "{price} Free",
+	"Label.FreeTrialPriceRow":
+		"{boldStart}1 month free,{boldEnd} then $4.99/month",
+	"Description.SubscriptionFreeTrialLegal":
+		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms{linkEnd}. Your 1-month free trial ends on [date] and you will be charged automatically each month and can cancel at any time.',
+	"Label.RobloxPlusPriceRowV2":
+		"{boldStart}1 month free,{boldEnd} then {price}/{periodType}",
+	"Label.FreeTrialLegalDisclosureText":
+		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your 1-month free trial ends on {date} and you will be charged automatically each month and can cancel at any time.',
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

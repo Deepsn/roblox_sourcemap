@@ -187,6 +187,9 @@ Roblox.LangDynamic["Purchasing.PurchaseDialog"] = {
 	"Heading.PurchaseCompleteV2": "Purchase complete",
 	"Action.Join": "Join",
 	"Action.BuyRobuxAndSubscription": "Buy Robux and subscription",
+	"Action.Close": "Close",
+	"Label.Subtotal": "Subtotal",
+	"Label.Total": "Total",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
