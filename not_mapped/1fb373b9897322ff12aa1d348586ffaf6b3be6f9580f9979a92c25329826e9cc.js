@@ -2505,6 +2505,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.NoOneLowercase": "no one",
 	"Description.Parent.TrustedFriendsAllFeaturesDisclaimer":
 		"Friends marked as trusted can use chat without filters, Party voice on Roblox and live collaboration in Studio with your child. {linkStart}View Details.{linkEnd}",
+	"Label.Subscriptions.FreeWithPlus": "Free With Plus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
