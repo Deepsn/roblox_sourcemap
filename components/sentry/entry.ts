@@ -8,6 +8,7 @@ import {
 	startSpan,
 	getActiveSpan,
 	flush,
+	captureException,
 } from "@sentry/browser";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import { buildTracesSampler } from "./src/utils/tracesSampler";
@@ -22,6 +23,7 @@ declare global {
 			startSpan: typeof startSpan;
 			getActiveSpan: typeof getActiveSpan;
 			flush: typeof flush;
+			captureException: typeof captureException;
 		};
 	}
 }
@@ -32,6 +34,7 @@ if (typeof window !== "undefined") {
 		startSpan,
 		getActiveSpan,
 		flush,
+		captureException,
 	};
 }
 

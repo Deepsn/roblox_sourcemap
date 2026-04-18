@@ -32,6 +32,7 @@ export enum UserSetting {
 	whoCanPartyWithMe = "whoCanPartyWithMe",
 	whoCanUsePartyChatWithMe = "whoCanUsePartyChatWithMe",
 	whoCanUsePartyVoiceWithMe = "whoCanUsePartyVoiceWithMe",
+	allowFacialAgeEstimation = "allowFacialAgeEstimation",
 }
 
 export default UserSetting;

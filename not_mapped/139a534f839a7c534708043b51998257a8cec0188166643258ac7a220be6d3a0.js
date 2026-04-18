@@ -113,6 +113,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your 1-month free trial ends on {date} and you will be charged automatically each month and can cancel at any time.',
 	"Label.FreeTrialDisclosureV2":
 		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your free trial will end in 1 month and you will be charged automatically each month and can cancel at any time.',
+	"Label.New": "New",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

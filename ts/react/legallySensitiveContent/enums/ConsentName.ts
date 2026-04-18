@@ -1,10 +1,7 @@
 export enum ConsentName {
 	phoneNumberDiscoverabilitySetting = "phoneNumberDiscoverabilitySetting",
-	phoneNumberDiscoverabilitySettingFriendsRename = "phoneNumberDiscoverabilitySettingFriendsRename",
 	phoneNumberDiscoverabilitySettingParentSide = "phoneNumberDiscoverabilitySettingParentSide",
-	phoneNumberDiscoverabilitySettingParentSideFriendsRename = "phoneNumberDiscoverabilitySettingParentSideFriendsRename",
 	phoneNumberDiscoverabilityUpsell = "phoneNumberDiscoverabilityUpsell",
-	phoneNumberDiscoverabilityUpsellFriendsRename = "phoneNumberDiscoverabilityUpsellFriendsRename",
 	personalizedAdsSetting = "personalizedAdsSetting",
 	sellShareDataSetting = "sellShareDataSetting",
 	allowMarketingEmailCheckboxEmailVerification = "allowMarketingEmailCheckboxEmailVerification",
@@ -16,6 +13,9 @@ export enum ConsentName {
 	whoCanUsePartyChatWithMeParentSide = "whoCanUsePartyChatWithMeParentSide",
 	whoCanUsePartyVoiceWithMe = "whoCanUsePartyVoiceWithMe",
 	whoCanUsePartyVoiceWithMeParentSide = "whoCanUsePartyVoiceWithMeParentSide",
+	vpcRequestLinkSubjectToPC = "vpcRequestLinkSubjectToPC",
+	vpcRequestLinkNotSubjectToPC = "vpcRequestLinkNotSubjectToPC",
+	vpcRequestLinkDefault = "vpcRequestLinkDefault",
 }
 
 export default ConsentName;

@@ -10,6 +10,7 @@ type TNewParentalRequestParams = {
 	email: string;
 	requestType: RequestType;
 	requestDetails?: Record<string, unknown>;
+	auditData?: string;
 };
 
 type TParentalRequestResponse = {
@@ -26,12 +27,17 @@ const parentalRequestService = {
 	sendRequestToNewParent: async (
 		params: TNewParentalRequestParams,
 	): Promise<TParentalRequestResponse> => {
-		const urlConfig = { url: newParentalRequest, withCredentials: true };
-		const { requestDetails } = params;
+		const { auditData, ...requestBody } = params;
+		const urlConfig = {
+			url: newParentalRequest,
+			withCredentials: true,
+			...(auditData ? { headers: { "rbx-audit-data": auditData } } : {}),
+		};
+		const { requestDetails } = requestBody;
 
 		const response = await httpService.post<TParentalRequestResponse>(
 			urlConfig,
-			params,
+			requestBody,
 		);
 		if (requestDetails) {
 			const settingName = Object.keys(requestDetails)[0];

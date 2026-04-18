@@ -1,46 +1,43 @@
 import ConsentName from "../enums/ConsentName";
 
+/** Shared copy for VPC “enter parent email” flows; descriptions differ by consent name. */
+const vpcRequestLinkBase = {
+	titleTranslationKey: "Title.EnterParentEmailV2",
+	titleSourceContentId: "1400648",
+	parentEmailLabelTranslationKey: "Label.ParentEmail",
+	parentEmailLabelSourceContentId: "2575432",
+	parentEmailPlaceholderTranslationKey: "Label.EmailCapitalized",
+	parentEmailPlaceholderSourceContentId: "1399624",
+	parentEmailFooterTranslationKey: "Description.ParentalEmailFooter",
+	parentEmailFooterSourceContentId: "332360",
+	linkStart:
+		'<a class="text-link" rel="noreferrer" target="_blank" href="https://en.help.roblox.com/hc/articles/115004630823">',
+	linkEnd: "</a>",
+	linkStartParam: "{linkStart}",
+	linkEndParam: "{linkEnd}",
+	buttonTranslationKey: "Action.SendEmail",
+	buttonSourceContentId: "1398857",
+	lineBreak: "<br /><br />",
+	lineBreakParam: "{lineBreak}",
+};
+
 // source content ids are generated from translations hub
 const legallySensitiveContentConstants = {
 	[ConsentName.phoneNumberDiscoverabilitySetting]: {
-		titleTranslationKey: "Heading.FriendDiscovery",
-		titleSourceContentId: "4063304",
-		consentTranslationKey: "Description.PhoneNumberDiscoverabilityConsent",
-		consentSourceContentId: "4054088",
-	},
-	[ConsentName.phoneNumberDiscoverabilitySettingParentSide]: {
-		titleTranslationKey: "Heading.FriendDiscovery",
-		titleSourceContentId: "4063304",
-		consentTranslationKey:
-			"Description.ParentSide.PhoneNumberDiscoverabilityConsent",
-		consentSourceContentId: "4102472",
-	},
-	[ConsentName.phoneNumberDiscoverabilityUpsell]: {
-		titleTranslationKey: "Heading.TurnOnFriendDiscovery",
-		titleSourceContentId: "4123720",
-		consentTranslationKey:
-			"Description.PhoneNumberDiscoverabilityUpsellConsent",
-		consentSourceContentId: "4123464",
-		actionButtonTextTranslationKey: "Action.FriendDiscovery.TurnOn",
-		actionButtonTextSourceContentId: "4123208",
-		neutralButtonTextTranslationKey: "Action.FriendDiscovery.NotNow",
-		neutralButtonTextSourceContentId: "4122952",
-	},
-	[ConsentName.phoneNumberDiscoverabilitySettingFriendsRename]: {
 		titleTranslationKey: "Heading.FriendDiscovery",
 		titleSourceContentId: "4063304",
 		consentTranslationKey:
 			"Description.PhoneNumberDiscoverabilityConsent.FriendsRename",
 		consentSourceContentId: "7216456",
 	},
-	[ConsentName.phoneNumberDiscoverabilitySettingParentSideFriendsRename]: {
+	[ConsentName.phoneNumberDiscoverabilitySettingParentSide]: {
 		titleTranslationKey: "Heading.FriendDiscovery",
 		titleSourceContentId: "4063304",
 		consentTranslationKey:
 			"Description.ParentSide.PhoneNumberDiscoverabilityConsent.TFR",
 		consentSourceContentId: "7237448",
 	},
-	[ConsentName.phoneNumberDiscoverabilityUpsellFriendsRename]: {
+	[ConsentName.phoneNumberDiscoverabilityUpsell]: {
 		titleTranslationKey: "Heading.TurnOnFriendDiscovery",
 		titleSourceContentId: "4123720",
 		consentTranslationKey:
@@ -158,6 +155,23 @@ const legallySensitiveContentConstants = {
 		titleSourceContentId: "7181384",
 		consentTranslationKey: "Description.PartyVoiceChatConsent",
 		consentSourceContentId: "7194440",
+	},
+	[ConsentName.vpcRequestLinkSubjectToPC]: {
+		...vpcRequestLinkBase,
+		descriptionTranslationKey: "Description.EnterParentEmailV5",
+		descriptionSourceContentId: "3710792",
+	},
+	[ConsentName.vpcRequestLinkNotSubjectToPC]: {
+		...vpcRequestLinkBase,
+		descriptionTranslationKey:
+			"Description.EnterParentEmailWithoutParentalControlV2",
+		descriptionSourceContentId: "3618888",
+	},
+	[ConsentName.vpcRequestLinkDefault]: {
+		...vpcRequestLinkBase,
+		descriptionTranslationKey:
+			"Description.EnterParentEmailWithoutParentalControl",
+		descriptionSourceContentId: "2540872",
 	},
 };
 

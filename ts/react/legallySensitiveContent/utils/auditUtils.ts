@@ -19,6 +19,7 @@ export const getAuditDataForConsent = (
 	consentName: ConsentName,
 	translate: TranslateFunction,
 ): TAuditData[] => {
+	let content;
 	switch (consentName) {
 		case ConsentName.phoneNumberDiscoverabilitySetting:
 			return [
@@ -41,32 +42,6 @@ export const getAuditDataForConsent = (
 							.consentSourceContentId,
 				},
 			];
-		case ConsentName.phoneNumberDiscoverabilitySettingFriendsRename: {
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingFriendsRename
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingFriendsRename
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingFriendsRename
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingFriendsRename
-							.consentSourceContentId,
-				},
-			];
-		}
 		case ConsentName.phoneNumberDiscoverabilitySettingParentSide:
 			return [
 				{
@@ -87,31 +62,6 @@ export const getAuditDataForConsent = (
 					sourceContentId:
 						legallySensitiveContentConstants
 							.phoneNumberDiscoverabilitySettingParentSide
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.phoneNumberDiscoverabilitySettingParentSideFriendsRename:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingParentSideFriendsRename
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingParentSideFriendsRename
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingParentSideFriendsRename
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilitySettingParentSideFriendsRename
 							.consentSourceContentId,
 				},
 			];
@@ -151,53 +101,6 @@ export const getAuditDataForConsent = (
 					),
 					sourceContentId:
 						legallySensitiveContentConstants.phoneNumberDiscoverabilityUpsell
-							.neutralButtonTextSourceContentId,
-				},
-			];
-		case ConsentName.phoneNumberDiscoverabilityUpsellFriendsRename:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.consentSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.actionButtonTextTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.actionButtonTextSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
-							.neutralButtonTextTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants
-							.phoneNumberDiscoverabilityUpsellFriendsRename
 							.neutralButtonTextSourceContentId,
 				},
 			];
@@ -590,6 +493,60 @@ export const getAuditDataForConsent = (
 					sourceContentId:
 						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
 							.consentSourceContentId,
+				},
+			];
+		case ConsentName.vpcRequestLinkSubjectToPC:
+		case ConsentName.vpcRequestLinkNotSubjectToPC:
+		case ConsentName.vpcRequestLinkDefault:
+			content = legallySensitiveContentConstants.vpcRequestLinkDefault;
+			if (consentName === ConsentName.vpcRequestLinkSubjectToPC) {
+				content = legallySensitiveContentConstants.vpcRequestLinkSubjectToPC;
+			} else if (consentName === ConsentName.vpcRequestLinkNotSubjectToPC) {
+				content = legallySensitiveContentConstants.vpcRequestLinkNotSubjectToPC;
+			}
+			return [
+				{
+					consentStringTemplate: translate(content.titleTranslationKey),
+					sourceContentId: content.titleSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(content.descriptionTranslationKey, {
+						lineBreak: content.lineBreakParam,
+					}),
+					sourceContentId: content.descriptionSourceContentId,
+					vars: {
+						lineBreak: content.lineBreak,
+					},
+				},
+				{
+					consentStringTemplate: translate(
+						content.parentEmailLabelTranslationKey,
+					),
+					sourceContentId: content.parentEmailLabelSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						content.parentEmailPlaceholderTranslationKey,
+					),
+					sourceContentId: content.parentEmailPlaceholderSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						content.parentEmailFooterTranslationKey,
+						{
+							linkStart: content.linkStartParam,
+							linkEnd: content.linkEndParam,
+						},
+					),
+					sourceContentId: content.parentEmailFooterSourceContentId,
+					vars: {
+						linkStart: content.linkStart,
+						linkEnd: content.linkEnd,
+					},
+				},
+				{
+					consentStringTemplate: translate(content.buttonTranslationKey),
+					sourceContentId: content.buttonSourceContentId,
 				},
 			];
 		default:

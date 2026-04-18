@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { Guac } from "Roblox";
 import { TranslateFunction } from "react-utilities";
 import { UserSetting } from "../enums/UserSetting";
 import {
@@ -32,54 +30,12 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 	consentName: ConsentName,
 	surface: string,
 ): [TLegallySensitiveData, TLegallySensitiveActions] => {
-	const [
-		connectionsToFriendsRenameEnabled,
-		setConnectionsToFriendsRenameEnabled,
-	] = useState<boolean>(false);
-
-	useEffect(() => {
-		Guac.callBehaviour<{ connectionsToFriendsRenameEnabled: boolean }>(
-			"web-rename-friends",
-		)
-			.then((data) => {
-				setConnectionsToFriendsRenameEnabled(
-					data.connectionsToFriendsRenameEnabled ?? false,
-				);
-			})
-			.catch(() => {
-				setConnectionsToFriendsRenameEnabled(false);
-			});
-	}, []);
-
-	const getConsentNameOverride = (): ConsentName => {
-		if (
-			consentName === ConsentName.phoneNumberDiscoverabilitySetting &&
-			connectionsToFriendsRenameEnabled
-		) {
-			return ConsentName.phoneNumberDiscoverabilitySettingFriendsRename;
-		}
-		if (
-			consentName === ConsentName.phoneNumberDiscoverabilitySettingParentSide &&
-			connectionsToFriendsRenameEnabled
-		) {
-			return ConsentName.phoneNumberDiscoverabilitySettingParentSideFriendsRename;
-		}
-		if (
-			consentName === ConsentName.phoneNumberDiscoverabilityUpsell &&
-			connectionsToFriendsRenameEnabled
-		) {
-			return ConsentName.phoneNumberDiscoverabilityUpsellFriendsRename;
-		}
-		return consentName;
-	};
-
 	const getLegallySensitiveData = (): TLegallySensitiveData => {
 		let languageConstants;
 		switch (consentName) {
 			case ConsentName.phoneNumberDiscoverabilitySetting: {
-				languageConstants = connectionsToFriendsRenameEnabled
-					? legallySensitiveContentConstants.phoneNumberDiscoverabilitySettingFriendsRename
-					: legallySensitiveContentConstants.phoneNumberDiscoverabilitySetting;
+				languageConstants =
+					legallySensitiveContentConstants.phoneNumberDiscoverabilitySetting;
 				return {
 					wordsOfConsent: {
 						title: translate(languageConstants.titleTranslationKey),
@@ -88,9 +44,8 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 				};
 			}
 			case ConsentName.phoneNumberDiscoverabilitySettingParentSide: {
-				languageConstants = connectionsToFriendsRenameEnabled
-					? legallySensitiveContentConstants.phoneNumberDiscoverabilitySettingParentSideFriendsRename
-					: legallySensitiveContentConstants.phoneNumberDiscoverabilitySettingParentSide;
+				languageConstants =
+					legallySensitiveContentConstants.phoneNumberDiscoverabilitySettingParentSide;
 				return {
 					wordsOfConsent: {
 						title: translate(languageConstants.titleTranslationKey),
@@ -99,9 +54,8 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 				};
 			}
 			case ConsentName.phoneNumberDiscoverabilityUpsell:
-				languageConstants = connectionsToFriendsRenameEnabled
-					? legallySensitiveContentConstants.phoneNumberDiscoverabilityUpsellFriendsRename
-					: legallySensitiveContentConstants.phoneNumberDiscoverabilityUpsell;
+				languageConstants =
+					legallySensitiveContentConstants.phoneNumberDiscoverabilityUpsell;
 				return {
 					wordsOfConsent: {
 						title: translate(languageConstants.titleTranslationKey),
@@ -247,6 +201,43 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 						consent: translate(languageConstants.consentTranslationKey),
 					},
 				};
+			case ConsentName.vpcRequestLinkSubjectToPC:
+			case ConsentName.vpcRequestLinkNotSubjectToPC:
+			case ConsentName.vpcRequestLinkDefault:
+				languageConstants =
+					legallySensitiveContentConstants.vpcRequestLinkDefault;
+				if (consentName === ConsentName.vpcRequestLinkSubjectToPC) {
+					languageConstants =
+						legallySensitiveContentConstants.vpcRequestLinkSubjectToPC;
+				} else if (consentName === ConsentName.vpcRequestLinkNotSubjectToPC) {
+					languageConstants =
+						legallySensitiveContentConstants.vpcRequestLinkNotSubjectToPC;
+				}
+				return {
+					wordsOfConsent: {
+						title: translate(languageConstants.titleTranslationKey),
+						description: translate(
+							languageConstants.descriptionTranslationKey,
+							{
+								lineBreak: languageConstants.lineBreak,
+							},
+						),
+						textboxLabel: translate(
+							languageConstants.parentEmailLabelTranslationKey,
+						),
+						placeholderText: translate(
+							languageConstants.parentEmailPlaceholderTranslationKey,
+						),
+						footer: translate(
+							languageConstants.parentEmailFooterTranslationKey,
+							{
+								linkStart: languageConstants.linkStart,
+								linkEnd: languageConstants.linkEnd,
+							},
+						),
+						button: translate(languageConstants.buttonTranslationKey),
+					},
+				};
 			default:
 				return undefined;
 		}
@@ -257,10 +248,7 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 		settingValue: SettingValue,
 		additionalContextualData?: Record<string, unknown>,
 	) => {
-		const auditData = getAuditDataForConsent(
-			getConsentNameOverride(),
-			translate,
-		);
+		const auditData = getAuditDataForConsent(consentName, translate);
 		const auditHeaderValue = getEncodedAuditHeader(
 			auditData,
 			surface,
@@ -276,10 +264,7 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 	const getBase64EncodedAuditHeader = (
 		additionalContextualData?: Record<string, unknown>,
 	): string => {
-		const auditData = getAuditDataForConsent(
-			getConsentNameOverride(),
-			translate,
-		);
+		const auditData = getAuditDataForConsent(consentName, translate);
 		const encodedHeaderValue = getEncodedAuditHeader(
 			auditData,
 			surface,

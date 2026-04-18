@@ -343,7 +343,7 @@ Roblox.LangDynamic["Authentication.TwoStepVerification"] = {
 	"Label.SimpleHour": "{numberOfHours} hour(s)",
 	"Label.SimpleDay": "{numberOfDays} day(s)",
 	"Label.AlternateDelayedMethod":
-		"If you can't, we'll need you to wait {delaySimpleText} for your security.",
+		"This is for your account security. If you don’t want to wait, you can verify with one of these methods now.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
