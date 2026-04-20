@@ -51,7 +51,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.EntrypointDisabled":
 		"This subscription isn’t available on this platform.",
 	"Description.BillingInfoWithFreeTrialOffer":
-		"{boldTagStart}{trialPeriod} {trialPeriodType, select, \n  Week {week}\n  Month {month}\n  Year {year}\n  other {trialPeriodType}\n} free{boldTagEnd}, then {price} a {periodType, select,\n  Week {week}\n  Month {month}\n  Year {year}\n  other {periodType}\n}",
+		"{boldTagStart}{trialPeriod} {trialPeriodType, select, \n  Week {week}\n  Month {month}\n  Year {year}\n  other {trialPeriodType}\n} free{boldTagEnd}, then {price} / {periodType, select,\n  Week {week}\n  Month {month}\n  Year {year}\n  other {periodType}\n}",
 	"Label.Status.Freetrial": "Free trial",
 	"Action.TrialSubscription": "Get free trial",
 	"Action.Customize": "Customize",
@@ -81,7 +81,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"This subscription isn't available to purchase on this device.",
 	"Label.month": "month",
 	"Label.months": "months",
-	"Description.SavingWithPlus": "Saving {robuxAmount} with Plus",
+	"Description.SavingWithPlus":
+		"Saving {amountStart}{robuxAmount}{amountEnd} with Plus",
 	"Description.SubscriptionLegal":
 		'By clicking "Subscribe", you agree to the {linkStart}Roblox Subscription Terms{linkEnd}. You will be automatically charged each month until you cancel.',
 	"Disclosure.BlackbirdTermsAgreement":
@@ -114,6 +115,23 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.FreeTrialDisclosureV2":
 		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your free trial will end in 1 month and you will be charged automatically each month and can cancel at any time.',
 	"Label.New": "New",
+	"Label.Learnmore": "Learn more",
+	"Label.ExploreMoreBenefits": "Explore more benefits",
+	"Description.ActiveUntil": "Active until {date}",
+	"Description.SubscribedSince": "Subscribed since {date}",
+	"Description.Benefit.DiscountCurrent":
+		"Your current discount is {discountPercent} off",
+	"Description.Benefit.DiscountOffInDays":
+		"{discountPercent} off in {dayCount, plural,\n =1 {{dayCount} day}\n other {{dayCount} days}\n}",
+	"Description.Benefit.DiscountMaxReached": "You've reached the max discount",
+	"Description.Benefit.DiscountUnlocked": "{discountPercent} off unlocked",
+	"Heading.SavingsYouveSaved": "You've saved",
+	"Heading.SavingsWithPlus": "with Plus",
+	"Label.Savings.InGameItems": "In-game items, avatars and more",
+	"Label.Savings.ItemsBought": "Items bought with Plus discount",
+	"Label.Savings.PrivateServers": "Private servers created for free",
+	"Label.Savings.RobuxSent": "Robux sent to friends",
+	"Label.Savings.PercentOff": "{discountPercent} off",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

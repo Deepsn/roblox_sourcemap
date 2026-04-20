@@ -212,6 +212,7 @@ Roblox.LangDynamic["Feature.VerificationUpsell"] = {
 		"By selecting “Verify,” I consent to Roblox's collection, use, and storage of my voice recording to enable voice services and for moderation, safety, and improvement of Roblox's services and tools.",
 	"Description.TurnOnFriendDiscovery.FriendsRename":
 		"Help people who have your phone number add you as a friend on Roblox",
+	homebannerV1Header: "Don’t miss out on the latest.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
