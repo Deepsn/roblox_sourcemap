@@ -16,11 +16,13 @@ export const LegallySensitiveContentContainer = ({
 			useLegallySensitiveContentAndActions: (
 				consentName: ConsentName,
 				surface: string,
+				translationArgs?: Record<string, unknown>,
 			) =>
 				useTranslatedLegallySensitiveContentAndActions(
 					translate,
 					consentName,
 					surface,
+					translationArgs,
 				),
 		};
 	}, [translate]);

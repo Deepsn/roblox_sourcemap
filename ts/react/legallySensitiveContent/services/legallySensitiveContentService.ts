@@ -21,6 +21,7 @@ import ConsentName from "../enums/ConsentName";
  * @param {TranslateFunction} translate - Function to translate text
  * @param {ConsentName} consentName - The name of the consent being updated
  * @param {string} surface - The surface this setting update is triggered from, i.e which modal, page, etc.
+ * @param {Record<string, unknown>} translationArgs - Additional arguments needed for translation
  * @returns {[TLegallySensitiveData, TLegallySensitiveActions]} Tuple containing:
  *   - Legally sensitive data (consent text and form type)
  *   - Actions for updating settings with audit logs
@@ -29,6 +30,7 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 	translate: TranslateFunction,
 	consentName: ConsentName,
 	surface: string,
+	translationArgs?: Record<string, unknown>,
 ): [TLegallySensitiveData, TLegallySensitiveActions] => {
 	const getLegallySensitiveData = (): TLegallySensitiveData => {
 		let languageConstants;
@@ -201,6 +203,40 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 						consent: translate(languageConstants.consentTranslationKey),
 					},
 				};
+			case ConsentName.receiveRobuxTransferConsentCard:
+				languageConstants =
+					legallySensitiveContentConstants.receiveRobuxTransferConsentCard;
+				return {
+					wordsOfConsent: {
+						title: translate(languageConstants.titleTranslationKey, {
+							username: translationArgs?.username,
+							amount: translationArgs?.amount,
+						}),
+						description: translate(
+							languageConstants.descriptionTranslationKey,
+							{
+								robuxAmount: translationArgs?.amount,
+							},
+						),
+					},
+				};
+			case ConsentName.sendRobuxTransferConsentCard:
+				languageConstants =
+					legallySensitiveContentConstants.sendRobuxTransferConsentCard;
+				return {
+					wordsOfConsent: {
+						title: translate(languageConstants.titleTranslationKey, {
+							username: translationArgs?.username,
+							amount: translationArgs?.amount,
+						}),
+						description: translate(
+							languageConstants.descriptionTranslationKey,
+							{
+								robuxAmount: translationArgs?.amount,
+							},
+						),
+					},
+				};
 			case ConsentName.vpcRequestLinkSubjectToPC:
 			case ConsentName.vpcRequestLinkNotSubjectToPC:
 			case ConsentName.vpcRequestLinkDefault:
@@ -238,6 +274,38 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 						button: translate(languageConstants.buttonTranslationKey),
 					},
 				};
+			case ConsentName.consentCenterAllowAction:
+				languageConstants =
+					legallySensitiveContentConstants.consentCenterAllowAction;
+				return {
+					wordsOfConsent: {
+						text: translate(languageConstants.textTranslationKey, {
+							actionName: translationArgs?.actionName,
+						}),
+					},
+				};
+			case ConsentName.consentCenterUpdateSettingNoValue:
+				languageConstants =
+					legallySensitiveContentConstants.consentCenterUpdateSettingNoValue;
+				return {
+					wordsOfConsent: {
+						text: translate(languageConstants.textTranslationKey, {
+							settingName: translationArgs?.settingName,
+						}),
+					},
+				};
+			case ConsentName.consentCenterUpdateSettingWithValue:
+				languageConstants =
+					legallySensitiveContentConstants.consentCenterUpdateSettingWithValue;
+				return {
+					wordsOfConsent: {
+						text: translate(languageConstants.textTranslationKey, {
+							settingName: translationArgs?.settingName,
+							currentValue: translationArgs?.currentValue,
+							proposedValue: translationArgs?.proposedValue,
+						}),
+					},
+				};
 			default:
 				return undefined;
 		}
@@ -248,7 +316,11 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 		settingValue: SettingValue,
 		additionalContextualData?: Record<string, unknown>,
 	) => {
-		const auditData = getAuditDataForConsent(consentName, translate);
+		const auditData = getAuditDataForConsent(
+			consentName,
+			translate,
+			translationArgs,
+		);
 		const auditHeaderValue = getEncodedAuditHeader(
 			auditData,
 			surface,
@@ -264,7 +336,11 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 	const getBase64EncodedAuditHeader = (
 		additionalContextualData?: Record<string, unknown>,
 	): string => {
-		const auditData = getAuditDataForConsent(consentName, translate);
+		const auditData = getAuditDataForConsent(
+			consentName,
+			translate,
+			translationArgs,
+		);
 		const encodedHeaderValue = getEncodedAuditHeader(
 			auditData,
 			surface,

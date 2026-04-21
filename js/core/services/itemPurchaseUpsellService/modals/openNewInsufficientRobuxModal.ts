@@ -192,6 +192,7 @@ function autoPurchaseFlow(
 			title: isSubscription
 				? translationResource.get(LANG_KEYS.buyRobuxAndSubscriptionAction, {})
 				: undefined,
+			discountInformation: itemDetail.discountInformation,
 		});
 		return;
 	}

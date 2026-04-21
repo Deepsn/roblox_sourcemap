@@ -61,7 +61,10 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 	const totalPrice = originalPrice - savedAmount;
 	const [isOpen, setIsOpen] = useState(false);
 
-	// Translation string: "Saving {amountStart}{amountEnd} with Plus"
+	const isPlusBenefitDiscount = !!discounts?.some(
+		(d) => d.discountCampaign === "BlackbirdSubscription",
+	);
+
 	const renderSavingsAmount = () => <RobuxAmount amount={savedAmount} />;
 	const savingsTags: TranslateHtmlTag[] = [
 		{
@@ -74,7 +77,6 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 	return (
 		<Accordion className="text-body-medium padding-none stroke-default stroke-thick radius-medium">
 			<AccordionItem isOpen={isOpen} onOpenChange={setIsOpen}>
-				{/* Trigger: summary row — Accordion manages aria-expanded, role, and keyboard handling */}
 				<AccordionItemTrigger
 					className={clsx(
 						"!padding-medium bg-shift-100 width-full flex flex-row items-center justify-between",
@@ -83,18 +85,26 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 					)}
 				>
 					<div className="flex flex-row items-center gap-x-small content-emphasis">
-						<Icon name="icon-regular-paper-airplane" size="Medium" />
+						{isPlusBenefitDiscount && (
+							<Icon name="icon-regular-roblox-plus" size="Medium" />
+						)}
 						<span>
-							{translateHtml(
-								translate,
-								"Description.SavingWithPlus",
-								savingsTags,
-							)}
+							{isPlusBenefitDiscount
+								? translateHtml(
+										translate,
+										"Description.SavingWithPlus",
+										savingsTags,
+										{
+											robuxAmount: numberFormat.getNumberFormat(savedAmount),
+										},
+									)
+								: translate("Description.SavingRobux", {
+										robuxAmount: numberFormat.getNumberFormat(savedAmount),
+									})}
 						</span>
 					</div>
 				</AccordionItemTrigger>
 				<AccordionItemContent className="!padding-none">
-					{/* top table: per-discount rows */}
 					<div
 						className="padding-medium padding-bottom-small flex flex-col gap-y-small bg-shift-100 stroke-default stroke-thick"
 						style={{ borderTop: "0px", borderLeft: "0px", borderRight: "0px" }}

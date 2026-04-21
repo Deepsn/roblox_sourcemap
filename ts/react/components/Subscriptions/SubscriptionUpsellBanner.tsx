@@ -6,30 +6,34 @@ import type {
 	SubscriptionOffer,
 } from "@rbx/client-subscriptions-api/v1";
 import { DeviceMeta } from "Roblox";
+import { paymentFlowAnalyticsService } from "core-roblox-utilities";
 import RobloxSubscriptionSheet from "./RobloxSubscriptionSheet";
 
 type SubscriptionUpsellBannerProps = {
 	translate: TranslateFunction;
-	subscriptionProductInfo: SubscriptionProductInfo | null;
+	subscriptionProductInfo?: SubscriptionProductInfo;
+	onSubscriptionButtonClick?: (isFreeTrial: boolean) => void;
 };
 
 const SubscriptionUpsellBanner: React.FC<SubscriptionUpsellBannerProps> = ({
 	translate,
 	subscriptionProductInfo,
+	onSubscriptionButtonClick,
 }) => {
 	const [sheetOpen, setSheetOpen] = useState(false);
+	const [upsellUuid, setUpsellUuid] = useState<string>();
+	const [redirectUrl, setRedirectUrl] = useState<string>();
 	const deviceMeta = DeviceMeta();
 
-	const onSubscribeClick = useCallback(() => {
-		setSheetOpen(true);
-	}, []);
+	const featureConfig =
+		subscriptionProductInfo?.productTypeDetails.robloxSubscriptionProductDetails
+			?.featureConfig;
+	const initDiscount = featureConfig?.virtualTransactionDiscounts?.find(
+		(d) => d.periodIndex === 0,
+	);
 
-	const onSheetClose = useCallback(() => {
-		setSheetOpen(false);
-	}, []);
-
-	const bannerText = translate("Description.ExclusiveBenefits", {
-		product: translate("Label.Blackbird"),
+	const bannerText = translate("Label.BlackbirdUpsellBanner", {
+		discountPercentage: initDiscount?.discountPercent?.toFixed(0),
 	});
 
 	const isFreeTrial =
@@ -37,8 +41,23 @@ const SubscriptionUpsellBanner: React.FC<SubscriptionUpsellBannerProps> = ({
 			(o: SubscriptionOffer) => o.offerType === "FreeTrial",
 		) ?? false;
 
+	const onSubscribeClick = () => {
+		const newUuid = paymentFlowAnalyticsService.purchaseFlowUuid;
+		setRedirectUrl(window.location.pathname + window.location.hash);
+		setUpsellUuid(newUuid);
+		setSheetOpen(true);
+	};
+
+	const onSubscriptionButtonAction = () => {
+		onSubscriptionButtonClick?.(isFreeTrial);
+	};
+
+	const onSheetClose = useCallback(() => {
+		setSheetOpen(false);
+	}, []);
+
 	const actionText = isFreeTrial
-		? translate("Feature.RobloxSubscription.Action.TrialSubscription")
+		? translate("Action.TrialSubscription")
 		: translate("Action.Subscribe");
 
 	return subscriptionProductInfo ? (
@@ -55,7 +74,7 @@ const SubscriptionUpsellBanner: React.FC<SubscriptionUpsellBannerProps> = ({
 				}}
 			>
 				<div className="gap-x-small flex items-center">
-					<Icon name="icon-regular-paper-airplane" size="Small" />
+					<Icon name="icon-regular-roblox-plus" size="Small" />
 					<span>{bannerText}</span>
 				</div>
 				<span className="content-default underline">{actionText}</span>
@@ -67,6 +86,10 @@ const SubscriptionUpsellBanner: React.FC<SubscriptionUpsellBannerProps> = ({
 					onClose={onSheetClose}
 					deviceMeta={deviceMeta}
 					subscriptionProductInfo={subscriptionProductInfo}
+					isFreeTrial={isFreeTrial}
+					upsellUuid={upsellUuid}
+					redirectUrl={redirectUrl}
+					trackSubscriptionButtonClick={onSubscriptionButtonAction}
 				/>
 			)}
 		</React.Fragment>

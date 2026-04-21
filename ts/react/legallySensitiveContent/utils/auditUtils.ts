@@ -13,11 +13,13 @@ import ConsentName from "../enums/ConsentName";
  *
  * @param {TConsentName} consentName - The consent name to generate audit data for
  * @param {TranslateFunction} translate - Function to translate text
+ * @param {Record<string, unknown>} translationArgs - Arguments needed for translation
  * @returns {TAuditData[]} Array of audit data objects
  */
 export const getAuditDataForConsent = (
 	consentName: ConsentName,
 	translate: TranslateFunction,
+	translationArgs?: Record<string, unknown>,
 ): TAuditData[] => {
 	let content;
 	switch (consentName) {
@@ -495,6 +497,88 @@ export const getAuditDataForConsent = (
 							.consentSourceContentId,
 				},
 			];
+		case ConsentName.receiveRobuxTransferConsentCard:
+			return [
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+							.titleTranslationKey,
+						{
+							username:
+								legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+									.usernameParam,
+							amount:
+								legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+									.amountParam,
+						},
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+							.titleSourceContentId,
+					vars: {
+						username: translationArgs?.username as string,
+						amount: translationArgs?.amount as string,
+					},
+				},
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+							.descriptionTranslationKey,
+						{
+							robuxAmount:
+								legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+									.robuxAmountParam,
+						},
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.receiveRobuxTransferConsentCard
+							.descriptionSourceContentId,
+					vars: {
+						robuxAmount: translationArgs?.amount as string,
+					},
+				},
+			];
+		case ConsentName.sendRobuxTransferConsentCard:
+			return [
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.sendRobuxTransferConsentCard
+							.titleTranslationKey,
+						{
+							username:
+								legallySensitiveContentConstants.sendRobuxTransferConsentCard
+									.usernameParam,
+							amount:
+								legallySensitiveContentConstants.sendRobuxTransferConsentCard
+									.amountParam,
+						},
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.sendRobuxTransferConsentCard
+							.titleSourceContentId,
+					vars: {
+						username: translationArgs?.username as string,
+						amount: translationArgs?.amount as string,
+					},
+				},
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.sendRobuxTransferConsentCard
+							.descriptionTranslationKey,
+						{
+							robuxAmount:
+								legallySensitiveContentConstants.sendRobuxTransferConsentCard
+									.robuxAmountParam,
+						},
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.sendRobuxTransferConsentCard
+							.descriptionSourceContentId,
+					vars: {
+						robuxAmount: translationArgs?.amount as string,
+					},
+				},
+			];
 		case ConsentName.vpcRequestLinkSubjectToPC:
 		case ConsentName.vpcRequestLinkNotSubjectToPC:
 		case ConsentName.vpcRequestLinkDefault:
@@ -547,6 +631,51 @@ export const getAuditDataForConsent = (
 				{
 					consentStringTemplate: translate(content.buttonTranslationKey),
 					sourceContentId: content.buttonSourceContentId,
+				},
+			];
+		case ConsentName.consentCenterAllowAction:
+			content = legallySensitiveContentConstants.consentCenterAllowAction;
+			return [
+				{
+					consentStringTemplate: translate(content.textTranslationKey, {
+						actionName: content.actionNameParam,
+					}),
+					sourceContentId: content.textSourceContentId,
+					vars: {
+						actionName: translationArgs?.actionName as string,
+					},
+				},
+			];
+		case ConsentName.consentCenterUpdateSettingNoValue:
+			content =
+				legallySensitiveContentConstants.consentCenterUpdateSettingNoValue;
+			return [
+				{
+					consentStringTemplate: translate(content.textTranslationKey, {
+						settingName: content.settingNameParam,
+					}),
+					sourceContentId: content.textSourceContentId,
+					vars: {
+						settingName: translationArgs?.settingName as string,
+					},
+				},
+			];
+		case ConsentName.consentCenterUpdateSettingWithValue:
+			content =
+				legallySensitiveContentConstants.consentCenterUpdateSettingWithValue;
+			return [
+				{
+					consentStringTemplate: translate(content.textTranslationKey, {
+						settingName: content.settingNameParam,
+						currentValue: content.currentValueParam,
+						proposedValue: content.proposedValueParam,
+					}),
+					sourceContentId: content.textSourceContentId,
+					vars: {
+						settingName: translationArgs?.settingName as string,
+						currentValue: translationArgs?.currentValue as string,
+						proposedValue: translationArgs?.proposedValue as string,
+					},
 				},
 			];
 		default:

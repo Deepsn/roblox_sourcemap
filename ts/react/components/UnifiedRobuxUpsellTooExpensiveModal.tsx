@@ -50,7 +50,7 @@ const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
 			isModal
 			size="Large"
 			type="Default"
-			ariaLabel={translate(LANG_KEYS.insufficientRobuxHeadingNew)}
+			closeLabel={translate("Action.Close") || "Close"}
 			hasCloseAffordance
 		>
 			<DialogContent className="relative width-full">

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { Modal } from "react-style-guide";
 import { Icon, ListItem } from "@rbx/foundation-ui";
@@ -15,6 +15,7 @@ import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContex
 import { TwoStepVerificationActionType } from "../store/action";
 import { MediaType } from "../interface";
 import {
+	calculateDelayByTranslations,
 	getAlternateMethodDelayTextOrDefault,
 	getDelayTextFromDates,
 } from "../delay/text";
@@ -310,23 +311,42 @@ const MediaTypeList: React.FC<Props> = ({
 		return item;
 	};
 
+	const trustedSessionCount = useTrustedSessionCount() ?? 0;
+	const getModalText = (): { title: string; body: ReactNode } => {
+		const defaultText = {
+			title: resources.Label.TwoStepVerification,
+			body: resources.Label.ChooseAlternateMediaType,
+		};
+		// Do not compute delay text if the delay is locked; it's just normal 2SV at this point.
+		if (delayParameters?.state !== "LOCK_STATE_UNLOCKED") {
+			return defaultText;
+		}
+		const maybeSimpleDelayText = calculateDelayByTranslations({
+			timestamp: delayParameters?.delayUntil ?? "0",
+			dayTranslation: resources.Label.SimpleDay,
+			hourTranslation: resources.Label.SimpleHour,
+			minuteTranslation: resources.Label.SimpleMinute,
+		});
+		if (!maybeSimpleDelayText) {
+			return defaultText;
+		}
+		const maybeDelayedBodyText = getAlternateMethodDelayTextOrDefault(
+			resources,
+			resources.Label.ChooseAlternateMediaType,
+			delayParameters,
+			trustedSessionCount,
+		);
+		return {
+			title: resources.Label.WeNeedYouToWait(maybeSimpleDelayText),
+			body: maybeDelayedBodyText,
+		};
+	};
+
 	/*
 	 * Render Properties
 	 */
-
-	const maybeDelayedTitleText =
-		delayParameters?.state === "LOCK_STATE_UNLOCKED"
-			? resources.Label.UseOneOfThese
-			: resources.Label.TwoStepVerification;
-	setModalTitleText(maybeDelayedTitleText);
-
-	const trustedSessionCount = useTrustedSessionCount() ?? 0;
-	const maybeDelayedBodyText = getAlternateMethodDelayTextOrDefault(
-		resources,
-		resources.Label.ChooseAlternateMediaType,
-		delayParameters,
-		trustedSessionCount,
-	);
+	const { title, body } = getModalText();
+	setModalTitleText(title);
 
 	const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
 	const lockIconClassName = renderInline
@@ -354,7 +374,7 @@ const MediaTypeList: React.FC<Props> = ({
 	return (
 		<BodyElement data-testid="media-type-list">
 			<div className={lockIconClassName} />
-			<p className={marginBottomXLargeClassName}>{maybeDelayedBodyText}</p>
+			<p className={marginBottomXLargeClassName}>{body}</p>
 			<table
 				className={`table table-striped media-type-list ${tableMarginClassName}`}
 			>

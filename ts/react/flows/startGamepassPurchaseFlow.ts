@@ -9,6 +9,37 @@ import {
 import { ASSET_TYPE_ENUM } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import createItemPurchase from "../../../js/react/itemPurchase/factories/createItemPurchase";
 import GamepassItemPurchaseWrapper from "../components/GamepassItemPurchaseWrapper";
+import type { DiscountInformation } from "../components/UnifiedPurchaseModal";
+
+type TGamePassDiscount = {
+	discountCampaign?: string;
+	localizedDiscountAttribution?: string | null;
+	robuxDiscountAmount?: number;
+	robuxDiscountPercentage?: number;
+};
+
+type TGamePassDiscountInformation = {
+	originalPrice?: number;
+	totalAmountSaved?: number;
+	discounts?: TGamePassDiscount[];
+};
+
+const toDiscountInformation = (
+	raw: TGamePassDiscountInformation,
+): DiscountInformation => ({
+	originalPrice: raw.originalPrice,
+	totalDiscountAmount: raw.totalAmountSaved,
+	totalDiscountPercentage:
+		raw.totalAmountSaved && raw.originalPrice && raw.originalPrice > 0
+			? raw.totalAmountSaved / raw.originalPrice
+			: undefined,
+	discounts: raw.discounts?.map((d) => ({
+		discountAmount: d.robuxDiscountAmount,
+		discountPercentage: d.robuxDiscountPercentage,
+		discountCampaign: d.discountCampaign,
+		localizedDiscountAttribution: d.localizedDiscountAttribution ?? undefined,
+	})),
+});
 
 export type TStartGamepassPurchaseFlowArgs = {
 	thumbnail: React.ReactNode;
@@ -19,6 +50,7 @@ export type TStartGamepassPurchaseFlowArgs = {
 	expectedSellerId: number;
 	expectedPrice: number;
 	iconAssetId: number;
+	discountInformation?: TGamePassDiscountInformation | null;
 	onPurchaseSuccess?: () => void;
 };
 
@@ -59,6 +91,9 @@ export function startGamepassPurchaseFlow(
 				expectedCurrency: 1,
 				expectedSellerId: args.expectedSellerId,
 				expectedPrice: args.expectedPrice,
+				discountInformation: args.discountInformation
+					? toDiscountInformation(args.discountInformation)
+					: null,
 				onPurchaseSuccess: args.onPurchaseSuccess,
 			},
 		}),

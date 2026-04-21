@@ -8,6 +8,7 @@ import UnifiedRobuxUpsellModal, {
 import UnifiedRobuxUpsellTooExpensiveModal, {
 	UnifiedRobuxUpsellTooExpensiveModalProps,
 } from "../../../../../ts/react/components/UnifiedRobuxUpsellTooExpensiveModal";
+import type { DiscountInformation } from "../../../../../ts/react/components/UnifiedPurchaseModal";
 import translationConfig from "../../../../react/itemPurchase/translation.config";
 import { UpsellProduct } from "../constants/serviceTypeDefinitions";
 
@@ -31,6 +32,7 @@ export type OpenUnifiedRobuxUpsellProps =
 			intl: RobloxIntlInstance;
 			priceSuffix?: string;
 			title?: string;
+			discountInformation?: DiscountInformation | null;
 	  } & BaseProps)
 	| ({
 			variant: "tooExpensive";
@@ -97,6 +99,7 @@ export function openUnifiedRobuxUpsellModal(
 		robuxPackagePrice: props.upsellProduct?.price,
 		priceSuffix: props.priceSuffix,
 		title: props.title,
+		discountInformation: props.discountInformation,
 	} as UnifiedRobuxUpsellModalProps);
 
 	ReactDOM.render(element, container);

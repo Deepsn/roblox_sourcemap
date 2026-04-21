@@ -156,6 +156,24 @@ const legallySensitiveContentConstants = {
 		consentTranslationKey: "Description.PartyVoiceChatConsent",
 		consentSourceContentId: "7194440",
 	},
+	[ConsentName.receiveRobuxTransferConsentCard]: {
+		titleTranslationKey: "Heading.ConversationalRequest.ReceiveTransfer.Robux",
+		titleSourceContentId: "7140680",
+		descriptionTranslationKey: "Description.ReceiveRobuxTransfer",
+		descriptionSourceContentId: "7154504",
+		usernameParam: "{username}",
+		amountParam: "{amount}",
+		robuxAmountParam: "{robuxAmount}",
+	},
+	[ConsentName.sendRobuxTransferConsentCard]: {
+		titleTranslationKey: "Heading.ConversationalRequest.SendTransfer.Robux",
+		titleSourceContentId: "7140424",
+		descriptionTranslationKey: "Description.SendRobuxTransfer",
+		descriptionSourceContentId: "7154760",
+		usernameParam: "{username}",
+		amountParam: "{amount}",
+		robuxAmountParam: "{robuxAmount}",
+	},
 	[ConsentName.vpcRequestLinkSubjectToPC]: {
 		...vpcRequestLinkBase,
 		descriptionTranslationKey: "Description.EnterParentEmailV5",
@@ -172,6 +190,23 @@ const legallySensitiveContentConstants = {
 		descriptionTranslationKey:
 			"Description.EnterParentEmailWithoutParentalControl",
 		descriptionSourceContentId: "2540872",
+	},
+	[ConsentName.consentCenterAllowAction]: {
+		textTranslationKey: "Description.AllowYourChild",
+		textSourceContentId: "1844552",
+		actionNameParam: "{actionName}",
+	},
+	[ConsentName.consentCenterUpdateSettingNoValue]: {
+		textTranslationKey: "Description.UpdateChildSetting",
+		textSourceContentId: "1566280",
+		settingNameParam: "{settingName}",
+	},
+	[ConsentName.consentCenterUpdateSettingWithValue]: {
+		textTranslationKey: "Description.UpdateChildSettingFromTo",
+		textSourceContentId: "1566536",
+		settingNameParam: "{settingName}",
+		currentValueParam: "{currentValue}",
+		proposedValueParam: "{proposedValue}",
 	},
 };
 

@@ -314,6 +314,7 @@ export default function createItemPurchase({
 					buyButtonElementDataset: targetData,
 					thumbnail,
 					priceSuffix,
+					discountInformation,
 				},
 				startOriginalFlowCallback: insufficientFundsModalServiceWrapper(
 					shortfallPrice,

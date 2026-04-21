@@ -173,7 +173,10 @@ const EmailInput: React.FC<Props> = ({
 				<BodyElement>
 					<div className={lockIconClassName} />
 					<p className={marginBottomXLargeClassName}>
-						{userEmailCopy} {maybeDelayedText ?? ""}
+						{userEmailCopy}
+						<br />
+						<br />
+						{maybeDelayedText ?? ""}
 					</p>
 
 					<InputControl

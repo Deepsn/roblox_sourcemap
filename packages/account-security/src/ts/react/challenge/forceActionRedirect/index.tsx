@@ -6,6 +6,7 @@ import "../../../../css/common/spinner.scss";
 import { ForceActionRedirect } from "@rbx/generic-challenge-types";
 import App from "./App";
 import { getForceActionRedirectChallengeConfig } from "./app.config";
+import { DelayParameters } from "../twoStepVerification/delay/types";
 
 // Export some additional enums that are declared in the shared interface (they
 // are also defined in the shared interface, but we need to expose them in the
@@ -30,6 +31,9 @@ export const renderChallenge: ForceActionRedirect.RenderChallenge = ({
 	delayParameters,
 }) => {
 	const container = document.getElementById(containerId);
+	// The types need to be fixed in generic-challenge-types. But no time so we go fast.
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+	const delayParametersTyped = delayParameters as DelayParameters | undefined;
 
 	// Retrieve config specific for the forceActionRedirectChallengeType.
 	const forceActionRedirectChallengeConfig =
@@ -38,7 +42,7 @@ export const renderChallenge: ForceActionRedirect.RenderChallenge = ({
 			headerTranslationKey,
 			bodyTranslationKey,
 			actionTranslationKey,
-			delayParameters,
+			delayParameters: delayParametersTyped,
 		});
 
 	if (container !== null) {
@@ -59,6 +63,8 @@ export const renderChallenge: ForceActionRedirect.RenderChallenge = ({
 				renderInline={renderInline}
 				onModalChallengeAbandoned={onModalChallengeAbandoned}
 				onChallengeAbandoned={onChallengeAbandoned}
+				delayParameters={delayParametersTyped}
+				bodyTranslationKey={bodyTranslationKey}
 			/>,
 			container,
 		);

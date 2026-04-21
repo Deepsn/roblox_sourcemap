@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { withTranslations, TranslateFunction } from "react-utilities";
 import {
 	Button,
@@ -8,12 +8,14 @@ import {
 	DialogFooter,
 } from "@rbx/foundation-ui";
 import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
+import { paymentFlowAnalyticsService } from "core-roblox-utilities";
 import translationConfig from "../../../js/react/itemPurchase/translation.config";
 import SubscriptionUpsellBanner from "./Subscriptions/SubscriptionUpsellBanner";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import useModalShownTracking from "../hooks/useModalShownTracking";
 import DiscountPriceDetail from "./DiscountPriceDetail";
+import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
 
 export type DiscountInformation = {
 	originalPrice?: number;
@@ -76,6 +78,27 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 	subscriptionProductInfo,
 	discountInformation,
 }) => {
+	const sendAnalyticsEvent = (isFreeTrial: boolean) => {
+		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({
+			assetType,
+			isReseller: false,
+			isPrivateServer: false,
+			isPlace: false,
+		});
+
+		const viewMessage = isFreeTrial
+			? paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_FREE_TRIAL
+			: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_SUBSCRIBE;
+		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
+			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+				.WEB_CATALOG_SINGLE_ITEM_PLUS_UPSELL,
+			false,
+			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
+			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+			viewMessage,
+		);
+	};
+
 	useModalShownTracking("UnifiedPurchaseModal", open);
 	return (
 		<Dialog
@@ -147,10 +170,13 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 							</div>
 						)}
 					</div>
-					<SubscriptionUpsellBanner
-						translate={translate}
-						subscriptionProductInfo={subscriptionProductInfo ?? null}
-					/>
+					{!isPlusBenefitDiscount(discountInformation) && (
+						<SubscriptionUpsellBanner
+							translate={translate}
+							subscriptionProductInfo={subscriptionProductInfo}
+							onSubscriptionButtonClick={sendAnalyticsEvent}
+						/>
+					)}
 					{footerDisclaimerText && (
 						<p
 							className="text-body-small content-default"

@@ -117,6 +117,7 @@ export const TWO_STEP_VERIFICATION_LANGUAGE_RESOURCES = [
 	"Label.UseYourDevice",
 	"Label.VerifyWithPasskey",
 	"Label.VerifyWithSecurityKey",
+	"Label.WeNeedYouToWait",
 	"Response.AuthenticatorCodeAlreadyUsed",
 	"Response.CodeSent",
 	"Response.DefaultError",

@@ -10,6 +10,8 @@ import {
 import { TranslateFunction } from "react-utilities";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import UnifiedProductDetails from "./UnifiedProductDetails";
+import DiscountPriceDetail from "./DiscountPriceDetail";
+import type { DiscountInformation } from "./UnifiedPurchaseModal";
 import RobuxUpsellPackageDetails from "../../../js/react/itemPurchase/components/RobuxUpsellPackageDetails";
 import { LANG_KEYS } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import useTermsOfUseText from "../hooks/useTermsOfUseText";
@@ -32,14 +34,13 @@ export type UnifiedRobuxUpsellModalProps = {
 	intl: RobloxIntlInstance;
 	priceSuffix?: string;
 	title?: string;
+	discountInformation?: DiscountInformation | null;
 };
 const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 	translate,
 	expectedPrice,
 	thumbnail,
 	assetName,
-	assetType,
-	assetTypeDisplayName,
 	onAction,
 	onCancel,
 	loading = false,
@@ -50,6 +51,7 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 	intl,
 	priceSuffix,
 	title,
+	discountInformation,
 }) => {
 	useModalShownTracking("UnifiedRobuxUpsellModal", open);
 	const titleText = title ?? translate(LANG_KEYS.buyRobuxAndItemAction);
@@ -67,7 +69,7 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 			isModal
 			size="Large"
 			type="Default"
-			ariaLabel={titleText}
+			closeLabel={translate("Action.Close") || "Close"}
 			hasCloseAffordance
 		>
 			<DialogContent className="relative width-full">
@@ -85,7 +87,14 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 						assetName={assetName}
 						expectedPrice={expectedPrice}
 						priceSuffix={priceSuffix}
+						discountInformation={discountInformation}
 					/>
+					{discountInformation && (
+						<DiscountPriceDetail
+							translate={translate}
+							discountInformation={discountInformation}
+						/>
+					)}
 					{robuxPackageAmount != null && robuxPackagePrice != null && (
 						<RobuxUpsellPackageDetails
 							robuxAmount={robuxPackageAmount}
@@ -105,10 +114,7 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 						>
 							{actionButtonText}
 						</Button>
-						<div
-							className="text-body-small"
-							dangerouslySetInnerHTML={{ __html: termsOfUseText }}
-						/>
+						<div className="text-body-small">{termsOfUseText}</div>
 					</div>
 				</DialogFooter>
 			</DialogContent>

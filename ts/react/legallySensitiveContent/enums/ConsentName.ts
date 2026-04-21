@@ -13,9 +13,14 @@ export enum ConsentName {
 	whoCanUsePartyChatWithMeParentSide = "whoCanUsePartyChatWithMeParentSide",
 	whoCanUsePartyVoiceWithMe = "whoCanUsePartyVoiceWithMe",
 	whoCanUsePartyVoiceWithMeParentSide = "whoCanUsePartyVoiceWithMeParentSide",
+	receiveRobuxTransferConsentCard = "receiveRobuxTransferConsentCard",
+	sendRobuxTransferConsentCard = "sendRobuxTransferConsentCard",
 	vpcRequestLinkSubjectToPC = "vpcRequestLinkSubjectToPC",
 	vpcRequestLinkNotSubjectToPC = "vpcRequestLinkNotSubjectToPC",
 	vpcRequestLinkDefault = "vpcRequestLinkDefault",
+	consentCenterAllowAction = "consentCenterAllowAction",
+	consentCenterUpdateSettingNoValue = "consentCenterUpdateSettingNoValue",
+	consentCenterUpdateSettingWithValue = "consentCenterUpdateSettingWithValue",
 }
 
 export default ConsentName;

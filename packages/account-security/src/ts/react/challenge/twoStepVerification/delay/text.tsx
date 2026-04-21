@@ -220,8 +220,6 @@ export const getAlternateMethodDelayTextOrDefault = (
 
 	const completeDelayTextByMethod =
 		resources.Label.AlternateDelayedMethod(delaySimpleText);
-
-	// TODO: use trustedSessionCount for count-specific copy
 	if (trustedSessionCount > 0 && completeDelayTextByMethod) {
 		return (
 			<React.Fragment>

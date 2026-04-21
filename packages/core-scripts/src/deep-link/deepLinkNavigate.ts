@@ -916,6 +916,24 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 				.catch(() => false);
 		}
 		return Promise.resolve(false);
+	} else if (navigateSubPath === PathPart.CurrencyTransfer) {
+		// Pass through roblox:// unchanged for protocol / in-app handling (urlTarget = target.url).
+		// Receive: roblox://navigation/currency_transfer?direction=receive&transferrequestid=RXT-...
+		// Send: roblox://navigation/currency_transfer?direction=send&userid={id}&transferorigination=buyRobux
+		const transferRequestId =
+			params.transferrequestid ??
+			params.transferRequestId ??
+			params.transferrequestId;
+		const direction = (params.direction ?? params.Direction)?.toLowerCase();
+		const userId = params.userid ?? params.userId;
+		const transferOrigination =
+			params.transferorigination ?? params.transferOrigination;
+		const isReceiveFlow = Boolean(transferRequestId);
+		const isSendFlow =
+			direction === "send" && Boolean(userId) && Boolean(transferOrigination);
+		if (isReceiveFlow || isSendFlow) {
+			urlTarget = target.url;
+		}
 	}
 
 	if (urlTarget) {

@@ -12,7 +12,7 @@ const BlackbirdHeading: React.FC<BlackbirdHeadingProps> = ({
 	size = "large",
 }) => (
 	<div className="gap-x-small flex items-center">
-		<Icon className="!size-1000" name="icon-regular-paper-airplane" />
+		<Icon className="!size-1000" name="icon-regular-roblox-plus" />
 		{size === "large" ? (
 			<div className="font-builder-extended text-display-small text-no-wrap">
 				{translate("Label.Blackbird")}

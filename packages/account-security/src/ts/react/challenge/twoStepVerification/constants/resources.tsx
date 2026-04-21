@@ -59,7 +59,7 @@ export const getResources = (translate: TranslateFunction) =>
 		Label: {
 			AlternateDelayedMethod: (delaySimpleText: string) =>
 				translate("Label.AlternateDelayedMethod", { delaySimpleText }) ||
-				`If you can't, we'll need you to wait ${delaySimpleText} for your security.`,
+				`This is for your account security. If you don’t want to wait, you can verify with one of these methods now.`,
 			ApproveWithDevice: translate("Label.ApproveWithDevice"),
 			AuthenticatorMediaType: translate("Label.AuthenticatorMediaType"),
 			CrossDeviceMediaType: translate("Label.UseYourDevice"),
@@ -181,6 +181,9 @@ export const getResources = (translate: TranslateFunction) =>
 			UseOneOfThese: translate("Label.UseOneOfThese") || "Use one of these",
 			VerifyWithPasskey: translate("Label.VerifyWithPasskey"),
 			VerifyWithSecurityKey: translate("Label.VerifyWithSecurityKey"),
+			WeNeedYouToWait: (delaySimpleText: string) =>
+				translate("Label.WeNeedYouToWait", { delaySimpleText }) ||
+				`We need you to wait ${delaySimpleText}`,
 		},
 		Response: {
 			AuthenticatorCodeAlreadyUsed: translate(

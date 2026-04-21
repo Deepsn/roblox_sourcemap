@@ -8,6 +8,9 @@ type SubscriptionButtonProps = {
 	deviceMeta: ReturnType<typeof DeviceMeta>;
 	isDisabled?: boolean;
 	children: React.ReactNode;
+	upsellUuid?: string;
+	redirectUrl?: string;
+	trackSubscriptionButtonClick?: () => void;
 };
 
 const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
@@ -16,14 +19,18 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 	deviceMeta,
 	isDisabled = false,
 	children,
+	upsellUuid,
+	redirectUrl,
+	trackSubscriptionButtonClick,
 }) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onClick = useCallback(() => {
 		if (!isDisabled) {
+			trackSubscriptionButtonClick?.();
 			setIsLoading(true);
 		}
-	}, [isDisabled]);
+	}, [isDisabled, trackSubscriptionButtonClick]);
 
 	const purchaseUrl = useMemo(() => {
 		if (deviceMeta.isDesktop) {
@@ -31,6 +38,12 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 			url.searchParams.append("ctx", "subscription");
 			url.searchParams.append("type", productType);
 			url.searchParams.append("id", productId);
+			if (redirectUrl) {
+				url.searchParams.append("redirectUrl", redirectUrl);
+			}
+			if (upsellUuid) {
+				url.searchParams.append("upsellUuid", upsellUuid);
+			}
 			return url.toString();
 		}
 
@@ -49,6 +62,8 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 		deviceMeta.isIosApp,
 		productType,
 		productId,
+		upsellUuid,
+		redirectUrl,
 	]);
 
 	return (

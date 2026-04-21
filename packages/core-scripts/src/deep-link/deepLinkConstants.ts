@@ -39,6 +39,7 @@ export enum PathPart {
 	Fae = "fae",
 	Messages = "messages",
 	BuyRobux = "buy_robux",
+	CurrencyTransfer = "currency_transfer",
 }
 
 export enum ItemType {
