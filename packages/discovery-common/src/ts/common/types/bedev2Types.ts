@@ -74,6 +74,7 @@ export type TCatalog = {
 };
 
 export type TOmniRecommendationGame = {
+	analyticsData: Record<string, string>;
 	contentType: TContentType.Game;
 	contentId: number;
 	contentMetadata: Record<string, string>;
@@ -132,6 +133,7 @@ export type TOmniRecommendationSduiSort = {
 };
 
 export type TOmniRecommendationGameSort = TSharedGameSort & {
+	analyticsData: Record<string, string>;
 	recommendationList: TOmniRecommendationGame[] | null;
 	numberOfRows?: number;
 };
@@ -356,6 +358,7 @@ export type TOmniSearchGameDataModel = {
 	creatorId: number;
 	creatorHasVerifiedBadge?: boolean;
 	contentMetadata?: Record<string, string>;
+	canonicalUrlPath?: string;
 };
 
 export type TOmniSearchTextDataModel = {
@@ -394,52 +397,6 @@ export type TGetOmniSearchParsedResponse = {
 	paginationMethod?: TPaginationMethod;
 	sorts: TGameSearchSortData[];
 };
-
-export type TSurvey = {
-	meta: TSurveyMeta;
-	content: TSurveyContent;
-};
-
-export type TSurveyMeta = {
-	token: string;
-};
-
-export type TSurveyContent = {
-	container: TSurveyContainer;
-	prompt: TSurveyPrompt;
-};
-
-export type TSurveyContainer = {
-	iconKey?: string;
-	responseType: string;
-	isDismissible?: boolean;
-};
-
-export type TTextWithIdentifier = {
-	text: string;
-	id: number;
-};
-
-export type TSurveyPrompt = {
-	promptText: TTextWithIdentifier;
-	subtitleText: string;
-	responseOptions: TTextWithIdentifier[];
-};
-
-export type TSurveyResponseBody = {
-	selectedText?: string[];
-	selectedIds?: number[];
-	resourceId?: string;
-	token: string;
-};
-
-export type TSendSurveyResultsResponse = {
-	success: boolean;
-};
-
-export enum TSurveyIcon {
-	helpIcon = "helpIcon",
-}
 
 export type TGuacAppPolicyBehaviorResponse = {
 	EnableAggregateLikesFavoritesCount: boolean;

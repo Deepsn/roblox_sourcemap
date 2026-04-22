@@ -39,8 +39,11 @@ type THomeSortHeaderProps = {
 	// Whether to hide the See All button and seeAllLink
 	hideSeeAll: boolean | undefined;
 
-	// Custom link component (e.g. React Router's Link) that is renderred instead of a plain <a> tag when provided
-	linkComponent?: ComponentType<TLinkComponentProps>;
+	// Custom title link component (e.g. React Router's Link) that is rendered instead of plain <a> tags
+	titleLinkComponent?: ComponentType<TLinkComponentProps>;
+
+	// Custom subtitle link component (e.g. React Router's Link) that is rendered instead of plain <a> tags
+	subtitleLinkComponent?: ComponentType<TLinkComponentProps>;
 
 	// When true, allows click event to bubble up from both title and subtitle links
 	permitLinkClickPropagation?: boolean;
@@ -62,7 +65,8 @@ const HomeSortHeader = ({
 	hasBackgroundMural,
 	tooltipText,
 	hideSeeAll,
-	linkComponent,
+	titleLinkComponent,
+	subtitleLinkComponent,
 	permitLinkClickPropagation,
 }: THomeSortHeaderProps): JSX.Element => {
 	const tokens = useTokens();
@@ -108,7 +112,7 @@ const HomeSortHeader = ({
 				onTitleActivated={hideSeeAll ? undefined : sendNavigateToSortLinkEvent}
 				titleLinkPath={hideSeeAll ? undefined : titleLink}
 				permitLinkClickPropagation={permitLinkClickPropagation}
-				linkComponent={linkComponent}
+				titleLinkComponent={titleLinkComponent}
 				// Force text color to dark mode token (white) if there is a background mural
 				titleTextColor={
 					hasBackgroundMural
@@ -133,6 +137,7 @@ const HomeSortHeader = ({
 					hasSubtitleLink ? sendNavigateToSortLinkEvent : undefined
 				}
 				subtitleLinkPath={hasSubtitleLink ? subtitleLink : undefined}
+				subtitleLinkComponent={subtitleLinkComponent}
 				subtitleIconClassName={
 					hasSubtitleLink ? subtitleIconClassName : undefined
 				}

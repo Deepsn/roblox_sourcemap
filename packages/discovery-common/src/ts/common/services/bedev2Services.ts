@@ -14,9 +14,6 @@ import {
 	TOmniRecommendation,
 	TOmniSearchContentType,
 	TOmniSearchGameDataModel,
-	TSendSurveyResultsResponse,
-	TSurvey,
-	TSurveyResponseBody,
 	TTreatmentType,
 	TGetProfilesResponse,
 	TSduiTreatmentType,
@@ -251,40 +248,6 @@ export const getExploreSortContents = (
 		});
 };
 
-export const getSurvey = (
-	locationName: string,
-	resourceId?: string,
-): Promise<TSurvey> => {
-	const params = resourceId ? { resourceId } : undefined;
-	return http
-		.get<TSurvey>(bedev2Constants.url.getSurvey(locationName), params)
-		.then((response) => {
-			return response.data;
-		});
-};
-
-const postSurveyResults = async (
-	token: string,
-	locationName: string,
-	selectedText?: string[],
-	selectedIds?: number[],
-	resourceId?: string,
-): Promise<TSendSurveyResultsResponse> => {
-	const requestBody: TSurveyResponseBody = {
-		selectedText,
-		selectedIds,
-		resourceId,
-		token,
-	};
-
-	const urlConfig = bedev2Constants.url.postSurveyResults(locationName);
-	const response = await http.post<TSendSurveyResultsResponse>(
-		urlConfig,
-		requestBody,
-	);
-	return response.data;
-};
-
 const postUserSignal = async (
 	signalValue: TUserSignalValue,
 	signalValueType: TUserSignalValueType,
@@ -458,8 +421,6 @@ export default {
 	getExploreSorts,
 	getExploreSortContents,
 	getLandingPageData,
-	getSurvey,
-	postSurveyResults,
 	postUserSignal,
 	getThumbnailForAsset,
 	getGuacAppPolicyBehaviorData,

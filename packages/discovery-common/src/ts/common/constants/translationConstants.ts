@@ -74,7 +74,6 @@ export const FeatureGameDetails = {
 	LabelMicrophone: "Label.Microphone",
 	LabelCamera: "Label.Camera",
 	LabelNone: "Label.None",
-	LabelThankYou: "Label.ThankYouMessage",
 	LabelGenreUnderConstruction: "Label.GenreUnderConstruction",
 	LabelGenreInProgress: "Label.GenreInProgress",
 	HeadingRecommendedGames: "Heading.RecommendedGames",

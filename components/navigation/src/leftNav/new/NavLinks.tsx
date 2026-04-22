@@ -5,7 +5,6 @@ import environmentUrls from "@rbx/environment-urls";
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import * as http from "@rbx/core-scripts/http";
 import { useTranslation } from "@rbx/core-scripts/react";
-import { callBehaviour } from "@rbx/core-scripts/guac";
 import {
 	AuthenticatedUser,
 	isBlackbirdUser,
@@ -80,8 +79,7 @@ const ProfileNavItem = ({
 					<VerifiedBadgeIconContainer size={BadgeSizes.CAPTIONHEADER} />
 				) : null}
 				{isBlackbirdUser() ? (
-					// TODO(SUBS-4332)
-					<Icon name="icon-regular-paper-airplane" size="Small" />
+					<Icon name="icon-regular-roblox-plus" size="Small" />
 				) : null}
 			</span>
 		</a>
@@ -237,7 +235,7 @@ const BlackbirdNavItem = ({ currentPath }: { currentPath: string }) => {
 		<NavItem
 			path="/blackbird"
 			isCurrentPath={blackbirdPathRegex.test(currentPath)}
-			icon="icon-regular-paper-airplane"
+			icon="icon-regular-roblox-plus"
 			text={translate("Label.Blackbird")}
 		/>
 	);
@@ -256,7 +254,7 @@ const BlackbirdUpsellNavItem = ({ currentPath }: { currentPath: string }) => {
 				href="/blackbird"
 				className="gap-y-medium flex flex-col padding-medium bg-shift-100 stroke-default stroke-thick radius-medium text-body-medium"
 			>
-				<Icon name="icon-regular-paper-airplane" />
+				<Icon name="icon-regular-roblox-plus" />
 				<span>
 					{translate("Description.ExclusiveBenefits", {
 						product: translate("Label.Blackbird"),
@@ -302,17 +300,6 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 	}, []);
 
 	const { translate } = useTranslation();
-
-	const { data: connectionsToFriendsRenameEnabled } = useQuery({
-		queryKey: ["connections-to-friends-rename"],
-		queryFn: async () => {
-			const data = await callBehaviour<{
-				connectionsToFriendsRenameEnabled: boolean;
-			}>("web-rename-friends");
-			return data.connectionsToFriendsRenameEnabled;
-		},
-		placeholderData: false,
-	});
 
 	const queryClient = useQueryClient();
 
@@ -406,11 +393,7 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 						currentPath,
 					)}
 					icon="icon-regular-two-people"
-					text={translate(
-						connectionsToFriendsRenameEnabled
-							? "Label.Friends"
-							: "Label.Connect",
-					)}
+					text={translate("Label.Friends")}
 					notification={
 						friendRequestCount
 							? plusAbbreviate(friendRequestCount, 500)

@@ -4,8 +4,8 @@
 const EVENT_CONSTANTS = {
 	schematizedEventTypes: {
 		authButtonClick: "authButtonClick",
-		authPageLoad: "authPageLoad",
 		authClientError: "authClientError",
+		authPageLoad: "authPageload",
 	},
 	context: {
 		homepage: "homepage",
@@ -13,6 +13,12 @@ const EVENT_CONSTANTS = {
 		cachedUserChanged: "cachedUserChanged",
 		auth401Modal: "signInRedirect",
 		silentPasskeyUpgrade: "handleSilentPasskeyUpgradeWeb",
+		silentPasskeyUpgradeWebLoginImmediate:
+			"handleSilentPasskeyUpgradeWebLoginImmediate",
+		silentPasskeyUpgradeWebLoginDelayed:
+			"handleSilentPasskeyUpgradeWebLoginDelayed",
+		silentPasskeyUpgradeWebSignupDelayed:
+			"handleSilentPasskeyUpgradeWebSignupDelayed",
 	},
 	btn: {
 		logout: "logout",
@@ -28,6 +34,7 @@ const EVENT_CONSTANTS = {
 		finishRegistrationSuccess: "finishRegistrationSuccess",
 		finishRegistrationError: "finishRegistrationError",
 		httpStatusErrorParsing: "httpStatusErrorParsing",
+		consumePasskeySessionFlagError: "consumePasskeySessionFlagError",
 	},
 } as const;
 

@@ -112,16 +112,10 @@ export enum EventStreamMetadata {
 	PreviousOptionContextTag = "previousOptionContextTag",
 	PreviousOptionId = "previousOptionId",
 	PreviousIndex = "previousIndex",
-	PromptId = "promptId",
-	PromptText = "promptText",
 	QueryText = "queryText",
 	QueryTexts = "queryTexts",
 	ResourceId = "resourceId",
-	ResponseOptionIds = "responseOptionIds",
-	ResponseOptionTexts = "responseOptionTexts",
 	RootPlaceIds = "rootPlaceIds",
-	SelectedIds = "selectedIds",
-	SelectedTexts = "selectedTexts",
 	ScreenSizeX = "screenSizeX",
 	ScreenSizeY = "screenSizeY",
 	ScrollAreaSize = "scrollAreaSize",
@@ -143,8 +137,6 @@ export enum EventStreamMetadata {
 	SuggestionReplacedKwd = "suggestionReplacedKwd",
 	SuggestionCorrectedKwd = "suggestionCorrectedKwd",
 	SuggestionAlgorithm = "suggestionAlgorithm",
-	TimeToRespond = "timeToRespond",
-	Token = "token",
 	Topics = "topics",
 	TreatmentType = "treatmentType",
 	UniverseId = "universeId",
@@ -155,7 +147,6 @@ export enum EventStreamMetadata {
 	ThumbnailAssetIds = "thumbnailAssetIds",
 	ThumbnailListIds = "thumbnailListIds",
 	LinkPath = "linkPath",
-	LocationName = "locationName",
 	RowOnPage = "rowOnPage",
 	RowsOnPage = "rowsOnPage",
 	PositionInRow = "positionInRow",
@@ -176,8 +167,6 @@ export enum EventType {
 	SortDetailReferral = "sortDetailReferral",
 	FeedScroll = "feedScroll",
 	NavigateToSortLink = "navigateToSortLink",
-	SurveyInteraction = "surveyInteraction",
-	SurveyImpression = "surveyImpression",
 	InterestCatcherClick = "interestCatcherClick",
 	FilterImpressions = "filterImpressions",
 	GamesFilterClick = "gamesFilterClick",
@@ -202,39 +191,6 @@ export type TDiscoverySessionInfo = {
 	[key in SessionInfoType]?: string;
 };
 
-export enum TSurveyInteractionType {
-	Submission = "submission",
-	Cancellation = "cancellation",
-}
-
-export type TSurveyInteraction =
-	| {
-			[EventStreamMetadata.LocationName]: string;
-			[EventStreamMetadata.ResourceId]?: string;
-			[EventStreamMetadata.Token]: string;
-			[EventStreamMetadata.PromptText]: string;
-			[EventStreamMetadata.PromptId]: number;
-			[EventStreamMetadata.TimeToRespond]: number;
-			[EventStreamMetadata.ResponseOptionTexts]: string[];
-			[EventStreamMetadata.ResponseOptionIds]: number[];
-			[EventStreamMetadata.SelectedTexts]?: string[];
-			[EventStreamMetadata.SelectedIds]?: number[];
-			[EventStreamMetadata.InteractionType]: TSurveyInteractionType;
-	  }
-	| Record<string, never>;
-
-export type TSurveyImpression =
-	| {
-			[EventStreamMetadata.LocationName]: string;
-			[EventStreamMetadata.ResourceId]?: string;
-			[EventStreamMetadata.Token]: string;
-			[EventStreamMetadata.PromptText]: string;
-			[EventStreamMetadata.PromptId]: number;
-			[EventStreamMetadata.ResponseOptionTexts]: string[];
-			[EventStreamMetadata.ResponseOptionIds]: number[];
-	  }
-	| Record<string, never>;
-
 export type TEvent = [
 	{ name: string; type: EventType; context: string },
 	Record<string, string | number>,
@@ -250,6 +206,7 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.PositionsInTopic]?: number[];
 	[EventStreamMetadata.UniverseIds]: number[];
 	[EventStreamMetadata.GameSetTypeId]?: number | string;
+	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.AdsPositions]?: number[];
 	[EventStreamMetadata.AdFlags]?: number[];
 	[EventStreamMetadata.AdIds]?: string[];
@@ -262,7 +219,6 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.FooterLocalizationKeys]?: string[];
 	[EventStreamMetadata.AppliedFilters]?: string;
 	[EventStreamMetadata.ComponentType]?: string;
-	[EventStreamMetadata.SortSubId]?: string;
 };
 
 export type TGridGameImpressions = TBaseGameImpressions & {
@@ -355,9 +311,9 @@ export type TCommonReferralParams = {
 	[EventStreamMetadata.PositionInRow]?: number;
 	[EventStreamMetadata.RowOnPage]?: number;
 	[EventStreamMetadata.SortPos]?: number;
-	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.NumberOfLoadedTiles]?: number;
 	[EventStreamMetadata.GameSetTypeId]?: number | string;
+	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.AttributionId]?: string;
 	[SessionInfoType.DiscoverPageSessionInfo]?: string;
 	[SessionInfoType.GameSearchSessionInfo]?: string;
@@ -403,6 +359,16 @@ export type TGameDetailReferral =
 				| PageContext.SearchLandingPage
 				| PageContext.SpotlightPage
 				| PageContext.UserProfilePage;
+			// PlayContext is included so it gets passed through the URL to the game
+			// detail page, where the play button reads it from query params.
+			// It is not actually used for the referral event
+			[EventStreamMetadata.PlayContext]?:
+				| PageContext.HomePage
+				| PageContext.GameDetailPage
+				| PageContext.GamesPage
+				| PageContext.SearchLandingPage
+				| PageContext.SpotlightPage
+				| PageContext.SortDetailPageDiscover;
 			[EventStreamMetadata.ShareLinkType]?: string;
 			[EventStreamMetadata.ShareLinkId]?: string;
 	  })
@@ -628,26 +594,6 @@ export default {
 		{
 			name: EventType.NavigateToSortLink,
 			type: EventType.NavigateToSortLink,
-			context: formInteraction,
-		},
-		parseEventParams({
-			...params,
-		}),
-	],
-	[EventType.SurveyInteraction]: (params: TSurveyInteraction = {}): TEvent => [
-		{
-			name: EventType.SurveyInteraction,
-			type: EventType.SurveyInteraction,
-			context: formInteraction,
-		},
-		parseEventParams({
-			...params,
-		}),
-	],
-	[EventType.SurveyImpression]: (params: TSurveyImpression = {}): TEvent => [
-		{
-			name: EventType.SurveyImpression,
-			type: EventType.SurveyImpression,
 			context: formInteraction,
 		},
 		parseEventParams({

@@ -40,11 +40,25 @@ export const SongCarouselFeedItem = ({
 			props: {
 				imageAspectRatio: 1,
 				titleText: song.title,
-				image: `rbxthumb://type=Asset&id=${song.albumArtAssetId}&w=150&h=150`,
+				imageComponent: {
+					componentType: SduiRegisteredComponents.SongThumbnail,
+					props: {
+						assetId: song.assetId,
+						width: 150,
+						height: 150,
+						altName: song.title,
+					},
+				},
 				footerComponent: {
 					componentType: SduiRegisteredComponents.TileFooter,
 					props: {
 						leftText: song.artist,
+					},
+				},
+				onActivated: {
+					actionType: SduiActionType.OpenSongDetails,
+					actionParams: {
+						itemId: song.assetId,
 					},
 				},
 			},
@@ -57,7 +71,7 @@ export const SongCarouselFeedItem = ({
 			props: {
 				items,
 				layoutOverrides: {
-					sideMargin: tokens.Gap.XLarge,
+					sideMargin: 10, // 10px (as per design of other carousels. Ref - gameCarousel.scss > .games-list-container)
 				},
 				scrollingEnabledOverride: true,
 				collectionItemSize: "Small",
@@ -93,7 +107,6 @@ export const SongCarouselFeedItem = ({
 			sort.topic,
 			sort.topicId,
 			sort.topicLayoutData?.infoText,
-			tokens.Gap.XLarge,
 			tokens.Gap.XSmall,
 		],
 	);
@@ -103,13 +116,15 @@ export const SongCarouselFeedItem = ({
 	}
 
 	return (
-		<SduiComponent
-			componentConfig={componentConfig}
-			parentAnalyticsContext={{}}
-			// MUS-1979 TODO: Validate analytics
-			localAnalyticsData={localAnalyticsData}
-			sduiContext={sduiContext}
-		/>
+		<div className="songs-carousel-container">
+			<SduiComponent
+				componentConfig={componentConfig}
+				parentAnalyticsContext={{}}
+				// MUS-1979 TODO: Validate analytics
+				localAnalyticsData={localAnalyticsData}
+				sduiContext={sduiContext}
+			/>
+		</div>
 	);
 };
 

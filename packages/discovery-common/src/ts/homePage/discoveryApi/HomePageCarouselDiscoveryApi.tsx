@@ -6,6 +6,8 @@ import {
 	EventStreamMetadata,
 	SessionInfoType,
 	TBuildNavigateToSortLinkEventProperties,
+	TCarouselGameImpressions,
+	TGameDetailReferral,
 } from "../../common/constants/eventStreamConstants";
 import { PageContext } from "../../common/types/pageContext";
 import { TGameData, TGetFriendsResponse } from "../../common/types/bedev1Types";
@@ -16,6 +18,7 @@ import {
 	TPlayerCountStyle,
 	THoverStyle,
 } from "../../common/types/bedev2Types";
+import { TOmniRecommendationAnalyticsData } from "../../common/types/analyticsTypes";
 import { GameCarousel } from "../../common/components/GameCarousel";
 import { TBuildEventProperties } from "../../common/components/GameTileUtils";
 import useGameImpressionsIntersectionTracker, {
@@ -29,6 +32,11 @@ import {
 	getTileBadgeContextsImpressionsData,
 	getTileFooterImpressionsData,
 } from "../../common/utils/parsingUtils";
+import {
+	buildOmniRecommendationGameImpressionsAnalyticsData,
+	buildOmniRecommendationTileAnalyticsData,
+	mergeEventParamsWithAnalyticsData,
+} from "../../common/utils/analyticsDataUtils";
 import { usePageSession } from "../../common/utils/PageSessionContext";
 import GameCarouselContainerHeader from "../../common/components/GameCarouselContainerHeader";
 import { homePage } from "../../common/constants/configConstants";
@@ -61,6 +69,7 @@ type THomePageGameCarouselDiscoveryApiProps = {
 	isCarouselHorizontalScrollEnabled?: boolean;
 	isNewScrollArrowsEnabled?: boolean;
 	isNewSortHeaderEnabled?: boolean;
+	omniAnalyticsData: TOmniRecommendationAnalyticsData;
 };
 
 export const HomePageCarousel = ({
@@ -89,28 +98,36 @@ export const HomePageCarousel = ({
 	isCarouselHorizontalScrollEnabled,
 	isNewScrollArrowsEnabled,
 	isNewSortHeaderEnabled,
+	omniAnalyticsData,
 }: THomePageGameCarouselDiscoveryApiProps): JSX.Element => {
 	// Type union will be cleaned up with isCarouselHorizontalScrollEnabled
 	const carouselRef = useRef<HTMLDivElement | HTMLUListElement>(null);
 	const tileRef = useRef<HTMLDivElement>(null);
 	const homePageSessionInfo = usePageSession();
-	const buildEventProperties: TBuildEventProperties = (data, id) => ({
-		[EventStreamMetadata.PlaceId]: data.placeIdOverride ?? data.placeId,
-		[EventStreamMetadata.PlaceIdOverride]: data.placeIdOverride,
-		[EventStreamMetadata.UniverseId]: data.universeId,
-		[EventStreamMetadata.IsAd]: data.isSponsored,
-		[EventStreamMetadata.NativeAdData]: data.nativeAdData,
-		[EventStreamMetadata.Position]: id,
-		...getAbsoluteRowClickData(startingRow, itemsPerRow, id),
-		[EventStreamMetadata.SortPos]: positionId,
-		[EventStreamMetadata.SortSubId]: sort.subId,
-		[EventStreamMetadata.NumberOfLoadedTiles]: (gameData || []).length,
-		[EventStreamMetadata.GameSetTypeId]: sort.topicId,
-		[EventStreamMetadata.Page]: PageContext.HomePage,
-		[SessionInfoType.HomePageSessionInfo]: homePageSessionInfo,
-		[EventStreamMetadata.PlayContext]: PageContext.HomePage,
-		[EventStreamMetadata.LaunchData]: data.launchDataOverride,
-	});
+	const buildEventProperties: TBuildEventProperties = (data, id) => {
+		const eventParams: TGameDetailReferral = {
+			[EventStreamMetadata.PlaceId]: data.placeIdOverride ?? data.placeId,
+			[EventStreamMetadata.PlaceIdOverride]: data.placeIdOverride,
+			[EventStreamMetadata.UniverseId]: data.universeId,
+			[EventStreamMetadata.IsAd]: data.isSponsored,
+			[EventStreamMetadata.NativeAdData]: data.nativeAdData,
+			[EventStreamMetadata.Position]: id,
+			...getAbsoluteRowClickData(startingRow, itemsPerRow, id),
+			[EventStreamMetadata.SortPos]: positionId,
+			[EventStreamMetadata.NumberOfLoadedTiles]: (gameData || []).length,
+			[EventStreamMetadata.GameSetTypeId]: sort.topicId,
+			[EventStreamMetadata.SortSubId]: sort.subId,
+			[EventStreamMetadata.Page]: PageContext.HomePage,
+			[SessionInfoType.HomePageSessionInfo]: homePageSessionInfo,
+			[EventStreamMetadata.PlayContext]: PageContext.HomePage,
+			[EventStreamMetadata.LaunchData]: data.launchDataOverride,
+		};
+		const tileAnalyticsData = buildOmniRecommendationTileAnalyticsData(
+			data.universeId,
+			omniAnalyticsData,
+		);
+		return mergeEventParamsWithAnalyticsData(eventParams, tileAnalyticsData);
+	};
 
 	const buildGameImpressionsProperties: TBuildCarouselGameImpressionsEventProperties =
 		useCallback(
@@ -119,13 +136,15 @@ export const HomePageCarousel = ({
 					const filteredViewedIndexes = viewedIndexes.filter(
 						(id) => id < gameData?.length,
 					);
-					return {
+					const viewedUniverseIds = filteredViewedIndexes.map(
+						(id) => gameData[id]!.universeId,
+					);
+
+					const eventParams: TCarouselGameImpressions = {
 						[EventStreamMetadata.RootPlaceIds]: filteredViewedIndexes.map(
 							(id) => gameData[id]!.placeId,
 						),
-						[EventStreamMetadata.UniverseIds]: filteredViewedIndexes.map(
-							(id) => gameData[id]!.universeId,
-						),
+						[EventStreamMetadata.UniverseIds]: viewedUniverseIds,
 						...getThumbnailAssetIdImpressionsData(
 							gameData,
 							sort.topicId,
@@ -159,11 +178,20 @@ export const HomePageCarousel = ({
 							(id) => (topicPositionOffset ?? 0) + id,
 						),
 						[EventStreamMetadata.SortPos]: positionId,
-						[EventStreamMetadata.SortSubId]: sort.subId,
 						[EventStreamMetadata.GameSetTypeId]: sort.topicId,
+						[EventStreamMetadata.SortSubId]: sort.subId,
 						[EventStreamMetadata.Page]: PageContext.HomePage,
 						[SessionInfoType.HomePageSessionInfo]: homePageSessionInfo,
 					};
+					const impressionAnalyticsData =
+						buildOmniRecommendationGameImpressionsAnalyticsData(
+							viewedUniverseIds,
+							omniAnalyticsData,
+						);
+					return mergeEventParamsWithAnalyticsData(
+						eventParams,
+						impressionAnalyticsData,
+					);
 				}
 
 				return undefined;
@@ -177,6 +205,7 @@ export const HomePageCarousel = ({
 				componentType,
 				startingRow,
 				topicPositionOffset,
+				omniAnalyticsData,
 			],
 		);
 

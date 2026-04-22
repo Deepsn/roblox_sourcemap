@@ -181,6 +181,7 @@ export type TGameData = {
 	primaryMediaAsset?: TMediaAssetInfo;
 	defaultLayoutData?: TLayoutMetadata;
 	layoutDataBySort?: TLayoutDataBySort;
+	contentMetadataMediaAsset?: TMediaAssetInfo;
 	navigationUid?: string;
 	canonicalUrlPath?: string;
 };

@@ -53,18 +53,14 @@ export const sendAuth401ModalButtonClickEvent = (): void => {
 };
 
 /**
- * Log authPageLoad event for silent passkey upgrade with optional state/origin.
+ * Log a generic authPageLoad event with the given context and state.
  */
-export const sendPasskeyUpgradeEvent = (
-	state?: string,
-	origin?: string,
-): void => {
+export const sendAuthPageLoadEvent = (context: string, state: string): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authPageLoad,
-		EVENT_CONSTANTS.context.silentPasskeyUpgrade,
+		context,
 		{
 			state,
-			origin,
 		},
 	);
 };

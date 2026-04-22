@@ -15,6 +15,10 @@ const FAEEventConstants = {
 		webEmbededFaeCancel: "webEmbededFaeCancel",
 		webFaeStatus: "webFaeStatus",
 		webHostedFaeStart: "webHostedFaeStart",
+		webQrCodeFaeStart: "webQrCodeFaeStart",
+		webQrCodeFaeComplete: "webQrCodeFaeComplete",
+		webQrCodeFaeTimeout: "webQrCodeFaeTimeout",
+		webQrCodeFaeClose: "webQrCodeFaeClose",
 	},
 	btn: {
 		cancelFae: "cancelFae",

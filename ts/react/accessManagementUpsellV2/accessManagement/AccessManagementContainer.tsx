@@ -69,7 +69,7 @@ function AccessManagementContainer({
 
 	const expChildModalType =
 		(useExperiments(vpcUpsellExperimentLayer)
-			.expNewChildModal as ExpNewChildModal) ?? ExpNewChildModal.control;
+			?.expNewChildModal as ExpNewChildModal) ?? ExpNewChildModal.control;
 	async function onAccessManagementCustomEvent(
 		event: CustomEvent<AccessManagementUpsellEventParams>,
 	) {

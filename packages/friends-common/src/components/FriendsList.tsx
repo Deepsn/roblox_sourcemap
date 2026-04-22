@@ -20,7 +20,6 @@ const FriendsList = ({
 	sortPosition,
 	badgeCount,
 	isAddFriendsTileEnabled,
-	connectionsToFriendsRenameEnabled,
 }: {
 	friendsList: TFriend[] | null;
 	isOwnUser: boolean;
@@ -33,7 +32,6 @@ const FriendsList = ({
 	sortPosition: number | undefined;
 	badgeCount: number;
 	isAddFriendsTileEnabled: boolean;
-	connectionsToFriendsRenameEnabled?: boolean;
 }): JSX.Element => {
 	const parentRef = useRef<HTMLElement | null>(null);
 	const [visibleFriendsList, setVisibleFriendsList] = useState(friendsList);
@@ -101,9 +99,6 @@ const FriendsList = ({
 								key="add-friends-tile"
 								translate={translate}
 								badgeCount={badgeCount}
-								connectionsToFriendsRenameEnabled={
-									connectionsToFriendsRenameEnabled
-								}
 								data-testid="add-friends-tile"
 							/>
 						) : null}

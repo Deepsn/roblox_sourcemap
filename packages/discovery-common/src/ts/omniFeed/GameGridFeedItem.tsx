@@ -6,11 +6,16 @@ import {
 	TGameSort,
 	TOmniRecommendationGame,
 } from "../common/types/bedev2Types";
+import { TOmniRecommendationAnalyticsData } from "../common/types/analyticsTypes";
 import HomePageGridDiscoveryApi from "../homePage/discoveryApi/HomePageGridDiscoveryApi";
 import bedev2Services from "../common/services/bedev2Services";
 import { homePage } from "../common/constants/configConstants";
 import { useContentMetadata } from "./utils/contentMetadataContextProvider";
-import { hydrateOmniRecommendationGames } from "./utils/gameSortUtils";
+import {
+	buildOmniRecommendationAnalyticsData,
+	hydrateOmniRecommendationGames,
+	isOmniRecommendationGameSort,
+} from "./utils/gameSortUtils";
 import { usePageSession } from "../common/utils/PageSessionContext";
 
 type THomePageDiscoveryApiProps = {
@@ -87,6 +92,16 @@ export const GameGridFeedItem = ({
 		return hydrateOmniRecommendationGames(recommendations, contentMetadata);
 	}, [recommendations, contentMetadata]);
 
+	const omniAnalyticsData = useMemo<TOmniRecommendationAnalyticsData>(() => {
+		if (!isOmniRecommendationGameSort(sort)) {
+			return { sortLevel: {}, itemLevel: {} };
+		}
+		return buildOmniRecommendationAnalyticsData(
+			recommendations,
+			sort.analyticsData,
+		);
+	}, [sort, recommendations]);
+
 	if (gridData?.length === 0) {
 		return null;
 	}
@@ -96,6 +111,7 @@ export const GameGridFeedItem = ({
 			key={sort.topic}
 			sort={sort}
 			gameData={gridData}
+			omniAnalyticsData={omniAnalyticsData}
 			translate={translate}
 			positionId={positionId}
 			itemsPerRow={itemsPerRow}

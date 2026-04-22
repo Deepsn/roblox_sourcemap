@@ -22,6 +22,10 @@ import {
 	TTreatmentType,
 } from "../../common/types/bedev2Types";
 import { sortDetailPage } from "../../common/constants/configConstants";
+import {
+	TOmniRecommendationAnalyticsData,
+	TUniverseIdToAnalyticsDataMap,
+} from "../../common/types/analyticsTypes";
 
 export const hydrateOmniRecommendationGames = (
 	recommendations: TOmniRecommendationGame[] | null,
@@ -58,6 +62,31 @@ export const hydrateOmniRecommendationGames = (
 							recommendationContentMetadata.LaunchDataOverride;
 					}
 
+					const primaryWideImageAssetId =
+						recommendationContentMetadata?.PrimaryWideImageAssetId;
+					const primaryWideImageListId =
+						recommendationContentMetadata?.PrimaryWideImageListId;
+					const primaryWideVideoAssetId =
+						recommendationContentMetadata?.PrimaryWideVideoAssetId;
+
+					if (
+						primaryWideImageAssetId ||
+						primaryWideImageListId ||
+						primaryWideVideoAssetId
+					) {
+						gameData.contentMetadataMediaAsset = {
+							...(primaryWideImageAssetId
+								? { wideImageAssetId: primaryWideImageAssetId }
+								: {}),
+							...(primaryWideImageListId
+								? { wideImageListId: primaryWideImageListId }
+								: {}),
+							...(primaryWideVideoAssetId
+								? { wideVideoAssetId: primaryWideVideoAssetId }
+								: {}),
+						};
+					}
+
 					return gameData;
 				}
 
@@ -70,7 +99,7 @@ export const hydrateOmniRecommendationGames = (
 		);
 };
 
-const isOmniRecommendationGameSort = (
+export const isOmniRecommendationGameSort = (
 	gameSort: TGameSort,
 ): gameSort is TOmniRecommendationGameSort => {
 	return "recommendationList" in gameSort;
@@ -432,6 +461,29 @@ export const parseAppliedFilters = (
 	}
 
 	return {};
+};
+
+/**
+ * Builds a structured analytics data object that preserves the separation between
+ * sort-level and item-level analytics data. This separation is important because
+ * sort-level data and item-level data are only merged for events for specific experiences.
+ * If the event is for a group of experiences (e.g. game impressions), then the sort-level data
+ * is sent as a separate key while the item-level data for each experience is
+ * aggregated into arrays.
+ */
+export const buildOmniRecommendationAnalyticsData = (
+	recommendationList: TOmniRecommendationGame[],
+	sortAnalyticsData?: Record<string, string>,
+): TOmniRecommendationAnalyticsData => {
+	const itemLevel: TUniverseIdToAnalyticsDataMap = {};
+	recommendationList.forEach((item) => {
+		itemLevel[item.contentId] = item.analyticsData;
+	});
+
+	return {
+		sortLevel: sortAnalyticsData ?? {},
+		itemLevel,
+	};
 };
 
 export default {

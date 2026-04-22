@@ -99,6 +99,7 @@ export const FeaturedGridTile = forwardRef(
 			gameData.placeId,
 			gameData.name,
 			buildEventProperties(gameData, id),
+			gameData.canonicalUrlPath,
 		);
 
 		const playButtonEventProperties = buildEventProperties(

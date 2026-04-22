@@ -162,6 +162,7 @@ const WideGameTile = React.forwardRef(
 				referralPlaceId,
 				gameData.name,
 				buildEventProperties(gameData, id),
+				gameData.canonicalUrlPath,
 			);
 		}, [gameData, buildEventProperties, id, referralPlaceId]);
 

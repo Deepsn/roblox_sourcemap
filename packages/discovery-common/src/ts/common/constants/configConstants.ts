@@ -36,7 +36,6 @@ export const gamesPage = {
 export const gameDetailsPage = {
 	maxTilesPerCarouselPage: 6,
 	visitsTruncationDigitsAfterDecimalPoint: 1,
-	surveyImpressionsIntersectionThreshold: 0.5,
 	requestRefundError: "RequestRefundError",
 	votingPanelLoadFailure: "VotingPanelLoadFailure",
 };
@@ -71,10 +70,6 @@ export const gameSearchPage = {
 	unknownTopicId: "Unknown",
 	omniSearchEndpointErrorEvent: "OmniSearchEndpointError",
 	omniSearchEndpointSuccessEvent: "OmniSearchEndpointSuccess",
-};
-
-export const surveyLocation = {
-	experienceDetails: "experienceDetails",
 };
 
 export const searchLandingPage = {

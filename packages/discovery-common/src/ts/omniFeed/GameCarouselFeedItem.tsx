@@ -3,9 +3,14 @@ import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import HomePageCarouselDiscoveryApi from "../homePage/discoveryApi/HomePageCarouselDiscoveryApi";
 import { TGameData, TGetFriendsResponse } from "../common/types/bedev1Types";
 import { TComponentType, TGameSort } from "../common/types/bedev2Types";
+import { TOmniRecommendationAnalyticsData } from "../common/types/analyticsTypes";
 import { useContentMetadata } from "./utils/contentMetadataContextProvider";
 import { getNumCarouselTiles } from "../common/components/GameTileUtils";
-import { getHydratedGameData } from "./utils/gameSortUtils";
+import {
+	buildOmniRecommendationAnalyticsData,
+	getHydratedGameData,
+	isOmniRecommendationGameSort,
+} from "./utils/gameSortUtils";
 import GamesPageGameCarousel from "../gamesPage/components/GamesPageGameCarousel";
 import { PageContext } from "../common/types/pageContext";
 import SearchLandingPageGamesCarousel from "../searchLandingPage/SearchLandingPageCarousel";
@@ -83,6 +88,16 @@ export const GameCarouselFeedItem = ({
 		isCarouselScrollEnabled,
 	]);
 
+	const omniAnalyticsData = useMemo<TOmniRecommendationAnalyticsData>(() => {
+		if (!isOmniRecommendationGameSort(sort)) {
+			return { sortLevel: {}, itemLevel: {} };
+		}
+		return buildOmniRecommendationAnalyticsData(
+			sort.recommendationList ?? [],
+			sort.analyticsData,
+		);
+	}, [sort]);
+
 	if (carouselData?.length === 0) {
 		return null;
 	}
@@ -155,6 +170,7 @@ export const GameCarouselFeedItem = ({
 			isCarouselHorizontalScrollEnabled={isCarouselScrollEnabled}
 			isNewScrollArrowsEnabled={isNewArrowsEnabled}
 			isNewSortHeaderEnabled={isNewSortHeaderEnabled}
+			omniAnalyticsData={omniAnalyticsData}
 		/>
 	);
 };

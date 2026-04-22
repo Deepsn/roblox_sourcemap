@@ -10,6 +10,7 @@ import useSduiContext from "../../sdui/hooks/useSduiContext";
 import { TServerDrivenComponentConfig } from "../../sdui/system/SduiTypes";
 import { SduiRegisteredComponents } from "../../sdui/system/SduiComponentRegistry";
 import SentinelTile from "../../common/components/SentinelTile";
+import { SduiActionType } from "../../sdui/system/SduiActionParserRegistry";
 import { buildSessionAnalyticsData } from "../../sdui/utils/analyticsParsingUtils";
 import { usePageSession } from "../../common/utils/PageSessionContext";
 
@@ -44,11 +45,25 @@ const SongsSeeAllGrid = ({
 			props: {
 				imageAspectRatio: 1,
 				titleText: song.title,
-				image: `rbxthumb://type=Asset&id=${song.albumArtAssetId}&w=150&h=150`,
+				imageComponent: {
+					componentType: SduiRegisteredComponents.SongThumbnail,
+					props: {
+						assetId: song.assetId,
+						width: 150,
+						height: 150,
+						altName: song.title,
+					},
+				},
 				footerComponent: {
 					componentType: SduiRegisteredComponents.TileFooter,
 					props: {
 						leftText: song.artist,
+					},
+				},
+				onActivated: {
+					actionType: SduiActionType.OpenSongDetails,
+					actionParams: {
+						itemId: song.assetId,
 					},
 				},
 			},

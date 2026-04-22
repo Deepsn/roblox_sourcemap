@@ -21,6 +21,14 @@ type TEventMetadataOverrides = Record<
 	string | number | boolean
 >;
 export type PartialEventMetadataOverrides = Partial<TEventMetadataOverrides>;
+// Only evaluated once at mount time. Values are read from the initial URL and
+// are not reactive to subsequent changes.
+type TMountOptions = {
+	// Suffix used to identify query params whose keys are server-provided (e.g.
+	// from analyticsData). The suffix will be stripped before sending the event.
+	queryParamSuffixForServerProvidedKeys?: string;
+};
+type TServerProvidedQueryParams = Record<string, string | string[]>;
 const { parseQueryString, composeQueryString } = parsingUtils;
 
 export const usePageReferralTracker = <T extends Record<string, unknown>>(
@@ -30,10 +38,13 @@ export const usePageReferralTracker = <T extends Record<string, unknown>>(
 	eventMetadataOverrides: PartialEventMetadataOverrides = {},
 	location: Location | TReactRouterDOMLocation = window.location,
 	history: History | TReactRouterDOMHistory = window.history,
+	mountOptions: TMountOptions = {},
 ): {
 	referralParams: T;
 	appsFlyerReferralParams: Partial<TAppsFlyerRefParams>;
+	serverProvidedQueryParams: TServerProvidedQueryParams;
 } => {
+	const { queryParamSuffixForServerProvidedKeys } = mountOptions;
 	const [referralParams, setReferralParams] = useState<T>(
 		parseQueryString(location.search) as unknown as T,
 	);
@@ -41,6 +52,37 @@ export const usePageReferralTracker = <T extends Record<string, unknown>>(
 		() => getAppsFlyerReferralParams(location),
 		[location],
 	);
+
+	const serverProvidedQueryParams = useMemo(() => {
+		if (queryParamSuffixForServerProvidedKeys === undefined) {
+			return {};
+		}
+
+		const params = parseQueryString(location.search);
+		const parsedServerProvidedQueryParams: Record<string, string | string[]> =
+			{};
+		// Check the query string for params that were added dynamically and add
+		// them to the parsedServerProvidedQueryParams object after removing the suffix from the key
+		Object.entries(params).forEach(([key, value]) => {
+			if (value === null) {
+				return;
+			}
+
+			if (key.endsWith(queryParamSuffixForServerProvidedKeys)) {
+				const newKey = key.slice(
+					0,
+					key.length - queryParamSuffixForServerProvidedKeys.length,
+				);
+				parsedServerProvidedQueryParams[newKey] = value;
+			}
+		});
+
+		return parsedServerProvidedQueryParams;
+		// We only want to run this once on mount because the params are removed
+		// from the URL once the event is sent and we don't want this to become an
+		// empty object
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const isTReactRouterDOMHistory = (
 		historyObject: TReactRouterDOMHistory | History,
@@ -60,19 +102,22 @@ export const usePageReferralTracker = <T extends Record<string, unknown>>(
 		const parsedEventParams = eventParams.reduce(
 			(acc, curr) => {
 				if (
-					params[curr as string] !== undefined ||
+					params[curr as string] !== undefined &&
 					params[curr as string] !== null
 				) {
 					acc[curr] = params[curr as string];
 				}
 				return acc;
 			},
-			{} as Record<keyof T, unknown>,
+			// serverProvidedQueryParams is set as the base object so that the statically
+			// defined event params override them if there are any overlapping keys.
+			// note that we do a shallow copy here so that the original object is not mutated
+			{ ...serverProvidedQueryParams } as Record<keyof T, unknown>,
 		) as T;
 
 		const parsedQueryParams = queryParams.reduce<Record<string, unknown>>(
 			(acc, curr) => {
-				if (params[curr] !== undefined || params[curr] !== null) {
+				if (params[curr] !== undefined && params[curr] !== null) {
 					acc[curr] = params[curr];
 				}
 				return acc;
@@ -110,11 +155,12 @@ export const usePageReferralTracker = <T extends Record<string, unknown>>(
 
 	useEffect(() => {
 		sendEvent();
-		// TODO: old, migrated code
+		// We only want to send the referral event once on mount. The URL params are
+		// consumed and removed from the URL after the event is sent.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return { referralParams, appsFlyerReferralParams };
+	return { referralParams, appsFlyerReferralParams, serverProvidedQueryParams };
 };
 
 export default usePageReferralTracker;

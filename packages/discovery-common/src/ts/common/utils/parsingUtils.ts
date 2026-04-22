@@ -177,6 +177,13 @@ export const getThumbnailOverrideAssetId = (
 		return null;
 	};
 
+	const contentMetadataAssetId = getAssetIdFromMediaLayoutData({
+		primaryMediaAsset: gameData.contentMetadataMediaAsset,
+	});
+	if (contentMetadataAssetId) {
+		return contentMetadataAssetId;
+	}
+
 	let assetId;
 
 	// If a layout data exists for this sort, use that set
@@ -199,6 +206,12 @@ const getThumbnailOverrideListId = (
 	gameData: TGameData,
 	topicId: string | undefined,
 ): string | undefined => {
+	const contentMetadataListId =
+		gameData.contentMetadataMediaAsset?.wideImageListId;
+	if (contentMetadataListId) {
+		return contentMetadataListId;
+	}
+
 	if (
 		gameData.layoutDataBySort &&
 		topicId &&
@@ -228,12 +241,19 @@ const getVideoAssetIdFromMediaLayoutData = (
 
 /**
  * Extract the video asset ID from game data, following the same priority chain
- * as getThumbnailOverrideAssetId: sort-specific layout -> default layout -> root primaryMediaAsset.
+ * as getThumbnailOverrideAssetId: contentMetadataMediaAsset -> sort-specific layout -> default layout -> root primaryMediaAsset.
  */
 export const getVideoOverrideAssetId = (
 	gameData: TGameData,
 	topicId: string | undefined,
 ): number | null => {
+	const contentMetadataVideoId = getVideoAssetIdFromMediaLayoutData({
+		primaryMediaAsset: gameData.contentMetadataMediaAsset,
+	});
+	if (contentMetadataVideoId) {
+		return contentMetadataVideoId;
+	}
+
 	let assetId;
 
 	if (
