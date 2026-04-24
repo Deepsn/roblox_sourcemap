@@ -2511,6 +2511,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Are you sure you want to cancel? If you cancel, your benefits will end on {subscriptionExpirationDate}, including any private servers you had will no longer be free.",
 	"Message.Subscriptions.PlusCancelBody2":
 		'By clicking "Yes, Cancel", you agree to cancel your Roblox Subscription and that you will lose your benefits. You will be redirected back to your Subscriptions page. Please review when and how much your private servers will be charged.',
+	"Heading.Dialog.ContinueUpdatingSetting": "Continue updating {settingName}?",
+	"Description.Dialog.ContinueUpdatingSetting":
+		"Confirm to finish updating your {settingName} setting",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

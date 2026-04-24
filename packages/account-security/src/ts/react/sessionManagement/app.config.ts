@@ -82,6 +82,8 @@ export const SESSION_MANAGEMENT_LANGUAGE_RESOURCES = [
 	"Label.Value.NoActiveDelays",
 	"Label.Value.ActiveDelayCount",
 	"Label.Delay.Subject.Group.Payouts",
+	"Label.Delay.Subject.Group.OwnershipTransfer",
+	"Label.Delay.Subject.Group.RolesOrPermissions",
 	"Label.Delay.Subject.Unknown",
 	"Label.Delay.Status.Completed",
 	"Label.Delay.Status.CompletedLower",
