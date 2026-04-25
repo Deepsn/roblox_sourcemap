@@ -5,7 +5,7 @@ import { Icon } from "@rbx/foundation-ui";
 import AssetName from "../../../js/react/itemPurchase/components/AssetName";
 import PriceLabel from "../../../js/react/itemPurchase/components/PriceLabel";
 import itemPurchaseConstants from "../../../js/react/itemPurchase/constants/itemPurchaseConstants";
-import type { DiscountInformation } from "./UnifiedPurchaseModal";
+import type { DiscountInformation } from "./discountInformation";
 
 const { resources } = itemPurchaseConstants;
 

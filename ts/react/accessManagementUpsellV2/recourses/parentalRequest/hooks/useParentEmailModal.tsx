@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Button, IModalService, Modal } from "react-style-guide";
 import { TranslateFunction } from "react-utilities";
-import { localStorageService } from "core-roblox-utilities";
 import { LegallySensitiveContentService } from "Roblox";
 import parentalRequestConstants from "../constants/parentalRequestConstants";
 import legallySensitiveContentConstants from "../constants/legallySensitiveContentConstants";
@@ -35,12 +34,8 @@ const useParentEmailModal = (
 	value?: Record<string, unknown> | null,
 	source?: string,
 ): [JSX.Element, IModalService] => {
-	const {
-		privacyPolicyUrl,
-		chargebackWizardSessionTokenLocalStorageKey,
-		emailRegex,
-		translationKeys,
-	} = parentalRequestConstants;
+	const { privacyPolicyUrl, emailRegex, translationKeys } =
+		parentalRequestConstants;
 	const { gatherParentEmail } = translationKeys;
 	const [modalOpen, setModalOpen] = useState<boolean>(false);
 	const [isChildSubjectToPC, setIsChildSubjectToPC] = useState<boolean>(false);
@@ -124,10 +119,6 @@ const useParentEmailModal = (
 
 	const sendParentEmailAddress = async () => {
 		setErrorTranslationKey("");
-		// needs to clear the local cache before starting a new wizard session
-		localStorageService.removeLocalStorage(
-			chargebackWizardSessionTokenLocalStorageKey,
-		);
 		try {
 			const response = await parentalRequestService.sendRequestToNewParent({
 				email: parentEmailInput,

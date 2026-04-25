@@ -2514,6 +2514,11 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.Dialog.ContinueUpdatingSetting": "Continue updating {settingName}?",
 	"Description.Dialog.ContinueUpdatingSetting":
 		"Confirm to finish updating your {settingName} setting",
+	"Heading.GetTheApp": "Get the app",
+	"Label.GetAppOnStore":
+		"Visit the App Store or Google Play to download the Roblox app now.",
+	"Label.DownloadOnTheAppStore": "Download on the App Store",
+	"Label.GetItOnGooglePlay": "Get it on Google Play",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

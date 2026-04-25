@@ -33,6 +33,7 @@ import {
 } from "@rbx/roblox-badges";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import { useRealTime } from "./useRealTime";
+import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
 
 // Temporarily copied from `@rbx/foundation-ui` since the NavigationRail component is not available yet.
 const interactable =
@@ -226,14 +227,14 @@ const PremiumNavItem = () => {
 	);
 };
 
-const blackbirdPathRegex = /^\/blackbird(\/|$)/;
+const blackbirdPathRegex = /^\/plus(\/|$)/;
 
 const BlackbirdNavItem = ({ currentPath }: { currentPath: string }) => {
 	const { translate } = useTranslation();
 
 	return (
 		<NavItem
-			path="/blackbird"
+			path="/plus"
 			isCurrentPath={blackbirdPathRegex.test(currentPath)}
 			icon="icon-regular-roblox-plus"
 			text={translate("Label.Blackbird")}
@@ -251,7 +252,7 @@ const BlackbirdUpsellNavItem = ({ currentPath }: { currentPath: string }) => {
 	return (
 		<li className="padding-top-xsmall">
 			<a
-				href="/blackbird"
+				href="/plus"
 				className="gap-y-medium flex flex-col padding-medium bg-shift-100 stroke-default stroke-thick radius-medium text-body-medium"
 			>
 				<Icon name="icon-regular-roblox-plus" />
@@ -274,6 +275,7 @@ const plusAbbreviate = (num: number, limit: number) =>
 const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const id = user.id!;
+	const liveNameForDisplay = useLiveUserNameForDisplay(user);
 	const [currentPath, setCurrentPath] = useState(
 		new URL(window.location.href).pathname,
 	);
@@ -354,7 +356,7 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 	return (
 		<nav>
 			<ul className="flex flex-col gap-small">
-				<ProfileNavItem id={id} displayName={user.displayName ?? ""} />
+				<ProfileNavItem id={id} displayName={liveNameForDisplay} />
 				<NavItem
 					path="/home"
 					isCurrentPath={/^\/([a-z]{2}\/)?home(\/|$)/.test(currentPath)}

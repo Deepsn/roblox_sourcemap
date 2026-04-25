@@ -1,7 +1,6 @@
 import React from "react";
 import { TranslateFunction } from "react-utilities";
 import { translateHtml } from "@rbx/translation-utils";
-import type { TranslateHtmlTag } from "@rbx/translation-utils";
 import type {
 	Money,
 	PeriodType,
@@ -43,7 +42,7 @@ const BillingInfoDisplay: React.FC<BillingInfoDisplayProps> = ({
 					{
 						opening: "boldTagStart",
 						closing: "boldTagEnd",
-						render: (text) => <b>{text}</b>,
+						render: (text) => <span className="font-bold">{text}</span>,
 					},
 				],
 				{

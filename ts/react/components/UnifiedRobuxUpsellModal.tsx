@@ -1,5 +1,5 @@
 import { RobloxIntlInstance } from "Roblox";
-import React from "react";
+import React, { useMemo } from "react";
 import {
 	Button,
 	Dialog,
@@ -11,11 +11,12 @@ import { TranslateFunction } from "react-utilities";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import DiscountPriceDetail from "./DiscountPriceDetail";
-import type { DiscountInformation } from "./UnifiedPurchaseModal";
 import RobuxUpsellPackageDetails from "../../../js/react/itemPurchase/components/RobuxUpsellPackageDetails";
 import { LANG_KEYS } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import useTermsOfUseText from "../hooks/useTermsOfUseText";
 import useModalShownTracking from "../hooks/useModalShownTracking";
+import { normalizeDiscountInformation } from "./discountInformation";
+import type { DiscountInformation } from "./discountInformation";
 
 export type UnifiedRobuxUpsellModalProps = {
 	translate: TranslateFunction;
@@ -53,6 +54,14 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 	title,
 	discountInformation,
 }) => {
+	const normalizedDiscount = useMemo(
+		() =>
+			discountInformation
+				? normalizeDiscountInformation(discountInformation)
+				: null,
+		[discountInformation],
+	);
+
 	useModalShownTracking("UnifiedRobuxUpsellModal", open);
 	const titleText = title ?? translate(LANG_KEYS.buyRobuxAndItemAction);
 	const actionButtonText = translate(LANG_KEYS.buy);
@@ -89,10 +98,10 @@ const UnifiedRobuxUpsellModal: React.FC<UnifiedRobuxUpsellModalProps> = ({
 						priceSuffix={priceSuffix}
 						discountInformation={discountInformation}
 					/>
-					{discountInformation && (
+					{normalizedDiscount && normalizedDiscount.savedAmount > 0 && (
 						<DiscountPriceDetail
 							translate={translate}
-							discountInformation={discountInformation}
+							normalizedDiscount={normalizedDiscount}
 						/>
 					)}
 					{robuxPackageAmount != null && robuxPackagePrice != null && (

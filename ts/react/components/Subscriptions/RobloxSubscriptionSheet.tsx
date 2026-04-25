@@ -1,14 +1,17 @@
 import React from "react";
 import { TranslateFunction } from "react-utilities";
+import { translateHtml } from "@rbx/translation-utils";
 import {
 	SheetRoot,
 	SheetContent,
 	SheetTitle,
 	SheetBody,
+	Icon,
+	Link,
 } from "@rbx/foundation-ui";
 import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
 import { DeviceMeta } from "Roblox";
-import BlackbirdHeading from "./BlackbirdHeading";
+
 import BillingInfoDisplay from "./BillingInfoDisplay";
 import BenefitList from "./BenefitList";
 import SubscriptionButton from "./SubscriptionButton";
@@ -25,6 +28,30 @@ type RobloxSubscriptionSheetProps = {
 	redirectUrl?: string;
 	trackSubscriptionButtonClick?: () => void;
 };
+
+const SUBSCRIPTION_TERMS_URL = "https://www.roblox.com/info/terms";
+
+/** Module scope so the reference is stable for `translateHtml` (see react/no-unstable-nested-components). */
+function renderSubscriptionTermsLink(children: React.ReactNode) {
+	return (
+		<Link
+			href={SUBSCRIPTION_TERMS_URL}
+			color="Standard"
+			target="_blank"
+			isExternal={false}
+		>
+			{children}
+		</Link>
+	);
+}
+
+const SUBSCRIPTION_TERMS_TRANSLATE_LINK = [
+	{
+		opening: "linkStart",
+		closing: "linkEnd",
+		render: renderSubscriptionTermsLink,
+	},
+];
 
 const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 	translate,
@@ -45,6 +72,10 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 		subscriptionProductInfo.productTypeDetails.robloxSubscriptionProductDetails
 			?.featureConfig;
 
+	const legalKey = isFreeTrial
+		? "Label.FreeTrialDisclosureV2"
+		: "Description.SubscriptionLegal";
+
 	return (
 		<SheetRoot
 			open={open}
@@ -57,10 +88,14 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 				largeScreenVariant="center"
 				closeLabel={translate("Action.Close")}
 			>
-				<SheetTitle>{translate("Label.Blackbird")}</SheetTitle>
+				<SheetTitle>
+					<div className="gap-x-small flex items-center">
+						<Icon className="!size-1000" name="icon-regular-roblox-plus" />
+						{translate("Title.GetBlackbird")}
+					</div>
+				</SheetTitle>
 				<SheetBody>
-					<div className="padding-large gap-y-xlarge bg-surface-100 radius-medium stroke-standard stroke-default flex flex-col">
-						<BlackbirdHeading translate={translate} size="small" />
+					<div className="padding-large gap-y-xlarge flex flex-col">
 						<BillingInfoDisplay
 							translate={translate}
 							eligibleOffers={eligibleOffers}
@@ -87,6 +122,14 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 								isFreeTrial ? "Action.TryItForFree" : "Action.Subscribe",
 							)}
 						</SubscriptionButton>
+
+						<span className="text-caption-medium content-muted">
+							{translateHtml(
+								translate,
+								legalKey,
+								SUBSCRIPTION_TERMS_TRANSLATE_LINK,
+							)}
+						</span>
 					</div>
 				</SheetBody>
 			</SheetContent>

@@ -3,7 +3,7 @@ import { withTranslations, TranslateFunction } from "react-utilities";
 import { renderToString } from "react-dom/server";
 import { escapeHtml, urlService } from "core-utilities";
 import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
-import type { DiscountInformation } from "../../../../ts/react/components/UnifiedPurchaseModal";
+import type { DiscountInformation } from "../../../../ts/react/components/discountInformation";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import { ROBLOX_TERMS_OF_USE_URL } from "../../../core/services/itemPurchaseUpsellService/constants/upsellConstants";

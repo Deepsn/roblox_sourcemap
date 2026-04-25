@@ -2,8 +2,6 @@ import { EnvironmentUrls } from "Roblox";
 
 const parentalRequestConstants = {
 	privacyPolicyUrl: `${EnvironmentUrls.websiteUrl}/info/privacy`,
-	chargebackWizardSessionTokenLocalStorageKey:
-		"Roblox.ChargebackWizardSessionToken",
 	defaultCooldownTimeInMs: 900000, // 15 minutes,
 	emailRegex: "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$",
 	isChildSubjectToPCFeatureName: "IsChildSubjectToParentalControls",

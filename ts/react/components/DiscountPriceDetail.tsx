@@ -11,24 +11,12 @@ import {
 import { numberFormat } from "core-utilities";
 import { translateHtml } from "@rbx/translation-utils";
 import type { TranslateHtmlTag } from "@rbx/translation-utils";
-import type { DiscountInformation } from "./UnifiedPurchaseModal";
+import type { NormalizedDiscountInformation } from "./discountInformation";
+import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
 
 export type DiscountPriceDetailProps = {
 	translate: TranslateFunction;
-	discountInformation: DiscountInformation;
-};
-
-type DiscountEntry = {
-	discountAmount?: number;
-	discountPercentage?: number;
-	discountCampaign?: string;
-	localizedDiscountAttribution?: string;
-};
-
-type TypedDiscountInformation = {
-	totalDiscountAmount?: number;
-	originalPrice?: number;
-	discounts?: DiscountEntry[];
+	normalizedDiscount: NormalizedDiscountInformation;
 };
 
 const RobuxAmount: React.FC<{ amount: number }> = ({ amount }) => {
@@ -48,22 +36,14 @@ const RobuxAmount: React.FC<{ amount: number }> = ({ amount }) => {
 
 const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 	translate,
-	discountInformation,
+	normalizedDiscount,
 }) => {
-	const {
-		totalDiscountAmount,
-		originalPrice: rawOriginalPrice,
-		discounts,
-	} = discountInformation as TypedDiscountInformation;
+	const { savedAmount, originalPrice, totalPrice, discountLines } =
+		normalizedDiscount;
 
-	const savedAmount: number = totalDiscountAmount ?? 0;
-	const originalPrice: number = rawOriginalPrice ?? 0;
-	const totalPrice = originalPrice - savedAmount;
 	const [isOpen, setIsOpen] = useState(false);
 
-	const isPlusBenefitDiscount = !!discounts?.some(
-		(d) => d.discountCampaign === "BlackbirdSubscription",
-	);
+	const hasPlusBenefitDiscount = isPlusBenefitDiscount(discountLines);
 
 	const renderSavingsAmount = () => <RobuxAmount amount={savedAmount} />;
 	const savingsTags: TranslateHtmlTag[] = [
@@ -85,11 +65,11 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 					)}
 				>
 					<div className="flex flex-row items-center gap-x-small content-emphasis">
-						{isPlusBenefitDiscount && (
+						{hasPlusBenefitDiscount && (
 							<Icon name="icon-regular-roblox-plus" size="Medium" />
 						)}
 						<span>
-							{isPlusBenefitDiscount
+							{hasPlusBenefitDiscount
 								? translateHtml(
 										translate,
 										"Description.SavingWithPlus",
@@ -115,19 +95,27 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 								<RobuxAmount amount={originalPrice} />
 							</span>
 						</div>
-						{discounts?.map((discount) => (
+						{discountLines.map((discount, index) => (
 							<div
-								key={discount.discountCampaign}
+								// eslint-disable-next-line react/no-array-index-key
+								key={`${discount.discountCampaign ?? "discount"}-${index}`}
 								className="flex flex-row items-center justify-between content-default"
 							>
-								<span>{discount.localizedDiscountAttribution}</span>
+								<span>
+									{isPlusBenefitDiscount([discount])
+										? translate("Label.PlusBenefitDiscount", {
+												discountPercentage: String(
+													discount.discountPercent ?? 0,
+												),
+											})
+										: discount.label}
+								</span>
 								<span className="flex flex-row items-center">
-									<RobuxAmount amount={-(discount.discountAmount ?? 0)} />
+									<RobuxAmount amount={-discount.discountAmount} />
 								</span>
 							</div>
 						))}
 					</div>
-					{/* bottom table: total row */}
 					<div className="padding-medium flex flex-row items-center justify-between text-heading-small content-default bg-shift-100">
 						<span>{translate("Label.Total")}</span>
 						<span className="flex flex-row items-center">

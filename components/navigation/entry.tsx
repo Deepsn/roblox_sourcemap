@@ -2,6 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import ready from "@rbx/core-scripts/util/ready";
 import { queryClient, renderWithErrorBoundary } from "@rbx/core-scripts/react";
 import { addExternal } from "@rbx/externals";
+import { ageBadgeControl } from "./src/util/ageBadgeUtil";
 import LeftNavigation from "./src/leftNav";
 import NavigationRightHeader from "./src/containers/NavigationRightHeader";
 import NavigationRobux from "./src/containers/NavigationRobux";
@@ -9,6 +10,7 @@ import { cacheUserId } from "./src/util/authUtil";
 import developUtil from "./src/util/developUtil";
 import navClickUtil from "./src/util/navClickUtil";
 import MenuIcon from "./src/containers/MenuIcon";
+import AgeBadge from "./src/components/AgeBadge";
 import setupAuthInterceptor from "./src/services/authInterceptor";
 import * as navigation from "./src";
 import { translations } from "./component.json";
@@ -21,6 +23,7 @@ const leftNavigationContainerId = "left-navigation-container";
 const menuIconContainerId = "header-menu-icon";
 const navigationRobuxContainerId = "navigation-robux-container";
 const navigationRobuxMobileContainerId = "navigation-robux-mobile-container";
+const ageBadgeContainerId = "age-badge-container";
 
 addExternal(["Roblox", "NavigationService"], { ...navigation });
 cacheUserId();
@@ -38,6 +41,14 @@ ready(() => {
 		renderWithErrorBoundary(
 			<MenuIcon />,
 			document.getElementById(menuIconContainerId),
+		);
+	}
+
+	const ageBadgeVariant = ageBadgeControl();
+	if (ageBadgeVariant && document.getElementById(ageBadgeContainerId)) {
+		renderWithErrorBoundary(
+			<AgeBadge variant={ageBadgeVariant} />,
+			document.getElementById(ageBadgeContainerId),
 		);
 	}
 

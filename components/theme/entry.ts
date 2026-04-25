@@ -13,8 +13,15 @@ const userId = (): number | null => {
 	return Number.isNaN(userId) ? null : userId;
 };
 
+const defaultTheme = (): theme.Theme | undefined => {
+	const meta = document.querySelector<HTMLMetaElement>(
+		'meta[name="age-badge-control"]',
+	);
+	return meta?.dataset.ageBadgeControl === "Kids" ? "dark" : undefined;
+};
+
 try {
-	theme.initialize(userId() ?? -1);
+	theme.initialize(userId() ?? -1, { defaultTheme: defaultTheme() });
 } catch (e) {
 	console.error(e);
 }

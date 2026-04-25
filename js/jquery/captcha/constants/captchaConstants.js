@@ -33,6 +33,7 @@ const CaptchaConstants = {
 		Generic: "ACTION_TYPE_GENERIC_CHALLENGE",
 		AssetComment: "ACTION_TYPE_ASSET_COMMENT",
 		Marketplace: "ACTION_TYPE_MARKETPLACE",
+		Passive: "ACTION_TYPE_PASSIVE",
 	},
 
 	endpoints: {

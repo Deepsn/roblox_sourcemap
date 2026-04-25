@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useMemo } from "react";
 import { withTranslations, TranslateFunction } from "react-utilities";
 import {
 	Button,
@@ -15,19 +15,9 @@ import UnifiedProductDetails from "./UnifiedProductDetails";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import useModalShownTracking from "../hooks/useModalShownTracking";
 import DiscountPriceDetail from "./DiscountPriceDetail";
+import { normalizeDiscountInformation } from "./discountInformation";
+import type { DiscountInformation } from "./discountInformation";
 import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
-
-export type DiscountInformation = {
-	originalPrice?: number;
-	totalDiscountAmount?: number;
-	totalDiscountPercentage?: number;
-	discounts?: Array<{
-		discountAmount?: number;
-		discountPercentage?: number;
-		discountCampaign?: string;
-		localizedDiscountAttribution?: string;
-	}>;
-};
 
 export type UnifiedPurchaseModalProps = {
 	translate: TranslateFunction;
@@ -54,7 +44,9 @@ export type UnifiedPurchaseModalProps = {
 	discountInformation?: DiscountInformation | null;
 };
 
-const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
+export const UnifiedPurchaseModalComponent: React.FC<
+	UnifiedPurchaseModalProps
+> = ({
 	translate,
 	titleText,
 	actionButtonText,
@@ -78,6 +70,14 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 	subscriptionProductInfo,
 	discountInformation,
 }) => {
+	const normalizedDiscount = useMemo(
+		() =>
+			discountInformation
+				? normalizeDiscountInformation(discountInformation)
+				: null,
+		[discountInformation],
+	);
+
 	const sendAnalyticsEvent = (isFreeTrial: boolean) => {
 		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({
 			assetType,
@@ -135,10 +135,10 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 						rentalOptionDays={rentalOptionDays}
 						discountInformation={discountInformation}
 					/>
-					{discountInformation && (
+					{normalizedDiscount && normalizedDiscount.savedAmount > 0 && (
 						<DiscountPriceDetail
 							translate={translate}
-							discountInformation={discountInformation}
+							normalizedDiscount={normalizedDiscount}
 						/>
 					)}
 				</DialogBody>
@@ -170,7 +170,9 @@ const UnifiedPurchaseModalComponent: React.FC<UnifiedPurchaseModalProps> = ({
 							</div>
 						)}
 					</div>
-					{!isPlusBenefitDiscount(discountInformation) && (
+					{!isPlusBenefitDiscount(
+						normalizedDiscount?.discountLines ?? null,
+					) && (
 						<SubscriptionUpsellBanner
 							translate={translate}
 							subscriptionProductInfo={subscriptionProductInfo}

@@ -8,9 +8,9 @@ import UnifiedRobuxUpsellModal, {
 import UnifiedRobuxUpsellTooExpensiveModal, {
 	UnifiedRobuxUpsellTooExpensiveModalProps,
 } from "../../../../../ts/react/components/UnifiedRobuxUpsellTooExpensiveModal";
-import type { DiscountInformation } from "../../../../../ts/react/components/UnifiedPurchaseModal";
 import translationConfig from "../../../../react/itemPurchase/translation.config";
 import { UpsellProduct } from "../constants/serviceTypeDefinitions";
+import type { DiscountInformation } from "../../../../../ts/react/components/discountInformation";
 
 export type UnifiedRobuxUpsellVariant = "standard" | "tooExpensive";
 

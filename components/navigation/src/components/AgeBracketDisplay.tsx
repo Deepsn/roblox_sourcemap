@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
+import { authenticatedUser as authenticatedUserMeta } from "@rbx/core-scripts/meta/user";
 import { Link } from "@rbx/core-ui/legacy/react-style-guide";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import {
@@ -8,24 +8,20 @@ import {
 	currentUserHasVerifiedBadge,
 } from "@rbx/roblox-badges";
 import links from "../constants/linkConstants";
-import userUtil from "../util/userUtil";
+import useLiveUserNameForDisplay from "../hooks/useLiveUserNameForDisplay";
 
 function AgeBracketDisplay() {
-	const renderEl = useRef(null);
+	const metaUser = authenticatedUserMeta();
+	const nameForDisplay = useLiveUserNameForDisplay(metaUser);
 
-	const badgeToRender =
-		currentUserHasVerifiedBadge() && VerifiedBadgeIconContainer ? (
-			<section
-				ref={(el) => {
-					renderEl.current = el;
-				}}
-			>
-				<VerifiedBadgeIconContainer
-					overrideImgClass="verified-badge-icon-header"
-					size={BadgeSizes.CAPTIONHEADER}
-				/>
-			</section>
-		) : null;
+	const badgeToRender = currentUserHasVerifiedBadge() ? (
+		<section>
+			<VerifiedBadgeIconContainer
+				overrideImgClass="verified-badge-icon-header"
+				size={BadgeSizes.CAPTIONHEADER}
+			/>
+		</section>
+	) : null;
 
 	return (
 		<div className="age-bracket-label text-header">
@@ -36,13 +32,13 @@ function AgeBracketDisplay() {
 				<span className="avatar avatar-headshot-xs">
 					<Thumbnail2d
 						containerClass="avatar-card-image"
-						targetId={authenticatedUser.id}
+						targetId={authenticatedUser.id ?? 0}
 						type={ThumbnailTypes.avatarHeadshot}
-						altName={authenticatedUser.name}
+						altName={authenticatedUser.name ?? undefined}
 					/>
 				</span>
 				<span className="text-overflow age-bracket-label-username font-caption-header">
-					{userUtil.nameForDisplay}
+					{nameForDisplay}
 				</span>
 				{badgeToRender}
 			</Link>

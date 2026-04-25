@@ -4,6 +4,7 @@ import { useTranslation } from "@rbx/core-scripts/react";
 import { Link, ScrollBar } from "@rbx/core-ui/legacy/react-style-guide";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
+import { authenticatedUser as authenticatedUserMeta } from "@rbx/core-scripts/meta/user";
 import {
 	BadgeSizes,
 	VerifiedBadgeIconContainer,
@@ -11,14 +12,16 @@ import {
 } from "@rbx/roblox-badges";
 import links from "../../constants/linkConstants";
 import ScrollListContainer from "./ScrollListContainer";
-import userUtil from "../../util/userUtil";
+import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
 import layoutConstant from "../../constants/layoutConstants";
 
 const { headerMenuIconClickEvent } = layoutConstant;
 
-function LeftNavigation({ ...props }) {
+function LeftNavigation({ ...props }: Record<string, unknown>) {
 	const { translate } = useTranslation();
 	const [isLeftNavOpen, setIsLeftNavOpen] = useState(false);
+	const metaUser = authenticatedUserMeta();
+	const nameForDisplay = useLiveUserNameForDisplay(metaUser);
 
 	const onClickMenuIcon = useCallback(() => {
 		setIsLeftNavOpen(!isLeftNavOpen);
@@ -35,20 +38,14 @@ function LeftNavigation({ ...props }) {
 	}, [onClickMenuIcon]);
 
 	const showBadge = currentUserHasVerifiedBadge();
-	const renderEl = useRef(null);
-	const badgeToRender =
-		showBadge && VerifiedBadgeIconContainer ? (
-			<section
-				ref={(el) => {
-					renderEl.current = el;
-				}}
-			>
-				<VerifiedBadgeIconContainer
-					overrideImgClass="verified-badge-icon-header"
-					size={BadgeSizes.CAPTIONHEADER}
-				/>
-			</section>
-		) : null;
+	const badgeToRender = showBadge ? (
+		<section>
+			<VerifiedBadgeIconContainer
+				overrideImgClass="verified-badge-icon-header"
+				size={BadgeSizes.CAPTIONHEADER}
+			/>
+		</section>
+	) : null;
 
 	const classNames = ClassNames("rbx-left-col", {
 		"nav-show": isLeftNavOpen,
@@ -73,14 +70,12 @@ function LeftNavigation({ ...props }) {
 						<span className="avatar avatar-headshot-xs">
 							<Thumbnail2d
 								containerClass="avatar-card-image"
-								targetId={authenticatedUser.id}
+								targetId={authenticatedUser.id ?? 0}
 								type={ThumbnailTypes.avatarHeadshot}
-								altName={authenticatedUser.name}
+								altName={authenticatedUser.name ?? undefined}
 							/>
 						</span>
-						<div className={displayNameDivClasses}>
-							{userUtil.nameForDisplay}
-						</div>
+						<div className={displayNameDivClasses}>{nameForDisplay}</div>
 						{badgeToRender}
 					</Link>
 				</li>

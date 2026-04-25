@@ -1,11 +1,16 @@
-import type { DiscountInformation } from "../components/UnifiedPurchaseModal";
+import type { NormalizedDiscountLine } from "../components/discountInformation";
 
 const PLUS_BENEFIT_DISCOUNT_CAMPAIGN = "BlackbirdSubscription";
+const ROBLOX_PLUS_SUBSCRIPTION_CAMPAIGN = "RobloxPlusSubscription";
+const ROBLOX_SUBSCRIPTION_CAMPAIGN = "RobloxSubscription";
 
 export default function isPlusBenefitDiscount(
-	discountInformation?: DiscountInformation | null,
+	discounts?: NormalizedDiscountLine[] | null,
 ): boolean {
-	return !!discountInformation?.discounts?.some(
-		(d) => d.discountCampaign === PLUS_BENEFIT_DISCOUNT_CAMPAIGN,
+	return !!discounts?.some(
+		(d) =>
+			d.discountCampaign === PLUS_BENEFIT_DISCOUNT_CAMPAIGN ||
+			d.discountCampaign === ROBLOX_PLUS_SUBSCRIPTION_CAMPAIGN ||
+			d.discountCampaign === ROBLOX_SUBSCRIPTION_CAMPAIGN,
 	);
 }

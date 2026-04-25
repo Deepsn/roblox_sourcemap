@@ -60,39 +60,33 @@ const BenefitList: React.FC<BenefitListProps> = ({
 		<div className="gap-y-xlarge flex flex-col">
 			{baseDiscount && (
 				<BenefitItem
-					iconName="icon-regular-tag-sparkle"
-					label={translate("Description.Benefit.DiscountBase", {
+					iconName="icon-regular-tag"
+					label={translate("Label.BlackbirdVTDiscountFirst", {
 						discountPercent: formatPercent(baseDiscount.discountPercent * 0.01),
 					})}
 				/>
 			)}
 			{nextDiscount && (
 				<BenefitItem
-					iconName="icon-regular-calendar-star"
-					label={translate("Description.Benefit.DiscountNext", {
-						productName: translate("Label.Blackbird"),
+					iconName="icon-regular-tag-arrow-up"
+					label={translate("Label.BlackbirdVTDiscountSecond", {
 						discountPercent: formatPercent(nextDiscount.discountPercent * 0.01),
-						discountPeriodCount: String(nextDiscount.periodIndex),
-						discountPeriodUnit: periodType,
+						periodIndex: String(nextDiscount.periodIndex),
+						periodType,
 					})}
 				/>
 			)}
+			{featureConfig.privateServerDiscounts &&
+				featureConfig.privateServerDiscounts.length > 0 && (
+					<BenefitItem
+						iconName="icon-regular-controller"
+						label={translate("Description.Benefit.PrivateServers")}
+					/>
+				)}
 			{featureConfig.isRobuxTransferEnabled && (
 				<BenefitItem
 					iconName="icon-regular-robux"
 					label={translate("Description.Benefit.RobuxTransfers")}
-				/>
-			)}
-			{featureConfig.isTradingEnabled && (
-				<BenefitItem
-					iconName="icon-regular-hand-two-arrows-horizontal"
-					label={translate("Description.Benefit.TradeResellItems")}
-				/>
-			)}
-			{featureConfig.isUgcPublishingEnabled && (
-				<BenefitItem
-					iconName="icon-regular-arrow-up-from-landscape-rectangle"
-					label={translate("Description.Benefit.PublishItems")}
 				/>
 			)}
 		</div>
