@@ -2393,6 +2393,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.DeleteAccountReceived": "Your request has been received",
 	"Description.DeleteAccountReceived":
 		"We are processing your request to delete your account. If successful, you will be logged out of all your Roblox sessions. For questions on account deletion, please see the {openHelpTag}account deletion help pages{closeHelpTag}.",
+	"Label.Blackbird": "Roblox Plus",
 	"Action.Create": "Create",
 	"Label.AddBothOfThese": "Add both of these:",
 	"Label.BackupCodes": "Backup codes",
@@ -2519,6 +2520,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Visit the App Store or Google Play to download the Roblox app now.",
 	"Label.DownloadOnTheAppStore": "Download on the App Store",
 	"Label.GetItOnGooglePlay": "Get it on Google Play",
+	"Label.FreeTrial": "Free trial",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
