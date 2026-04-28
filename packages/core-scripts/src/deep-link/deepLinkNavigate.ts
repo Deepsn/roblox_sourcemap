@@ -138,7 +138,10 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 				return false;
 			})
 			.catch(() => false);
-	} else if (navigateSubPath === PathPart.Profile) {
+	} else if (
+		navigateSubPath === PathPart.Profile ||
+		navigateSubPath === PathPart.ProfileCard
+	) {
 		if (params.userId) {
 			// roblox://navigation/profile?userId=<userId>
 			// Navigate to user profile

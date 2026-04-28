@@ -40,6 +40,7 @@ export enum PathPart {
 	Messages = "messages",
 	BuyRobux = "buy_robux",
 	CurrencyTransfer = "currency_transfer",
+	ProfileCard = "profile_card",
 }
 
 export enum ItemType {

@@ -27,7 +27,7 @@ export type BenefitListProps = {
 };
 
 const formatPercent = (value: number): string =>
-	new Intl.NumberFormat(undefined, { style: "percent" }).format(value);
+	new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(value);
 
 const BenefitList: React.FC<BenefitListProps> = ({
 	translate,
@@ -62,7 +62,7 @@ const BenefitList: React.FC<BenefitListProps> = ({
 				<BenefitItem
 					iconName="icon-regular-tag"
 					label={translate("Label.BlackbirdVTDiscountFirst", {
-						discountPercent: formatPercent(baseDiscount.discountPercent * 0.01),
+						discountPercent: formatPercent(baseDiscount.discountPercent),
 					})}
 				/>
 			)}
@@ -70,7 +70,7 @@ const BenefitList: React.FC<BenefitListProps> = ({
 				<BenefitItem
 					iconName="icon-regular-tag-arrow-up"
 					label={translate("Label.BlackbirdVTDiscountSecond", {
-						discountPercent: formatPercent(nextDiscount.discountPercent * 0.01),
+						discountPercent: formatPercent(nextDiscount.discountPercent),
 						periodIndex: String(nextDiscount.periodIndex),
 						periodType,
 					})}

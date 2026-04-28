@@ -8,6 +8,8 @@ import {
 } from "@rbx/generic-challenges";
 import { getToken, setToken } from "../auth/xsrfToken";
 import * as endpoints from "../endpoints";
+import { isTestSite } from "../meta/environment";
+import { setMrRouterHeaders } from "../mrRouter";
 import {
 	apiSiteRequestValidator,
 	inject,
@@ -150,6 +152,11 @@ axios.interceptors.request.use((config: UrlConfig) => {
 		newConfig.tracerConfig = {
 			requestSpan,
 		};
+	}
+
+	// MrRouter MEM headers (sitetest / non-production only; see ENGEFF MEM guide)
+	if (isTestSite()) {
+		setMrRouterHeaders(newConfig.headers);
 	}
 
 	// request duplication

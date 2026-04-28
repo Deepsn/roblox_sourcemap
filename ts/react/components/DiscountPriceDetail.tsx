@@ -104,9 +104,7 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 								<span>
 									{isPlusBenefitDiscount([discount])
 										? translate("Label.PlusBenefitDiscount", {
-												discountPercentage: String(
-													discount.discountPercent ?? 0,
-												),
+												discountPercent: String(discount.discountPercent ?? 0),
 											})
 										: discount.label}
 								</span>

@@ -20,7 +20,6 @@ type RobloxSubscriptionSheetProps = {
 	translate: TranslateFunction;
 	subscriptionProductInfo: SubscriptionProductInfo;
 	isFreeTrial: boolean;
-	deviceMeta: ReturnType<typeof DeviceMeta>;
 	open: boolean;
 	onClose: () => void;
 	isDisabled?: boolean;
@@ -57,7 +56,6 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 	translate,
 	subscriptionProductInfo,
 	isFreeTrial,
-	deviceMeta,
 	open,
 	onClose,
 	isDisabled = false,
@@ -65,6 +63,7 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 	redirectUrl,
 	trackSubscriptionButtonClick,
 }) => {
+	const deviceMeta = DeviceMeta();
 	const { type, id } = subscriptionProductInfo.productKey;
 	const { periodType, localizedPrice, eligibleOffers } =
 		subscriptionProductInfo;

@@ -23,10 +23,6 @@ export const composeQueryString = (
 export const getAbsoluteUrl = (targetUrl: string): string =>
 	endpoints.getAbsoluteUrl(targetUrl);
 
-export const getGameDetailReferralUrls = (
-	queryParams: Record<string, unknown>,
-): string => getAbsoluteUrl(`/games/refer?${composeQueryString(queryParams)}`);
-
 export const getUrlWithQueries = (
 	path: string,
 	queryParams: Record<string, unknown>,

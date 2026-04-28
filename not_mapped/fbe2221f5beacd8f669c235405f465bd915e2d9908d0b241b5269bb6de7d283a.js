@@ -522,6 +522,8 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 		"Directing Users Off Platform - Permitted",
 	"Label.Sublabel.AdvertisingDirectingOffPlatformGeneral":
 		"Directing Users Off Platform",
+	"Description.LinkedAccounts":
+		"Consequences are based on your behavior across all linked accounts.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

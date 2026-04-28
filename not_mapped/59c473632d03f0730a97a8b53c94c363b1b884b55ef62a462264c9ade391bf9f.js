@@ -136,6 +136,33 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.PickAPlan": "Pick a plan",
 	"Label.RobuxAllowance": "{amount}/mo.",
 	"Label.Free": "Free",
+	"Description.Benefit.RobuxAllowance": "{amount} Robux every month",
+	"Description.Benefit.AllPlus": "Includes all Plus benefits",
+	"Description.Benefit.BonusRobux": "Up to 25% bonus Robux every time",
+	"Description.Benefit.PublishItemsExpandedTitle": "Publishing and selling",
+	"Description.Benefit.DiscountStaySubscribedToKeep": "Stay subscribed to keep",
+	"Label.Status.AutoRenewOff": "Auto-renew off",
+	"Description.Benefit.DiscountBaseExpandedBody":
+		"Save on VIP passes, cosmetic skins, key bundles and more. Discounts do not apply to items over 1M Robux, ads credit, UGC publishing fees, or group fees (name or roles).",
+	"Description.Benefit.DiscountStaySubscribedToGet": "Stay subscribed to get",
+	"Description.Benefit.DiscountAllPurchases":
+		"{discountPercent} off all purchases",
+	"Description.Benefit.DiscountBaseExpandedTitle": "10% off from today",
+	"Description.Benefit.DiscountNextExpandedTitle": "20% from month three",
+	"Description.Benefit.DiscountNextExpandedBody":
+		"Keep your subscription for two full months and your discount jumps to 20%, so your Robux go even further on the same items starting in month three.",
+	"Description.Benefit.PrivateServersExpandedTitle": "Free private servers",
+	"Description.Benefit.PrivateServersExpandedBody":
+		"Create as many private servers as you want so you can play only with friends across supported games at no extra cost.",
+	"Description.Benefit.RobuxTransfersExpandedTitle": "Free Robux Transfers",
+	"Description.Benefit.RobuxTransfersExpandedBody":
+		"Instantly transfer Robux to other users without paying any fees on either side. To help keep transfers safe, parent or caregiver approval is required every time users under 18 send or receive Robux.",
+	"Description.Benefit.TradeResellItemsExpandedTitle": "Trading and reselling",
+	"Description.Benefit.TradeResellItemsExpandedBody":
+		"Upgrade your looks, chase rare pieces, and grow your collection over time instead of always buying new.",
+	"Description.Benefit.PublishItemsExpandedBody":
+		"Monetize your designs by publishing and selling avatar items on Marketplace, giving your creations a chance to be discovered and worn by millions of players.",
+	"Label.Ok": "OK",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

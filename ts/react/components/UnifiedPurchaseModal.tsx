@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { withTranslations, TranslateFunction } from "react-utilities";
 import {
 	Button,
@@ -7,17 +7,24 @@ import {
 	DialogContent,
 	DialogFooter,
 } from "@rbx/foundation-ui";
-import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
+import type {
+	SubscriptionProductInfo,
+	SubscriptionOffer,
+} from "@rbx/client-subscriptions-api/v1";
 import { paymentFlowAnalyticsService } from "core-roblox-utilities";
 import translationConfig from "../../../js/react/itemPurchase/translation.config";
 import SubscriptionUpsellBanner from "./Subscriptions/SubscriptionUpsellBanner";
+import RobloxSubscriptionSheet from "./Subscriptions/RobloxSubscriptionSheet";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import useModalShownTracking from "../hooks/useModalShownTracking";
+import useUpsellTracking from "../hooks/useUpsellTracking";
 import DiscountPriceDetail from "./DiscountPriceDetail";
 import { normalizeDiscountInformation } from "./discountInformation";
 import type { DiscountInformation } from "./discountInformation";
 import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
+import isPlusSubscriptionRolloutEnabled from "../utils/subscriptionRolloutMeta";
+import guacService from "../services/guacService";
 
 export type UnifiedPurchaseModalProps = {
 	translate: TranslateFunction;
@@ -70,6 +77,39 @@ export const UnifiedPurchaseModalComponent: React.FC<
 	subscriptionProductInfo,
 	discountInformation,
 }) => {
+	const [sheetOpen, setSheetOpen] = useState(false);
+	const [upsellUuid, setUpsellUuid] = useState<string>();
+	const [redirectUrl, setRedirectUrl] = useState<string>();
+	/**
+	 * GUAC `app-policy` kill switch: when true, hide Plus entrypoints (in addition to
+	 * `isPlusSubscriptionRolloutEnabled` from page meta).
+	 */
+	const [plusEntrypointsDisabledByPolicy, setPlusEntrypointsDisabledByPolicy] =
+		useState(false);
+
+	useEffect(() => {
+		let cancelled = false;
+		guacService
+			.getDisableRobloxPlusEntrypoints()
+			.then((disabled) => {
+				if (!cancelled && disabled) {
+					setPlusEntrypointsDisabledByPolicy(true);
+				}
+			})
+			.catch(() => undefined);
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	const hideRobloxPlusEntrypoints =
+		plusEntrypointsDisabledByPolicy || !isPlusSubscriptionRolloutEnabled();
+
+	const isFreeTrial =
+		subscriptionProductInfo?.eligibleOffers?.some(
+			(o: SubscriptionOffer) => o.offerType === "FreeTrial",
+		) ?? false;
+
 	const normalizedDiscount = useMemo(
 		() =>
 			discountInformation
@@ -78,118 +118,158 @@ export const UnifiedPurchaseModalComponent: React.FC<
 		[discountInformation],
 	);
 
-	const sendAnalyticsEvent = (isFreeTrial: boolean) => {
-		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({
-			assetType,
-			isReseller: false,
-			isPrivateServer: false,
-			isPlace: false,
-		});
+	const sendAnalyticsEvent = useCallback(
+		(isFreeTrialParam: boolean) => {
+			paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({
+				assetType,
+				isReseller: false,
+				isPrivateServer: false,
+				isPlace: false,
+			});
 
-		const viewMessage = isFreeTrial
-			? paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_FREE_TRIAL
-			: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_SUBSCRIBE;
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-				.WEB_CATALOG_SINGLE_ITEM_PLUS_UPSELL,
-			false,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-			viewMessage,
-		);
-	};
+			const viewMessage = isFreeTrialParam
+				? paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_FREE_TRIAL
+				: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_SUBSCRIBE;
+			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
+				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+					.WEB_CATALOG_SINGLE_ITEM_PLUS_UPSELL,
+				false,
+				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
+				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+				viewMessage,
+			);
+		},
+		[assetType],
+	);
+
+	const { trackUpsellClick: trackSheetUpsellClick } = useUpsellTracking(
+		"UnifiedPurchaseModalUpsellSheet",
+		assetType,
+		sheetOpen,
+	);
+
+	const trackSubscriptionButtonClick = useCallback(() => {
+		trackSheetUpsellClick();
+		sendAnalyticsEvent(isFreeTrial);
+	}, [trackSheetUpsellClick, sendAnalyticsEvent, isFreeTrial]);
+
+	const onBannerClick = useCallback(() => {
+		setUpsellUuid(paymentFlowAnalyticsService.purchaseFlowUuid);
+		setRedirectUrl(window.location.pathname + window.location.hash);
+		setSheetOpen(true);
+		onCancel?.();
+	}, [onCancel]);
+
+	const onSheetClose = useCallback(() => setSheetOpen(false), []);
 
 	useModalShownTracking("UnifiedPurchaseModal", open);
-	return (
-		<Dialog
-			open={open}
-			onOpenChange={(nextOpen: boolean) => {
-				if (!nextOpen && onCancel) {
-					onCancel();
-				}
-			}}
-			isModal
-			size="Large"
-			type="Default"
-			closeLabel={translate("Action.Close") || "Close"}
-			hasCloseAffordance
-		>
-			<DialogContent className="relative unified-purchase-dialog-content">
-				<DialogBody className="gap-xlarge flex flex-col">
-					<div style={{ marginTop: 2 }}>
-						<UnifiedPurchaseHeading
-							translate={translate}
-							titleText={titleText}
-							currentRobuxBalance={
-								displayPrice ? undefined : currentRobuxBalance
-							}
-						/>
-					</div>
-					<UnifiedProductDetails
-						translate={translate}
-						thumbnail={thumbnail}
-						assetName={assetName}
-						expectedPrice={expectedPrice}
-						displayPrice={displayPrice}
-						priceSuffix={priceSuffix}
-						rentalOptionDays={rentalOptionDays}
-						discountInformation={discountInformation}
-					/>
-					{normalizedDiscount && normalizedDiscount.savedAmount > 0 && (
-						<DiscountPriceDetail
-							translate={translate}
-							normalizedDiscount={normalizedDiscount}
-						/>
-					)}
-				</DialogBody>
 
-				<DialogFooter className="flex flex-col mt-[40px]">
-					<div className="gap-small flex flex-col">
-						<div className="flex flex-row-reverse">
-							<Button
-								variant="Emphasis"
-								className="fill basis-0"
-								onClick={onAction}
-								isDisabled={loading}
-								data-testid="purchase-confirm-button"
-							>
-								{actionButtonText}
-							</Button>
+	return (
+		<React.Fragment>
+			<Dialog
+				open={open}
+				onOpenChange={(nextOpen: boolean) => {
+					if (!nextOpen && onCancel) {
+						onCancel();
+					}
+				}}
+				isModal
+				size="Large"
+				type="Default"
+				closeLabel={translate("Action.Close") || "Close"}
+				hasCloseAffordance
+			>
+				<DialogContent className="relative unified-purchase-dialog-content">
+					<DialogBody className="gap-xlarge flex flex-col">
+						<div style={{ marginTop: 2 }}>
+							<UnifiedPurchaseHeading
+								translate={translate}
+								titleText={titleText}
+								currentRobuxBalance={
+									displayPrice ? undefined : currentRobuxBalance
+								}
+							/>
 						</div>
-						{onSecondaryAction && secondaryActionButtonText && (
+						<UnifiedProductDetails
+							translate={translate}
+							thumbnail={thumbnail}
+							assetName={assetName}
+							expectedPrice={expectedPrice}
+							displayPrice={displayPrice}
+							priceSuffix={priceSuffix}
+							rentalOptionDays={rentalOptionDays}
+							discountInformation={discountInformation}
+						/>
+						{normalizedDiscount && normalizedDiscount.savedAmount > 0 && (
+							<DiscountPriceDetail
+								translate={translate}
+								normalizedDiscount={normalizedDiscount}
+							/>
+						)}
+					</DialogBody>
+
+					<DialogFooter className="flex flex-col mt-[40px]">
+						<div className="gap-small flex flex-col">
 							<div className="flex flex-row-reverse">
 								<Button
-									variant="Standard"
+									variant="Emphasis"
 									className="fill basis-0"
-									onClick={onSecondaryAction}
+									onClick={onAction}
 									isDisabled={loading}
-									data-testid="purchase-secondary-button"
+									data-testid="purchase-confirm-button"
 								>
-									{secondaryActionButtonText}
+									{actionButtonText}
 								</Button>
 							</div>
+							{onSecondaryAction && secondaryActionButtonText && (
+								<div className="flex flex-row-reverse">
+									<Button
+										variant="Standard"
+										className="fill basis-0"
+										onClick={onSecondaryAction}
+										isDisabled={loading}
+										data-testid="purchase-secondary-button"
+									>
+										{secondaryActionButtonText}
+									</Button>
+								</div>
+							)}
+						</div>
+						{!isPlusBenefitDiscount(
+							normalizedDiscount?.discountLines ?? null,
+						) &&
+							!hideRobloxPlusEntrypoints && (
+								<SubscriptionUpsellBanner
+									translate={translate}
+									assetType={assetType}
+									subscriptionProductInfo={subscriptionProductInfo}
+									onBannerClick={onBannerClick}
+								/>
+							)}
+						{footerDisclaimerText && (
+							<p
+								className="text-body-small content-default"
+								style={{ marginTop: 12 }}
+							>
+								{footerDisclaimerText}
+							</p>
 						)}
-					</div>
-					{!isPlusBenefitDiscount(
-						normalizedDiscount?.discountLines ?? null,
-					) && (
-						<SubscriptionUpsellBanner
-							translate={translate}
-							subscriptionProductInfo={subscriptionProductInfo}
-							onSubscriptionButtonClick={sendAnalyticsEvent}
-						/>
-					)}
-					{footerDisclaimerText && (
-						<p
-							className="text-body-small content-default"
-							style={{ marginTop: 12 }}
-						>
-							{footerDisclaimerText}
-						</p>
-					)}
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+			{subscriptionProductInfo && !hideRobloxPlusEntrypoints && (
+				<RobloxSubscriptionSheet
+					translate={translate}
+					open={sheetOpen}
+					onClose={onSheetClose}
+					subscriptionProductInfo={subscriptionProductInfo}
+					isFreeTrial={isFreeTrial}
+					upsellUuid={upsellUuid}
+					redirectUrl={redirectUrl}
+					trackSubscriptionButtonClick={trackSubscriptionButtonClick}
+				/>
+			)}
+		</React.Fragment>
 	);
 };
 

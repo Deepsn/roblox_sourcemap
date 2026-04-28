@@ -57,21 +57,16 @@ const initializeGenericChallengeInterceptor = (forceInit?: boolean): void => {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-void, @typescript-eslint/no-unsafe-member-access
 					void window.Roblox.AccountIntegrityChallengeService.Generic.interceptChallenge(
 						{
-							// @ts-expect-error TODO: old, migrated code
 							retryRequest: (
-								challengeIdInner,
-								redemptionMetadataJsonBase64,
+								challengeIdInner: string,
+								redemptionMetadataJsonBase64: string,
 							) => {
 								// TODO: old, migrated code
 								// eslint-disable-next-line no-param-reassign
 								options.headers = {
 									...options.headers,
-									// TODO: old, migrated code
-									// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 									[GENERIC_CHALLENGE_ID_HEADER]: challengeIdInner,
 									[GENERIC_CHALLENGE_TYPE_HEADER]: challengeTypeRaw,
-									// TODO: old, migrated code
-									// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 									[GENERIC_CHALLENGE_METADATA_HEADER]:
 										redemptionMetadataJsonBase64,
 								};
