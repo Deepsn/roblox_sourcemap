@@ -122,6 +122,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.AcceptFriend": "Accept Friend",
 	"Label.AddFriend": "Add Friend",
 	"Label.AddFriends": "Add Friends",
+	"Label.Games": "Games",
 	"Label.RobloxPlus": "Roblox Plus",
 };
 window.Roblox &&

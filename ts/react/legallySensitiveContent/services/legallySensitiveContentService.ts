@@ -306,6 +306,21 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 						}),
 					},
 				};
+			case ConsentName.allowMarketingEmailNotifications:
+				languageConstants =
+					legallySensitiveContentConstants.allowMarketingEmailNotifications;
+				return {
+					wordsOfConsent: {
+						pageTitle: translate(languageConstants.pageHeadingTranslationKey),
+						pageDescription: translate(
+							languageConstants.pageDescriptionTranslationKey,
+						),
+						title: translate(languageConstants.labelTranslationKey),
+						consent: translate(
+							languageConstants.labelDescriptionTranslationKey,
+						),
+					},
+				};
 			default:
 				return undefined;
 		}

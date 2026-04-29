@@ -659,6 +659,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		'This game has a "Moderate" content maturity rating, and it may contain repeated moderate violence, light realistic blood, moderate crude humor, unplayable gambling content, and/or moderate fear.',
 	"Description.VPCRequestApproveExperienceRestricted":
 		'This game has a "Restricted" content maturity rating, and it may contain strong violence, heavy realistic blood, moderate crude humor, romantic themes, unplayable gambling content, strong language, the presence of alcohol, and/or moderate fear.',
+	"Description.VPCRequestApproveExperienceMinimal":
+		'This game has a "Minimal" content maturity rating, and it may contain occasional mild violence, light unrealistic blood, and/or occasional mild fear.',
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

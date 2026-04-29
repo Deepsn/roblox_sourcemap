@@ -678,6 +678,45 @@ export const getAuditDataForConsent = (
 					},
 				},
 			];
+		case ConsentName.allowMarketingEmailNotifications:
+			return [
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.pageHeadingTranslationKey,
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.pageHeadingSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.pageDescriptionTranslationKey,
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.pageDescriptionSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.labelTranslationKey,
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.labelSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.labelDescriptionTranslationKey,
+					),
+					sourceContentId:
+						legallySensitiveContentConstants.allowMarketingEmailNotifications
+							.labelDescriptionSourceContentId,
+				},
+			];
 		default:
 			return [];
 	}

@@ -21,7 +21,12 @@ export const updateSettingsTranslationConfig = {
 };
 
 export const legallySensitiveContentTranslationConfig = {
-	common: ["CommonUI.Controls", "Feature.Parents", "Feature.AccountSettings"],
+	common: [
+		"CommonUI.Controls",
+		"Feature.Parents",
+		"Feature.AccountSettings",
+		"Feature.NotificationSettings",
+	],
 	feature: "Feature.LegallySensitiveContent",
 };
 

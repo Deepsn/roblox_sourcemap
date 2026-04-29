@@ -74,6 +74,16 @@ const legallySensitiveContentConstants = {
 		consentTranslationKey: "Description.EmailNotificationsOptIn",
 		consentSourceContentId: "4557640",
 	},
+	[ConsentName.allowMarketingEmailNotifications]: {
+		pageHeadingTranslationKey: "Heading.PlatformNews",
+		pageHeadingSourceContentId: "7655496",
+		pageDescriptionTranslationKey: "Description.ChooseNotificationTypes",
+		pageDescriptionSourceContentId: "7670088",
+		labelTranslationKey: "Label.EmailChannelLabel",
+		labelSourceContentId: "7686216",
+		labelDescriptionTranslationKey: "Description.EmailChannel",
+		labelDescriptionSourceContentId: "7689032",
+	},
 	[ConsentName.voiceDataConsentSetting]: {
 		titleTranslationKey: "Heading.VoiceDataConsent",
 		titleSourceContentId: "4565320",

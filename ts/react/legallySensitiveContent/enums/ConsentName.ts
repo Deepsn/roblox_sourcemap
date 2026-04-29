@@ -13,6 +13,7 @@ export enum ConsentName {
 	whoCanUsePartyChatWithMeParentSide = "whoCanUsePartyChatWithMeParentSide",
 	whoCanUsePartyVoiceWithMe = "whoCanUsePartyVoiceWithMe",
 	whoCanUsePartyVoiceWithMeParentSide = "whoCanUsePartyVoiceWithMeParentSide",
+	allowMarketingEmailNotifications = "allowMarketingEmailNotifications",
 	receiveRobuxTransferConsentCard = "receiveRobuxTransferConsentCard",
 	sendRobuxTransferConsentCard = "sendRobuxTransferConsentCard",
 	vpcRequestLinkSubjectToPC = "vpcRequestLinkSubjectToPC",
