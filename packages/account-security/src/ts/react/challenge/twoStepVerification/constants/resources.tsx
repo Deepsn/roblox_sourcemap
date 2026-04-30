@@ -92,7 +92,12 @@ export const getResources = (translate: TranslateFunction) =>
 								opening: "linkStart",
 								closing: "linkEnd",
 								render: (children) => (
-									<a href={linkRef} target="_self" className="underline">
+									<a
+										href={linkRef}
+										target="_blank"
+										rel="noreferrer"
+										className="underline"
+									>
 										{children}
 									</a>
 								),
@@ -108,7 +113,12 @@ export const getResources = (translate: TranslateFunction) =>
 								opening: "linkStart",
 								closing: "linkEnd",
 								render: (children) => (
-									<a href={linkRef} target="_self" className="underline">
+									<a
+										href={linkRef}
+										target="_blank"
+										rel="noreferrer"
+										className="underline"
+									>
 										{children}
 									</a>
 								),

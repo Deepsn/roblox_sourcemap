@@ -35,6 +35,8 @@ const EVENT_CONSTANTS = {
 		finishRegistrationError: "finishRegistrationError",
 		httpStatusErrorParsing: "httpStatusErrorParsing",
 		consumePasskeySessionFlagError: "consumePasskeySessionFlagError",
+		silentUpgradeNotEligible: "silentUpgradeNotEligible",
+		silentUpgradeCheckError: "silentUpgradeCheckError",
 	},
 } as const;
 

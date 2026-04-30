@@ -41,6 +41,7 @@ import ExperienceAffiliateStatus from "./enums/ExperienceAffiliateStatus";
 import ContentPostStatus from "./enums/ContentPostStatus";
 import ExperienceEventStatus from "./enums/ExperienceEventStatus";
 import ExperienceAffiliateDeepLinkFallbackType from "./enums/ExperienceAffiliateDeepLinkFallbackType";
+import { getDeviceMeta } from "../meta/device";
 
 const fireEvent = window.EventTracker?.fireEvent;
 
@@ -935,6 +936,16 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		const isSendFlow =
 			direction === "send" && Boolean(userId) && Boolean(transferOrigination);
 		if (isReceiveFlow || isSendFlow) {
+			const deviceMeta = getDeviceMeta();
+			if (
+				deviceMeta?.isDesktop &&
+				window.Roblox.ProtocolHandlerClientInterface?.startDeepLinkFlow
+			) {
+				window.Roblox.ProtocolHandlerClientInterface.startDeepLinkFlow(
+					target.url,
+				);
+				return Promise.resolve(true);
+			}
 			urlTarget = target.url;
 		}
 	}

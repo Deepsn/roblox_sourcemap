@@ -6,6 +6,11 @@ export const enum EVENT_NAME {
 	USER_PURCHASE_STATUS = "UserPurchaseStatus",
 }
 
+/**
+ * IMPORTANT: When adding values in this enum, update the corresponding
+ * data pipeline context_to_flow_and_client_mapping in powerhouse-pipelines repo:
+ * k8s/economy/payfrud/purchase_funnels/purchase_funnel_constants.py for flow attribution.
+ */
 export enum TRIGGERING_CONTEXT {
 	WEB_ROBUX_PURCHASE = "WebRobuxPurchase",
 	MOBILE_WEB_ROBUX_PURCHASE = "MobileWebRobuxPurchase",
@@ -117,6 +122,8 @@ export enum VIEW_NAME {
 	ROBLOX_PLUS_LANDING = "RobloxPlusLanding",
 	ROBLOX_PLUS_UPSELL_BANNER = "RobloxPlusUpsellBanner",
 	ROBLOX_PLUS_BUY_ROBUX = "RobloxPlusBuyRobux",
+	ROBUX_SEND_TRANSFERS = "RobuxSendTransfers",
+	ROBUX_PENDING_TRANSFERS = "RobuxPendingTransfers",
 }
 
 export enum PURCHASE_EVENT_TYPE {
@@ -192,6 +199,13 @@ export enum VIEW_MESSAGE {
 	CONFIRM = "Confirm",
 	ROBLOX_PLUS_FREE_TRIAL = "RobloxPlusFreeTrial",
 	ROBLOX_PLUS_SUBSCRIBE = "RobloxPlusSubscribe",
+	ROBLOX_PLUS_LEARN_MORE = "RobloxPlusLearnMore",
+	TRANSFER_SEND_BUTTON = "TransferSendButton",
+	TRANSFER_SEND_SHEET = "TransferSendSheet",
+	TRANSFER_SEND_USER_SELECTED = "TransferSendUserSelected",
+	TRANSFER_PENDING_BUTTON = "TransferPendingButton",
+	TRANSFER_PENDING_SHEET = "TransferPendingSheet",
+	TRANSFER_PENDING_ACCEPT_CLICK = "TransferPendingAcceptClick",
 }
 
 export enum PURCHASE_STATUS {

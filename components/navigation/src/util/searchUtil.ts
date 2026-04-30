@@ -58,7 +58,7 @@ const getDefaultSearchType = (suggestion: Suggestion) => {
 		case "Label.CreatorStore": {
 			return "defaultLibrary";
 		}
-		case "Label.Experience": {
+		case "Label.Games": {
 			return "defaultGames";
 		}
 		default: {

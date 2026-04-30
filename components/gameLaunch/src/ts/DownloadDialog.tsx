@@ -153,7 +153,7 @@ const DownloadDialog = ({
 						<div />{" "}
 						{/* Empty div to double gap (design wants super large gap) */}
 						<div className="flex gap-xxlarge">
-							<section className="flex flex-col gap-large grow basis-0">
+							<section className="flex flex-col fill basis-0 gap-large">
 								<h3 className="text-title-large content-emphasis padding-none">
 									{translate("Heading.InstallInstructions")}
 								</h3>
@@ -220,7 +220,7 @@ const DownloadDialog = ({
 							<div className="stroke-standard stroke-default" />
 							<div />{" "}
 							{/* Empty div to double gap (design wants super large gap) */}
-							<section className="flex flex-col grow basis-0 gap-xxlarge">
+							<section className="flex flex-col fill basis-0 gap-xxlarge">
 								<div className="flex flex-col gap-small">
 									<h3 className="text-label-large content-emphasis padding-none">
 										{translate("Heading.MobileAppDownloadOption")}

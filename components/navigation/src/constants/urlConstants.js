@@ -37,4 +37,6 @@ export default {
 		`${environmentUrls.authApi}/v1/passkey/StartRegistration`,
 	getPasskeyFinishRegistrationUrl: () =>
 		`${environmentUrls.authApi}/v1/passkey/FinishRegistration`,
+	getSilentUpgradeAvailableUrl: () =>
+		`${environmentUrls.authApi}/v1/passkey/su-eligibility`,
 };

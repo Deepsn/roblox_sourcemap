@@ -11,7 +11,6 @@ import {
 	EmailVerificationService,
 	AccountSwitcherService,
 } from "@rbx/core-scripts/legacy/Roblox";
-import ExperimentationService from "@rbx/experimentation";
 import cacheConstants from "../constants/cacheConstants";
 import layoutConstants from "../constants/layoutConstants";
 import urlConstants from "../constants/urlConstants";
@@ -34,7 +33,6 @@ const {
 } = urlConstants;
 
 const { logoutEvent, loginEvent, signupEvent } = layoutConstants;
-const VNG_LANDING_LAYER = "Website.LandingPage";
 const getReturnUrl = () => {
 	// return from the current page if there is no returnUrl param, except it is from login page or the signup page.
 	let returnUrl = getQueryParam("returnUrl") || window.location.href;
@@ -187,13 +185,8 @@ const isLoginLinkAvailable = () => {
 
 const getIsVNGLandingRedirectEnabled = async () => {
 	try {
-		const [ixp, intAuth] = await Promise.all([
-			ExperimentationService.getAllValuesForLayer(VNG_LANDING_LAYER),
-			getIntAuthCompliancePolicy(),
-		]);
-		const isIXPEnabled = ixp.IsVngLandingPageRedirectEnabled ?? false;
-		const isFeatureEnabled = intAuth.isVNGComplianceEnabled ?? false;
-		return isFeatureEnabled && isIXPEnabled;
+		const intAuth = await getIntAuthCompliancePolicy();
+		return intAuth.isVNGComplianceEnabled ?? false;
 	} catch {
 		return false;
 	}

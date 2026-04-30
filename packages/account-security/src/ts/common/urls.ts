@@ -15,5 +15,5 @@ export const sessionManagementLinkWithRedirect =
 	SECURITY;
 
 export const redirectToSessionManagement = (): void => {
-	window.open(sessionManagementLinkWithRedirect, "_self");
+	window.open(sessionManagementLinkWithRedirect, "_blank");
 };

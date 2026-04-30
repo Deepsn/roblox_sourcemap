@@ -1,4 +1,5 @@
 import { eventStreamService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import AUTH_EVENT_CONSTANTS from "@rbx/authentication-common/constants/eventsConstants";
 import EVENT_CONSTANTS from "../constants/eventsConstants";
 
 /**
@@ -77,6 +78,22 @@ export const sendAccountSwitcherBlobPresentOnPageLoadEvent = (
 		EVENT_CONSTANTS.context.accountSwitcherStatus,
 		{
 			state: isBlobPresent.toString(),
+		},
+	);
+};
+
+/**
+ * Log authMsgShown event reporting the source flow that triggered a
+ * successful passkey creation (mirrors `sendPasskeyCreationSourceEvent`
+ * in account-security and account-settings).
+ */
+export const sendPasskeyCreationSourceEvent = (source: string): void => {
+	eventStreamService.sendEventWithTarget(
+		AUTH_EVENT_CONSTANTS.schematizedEventTypes.authMsgShown,
+		AUTH_EVENT_CONSTANTS.context.passkeyCreationSource,
+		{
+			state: AUTH_EVENT_CONSTANTS.state.passkeyCreation.finishRegistration,
+			field: source,
 		},
 	);
 };

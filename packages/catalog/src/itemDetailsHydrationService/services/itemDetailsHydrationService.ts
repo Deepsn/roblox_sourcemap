@@ -120,7 +120,7 @@ export const awaitHydrationForCollectibleDetails = async (
 ): Promise<void> => {
 	const newItemsAwaitingHydration = new Array<string>();
 	for (let i = 0; i < collectibleItemIds.length; i++) {
-		const collectibleItemId = collectibleItemIds[i]!;
+		const collectibleItemId = collectibleItemIds[i];
 		const itemDetailEntry = hydratedItemDetails.find(
 			(item) => item.collectibleItemId === collectibleItemId,
 		);
@@ -133,7 +133,7 @@ export const awaitHydrationForCollectibleDetails = async (
 				hydratedItemDetail &&
 				hydratedItemDetail.details.collectibleItemDetails === undefined
 			) {
-				newItemsAwaitingHydration.push(collectibleItemId);
+				newItemsAwaitingHydration.push(collectibleItemId!);
 			}
 		}
 	}
@@ -261,7 +261,7 @@ export const getItemDetails = async (
 					itemDetailEntry,
 					collectibleItemDetails,
 				);
-				itemDetailEntry.collectibleItemDetails = collectibleItemDetails;
+				itemDetailEntry.collectibleItemDetails = collectibleItemDetails!;
 				setItemDetailHydrationEntry(
 					itemDetailEntry.id,
 					itemDetailEntry.itemType,
