@@ -2529,6 +2529,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.GetItOnGooglePlay": "Get it on Google Play",
 	"Label.FreeTrial": "Free trial",
 	"Label.Subscriptions.PaypalPayment": "Paypal",
+	"Label.Subscriptions.SubscriptionBenefits": "Benefits",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

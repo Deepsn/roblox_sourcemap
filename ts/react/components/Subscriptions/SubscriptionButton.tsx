@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Button } from "@rbx/foundation-ui";
+import { upsellUtil } from "core-roblox-utilities";
 import { DeviceMeta } from "Roblox";
 
 type SubscriptionButtonProps = {
@@ -39,10 +40,13 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 			url.searchParams.append("type", productType);
 			url.searchParams.append("id", productId);
 			if (redirectUrl) {
-				url.searchParams.append("redirectUrl", redirectUrl);
+				url.searchParams.append("returnUrl", redirectUrl);
 			}
 			if (upsellUuid) {
-				url.searchParams.append("upsellUuid", upsellUuid);
+				url.searchParams.append(
+					upsellUtil.constants.UPSELL_QUERY_PARAM_KEY,
+					upsellUuid,
+				);
 			}
 			return url.toString();
 		}
