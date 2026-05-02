@@ -11,7 +11,7 @@ import {
 	captureException,
 } from "@sentry/browser";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
-//import { buildTracesSampler } from "./src/utils/tracesSampler";
+import { buildTracesSampler } from "./src/utils/tracesSampler";
 import { filterCdnSpans } from "./src/utils/filterCdnSpans";
 import { sendToOtel } from "./src/utils/sentryToOtel";
 import { getOtelCollectorTracesEndpoint } from "./src/utils/otelEndpoint";
@@ -44,14 +44,17 @@ const metaTag = document.querySelector<HTMLMetaElement>(
 const environmentMetaTag = document.querySelector<HTMLMetaElement>(
 	'meta[name="environment-meta"]',
 );
-const { dsn, envName, sampleRate } = metaTag?.dataset ?? {};
+const { dsn, envName, sampleRate, tracesSampleRate } = metaTag?.dataset ?? {};
 const otelEndpoint = getOtelCollectorTracesEndpoint(
 	window.location.hostname,
 	environmentMetaTag?.dataset,
 );
 
 const parsedSampleRate = sampleRate == null ? 0.001 : parseFloat(sampleRate);
-//const perfBase = Math.min(parsedSampleRate, 0.0005);
+const parsedTracesSampleRate =
+	tracesSampleRate == null ? 0 : parseFloat(tracesSampleRate);
+const isTransactionOff = parsedTracesSampleRate === 0;
+const perfBase = Math.min(parsedTracesSampleRate, 0.0005);
 
 initSentry({
 	dsn:
@@ -64,9 +67,9 @@ initSentry({
 	],
 	environment: envName ?? "staging",
 	/// Keep a base perf rate visible (docs/telemetry). If tracesSampler is present,
-	tracesSampleRate: 0, //TODO: we are running out of data in Apr, turn off now to save quota for nextjs project, meanwhile, will add seperate setting to manage this; original value is perfBase,
+	tracesSampleRate: perfBase,
 	// Cut noise: only trace XHR/fetch calls to our own API and page loads.
-	// tracesSampler: buildTracesSampler(perfBase), //TODO: we are running out of data in Apr, turn off now to save quota for nextjs project, meanwhile, will add seperate setting to manage this;
+	tracesSampler: isTransactionOff ? undefined : buildTracesSampler(perfBase),
 	sampleRate: buildSampleRate(parsedSampleRate),
 	replaysOnErrorSampleRate: parsedSampleRate,
 	beforeSendTransaction: (event) => {

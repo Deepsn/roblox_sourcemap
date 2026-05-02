@@ -165,6 +165,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Title.PurchasePromoHeadlinePart1": "Our best deal.",
 	"Title.PurchasePromoHeadlinePart2": "Unlock 20% off.",
 	"Description.SavingsDataDelay": "All data shown here is delayed by 1 day",
+	"Label.MonthlyPrice": "{amount}/month",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
