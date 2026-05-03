@@ -81,22 +81,20 @@ const getLoginLinkUrl = () => {
 const logoutAndRedirect = () =>
 	// TODO: old, migrated code
 	// eslint-disable-next-line require-await
-	navigationService
-		.logout()
-		.then(async () => {
-			document.dispatchEvent(new CustomEvent(logoutEvent.name));
-			if (!angular.isUndefined(angular.element("#chat-container").scope())) {
-				const scope = angular.element("#chat-container").scope();
-				scope.$digest(scope.$broadcast("Roblox.Chat.destroyChatCookie"));
-			}
+	navigationService.logout().then(async () => {
+		document.dispatchEvent(new CustomEvent(logoutEvent.name));
+		if (!angular.isUndefined(angular.element("#chat-container").scope())) {
+			const scope = angular.element("#chat-container").scope();
+			scope.$digest(scope.$broadcast("Roblox.Chat.destroyChatCookie"));
+		}
 
-			// clear cached user id
-			localStorageService.setLocalStorage(cacheConstants.userCacheKey, null);
+		// clear cached user id
+		localStorageService.setLocalStorage(cacheConstants.userCacheKey, null);
 
-			// NOTE: we should not delete keyPairs upon logout.
-			// TODO: delete CrpytoKey in indexeddb when all users are signed out.
-			window.location.reload();
-		});
+		// NOTE: we should not delete keyPairs upon logout.
+		// TODO: delete CrpytoKey in indexeddb when all users are signed out.
+		window.location.reload();
+	});
 
 const navigateToLoginWithRedirect = () => {
 	window.location.href = getLoginLinkUrl();
