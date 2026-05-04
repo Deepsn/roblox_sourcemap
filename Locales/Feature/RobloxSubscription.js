@@ -44,7 +44,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"More fun for less Robux. Subscribe to Roblox Plus.",
 	"Title.BenefitsUnlocked": "Benefits unlocked",
 	"Description.Welcome":
-		"With Roblox Plus, you can now make your dollar go further.",
+		"With Roblox Plus, you can now make your Robux go further.",
 	"Action.OK": "OK",
 	"Title.Welcome": "Welcome to {productShort}!",
 	"Label.BlackbirdShort": "Plus",
