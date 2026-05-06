@@ -199,6 +199,8 @@ export enum VIEW_MESSAGE {
 	CONFIRM = "Confirm",
 	ROBLOX_PLUS_FREE_TRIAL = "RobloxPlusFreeTrial",
 	ROBLOX_PLUS_SUBSCRIBE = "RobloxPlusSubscribe",
+	ROBLOX_PLUS_BUNDLE_SHEET_OPENED = "RobloxPlusBundleSheetOpened",
+	ROBLOX_PLUS_BUNDLE_TIER_SELECTED = "RobloxPlusBundleTierSelected",
 	ROBLOX_PLUS_LEARN_MORE = "RobloxPlusLearnMore",
 	TRANSFER_SEND_BUTTON = "TransferSendButton",
 	TRANSFER_SEND_SHEET = "TransferSendSheet",

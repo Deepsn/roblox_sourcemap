@@ -105,6 +105,23 @@ export const isBypassedByTrustedSession = (
 	return currentSessionTrusted;
 };
 
+export const shouldTrustOtherSessions = (
+	delayParameters: DelayParameters,
+): boolean => {
+	const maybeGoodParse = Either.tryCatch(
+		() =>
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+			JSON.parse(delayParameters.metadata) as DelayMetadata,
+		() => new Error("Failed to parse metadata"),
+	);
+	if (Either.isLeft(maybeGoodParse)) {
+		return false;
+	}
+
+	const { shouldTrustOtherSessions } = maybeGoodParse.right;
+	return shouldTrustOtherSessions;
+};
+
 export const getDelayTextFromDates = ({
 	delayParameters,
 	dayTranslation,

@@ -2,7 +2,10 @@ import { TranslationConfig } from "react-utilities";
 import { ForceActionRedirect } from "@rbx/generic-challenge-types";
 import { useTrustedSessionCount } from "../../common/hooks/useSessionsQuery";
 import { sessionManagementLinkWithRedirect } from "../../../common/urls";
-import { calculateDelayOffset } from "../twoStepVerification/delay/text";
+import {
+	calculateDelayOffset,
+	shouldTrustOtherSessions,
+} from "../twoStepVerification/delay/text";
 import { DelayParameters } from "../twoStepVerification/delay";
 
 export const FEATURE_NAME = "ForceActionRedirect" as const;
@@ -146,7 +149,8 @@ export const useMaybeConditionalDynamicBody = (
 			if (
 				trustedSessionCount &&
 				trustedSessionCount > 0 &&
-				delayParameters?.delayUntil
+				delayParameters?.delayUntil &&
+				shouldTrustOtherSessions(delayParameters)
 			) {
 				const augmentedKey = "Denied.Delayed.BodyWithTrustedSession";
 				return translate(

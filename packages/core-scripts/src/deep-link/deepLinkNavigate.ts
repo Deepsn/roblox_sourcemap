@@ -259,6 +259,10 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							response.data.linkType === "StudioTrustedConnection") &&
 						response.data.targetId
 					) {
+						if (!parseInt(response.data.targetId, 10)) {
+							return false;
+						}
+
 						const linkTypeV2 =
 							response.data.linkType === "UserTrustedConnection"
 								? ShareLinksTypeV2.USER_TRUSTED_CONNECTION
@@ -273,7 +277,9 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							resolveLinkEvent.context,
 							resolveLinkEvent.params,
 						);
+
 						window.location.href = target.url;
+						window.location.href = `${UrlPart.Users}/${response.data.targetId}${UrlPart.Profile}?trustedFriendLinkCode=${code}`;
 					}
 					return true;
 				})
@@ -948,6 +954,11 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			}
 			urlTarget = target.url;
 		}
+	} else if (navigateSubPath === PathPart.AmpWizard) {
+		// Pass through roblox:// unchanged for protocol / in-app handling.
+		// amp_wizard deeplinking is mobile-only, so no desktop fallback is needed here.
+		// roblox://navigation/amp_wizard?feature_name=...&namespace=...&entry_point=...&returnpage=...
+		urlTarget = target.url;
 	}
 
 	if (urlTarget) {

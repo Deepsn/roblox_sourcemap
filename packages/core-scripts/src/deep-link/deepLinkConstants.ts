@@ -41,6 +41,7 @@ export enum PathPart {
 	BuyRobux = "buy_robux",
 	CurrencyTransfer = "currency_transfer",
 	ProfileCard = "profile_card",
+	AmpWizard = "amp_wizard",
 }
 
 export enum ItemType {
