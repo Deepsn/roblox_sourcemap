@@ -72,6 +72,7 @@ export const TWO_STEP_VERIFICATION_LANGUAGE_RESOURCES = [
 	"Label.AlternateDelayedMethod",
 	"Label.ApproveWithDevice",
 	"Label.AuthenticatorMediaType",
+	"Label.ChooseAMediaType",
 	"Label.ChooseAlternateMediaType",
 	"Label.CharacterCodeInputPlaceholderText",
 	"Label.CodeInputPlaceholderText",

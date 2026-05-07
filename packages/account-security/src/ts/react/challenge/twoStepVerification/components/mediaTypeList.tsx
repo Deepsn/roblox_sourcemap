@@ -13,7 +13,7 @@ import { mediaTypeToPath } from "../hooks/useActiveMediaType";
 import { useTrustedSessionCount } from "../hooks/useSessionsQuery";
 import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContext";
 import { TwoStepVerificationActionType } from "../store/action";
-import { MediaType } from "../interface";
+import { ActionType, MediaType } from "../interface";
 import {
 	calculateDelayByTranslations,
 	getAlternateMethodDelayTextOrDefault,
@@ -313,9 +313,13 @@ const MediaTypeList: React.FC<Props> = ({
 
 	const trustedSessionCount = useTrustedSessionCount() ?? 0;
 	const getModalText = (): { title: string; body: ReactNode } => {
+		const defaultBodyText =
+			actionType === ActionType.PasswordReset
+				? resources.Label.ChooseAMediaType
+				: resources.Label.ChooseAlternateMediaType;
 		const defaultText = {
 			title: resources.Label.TwoStepVerification,
-			body: resources.Label.ChooseAlternateMediaType,
+			body: defaultBodyText,
 		};
 		// Do not compute delay text if the delay is locked; it's just normal 2SV at this point.
 		if (delayParameters?.state !== "LOCK_STATE_UNLOCKED") {
@@ -332,7 +336,7 @@ const MediaTypeList: React.FC<Props> = ({
 		}
 		const maybeDelayedBodyText = getAlternateMethodDelayTextOrDefault(
 			resources,
-			resources.Label.ChooseAlternateMediaType,
+			defaultBodyText,
 			delayParameters,
 			trustedSessionCount,
 		);

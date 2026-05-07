@@ -310,8 +310,20 @@ export const loadChallenge = async ({
 
 	const { primaryMediaType, coerced } = maybeCoercedPrimaryMediaTypeResult;
 
-	history.replace(mediaTypeToPath(primaryMediaType));
-	if (primaryMediaType === MediaType.Email) {
+	const shouldDefaultToMediaTypeListForPasswordReset =
+		actionType === ActionType.PasswordReset;
+
+	history.replace(
+		shouldDefaultToMediaTypeListForPasswordReset
+			? mediaTypeToPath(null)
+			: mediaTypeToPath(primaryMediaType),
+	);
+	// We avoid sending an email code if we default to media type list, since the
+	// user is not explicitly on the email challenge screen..
+	if (
+		primaryMediaType === MediaType.Email &&
+		!shouldDefaultToMediaTypeListForPasswordReset
+	) {
 		if (coerced) {
 			eventService.sendEmailResendRequestedEvent();
 			const emailResult =

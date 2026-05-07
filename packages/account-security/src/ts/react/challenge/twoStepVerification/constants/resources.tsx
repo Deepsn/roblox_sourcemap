@@ -63,6 +63,7 @@ export const getResources = (translate: TranslateFunction) =>
 			ApproveWithDevice: translate("Label.ApproveWithDevice"),
 			AuthenticatorMediaType: translate("Label.AuthenticatorMediaType"),
 			CrossDeviceMediaType: translate("Label.UseYourDevice"),
+			ChooseAMediaType: translate("Label.ChooseAMediaType"),
 			ChooseAlternateMediaType: translate("Label.ChooseAlternateMediaType"),
 			CharacterCodeInputPlaceholderText: (codeLength: number) =>
 				translate("Label.CharacterCodeInputPlaceholderText", { codeLength }),
