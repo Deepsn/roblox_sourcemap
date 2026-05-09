@@ -66,6 +66,8 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 	"PlayButtonText.Unlock": "Unlock",
 	"AskYourParentToAllowGameModal.Label.Body":
 		"You need parent permission to join this game.",
+	"UnplayableError.ContextualPlayabilityRequireParentApproval":
+		"Ask your parent to unlock this game for you.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

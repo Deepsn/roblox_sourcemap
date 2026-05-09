@@ -2569,6 +2569,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"View and manage the 20 games your child has played the most. {linkStart}Learn more{linkEnd}",
 	"Heading.RecentActivity": "Recent activity",
 	"Heading.TopGamesThisWeek": "Top games this week",
+	"Description.ParentSide.ExperienceChat.TrustedFriends":
+		"Your child can chat with trusted friends who are playing the same experience. {linkStart}View details{linkEnd}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

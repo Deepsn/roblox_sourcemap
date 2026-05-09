@@ -112,10 +112,12 @@ export const UnifiedPurchaseModalComponent: React.FC<
 
 	const normalizedDiscount = useMemo(
 		() =>
-			discountInformation
+			discountInformation &&
+			discountInformation.originalPrice &&
+			discountInformation.originalPrice > expectedPrice
 				? normalizeDiscountInformation(discountInformation)
 				: null,
-		[discountInformation],
+		[discountInformation, expectedPrice],
 	);
 
 	const sendAnalyticsEvent = useCallback(

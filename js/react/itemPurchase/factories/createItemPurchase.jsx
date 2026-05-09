@@ -165,7 +165,6 @@ export default function createItemPurchase({
 			hour: timeoutInHours,
 		});
 	};
-
 	function ItemPurchase({
 		translate,
 		assetName,
@@ -899,13 +898,15 @@ export default function createItemPurchase({
 					if (data.invalidReason) {
 						setLoading(false);
 						closeAll();
+						const [, violation, timeoutDurationInMinutes] =
+							data.invalidReason.split("/");
 						handleError({
 							title: translate(resources.economicRestrictionsErrorHeading),
 							errorMsg:
 								getEconomicRestrictionErrorMsg(
 									translate,
-									data.invalidReason,
-									0,
+									violation,
+									parseInt(timeoutDurationInMinutes, 10),
 								) || translate(resources.generalPurchaseErrorMessage),
 							showDivId: errorTypeIds.transactionFailure,
 						});
