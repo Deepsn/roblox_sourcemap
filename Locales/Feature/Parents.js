@@ -675,6 +675,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Trusted friends may unlock features like chat across age groups, depending on your child’s region and age. Make sure this is a person you and your child know and trust. {linkStart}View Details{linkEnd}",
 	"Description.ChatAcrossAgeGroupsWithoutFilter":
 		"Trusted friends may unlock features like chat across age groups and chat without filters, depending on your child’s region and age. {linkStart}View Details{linkEnd}",
+	"Label.Contacts": "Contacts",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
