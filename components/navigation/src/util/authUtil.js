@@ -192,8 +192,13 @@ const getIsVNGLandingRedirectEnabled = async () => {
 
 const cacheUserId = () => {
 	const currentUserId = window.Roblox?.CurrentUser?.userId ?? null;
-	const cachedUserId =
-		localStorageService.getLocalStorage(cacheConstants.userCacheKey) ?? null;
+	let cachedUserId = null;
+	try {
+		cachedUserId =
+			localStorageService.getLocalStorage(cacheConstants.userCacheKey) ?? null;
+	} catch {
+		// ignore error
+	}
 	if (
 		cachedUserId != null &&
 		currentUserId != null &&
@@ -211,18 +216,18 @@ const cacheUserId = () => {
 
 	// listen for login event
 	window.addEventListener(loginEvent.name, (e) => {
-		localStorageService.setLocalStorage(
-			cacheConstants.userCacheKey,
-			e?.detail?.userId,
-		);
+		const userId = e?.detail?.userId;
+		if (userId != null) {
+			localStorageService.setLocalStorage(cacheConstants.userCacheKey, userId);
+		}
 	});
 
 	// listen for signup event
 	window.addEventListener(signupEvent.name, (e) => {
-		localStorageService.setLocalStorage(
-			cacheConstants.userCacheKey,
-			e?.detail?.userId,
-		);
+		const userId = e?.detail?.userId;
+		if (userId != null) {
+			localStorageService.setLocalStorage(cacheConstants.userCacheKey, userId);
+		}
 	});
 };
 

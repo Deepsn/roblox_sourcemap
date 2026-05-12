@@ -2571,6 +2571,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.TopGamesThisWeek": "Top games this week",
 	"Description.ParentSide.ExperienceChat.TrustedFriends":
 		"Your child can chat with trusted friends who are playing the same experience. {linkStart}View details{linkEnd}.",
+	"Label.ContentMaturityRating": "{maturityRating} rating",
+	"Action.ViewMore": "View more",
+	"Heading.GameDetails": "Game details",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

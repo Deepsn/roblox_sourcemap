@@ -528,6 +528,8 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 	"Label.Sublabel.TextScrubbed.Note":
 		"Your experience name or experience description was found to be inappropriate. Both have been changed to a placeholder. You can create a new name and description in Creator Hub or Studio.",
 	"Action.LogOut": "Log out",
+	"Description.AppealViaSupport":
+		"To appeal this decision, {link}contact support.{linkEnd}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
