@@ -227,13 +227,13 @@ export default function createItemPurchase({
 			useState(false);
 
 		const { data: subscriptionProductInfo = null } = useQuery({
-			queryKey: ["blackbird-product", CurrentUser.userId],
+			queryKey: ["list-available-subscription-products", CurrentUser.userId],
 			queryFn: () =>
 				listAvailableSubscriptionProductsV2(ProductType.Blackbird, false),
 			select: ({ products }) => products[0] ?? null,
 			enabled: shouldShowUnifiedPurchaseModal,
-			staleTime: 30 * 60 * 1000, // This endpoint will be updated when user purchases a subscription, so we can keep it stale for 30 minutes.
 			retry: 1,
+			retryDelay: 100,
 		});
 
 		const getCurrentUserBalance = () => {

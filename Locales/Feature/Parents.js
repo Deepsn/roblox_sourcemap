@@ -417,7 +417,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.LinkToChildV2":
 		"Link accounts to get insights about your teen’s Roblox activity",
 	"Description.VPCRequestVoiceDataForProductImprovements":
-		"Roblox always uses voice data for safety and moderation. This setting also allows Roblox to use your child’s voice data for product improvements. {linkStart}View details{linkEnd}.",
+		"Roblox always uses voice data for safety and moderation. This setting also allows Roblox to use your child’s voice data for product improvements. {voiceDataUsageLinkStart}View details{voiceDataUsageLinkEnd}.",
 	"Description.VoiceDataForProductImprovementsSettingNameInContext":
 		"voice data for product improvements setting",
 	"Description.EnterParentEmailV5":

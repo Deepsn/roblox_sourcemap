@@ -497,6 +497,34 @@ export const getAuditDataForConsent = (
 							.consentSourceContentId,
 				},
 			];
+		case ConsentName.whoCanPartyWithMeTrustedFriends:
+		case ConsentName.whoCanPartyWithMeParentSideRemovedComms:
+		case ConsentName.whoCanUsePartyChatWithMeTrustedFriends:
+		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriends:
+		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriends:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriends: {
+			const constants = legallySensitiveContentConstants[consentName];
+			return [
+				{
+					consentStringTemplate: translate(constants.pageTitleTranslationKey),
+					sourceContentId: constants.pageTitleSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(
+						constants.pageDescriptionTranslationKey,
+					),
+					sourceContentId: constants.pageDescriptionSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(constants.titleTranslationKey),
+					sourceContentId: constants.titleSourceContentId,
+				},
+				{
+					consentStringTemplate: translate(constants.consentTranslationKey),
+					sourceContentId: constants.consentSourceContentId,
+				},
+			];
+		}
 		case ConsentName.receiveRobuxTransferConsentCard:
 			return [
 				{

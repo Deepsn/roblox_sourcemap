@@ -1,3 +1,4 @@
+import React from "react";
 import { escapeHtml } from "core-utilities";
 import { deviceMeta } from "header-scripts";
 import { Dialog, RobloxTranslationResource, Endpoints } from "Roblox";
@@ -21,6 +22,7 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 	itemDetail: ItemDetailElementDataset,
 	translationResource: RobloxTranslationResource,
 	shouldShowUnifiedPurchaseModal = false,
+	thumbnail?: React.ReactNode,
 ): void {
 	const robuxNeeded = formattingRobux(robuxShortfallPrice);
 	const expectedPrice = parseInt(itemDetail.expectedPrice, 10);
@@ -102,13 +104,16 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 		reportCounter(UPSELL_COUNTER_NAMES.UpsellCancelled, itemDetail?.assetType);
 	}
 	if (shouldShowUnifiedPurchaseModal) {
+		const isPrivateServer = itemDetail.isPrivateServer === true;
+		const thumbnailNode =
+			isPrivateServer && thumbnail
+				? thumbnail
+				: ItemPreviewThumbnail({ thumbnailImageUrl: thumbnailImageUrl ?? "" });
 		openUnifiedRobuxUpsellModal({
 			variant: "tooExpensive",
 			expectedPrice,
 			assetName: itemDetail.itemName,
-			thumbnail: ItemPreviewThumbnail({
-				thumbnailImageUrl: thumbnailImageUrl ?? "",
-			}),
+			thumbnail: thumbnailNode,
 			onAccept,
 			onCancel,
 		});

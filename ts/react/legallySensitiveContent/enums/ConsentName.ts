@@ -22,6 +22,12 @@ export enum ConsentName {
 	consentCenterAllowAction = "consentCenterAllowAction",
 	consentCenterUpdateSettingNoValue = "consentCenterUpdateSettingNoValue",
 	consentCenterUpdateSettingWithValue = "consentCenterUpdateSettingWithValue",
+	whoCanPartyWithMeTrustedFriends = "whoCanPartyWithMeTrustedFriends",
+	whoCanPartyWithMeParentSideRemovedComms = "whoCanPartyWithMeParentSideRemovedComms",
+	whoCanUsePartyChatWithMeTrustedFriends = "whoCanUsePartyChatWithMeTrustedFriends",
+	whoCanUsePartyChatWithMeParentSideTrustedFriends = "whoCanUsePartyChatWithMeParentSideTrustedFriends",
+	whoCanUsePartyVoiceWithMeTrustedFriends = "whoCanUsePartyVoiceWithMeTrustedFriends",
+	whoCanUsePartyVoiceWithMeParentSideTrustedFriends = "whoCanUsePartyVoiceWithMeParentSideTrustedFriends",
 }
 
 export default ConsentName;

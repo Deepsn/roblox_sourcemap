@@ -10,6 +10,7 @@ type SubscriptionButtonProps = {
 	isDisabled?: boolean;
 	children: React.ReactNode;
 	upsellUuid?: string;
+	paymentSessionId?: string;
 	redirectUrl?: string;
 	trackSubscriptionButtonClick?: () => void;
 };
@@ -21,6 +22,7 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 	isDisabled = false,
 	children,
 	upsellUuid,
+	paymentSessionId,
 	redirectUrl,
 	trackSubscriptionButtonClick,
 }) => {
@@ -48,6 +50,9 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 					upsellUuid,
 				);
 			}
+			if (paymentSessionId) {
+				url.searchParams.append("paymentSessionId", paymentSessionId);
+			}
 			return url.toString();
 		}
 
@@ -67,6 +72,7 @@ const SubscriptionButton: React.FC<SubscriptionButtonProps> = ({
 		productType,
 		productId,
 		upsellUuid,
+		paymentSessionId,
 		redirectUrl,
 	]);
 

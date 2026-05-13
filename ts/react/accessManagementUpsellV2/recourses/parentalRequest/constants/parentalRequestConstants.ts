@@ -60,6 +60,11 @@ const parentalRequestConstants = {
 			settingsAge: "settingsAgeSettings",
 			settingsRequestSent: "settingsRequestSent",
 		},
+		addTrustedFriendVpcContext: {
+			parentalEntry: "parentalEntryAddTrustedFriendVpc",
+			settingsAge: "settingsAgeAddTrustedFriendVpc",
+			settingsRequestSent: "settingsAddTrustedFriendVpcRequestSent",
+		},
 		eventName: {
 			authPageLoad: "authPageload",
 			authButtonClick: "authButtonClick",

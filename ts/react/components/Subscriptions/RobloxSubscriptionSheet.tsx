@@ -24,6 +24,7 @@ type RobloxSubscriptionSheetProps = {
 	onClose: () => void;
 	isDisabled?: boolean;
 	upsellUuid?: string;
+	paymentSessionId?: string;
 	redirectUrl?: string;
 	trackSubscriptionButtonClick?: () => void;
 };
@@ -60,6 +61,7 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 	onClose,
 	isDisabled = false,
 	upsellUuid,
+	paymentSessionId,
 	redirectUrl,
 	trackSubscriptionButtonClick,
 }) => {
@@ -114,6 +116,7 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 							productId={id}
 							productType={type}
 							upsellUuid={upsellUuid}
+							paymentSessionId={paymentSessionId}
 							redirectUrl={redirectUrl}
 							trackSubscriptionButtonClick={trackSubscriptionButtonClick}
 						>

@@ -39,7 +39,7 @@ const UnifiedProductDetails: React.FC<UnifiedProductDetailsProps> = ({
 
 	const hasDiscount =
 		discountInformation?.originalPrice != null &&
-		discountInformation.originalPrice !== expectedPrice;
+		discountInformation.originalPrice > expectedPrice;
 
 	const renderPrice = () => {
 		if (hasDiscount) {
