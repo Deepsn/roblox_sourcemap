@@ -670,7 +670,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.AddTFConsent.ChatAcrossAgeGroupsWithoutFilter":
 		"Trusted friends may unlock features like chat across age groups and chat without filters, depending on your child’s region and age. Make sure this is a person you and your child know and trust. {linkStart}View Details{linkEnd}",
 	"Description.TrustedConnectionTeamCreateGame":
-		"This was made from {gameName} by {creatorName}.",
+		"This request was initiated via the {gameName} group within {creatorName}.",
 	"Description.AddTFConsent.ChatAcrossAgeGroups":
 		"Trusted friends may unlock features like chat across age groups, depending on your child’s region and age. Make sure this is a person you and your child know and trust. {linkStart}View Details{linkEnd}",
 	"Description.ChatAcrossAgeGroupsWithoutFilter":

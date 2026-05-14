@@ -235,6 +235,25 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 	"Label.RemainingBalance": "Remaining balance",
 	"Label.LearnAboutRobloxSafety":
 		"Learn About Roblox Safety, Moderation, and Parental Controls",
+	"Label.ScanGiftCard.LoadingCamera": "Loading camera",
+	"Label.ScanGiftCard.ValidatingPINCode": "Validating PIN code",
+	"Label.ScanGiftCard.CaptureTheBackOfYourCard":
+		"Capture the back of your card",
+	"Label.ScanGiftCard.PlacePINCodeInsideHere": "Place PIN code inside here",
+	"Label.ScanGiftCard.CouldNotAccessCamera": "Could not access camera",
+	"Label.ScanGiftCard.CouldNotReadCard": "Could not read card",
+	"Label.ScanGiftCard.CardDamaged": "Card damaged",
+	"Description.ScanGiftCard.SorryWeCouldntAccessCamera":
+		"Sorry, we couldn't access your camera. Please check your camera permissions and try again.",
+	"Description.ScanGiftCard.SorryWeCouldntReadCard":
+		"Sorry, we couldn't read your card. Please try again or enter your code manually.",
+	"Action.ScanGiftCard.TakePhoto": "Take photo",
+	"Action.ScanGiftCard.EnterManually": "Enter manually",
+	"Action.ScanGiftCard.GetHelp": "Get help",
+	"Action.ScanGiftCard.IveUpdatedMyCameraSettings":
+		"I've updated my camera settings",
+	"Action.ScanGiftCard.RetakePhoto": "Retake photo",
+	"Action.ScanGiftCard.TryScanToRedeem": "Try scan to redeem",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

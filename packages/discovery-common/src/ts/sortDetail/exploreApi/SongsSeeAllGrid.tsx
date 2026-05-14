@@ -13,6 +13,7 @@ import SentinelTile from "../../common/components/SentinelTile";
 import { SduiActionType } from "../../sdui/system/SduiActionParserRegistry";
 import { buildSessionAnalyticsData } from "../../sdui/utils/analyticsParsingUtils";
 import { usePageSession } from "../../common/utils/PageSessionContext";
+import { ContentType } from "@rbx/unified-logging";
 
 const SongsSeeAllGrid = ({
 	sort,
@@ -22,7 +23,7 @@ const SongsSeeAllGrid = ({
 }: {
 	sort: TExploreApiSongsSort;
 	isFetching: boolean;
-	currentPage: PageContext.SortDetailPageDiscover;
+	currentPage: PageContext.SongListPage;
 	loadMoreData: () => void;
 }): JSX.Element => {
 	const tokens = useTokens();
@@ -34,7 +35,7 @@ const SongsSeeAllGrid = ({
 		return buildSessionAnalyticsData(pageSessionInfo, sduiContext);
 	}, [pageSessionInfo, sduiContext]);
 
-	useVerticalScrollTracker(PageContext.SortDetailPageDiscover);
+	useVerticalScrollTracker(currentPage);
 
 	const items: TServerDrivenComponentConfig[] = useMemo(() => {
 		return sort.songs.map((song) => ({
@@ -73,6 +74,9 @@ const SongsSeeAllGrid = ({
 	const componentConfig = useMemo(
 		() => ({
 			componentType: SduiRegisteredComponents.CollectionGrid,
+			analyticsData: {
+				contentType: ContentType.Song,
+			},
 			props: {
 				items,
 				layoutOverrides: {

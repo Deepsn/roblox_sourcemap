@@ -5,9 +5,9 @@ import React, {
 	useRef,
 	useLayoutEffect,
 } from "react";
+import { throttle } from "lodash";
 import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import { Loading } from "@rbx/core-ui";
-import { throttle } from "lodash";
 import { GameGrid } from "../../common/components/GameGrid";
 import {
 	getNumTilesPerRow,
@@ -151,7 +151,6 @@ export const SortDetailGridV2DiscoveryApi = ({
 							gameData,
 							sort.topicId,
 							parsedViewedIndex,
-							sort.topicLayoutData?.componentType,
 						),
 						[EventStreamMetadata.NavigationUids]: parsedViewedIndex.map(
 							(id) => gameData[id]!.navigationUid ?? "0",

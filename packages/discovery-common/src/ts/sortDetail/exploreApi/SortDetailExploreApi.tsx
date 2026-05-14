@@ -149,7 +149,7 @@ export const SortDetailExploreApi = ({
 	if (isMusicChartsCarouselEnabled && isSongSortFromExploreApi(sort)) {
 		return (
 			<SongsSeeAllGrid
-				currentPage={PageContext.SortDetailPageDiscover}
+				currentPage={PageContext.SongListPage}
 				sort={sort}
 				isFetching={isFetching}
 				loadMoreData={checkLoadMoreData}

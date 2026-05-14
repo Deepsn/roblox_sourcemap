@@ -1,5 +1,5 @@
-import { TranslateFunction } from "@rbx/core-scripts/react";
 import React, { useCallback, useRef } from "react";
+import { TranslateFunction } from "@rbx/core-scripts/react";
 import { Loading } from "@rbx/core-ui";
 import { TExploreApiGameSort } from "../../common/types/bedev2Types";
 import {
@@ -17,7 +17,10 @@ import useGameImpressionsIntersectionTracker, {
 } from "../../common/hooks/useGameImpressionsIntersectionTracker";
 import { TBuildEventProperties } from "../../common/components/GameTileUtils";
 import { CommonGameSorts } from "../../common/constants/translationConstants";
-import { getSponsoredAdImpressionsData } from "../../common/utils/parsingUtils";
+import {
+	getSponsoredAdImpressionsData,
+	getTileBadgeContextsImpressionsData,
+} from "../../common/utils/parsingUtils";
 import { TGameData } from "../../common/types/bedev1Types";
 import useVerticalScrollTracker from "../../common/components/useVerticalScrollTracker";
 import { usePageSession } from "../../common/utils/PageSessionContext";
@@ -84,6 +87,11 @@ const GamesSeeAllGrid = ({
 					[EventStreamMetadata.GameSetTypeId]: sort.topicId,
 					...getSortTargetIdMetadata(sort),
 					...getSortAppliedFiltersMetadata(sort),
+					...getTileBadgeContextsImpressionsData(
+						sort.games,
+						sort.topicId,
+						parsedViewedIndex,
+					),
 					[EventStreamMetadata.Page]: PageContext.SortDetailPageDiscover,
 					[SessionInfoType.DiscoverPageSessionInfo]: discoverPageSessionInfo,
 				};

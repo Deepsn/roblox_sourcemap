@@ -2574,6 +2574,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.ContentMaturityRating": "{maturityRating} rating",
 	"Action.ViewMore": "View more",
 	"Heading.GameDetails": "Game details",
+	"Action.Request": "Request",
+	"Action.RequestData": "Request",
+	"Label.PlaytimeCompactHoursMinutes": "{hours}h {minutes}m",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
