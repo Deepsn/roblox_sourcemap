@@ -1,4 +1,4 @@
-// bundle: headerinit___9ed662447df1a6521b6ad29f8973f449_m // files: jquery/jquery-1.11.1.min.js, jquery/jquery-migrate-1.2.1.min.js, roblox.js, common/constants.js, jquery.cookie.js, RobloxCookies.js, utilities/minifyTestFile.js, RobloxEventStream.js, Events/UserInteractionsEvent.js, Events/PageHeartbeatEvent.js, services/userService.js, services/metaDataValues.js, utilities/localStorage.js, utilities/ExponentialBackoff.js, utilities/ExponentialBackoffSpecification.js, Reference/themeUpdate.js // jquery/jquery-1.11.1.min.js
+// bundle: headerinit___0a78fbd06e2758f0848bc1796d94575e_m // files: jquery/jquery-1.11.1.min.js, jquery/jquery-migrate-1.2.1.min.js, roblox.js, common/constants.js, jquery.cookie.js, RobloxCookies.js, utilities/minifyTestFile.js, RobloxEventStream.js, Events/UserInteractionsEvent.js, Events/PageHeartbeatEvent.js, services/userService.js, services/metaDataValues.js, utilities/localStorage.js, utilities/ExponentialBackoff.js, utilities/ExponentialBackoffSpecification.js // jquery/jquery-1.11.1.min.js
 /*! jQuery v1.11.1 | (c) 2005, 2014 jQuery Foundation, Inc. | jquery.org/license */
 
 !(function (a, b) {
@@ -6899,86 +6899,7 @@ Roblox.Utilities.ExponentialBackoffSpecification = function (options) {
 	this.MaximumDelayBase = function () {
 		return maximumDelayBase;
 	};
-}; // Reference/themeUpdate.js
-
-("use strict");
-var Roblox = Roblox || {};
-Roblox.ThemeUpdate = (function () {
-	var themeClasses = {
-		Classic: "light-theme",
-		Dark: "dark-theme",
-		Light: "light-theme",
-	};
-	var reskinBodyClassName = ".rbx-body";
-	var themeElms = [
-		"#navigation-container",
-		".container-main",
-		"#chat-container",
-		".notification-stream-base",
-		"#notification-stream-popover",
-	];
-	var currentTheme = "";
-	function handleGetThemeSuccess(data) {
-		if (currentTheme !== data.themeType) {
-			cleanClass();
-			setClass(themeClasses[data.themeType]);
-			currentTheme = data.themeType;
-		}
-	}
-	function getTheme() {
-		var url = Roblox.EnvironmentUrls.accountSettingsApi + "/v1/themes/user";
-		$.ajax({
-			type: "GET",
-			url: url,
-			contentType: "application/json; charset=utf-8",
-			success: handleGetThemeSuccess,
-		});
-	}
-	function listenThemeChange() {
-		if (Roblox && Roblox.RealTime) {
-			var realTimeClient = Roblox.RealTime.Factory.GetClient();
-			realTimeClient.Subscribe("UserThemeTypeChangeNotification", getTheme);
-		}
-		$(document).on("Roblox.ThemeUpdate", getTheme);
-	}
-	function isReskinPage() {
-		var reskinBody = $(reskinBodyClassName);
-		return reskinBody && reskinBody.length > 0;
-	}
-	function setClass(themeType) {
-		if (isReskinPage()) {
-			$(reskinBodyClassName).addClass(themeType);
-		} else {
-			themeElms.forEach(function (elm) {
-				if ($(elm)) {
-					$(elm).addClass(themeType);
-				}
-			});
-		}
-	}
-	function cleanClass() {
-		for (var theme in themeClasses) {
-			$(reskinBodyClassName).removeClass(themeClasses[theme]);
-			themeElms.forEach(function (elm) {
-				if ($(elm)) {
-					$(elm).removeClass(themeClasses[theme]);
-				}
-			});
-		}
-	}
-	function init() {
-		var themeOverride = document.cookie.split("; ").find(function (row) {
-			return row.startsWith("RBXThemeOverride=");
-		});
-		if (themeOverride == null || themeOverride.split("=")[1] == "") {
-			listenThemeChange();
-		}
-	}
-	return { init: init };
-})();
-$(function () {
-	Roblox.ThemeUpdate.init();
-}); //Bundle detector
+}; //Bundle detector
 
 Roblox &&
 	Roblox.BundleDetector &&
