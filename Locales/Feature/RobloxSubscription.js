@@ -177,6 +177,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Includes Plus and {amountStart}{price}{amountEnd}/mo.",
 	"Label.PlusLandingPage.Subtitle.V3":
 		"Starts at {boldStart}{price}{boldEnd}/{periodType, select,\n Week {week}\n Month {month}\n Year {year}\n other {periodType} \n}",
+	"Description.Benefit.RobuxStipend":
+		"{amount} Robux every {periodType, select, Day {day} Week {week} Month {month} Year {year} other {periodType} }",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
