@@ -1,6 +1,9 @@
+import { isStringEnum } from "@rbx/core-lib";
 import { TileBadgePositionEnum } from "../constants/genericTileConstants";
 import {
+	TGameTileBadgeComponentType,
 	TGameTileBadgeType,
+	TGameTileIconClass,
 	TGameTilePillData,
 	TGameTileTextFooter,
 	TLayoutComponentType,
@@ -9,10 +12,59 @@ import {
 	TTileBadgesByPosition,
 } from "../types/bedev1Types";
 
-export const getGameTilePillsIconClass = (icon: string): string | null => {
+const hasEmptyValue = (value: string | undefined): value is "" | undefined =>
+	value === undefined || value === "";
+
+export const extractTileBadgesByPositionFromContentMetadata = (
+	contentMetadata: Record<string, string> | undefined,
+): TTileBadgesByPosition | undefined => {
+	if (!contentMetadata) {
+		return undefined;
+	}
+
+	const {
+		badgePosition,
+		badgeAnalyticsId,
+		badgeType,
+		badgeText,
+		badgeIcon,
+		badgeComponentType,
+	} = contentMetadata;
+
+	if (
+		hasEmptyValue(badgePosition) ||
+		hasEmptyValue(badgeAnalyticsId) ||
+		hasEmptyValue(badgeType) ||
+		!isStringEnum(TGameTileBadgeType, badgeType)
+	) {
+		return undefined;
+	}
+
+	return {
+		[badgePosition]: [
+			{
+				analyticsId: badgeAnalyticsId,
+				tileBadgeType: badgeType,
+				text: badgeText,
+				icons: badgeIcon ? [badgeIcon] : undefined,
+				tileBadgeComponentType:
+					!hasEmptyValue(badgeComponentType) &&
+					isStringEnum(TGameTileBadgeComponentType, badgeComponentType)
+						? badgeComponentType
+						: undefined,
+			},
+		],
+	};
+};
+
+export const getGameTilePillsIconClass = (
+	icon: string,
+): TGameTileIconClass | null => {
 	switch (icon) {
 		case "icons/menu/gem_small":
-			return "icon-gem-dark-stroke";
+			return { class: "icon-gem-dark-stroke", type: "core-ui" };
+		case "icons/menu/lock_closed":
+			return { class: "icon-regular-lock-closed", type: "foundation" };
 		default:
 			return null;
 	}
@@ -45,32 +97,55 @@ export type TGameTilesPillsByPosition = Partial<
 	Record<TileBadgePositionEnum, TGameTilePillData[]>
 >;
 
+const resolveIconClasses = (
+	icons: string[] | undefined,
+): TGameTileIconClass[] => {
+	if (!icons) {
+		return [];
+	}
+	return icons
+		.map((icon) => getGameTilePillsIconClass(icon))
+		.filter((icon): icon is TGameTileIconClass => icon !== null);
+};
+
 const processBadges = (
 	badges: TTileBadge[] | undefined,
 ): TGameTilePillData[] => {
-	if (!badges || !badges.length) {
+	if (!badges?.length) {
 		return [];
 	}
-	return badges.map((tileBadge) => {
-		const badgeData: TGameTilePillData = {
-			id: tileBadge.analyticsId,
-		};
-		if (tileBadge.tileBadgeType === TGameTileBadgeType.Text && tileBadge.text) {
-			badgeData.text = tileBadge.text;
-			badgeData.animationClass = getGameTilePillsAnimationClass(tileBadge);
-		} else if (
-			tileBadge.tileBadgeType === TGameTileBadgeType.Icon &&
-			tileBadge.icons
-		) {
-			const icons = tileBadge.icons
-				.map((icon) => getGameTilePillsIconClass(icon))
-				.filter((icon) => !!icon) as string[];
-			badgeData.icons = icons;
-			badgeData.animationClass = getGameTilePillsAnimationClass(tileBadge);
-		}
-		badgeData.componentType = tileBadge.tileBadgeComponentType;
-		return badgeData;
-	});
+	return badges
+		.map((tileBadge): TGameTilePillData | undefined => {
+			const badgeData: TGameTilePillData = {
+				id: tileBadge.analyticsId,
+				componentType: tileBadge.tileBadgeComponentType,
+				animationClass: getGameTilePillsAnimationClass(tileBadge),
+			};
+			if (
+				tileBadge.tileBadgeType === TGameTileBadgeType.Text &&
+				tileBadge.text
+			) {
+				badgeData.text = tileBadge.text;
+			} else if (
+				tileBadge.tileBadgeType === TGameTileBadgeType.Icon &&
+				tileBadge.icons
+			) {
+				badgeData.icons = resolveIconClasses(tileBadge.icons);
+			} else if (
+				tileBadge.tileBadgeType === TGameTileBadgeType.IconWithText &&
+				tileBadge.icons &&
+				tileBadge.text
+			) {
+				badgeData.icons = resolveIconClasses(tileBadge.icons);
+				badgeData.text = tileBadge.text;
+			} else {
+				return undefined;
+			}
+			return badgeData;
+		})
+		.filter(
+			(badgeData): badgeData is TGameTilePillData => badgeData !== undefined,
+		);
 };
 
 export const getGameTilePillsData = (
@@ -105,6 +180,7 @@ export const getGameTileTextFooterData = (
 };
 
 export default {
+	extractTileBadgesByPositionFromContentMetadata,
 	getGameTilePillsData,
 	getGameTilePillsIconClass,
 	getGameTilePillsAnimationClass,

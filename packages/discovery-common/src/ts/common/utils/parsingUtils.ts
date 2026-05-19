@@ -400,38 +400,21 @@ export const getTileBadgeContext = (
 	gameData: TGameData,
 	topicId: string | undefined,
 ): string | undefined => {
-	let tileBadgeContext: string | undefined;
-
-	if (
-		gameData.layoutDataBySort &&
-		topicId &&
-		gameData.layoutDataBySort[topicId]
-	) {
-		tileBadgeContext = getAnalyticsIdFromLayoutData(
-			gameData.layoutDataBySort[topicId],
-		);
-	} else if (gameData.defaultLayoutData) {
-		tileBadgeContext = getAnalyticsIdFromLayoutData(gameData.defaultLayoutData);
-	}
-
-	return tileBadgeContext;
+	const layoutData = getGameLayoutData(gameData, topicId);
+	return layoutData ? getAnalyticsIdFromLayoutData(layoutData) : undefined;
 };
 
 export const getTileBadgeContextsImpressionsData = (
 	gameData: TGameData[],
-	topicId: number | string,
+	topicId: number | string | undefined,
 	impressedIndexes: number[],
-	componentType?: TComponentType,
-): TGameImpressionsEventTileBadgeContextsData | {} => {
-	if (isWideTileComponentType(componentType)) {
-		return {
-			[EventStreamMetadata.TileBadgeContexts]: impressedIndexes.map(
-				(index) =>
-					getTileBadgeContext(gameData[index]!, topicId.toString()) ?? "0",
-			),
-		};
-	}
-	return {};
+): TGameImpressionsEventTileBadgeContextsData => {
+	return {
+		[EventStreamMetadata.TileBadgeContexts]: impressedIndexes.map(
+			(index) =>
+				getTileBadgeContext(gameData[index]!, topicId?.toString()) ?? "0",
+		),
+	};
 };
 
 const calculateAbsoluteRowData = (

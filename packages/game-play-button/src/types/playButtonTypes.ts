@@ -62,12 +62,26 @@ export type TPlayableUxTreatment = {
 	data?: Record<string, string>;
 };
 
+export const UpsellUxTreatmentEnum = {
+	AgeCheckUpsell: "ageCheckUpsell",
+} as const;
+
+export type TUpsellUxTreatmentData = {
+	bodyText: string;
+};
+
+export type TUpsellUxTreatment = {
+	treatment: string;
+	data?: Record<string, string>;
+};
+
 export type TGetPlayabilityStatus = {
 	playabilityStatus: TPlayabilityStatus;
 	isPlayable: boolean;
 	universeId: number;
-	unplayableDisplayText?: string;
+	unplayableDisplayText: string | null;
 	playableUxTreatment?: TPlayableUxTreatment;
+	upsellUxTreatment?: TUpsellUxTreatment;
 };
 
 export type TGuacPlayButtonUIResponse = {
@@ -78,6 +92,7 @@ export type TGuacPlayButtonUIResponse = {
 	requireExplicitVoiceConsent: boolean;
 	useCameraU13Design: boolean;
 	useVoiceUpsellV2Design: boolean;
+	useExperienceApprovalForParentalConsent: boolean;
 };
 
 export type TUniversePlaceVoiceEnabledSettings = {

@@ -154,7 +154,6 @@ export const HomePageGrid = ({
 							gameData,
 							sort.topicId,
 							parsedViewedIndex,
-							componentType,
 						),
 						...getTileFooterImpressionsData(
 							gameData,

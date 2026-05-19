@@ -1,17 +1,23 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import ready from "@rbx/core-scripts/util/ready";
 import { queryClient, renderWithErrorBoundary } from "@rbx/core-scripts/react";
+import {
+	Browser,
+	currentBrowser,
+} from "@rbx/core-scripts/util/current-browser";
 import { addExternal } from "@rbx/externals";
 import { ageBadgeControl } from "./src/util/ageBadgeUtil";
 import LeftNavigation from "./src/leftNav";
 import NavigationRightHeader from "./src/containers/NavigationRightHeader";
 import NavigationRobux from "./src/containers/NavigationRobux";
 import { cacheUserId } from "./src/util/authUtil";
+import PasskeyUpgradeSnackbar from "./src/components/PasskeyUpgradeSnackbar";
 import developUtil from "./src/util/developUtil";
 import navClickUtil from "./src/util/navClickUtil";
 import MenuIcon from "./src/containers/MenuIcon";
 import AgeBadge from "./src/components/AgeBadge";
 import setupAuthInterceptor from "./src/services/authInterceptor";
+import { attemptPasskeyUpgrade } from "./src/util/conditionalPasskeyCreate";
 import * as navigation from "./src";
 import { translations } from "./component.json";
 
@@ -37,6 +43,8 @@ setupAuthInterceptor();
 // Mounting components seperatly to avoid hydrating
 // components that do not need to be server rendered.
 ready(() => {
+	const upgradeResult = attemptPasskeyUpgrade();
+
 	if (document.getElementById(menuIconContainerId)) {
 		renderWithErrorBoundary(
 			<MenuIcon />,
@@ -50,6 +58,11 @@ ready(() => {
 			<AgeBadge variant={ageBadgeVariant} />,
 			document.getElementById(ageBadgeContainerId),
 		);
+
+		document
+			.getElementById(ageBadgeContainerId)
+			?.closest(".rbx-navbar-header")
+			?.classList.add("has-age-badge");
 	}
 
 	if (document.getElementById(navigationRobuxContainerId)) {
@@ -71,6 +84,17 @@ ready(() => {
 			<NavigationRightHeader />,
 			document.getElementById(rightNavigationHeaderContainerId),
 		);
+	}
+
+	if (currentBrowser() === Browser.Safari) {
+		// eslint-disable-next-line no-void
+		void upgradeResult.then((success) => {
+			if (success) {
+				const snackbarContainer = document.createElement("div");
+				document.body.appendChild(snackbarContainer);
+				renderWithErrorBoundary(<PasskeyUpgradeSnackbar />, snackbarContainer);
+			}
+		});
 	}
 
 	if (document.getElementById(leftNavigationContainerId)) {

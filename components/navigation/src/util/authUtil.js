@@ -7,10 +7,8 @@ import {
 	httpService,
 } from "@rbx/core-scripts/legacy/core-utilities";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
-import {
-	EmailVerificationService,
-	AccountSwitcherService,
-} from "@rbx/core-scripts/legacy/Roblox";
+import { AccountSwitcherService } from "@rbx/core-scripts/legacy/Roblox";
+import { handleLogoutUpsell } from "@rbx/authentication";
 import cacheConstants from "../constants/cacheConstants";
 import layoutConstants from "../constants/layoutConstants";
 import urlConstants from "../constants/urlConstants";
@@ -100,18 +98,9 @@ const navigateToLoginWithRedirect = () => {
 	window.location.href = getLoginLinkUrl();
 };
 
-const logoutUser = (e) => {
-	e.stopPropagation();
-	e.preventDefault();
+const logoutUser = async () => {
 	sendLogoutButtonClickEvent();
-	EmailVerificationService?.handleUserEmailUpsellAtLogout(
-		logoutAndRedirect,
-	).then((data) => {
-		// if user is not in test group or has email on file already, logout directly
-		if (!data || data.emailAddress) {
-			logoutAndRedirect();
-		}
-	});
+	await handleLogoutUpsell({ onLogout: logoutAndRedirect });
 };
 
 const refreshCurrentSession = async () => {

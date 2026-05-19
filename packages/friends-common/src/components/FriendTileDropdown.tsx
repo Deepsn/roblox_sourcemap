@@ -10,6 +10,7 @@ import {
 	ThumbnailGameIconSize,
 } from "@rbx/thumbnails";
 import { TFriend } from "../types/friendsCarousel";
+import IARCInGameCard from "./IARCInGameCard";
 
 const FriendTileDropdown = ({
 	friend,
@@ -21,6 +22,7 @@ const FriendTileDropdown = ({
 	universeId,
 	canChat,
 	translate,
+	isIARCJoinCardRedesignEnabled,
 }: {
 	friend: TFriend;
 	displayName: string;
@@ -31,6 +33,7 @@ const FriendTileDropdown = ({
 	universeId: number;
 	canChat: boolean;
 	translate: TranslateFunction;
+	isIARCJoinCardRedesignEnabled: boolean;
 }): JSX.Element => {
 	const launchGame = async () => {
 		const joinAttemptId = friend.presence.gameId ?? "";
@@ -61,6 +64,18 @@ const FriendTileDropdown = ({
 	const startChat = () => {
 		chatService.startDesktopAndMobileWebChat({ userId: friend.id });
 	};
+
+	if (isIARCJoinCardRedesignEnabled && isInGame && userPresence != null) {
+		return (
+			<IARCInGameCard
+				displayName={displayName}
+				userPresence={userPresence}
+				universeId={universeId}
+				translate={translate}
+				launchGame={launchGame}
+			/>
+		);
+	}
 
 	return (
 		<div className="friend-tile-dropdown">

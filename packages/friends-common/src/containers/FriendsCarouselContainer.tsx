@@ -1,9 +1,8 @@
 import { JSX, useEffect, useState } from "react";
 import ExperimentationService from "@rbx/experimentation";
 import { EventContext } from "@rbx/unified-logging";
-import { useTheme, useTranslation } from "@rbx/core-scripts/react";
+import { useTranslation } from "@rbx/core-scripts/react";
 import RealTime from "@rbx/core-scripts/realtime";
-import { CacheProvider, UIThemeProvider, createCache } from "@rbx/ui";
 import dataStores from "@rbx/core-scripts/data-store";
 import * as friendsService from "../services/friends";
 import * as chatService from "../services/chat";
@@ -22,6 +21,7 @@ const { userDataStore } = dataStores;
 type ExperimentationConfig = {
 	isBadgeEnabled: boolean;
 	isAddFriendsTileEnabledWeb: boolean;
+	isIARCJoinCardRedesignEnabled: boolean;
 };
 
 const mustHideConnectionsCheck = async (
@@ -67,10 +67,8 @@ const FriendsCarouselContainer = ({
 		useState<ExperimentationConfig>({
 			isBadgeEnabled: false,
 			isAddFriendsTileEnabledWeb: false,
+			isIARCJoinCardRedesignEnabled: false,
 		});
-
-	const cache = createCache();
-	const theme = useTheme();
 
 	const { translate } = useTranslation();
 
@@ -84,12 +82,15 @@ const FriendsCarouselContainer = ({
 					isBadgeEnabled: ixpResult.enableNewFriendRequestsBadge === true,
 					isAddFriendsTileEnabledWeb:
 						ixpResult.enableAddFriendsTileOnWeb === true,
+					isIARCJoinCardRedesignEnabled:
+						ixpResult.isIARCJoinCardRedesignEnabled === true,
 				};
 			} catch (error) {
 				console.error("Error fetching experimentation config:", error);
 				return {
 					isBadgeEnabled: false,
 					isAddFriendsTileEnabledWeb: false,
+					isIARCJoinCardRedesignEnabled: false,
 				};
 			}
 		};
@@ -176,6 +177,7 @@ const FriendsCarouselContainer = ({
 					: {
 							isBadgeEnabled: false,
 							isAddFriendsTileEnabledWeb: false,
+							isIARCJoinCardRedesignEnabled: false,
 						};
 			const mustHideConnections =
 				mustHideFriends.status === FULFILLED_PROMISE_STATUS
@@ -204,42 +206,39 @@ const FriendsCarouselContainer = ({
 		});
 	}, [profileUserId, isOwnUser, carouselName]);
 
-	return (
-		<CacheProvider cache={cache}>
-			<UIThemeProvider theme={theme} cssBaselineMode="disabled">
-				{!showFriendsCarousel ? (
-					<div className="friends-carousel-0-friends" />
-				) : (
-					<div className="react-friends-carousel-container">
-						<FriendsCarouselHeader
-							friendsCount={friendsCount}
-							translate={translate}
-							profileUserId={profileUserId}
-							isOwnUser={isOwnUser}
-						/>
-						<FriendsList
-							badgeCount={
-								experimentationConfig.isBadgeEnabled
-									? (newFriendRequestsCount ?? 0)
-									: 0
-							}
-							friendsList={friends}
-							translate={translate}
-							isOwnUser={isOwnUser}
-							canChat={canChat}
-							carouselName={carouselName}
-							eventContext={eventContext}
-							homePageSessionInfo={homePageSessionInfo}
-							sortId={sortId}
-							sortPosition={sortPosition}
-							isAddFriendsTileEnabled={
-								experimentationConfig.isAddFriendsTileEnabledWeb
-							}
-						/>
-					</div>
-				)}
-			</UIThemeProvider>
-		</CacheProvider>
+	return !showFriendsCarousel ? (
+		<div className="friends-carousel-0-friends" />
+	) : (
+		<div className="react-friends-carousel-container">
+			<FriendsCarouselHeader
+				friendsCount={friendsCount}
+				translate={translate}
+				profileUserId={profileUserId}
+				isOwnUser={isOwnUser}
+			/>
+			<FriendsList
+				badgeCount={
+					experimentationConfig.isBadgeEnabled
+						? (newFriendRequestsCount ?? 0)
+						: 0
+				}
+				friendsList={friends}
+				translate={translate}
+				isOwnUser={isOwnUser}
+				canChat={canChat}
+				carouselName={carouselName}
+				eventContext={eventContext}
+				homePageSessionInfo={homePageSessionInfo}
+				sortId={sortId}
+				sortPosition={sortPosition}
+				isAddFriendsTileEnabled={
+					experimentationConfig.isAddFriendsTileEnabledWeb
+				}
+				isIARCJoinCardRedesignEnabled={
+					experimentationConfig.isIARCJoinCardRedesignEnabled
+				}
+			/>
+		</div>
 	);
 };
 

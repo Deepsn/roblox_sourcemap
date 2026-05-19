@@ -155,7 +155,6 @@ export const HomePageCarousel = ({
 							gameData,
 							sort.topicId,
 							filteredViewedIndexes,
-							componentType,
 						),
 						...getTileFooterImpressionsData(
 							gameData,

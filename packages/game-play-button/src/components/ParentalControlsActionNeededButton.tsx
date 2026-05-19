@@ -14,7 +14,6 @@ import { TAppsFlyerReferralProperties } from "../types/playButtonTypes";
 
 type TParentalControlsActionNeededButtonProps = {
 	universeId: string;
-	hideButtonText?: boolean;
 	buttonClassName?: string;
 	placeId: string;
 	rootPlaceId?: string;
@@ -26,7 +25,6 @@ type TParentalControlsActionNeededButtonProps = {
 
 const ParentalControlsActionNeededButton = ({
 	universeId,
-	hideButtonText,
 	buttonClassName,
 	placeId,
 	rootPlaceId,
@@ -85,7 +83,6 @@ const ParentalControlsActionNeededButton = ({
 		<React.Fragment>
 			<ActionNeededButton
 				onButtonClick={onPlayButtonClick}
-				hideButtonText={hideButtonText}
 				buttonClassName={buttonClassName}
 			/>
 			{isSelfUpdateSettingModalOpen && (
@@ -108,7 +105,6 @@ const ParentalControlsActionNeededButton = ({
 };
 
 ParentalControlsActionNeededButton.defaultProps = {
-	hideButtonText: undefined,
 	buttonClassName: undefined,
 	rootPlaceId: undefined,
 	privateServerLinkCode: undefined,

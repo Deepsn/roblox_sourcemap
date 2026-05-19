@@ -1,5 +1,8 @@
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
-import { authenticatedUser as authenticatedUserMeta } from "@rbx/core-scripts/meta/user";
+import {
+	authenticatedUser as authenticatedUserMeta,
+	isBlackbirdUser,
+} from "@rbx/core-scripts/meta/user";
 import { Link } from "@rbx/core-ui/legacy/react-style-guide";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import {
@@ -7,6 +10,7 @@ import {
 	VerifiedBadgeIconContainer,
 	currentUserHasVerifiedBadge,
 } from "@rbx/roblox-badges";
+import { DisplayNameBadges, useIsPlusBadgeEnabled } from "@rbx/identity-badges";
 import links from "../constants/linkConstants";
 import useLiveUserNameForDisplay from "../hooks/useLiveUserNameForDisplay";
 
@@ -22,6 +26,8 @@ function AgeBracketDisplay() {
 			/>
 		</section>
 	) : null;
+
+	const showPlusBadge = useIsPlusBadgeEnabled() && isBlackbirdUser();
 
 	return (
 		<div className="age-bracket-label text-header">
@@ -41,6 +47,11 @@ function AgeBracketDisplay() {
 					{nameForDisplay}
 				</span>
 				{badgeToRender}
+				{showPlusBadge ? (
+					<section className="age-bracket-label-plus-badge">
+						<DisplayNameBadges isRobloxPlus size="Small" />
+					</section>
+				) : null}
 			</Link>
 		</div>
 	);

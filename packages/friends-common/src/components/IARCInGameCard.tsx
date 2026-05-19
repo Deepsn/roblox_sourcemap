@@ -10,14 +10,12 @@ import {
 const IARCInGameCard = ({
 	displayName,
 	userPresence,
-	gameUrl,
 	universeId,
 	translate,
 	launchGame,
 }: {
 	displayName: string;
 	userPresence: string;
-	gameUrl: string;
 	universeId: number;
 	translate: TranslateFunction;
 	launchGame: () => Promise<void>;
@@ -30,13 +28,7 @@ const IARCInGameCard = ({
 			className="in-game-friend-card--iarc flex flex-col items-start justify-center padding-y-large padding-x-large gap-medium radius-medium stroke-standard stroke-default bg-over-media-300 width-full"
 			style={{ boxSizing: "border-box" }}
 		>
-			<a
-				href={gameUrl}
-				target="_blank"
-				rel="noreferrer"
-				className="friend-tile-non-styled-button flex items-center gap-small width-full min-width-0"
-				style={{ color: "inherit", textDecoration: "none" }}
-			>
+			<div className="flex items-center gap-small width-full min-width-0">
 				<span
 					className="shrink-0 radius-small clip"
 					style={{ display: "inline-block", width: 40, height: 40 }}
@@ -57,7 +49,7 @@ const IARCInGameCard = ({
 						{userPresence}
 					</span>
 				</span>
-			</a>
+			</div>
 			<div className="in-game-friend-card-actions flex self-stretch gap-small">
 				<FoundationButton
 					variant="Emphasis"

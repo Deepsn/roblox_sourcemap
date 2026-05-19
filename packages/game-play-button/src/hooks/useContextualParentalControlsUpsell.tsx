@@ -13,6 +13,7 @@ import {
 } from "../utils/playButtonUtils";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
+import useGuacPlayButtonUI from "./useGuacPlayButtonUI";
 
 const { counterEvents, unlockPlayIntentConstants } = playButtonConstants;
 
@@ -43,6 +44,8 @@ const useContextualParentalControlsUpsell = (
 	eventProperties?: Record<string, string | number | undefined>,
 	appsFlyerReferralProperties?: TAppsFlyerReferralProperties,
 ): TContextualParentalControlUpsell => {
+	const { data: guacData } = useGuacPlayButtonUI();
+
 	const [isSelfUpdateSettingModalOpen, setIsSelfUpdateSettingModalOpen] =
 		useState<boolean>(false);
 
@@ -156,21 +159,39 @@ const useContextualParentalControlsUpsell = (
 						break;
 					}
 					case "ParentalConsent": {
+						fireEvent?.(counterEvents.PlayButtonUpsellAskYourParentTriggered);
+
+						sendUnlockPlayIntent(requirement);
+
+						if (!window.Roblox.AccessManagementUpsellV2Service) {
+							fireEvent?.(counterEvents.PlayButtonUpsellParentalConsentError);
+							break;
+						}
+
 						try {
-							fireEvent?.(counterEvents.PlayButtonUpsellAskYourParentTriggered);
+							const upsellParams =
+								guacData?.useExperienceApprovalForParentalConsent
+									? {
+											featureName: "CanApproveExperience",
+											isAsyncCall: false,
+											usePrologue: true,
+											ampRecourseData: {
+												universeId,
+												experienceManagementAction: "Approve",
+											},
+										}
+									: {
+											featureName: "CanChangeSetting",
+											isAsyncCall: false,
+											usePrologue: true,
+											ampRecourseData: {
+												contentAgeRestriction:
+													requestedOption.option.optionValue,
+											},
+										};
 
-							sendUnlockPlayIntent(requirement);
-
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							await window.Roblox.AccessManagementUpsellV2Service!.startAccessManagementUpsell(
-								{
-									featureName: "CanChangeSetting",
-									isAsyncCall: false,
-									usePrologue: true,
-									ampRecourseData: {
-										contentAgeRestriction: requestedOption.option.optionValue,
-									},
-								},
+							await window.Roblox.AccessManagementUpsellV2Service.startAccessManagementUpsell(
+								upsellParams,
 							);
 						} catch {
 							launchGameFallback();
@@ -231,7 +252,7 @@ const useContextualParentalControlsUpsell = (
 				);
 			}
 		},
-		[launchGameFallback, universeId],
+		[guacData, launchGameFallback, universeId],
 	);
 
 	const closeSelfUpdateSettingModal = useCallback(() => {

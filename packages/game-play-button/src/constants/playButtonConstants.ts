@@ -59,10 +59,12 @@ const playButtonErrorStatusTranslationMap: Record<
 		"UnplayableError.ContextualPlayabilityAgeGatedByDescriptor",
 	[PlayabilityStatus.ContextualPlayabilityExperienceBlockedParentalControls]:
 		"UnplayableError.ContextualPlayabilityExperienceBlockedParentalControls",
+	[PlayabilityStatus.ContextualPlayabilityRequireParentApproval]:
+		"UnplayableError.ContextualPlayabilityRequireParentApproval",
 };
 
 const playButtonTextTranslationMap = {
-	ActionNeeded: "PlayButtonText.ActionNeeded",
+	Unlock: "PlayButtonText.Unlock",
 	Unplayable: "PlayButtonText.Unavailable",
 	Buy: "PlayButtonText.Buy",
 };
@@ -87,6 +89,10 @@ const counterEvents = {
 	PlayButtonUpsellAgeRestrictionVerificationError:
 		"PlayButtonUpsellAgeRestrictionVerificationError",
 	PlayButtonUpsellUnknownRequirement: "PlayButtonUpsellUnknownRequirement",
+	PlayButtonUpsellExperienceApprovalTriggered:
+		"PlayButtonUpsellExperienceApprovalTriggered",
+	PlayButtonUpsellExperienceApprovalError:
+		"PlayButtonUpsellExperienceApprovalError",
 	PreparePurchaseUrlError: "PreparePurchaseUrlError",
 	PlayButtonShowIdentificationError: "PlayButtonShowIdentificationIssueCaught",
 	PlayabilityStatusFetchInvalidUniverseId:
@@ -112,6 +118,7 @@ const unlockPlayIntentConstants = {
 		"AgeVerificationUnverifiedSeventeenPlusUser",
 	fiatPurchaseUpsellName: "FiatPurchase",
 	reconfirmLaunchModalUpsellName: "ReconfirmLaunchModal",
+	experienceApprovalUpsellName: "ExperienceApproval",
 };
 
 export const FeatureExperienceDetails = {

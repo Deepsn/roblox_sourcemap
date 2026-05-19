@@ -26,6 +26,10 @@ export const getEventContext = (
 			return EventContext.SearchLanding;
 		case PageContext.GameDetailPage:
 			return EventContext.GameDetail;
+		case PageContext.SongListPage:
+			return EventContext.SongList;
+		case PageContext.SearchPage:
+			return EventContext.SearchPage;
 		default:
 			window.EventTracker?.fireEvent(
 				common.NoMatchingEventContextFoundCounterEvent,
@@ -284,7 +288,8 @@ export type TCarouselGameImpressions = TBaseGameImpressions & {
 		| PageContext.GamesPage
 		| PageContext.GameDetailPage
 		| PageContext.SearchLandingPage
-		| PageContext.SpotlightPage;
+		| PageContext.SpotlightPage
+		| PageContext.SongListPage;
 };
 
 export type TGameImpressions = TCarouselGameImpressions | TGridGameImpressions;
@@ -329,7 +334,8 @@ export type TCommonReferralParams = {
 		| PageContext.PeopleListInHomePage
 		| PageContext.SearchLandingPage
 		| PageContext.SpotlightPage
-		| PageContext.UserProfilePage;
+		| PageContext.UserProfilePage
+		| PageContext.SongListPage;
 	[EventStreamMetadata.PlaceIdOverride]?: number;
 	[EventStreamMetadata.LaunchData]?: string;
 };
@@ -358,7 +364,8 @@ export type TGameDetailReferral =
 				| PageContext.PeopleListInHomePage
 				| PageContext.SearchLandingPage
 				| PageContext.SpotlightPage
-				| PageContext.UserProfilePage;
+				| PageContext.UserProfilePage
+				| PageContext.SongListPage;
 			// PlayContext is included so it gets passed through the URL to the game
 			// detail page, where the play button reads it from query params.
 			// It is not actually used for the referral event
@@ -383,7 +390,8 @@ export type TPlayGameClicked = TCommonReferralParams & {
 		| PageContext.GameDetailPage
 		| PageContext.GamesPage
 		| PageContext.SpotlightPage
-		| PageContext.SortDetailPageDiscover;
+		| PageContext.SortDetailPageDiscover
+		| PageContext.SongListPage;
 };
 
 export type TRequestRefundClick =

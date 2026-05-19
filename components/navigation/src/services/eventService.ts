@@ -99,6 +99,27 @@ export const sendPasskeyCreationSourceEvent = (source: string): void => {
 };
 
 /**
+ * Log a passkeyRegistrationEvent (proto: eventstream.accountauth.PasskeyRegistrationEvent).
+ * `passkeyFailureReason` is omitted from the payload when not provided so the
+ * field stays unset on success-path events.
+ */
+export const sendPasskeyRegistrationEvent = (
+	source: string,
+	state: string,
+	passkeyFailureReason?: string,
+): void => {
+	eventStreamService.sendEventWithTarget(
+		EVENT_CONSTANTS.schematizedEventTypes.passkeyRegistrationEvent,
+		EVENT_CONSTANTS.context.passkeyRegistration,
+		{
+			source,
+			state,
+			...(passkeyFailureReason ? { passkeyFailureReason } : {}),
+		},
+	);
+};
+
+/**
  * Log authClientError event for cache user changed.
  */
 export const sendCacheUserChangedAuthClientErrorEvent = (

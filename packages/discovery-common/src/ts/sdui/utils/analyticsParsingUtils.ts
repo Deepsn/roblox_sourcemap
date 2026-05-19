@@ -178,6 +178,8 @@ export const getSessionInfoKey = (
 			return SessionInfo.HomePageSessionInfo;
 		case PageContext.GamesPage:
 			return SessionInfo.DiscoverPageSessionInfo;
+		case PageContext.SongListPage:
+			return SessionInfo.DiscoverPageSessionInfo;
 		case PageContext.SpotlightPage:
 			return SessionInfo.SpotlightPageSessionInfo;
 		default:
@@ -227,6 +229,8 @@ export const getEventContext = (
 			return EventContext.Games;
 		case PageContext.SpotlightPage:
 			return EventContext.Spotlight;
+		case PageContext.SongListPage:
+			return EventContext.SongList;
 		default:
 			// direct logging to event stream to avoid recursive calls on
 			// getEventContext <-> logSduiError <-> getEventContext

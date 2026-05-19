@@ -310,10 +310,12 @@ export const shouldShowUnplayableButton = (
 		return false;
 	}
 
-	// This status should show Locked Join instead of Unplayable if VPC play button upsells are enabled
+	// These statuses should show Locked Join instead of Unplayable if VPC play button upsells are enabled
 	if (
-		playabilityStatus ===
-			PlayabilityStatus.ContextualPlayabilityAgeRecommendationParentalControls &&
+		(playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityAgeRecommendationParentalControls ||
+			playabilityStatus ===
+				PlayabilityStatus.ContextualPlayabilityRequireParentApproval) &&
 		shouldShowVpcPlayButtonUpsells
 	) {
 		return false;

@@ -432,11 +432,17 @@ export type TCanUserManagePlaceResponse = {
 	}[];
 };
 
+export type TPrivateServerDiscount = {
+	source: string;
+	robux: number;
+};
+
 export type TPrivateServerResponseData = {
 	isAvailable: boolean;
 	price: number;
 	privateServerProductId: number;
 	privateServerLimit: number;
+	discounts: TPrivateServerDiscount[];
 };
 
 export type TPrivateServerSettingsResponse = {

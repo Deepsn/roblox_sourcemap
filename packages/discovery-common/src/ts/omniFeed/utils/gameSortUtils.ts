@@ -26,6 +26,7 @@ import {
 	TOmniRecommendationAnalyticsData,
 	TUniverseIdToAnalyticsDataMap,
 } from "../../common/types/analyticsTypes";
+import { extractTileBadgesByPositionFromContentMetadata } from "../../common/utils/gameTileLayoutUtils";
 
 export const hydrateOmniRecommendationGames = (
 	recommendations: TOmniRecommendationGame[] | null,
@@ -85,6 +86,14 @@ export const hydrateOmniRecommendationGames = (
 								? { wideVideoAssetId: primaryWideVideoAssetId }
 								: {}),
 						};
+					}
+
+					const tileBadgesByPosition =
+						extractTileBadgesByPositionFromContentMetadata(
+							recommendationContentMetadata,
+						);
+					if (tileBadgesByPosition) {
+						gameData.tileBadgesByPosition = tileBadgesByPosition;
 					}
 
 					return gameData;
@@ -189,9 +198,12 @@ export const mapExploreApiGameSortResponse = (
 		topicId: sort.gameSetTypeId,
 		treatmentType: sort.treatmentType,
 		games: sort.games.map((game) => {
+			const tileBadgesByPosition =
+				extractTileBadgesByPositionFromContentMetadata(game.contentMetadata);
 			return {
 				...game,
 				placeId: game.placeId ?? game.rootPlaceId,
+				...(tileBadgesByPosition ? { tileBadgesByPosition } : {}),
 			};
 		}),
 		sortId: sort.sortId,

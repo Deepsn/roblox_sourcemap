@@ -6,6 +6,7 @@ const EVENT_CONSTANTS = {
 		authButtonClick: "authButtonClick",
 		authClientError: "authClientError",
 		authPageLoad: "authPageload",
+		passkeyRegistrationEvent: "passkeyRegistrationEvent",
 	},
 	context: {
 		homepage: "homepage",
@@ -19,6 +20,10 @@ const EVENT_CONSTANTS = {
 			"handleSilentPasskeyUpgradeWebLoginDelayed",
 		silentPasskeyUpgradeWebSignupDelayed:
 			"handleSilentPasskeyUpgradeWebSignupDelayed",
+		passkeyRegistration: "passkeyRegistration",
+	},
+	passkeyRegistrationState: {
+		navigationCredentialCreateFailure: "NavigationCredentialCreateFailure",
 	},
 	btn: {
 		logout: "logout",
@@ -37,6 +42,9 @@ const EVENT_CONSTANTS = {
 		consumePasskeySessionFlagError: "consumePasskeySessionFlagError",
 		silentUpgradeNotEligible: "silentUpgradeNotEligible",
 		silentUpgradeCheckError: "silentUpgradeCheckError",
+		expectedUserIdMissing: "expectedUserIdMissing",
+		currentUserIdMissing: "currentUserIdMissing",
+		userIdMismatch: "userIdMismatch",
 	},
 } as const;
 

@@ -25,6 +25,7 @@ import {
 	startVerificationFlow,
 	startVoiceOptInOverlayFlow,
 } from "../utils/playButtonUtils";
+import ExperienceApprovalActionNeededButton from "./ExperienceApprovalActionNeededButton";
 import ParentalControlsActionNeededButton from "./ParentalControlsActionNeededButton";
 import PurchaseButton from "./PurchaseButtonContainer";
 import SeventeenPlusActionNeededButton from "./SeventeenPlusActionNeededButton";
@@ -63,7 +64,7 @@ const getShowIdentityVerificationFlow = async (
 		requireExplicitVoiceConsent,
 		useCameraU13Design,
 		useVoiceUpsellV2Design,
-	} = await playButtonService.getGuacPlayButtonUI();
+	} = await playButtonService.getGuacPlayButtonUI(); // TODO(ACCMAN-4355): migrate to useGuacPlayButtonUI hook for caching
 
 	// TODO: remove this check if playButtonOverlayWebFlag is always true
 	if (
@@ -454,7 +455,6 @@ export const DefaultPlayButton = ({
 			return (
 				<SeventeenPlusActionNeededButton
 					universeId={universeId}
-					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
 				/>
 			);
@@ -479,7 +479,6 @@ export const DefaultPlayButton = ({
 				return (
 					<ParentalControlsActionNeededButton
 						universeId={universeId}
-						hideButtonText={hideButtonText}
 						buttonClassName={buttonClassName}
 						placeId={placeId}
 						rootPlaceId={rootPlaceId}
@@ -492,6 +491,26 @@ export const DefaultPlayButton = ({
 			}
 
 			// If policy is false, fall back to unplayable behavior
+			fireEvent?.(counterEvents.Unplayable);
+
+			return (
+				<UnplayableButton
+					hideButtonText={hideButtonText}
+					buttonClassName={buttonClassName}
+				/>
+			);
+		case PlayabilityStatus.ContextualPlayabilityRequireParentApproval:
+			if (shouldShowVpcPlayButtonUpsells) {
+				fireEvent?.(counterEvents.ActionNeeded);
+
+				return (
+					<ExperienceApprovalActionNeededButton
+						universeId={universeId}
+						buttonClassName={buttonClassName}
+					/>
+				);
+			}
+
 			fireEvent?.(counterEvents.Unplayable);
 
 			return (

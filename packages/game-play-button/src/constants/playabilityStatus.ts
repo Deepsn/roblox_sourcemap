@@ -29,4 +29,6 @@ export const PlayabilityStatus = {
 		"ContextualPlayabilityAgeGatedByDescriptor",
 	ContextualPlayabilityExperienceBlockedParentalControls:
 		"ContextualPlayabilityExperienceBlockedParentalControls",
+	ContextualPlayabilityRequireParentApproval:
+		"ContextualPlayabilityRequireParentApproval",
 } as const;

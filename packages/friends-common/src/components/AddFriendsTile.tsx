@@ -1,10 +1,13 @@
 import { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
-import { PlusHeavyIcon, Badge } from "@rbx/ui";
+import { Badge, Icon } from "@rbx/foundation-ui";
 
 const ADD_FRIENDS_URL = "/users/friends#!/friend-requests";
 
 const ADD_FRIENDS_TRANSLATIONS_KEY = "Label.AddFriends";
+
+const formatFriendRequestBadgeLabel = (count: number): string =>
+	count > 99 ? "99+" : String(count);
 
 const AddFriendsTile = ({
 	translate,
@@ -22,14 +25,15 @@ const AddFriendsTile = ({
 					{badgeCount > 0 && (
 						<Badge
 							className="friend-request-badge"
-							overlap="rectangular"
-							variant="standard"
-							max={99}
-							color="error"
-							badgeContent={badgeCount.toString()}
+							variant="Alert"
+							label={formatFriendRequestBadgeLabel(badgeCount)}
 						/>
 					)}
-					<PlusHeavyIcon className="add-friends-icon" color="secondary" />
+					<Icon
+						className="add-friends-icon content-secondary"
+						name="icon-filled-plus-large"
+						size="XLarge"
+					/>
 				</div>
 				<div
 					className="friends-carousel-tile-labels"

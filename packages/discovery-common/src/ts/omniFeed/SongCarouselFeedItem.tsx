@@ -11,6 +11,7 @@ import SduiComponent from "../sdui/system/SduiComponent";
 import { buildSessionAnalyticsData } from "../sdui/utils/analyticsParsingUtils";
 import { usePageSession } from "../common/utils/PageSessionContext";
 import { SduiActionType } from "../sdui/system/SduiActionParserRegistry";
+import { ContentType } from "@rbx/unified-logging";
 
 type TSongCarouselFeedItemProps = {
 	sort: TSongSort;
@@ -68,6 +69,9 @@ export const SongCarouselFeedItem = ({
 	const componentConfig = useMemo(
 		() => ({
 			componentType: SduiRegisteredComponents.CollectionCarousel,
+			analyticsData: {
+				contentType: ContentType.Song,
+			},
 			props: {
 				items,
 				layoutOverrides: {
@@ -120,7 +124,6 @@ export const SongCarouselFeedItem = ({
 			<SduiComponent
 				componentConfig={componentConfig}
 				parentAnalyticsContext={{}}
-				// MUS-1979 TODO: Validate analytics
 				localAnalyticsData={localAnalyticsData}
 				sduiContext={sduiContext}
 			/>

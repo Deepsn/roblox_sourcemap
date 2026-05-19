@@ -1,5 +1,7 @@
 import React from "react";
 import ClassNames from "classnames";
+import { QueryClientProvider, useMutation } from "@tanstack/react-query";
+import { queryClient } from "@rbx/core-scripts/react";
 import { Link } from "@rbx/core-ui/legacy/react-style-guide";
 import { AccountSwitcherService } from "@rbx/core-scripts/legacy/Roblox";
 import links from "../constants/linkConstants";
@@ -16,7 +18,7 @@ interface Props {
 	isCrossDeviceLoginCodeValidationDisplayed: boolean;
 }
 
-function SettingsMenu({
+function SettingsMenuItems({
 	translate,
 	accountNotificationCount = 0,
 	isCrossDeviceLoginCodeValidationDisplayed = false,
@@ -29,6 +31,17 @@ function SettingsMenu({
 	);
 	const [isAccountSwitchingEnabledForBrowser] =
 		AccountSwitcherService.useIsAccountSwitcherAvailableForBrowser();
+	const logoutMutation = useMutation({
+		mutationFn: async () => {
+			await logoutUser();
+		},
+	});
+	const handleLogoutClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (logoutMutation.isPending) return;
+		logoutMutation.mutate(undefined);
+	};
 	return (
 		<React.Fragment>
 			{Object.entries(settingsUrl).map(([urlKey, { url, label }]) => (
@@ -37,7 +50,7 @@ function SettingsMenu({
 						<Link
 							className="rbx-menu-item logout-menu-item"
 							key={urlKey}
-							onClick={logoutUser}
+							onClick={handleLogoutClick}
 							url="#"
 						>
 							{translate(label)}
@@ -75,6 +88,14 @@ function SettingsMenu({
 				</li>
 			))}
 		</React.Fragment>
+	);
+}
+
+function SettingsMenu(props: Props) {
+	return (
+		<QueryClientProvider client={queryClient}>
+			<SettingsMenuItems {...props} />
+		</QueryClientProvider>
 	);
 }
 

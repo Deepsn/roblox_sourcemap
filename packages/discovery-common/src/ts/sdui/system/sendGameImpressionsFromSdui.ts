@@ -66,19 +66,14 @@ const getThumbnailPersonalizationData = (
 };
 
 const getTileBadgeData = (
-	useGridTiles: boolean,
 	indexesToSend: number[],
 	itemAnalyticsDatas: TItemAnalyticsData[],
-): TGameImpressionsEventTileBadgeContextsData | {} => {
-	if (useGridTiles) {
-		return {
-			[EventStreamMetadata.TileBadgeContexts]: indexesToSend.map((index) =>
-				parseStringField(itemAnalyticsDatas[index]?.tileBadgeIds, "0"),
-			),
-		};
-	}
-
-	return {};
+): TGameImpressionsEventTileBadgeContextsData => {
+	return {
+		[EventStreamMetadata.TileBadgeContexts]: indexesToSend.map((index) =>
+			parseStringField(itemAnalyticsDatas[index]?.tileBadgeIds, "0"),
+		),
+	};
 };
 
 const getSponsoredAdData = (
@@ -145,7 +140,7 @@ const sendGameImpressionsFromSdui = (
 			indexesToSend,
 			itemAnalyticsDatas,
 		),
-		...getTileBadgeData(useGridTiles, indexesToSend, itemAnalyticsDatas),
+		...getTileBadgeData(indexesToSend, itemAnalyticsDatas),
 
 		...getSponsoredAdData(indexesToSend, itemAnalyticsDatas, sduiContext),
 
