@@ -7,6 +7,7 @@ import {
 } from "@rbx/core-scripts/util/current-browser";
 import { addExternal } from "@rbx/externals";
 import { ageBadgeControl } from "./src/util/ageBadgeUtil";
+import { logKidsThemeExposureIfEnabled } from "./src/util/kidsThemeIxpUtil";
 import LeftNavigation from "./src/leftNav";
 import NavigationRightHeader from "./src/containers/NavigationRightHeader";
 import NavigationRobux from "./src/containers/NavigationRobux";
@@ -64,6 +65,8 @@ ready(() => {
 			?.closest(".rbx-navbar-header")
 			?.classList.add("has-age-badge");
 	}
+
+	logKidsThemeExposureIfEnabled();
 
 	if (document.getElementById(navigationRobuxContainerId)) {
 		renderWithErrorBoundary(

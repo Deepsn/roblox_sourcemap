@@ -1,6 +1,7 @@
 // @ts-expect-error - Legacy Roblox module types
 import { EmailVerificationService } from "@rbx/core-scripts/legacy/Roblox";
 import ExperimentationService from "@rbx/experimentation";
+import { PasskeyUpsellTranslations } from "../components/PasskeyUpsellContent";
 import {
 	getLogoutPrompt,
 	LogoutPrompt,
@@ -10,6 +11,7 @@ import {
 	LogoutUpsellClientError,
 	sendLogoutUpsellClientError,
 } from "./logoutUpsellEvents";
+import { showPasskeyUpsellModal } from "./showPasskeyUpsellModal";
 
 /**
  * Single entry point for the logout upsell flow.
@@ -27,16 +29,25 @@ import {
  *          prompts service has already decided this user should see the
  *          modal, so we skip the legacy eligibility checks (metadata flag +
  *          email-status GET) and just render.
+ *        - `LogoutPasskeyUpsellV1` / `LogoutPasskeyUpsellWithEmailV1` →
+ *          record an impression, build a `PasskeyUpsellTranslations` from
+ *          `prompt.translations` (with English fallbacks for any keys the
+ *          server hasn't filled in yet), and mount the passkey upsell modal.
+ *          The "with email" variant additionally surfaces an "Add email" CTA;
+ *          its click handler is a no-op until the email flow lands in a
+ *          follow-up PR.
  *        - Anything else (including no prompt) → log out directly. Renderers
  *          for new prompt types land in follow-up PRs that add branches to
  *          `dispatchPrompt`.
- *        TODO: adjust the above comment when adding passkey upsell handling
  */
 
 const LOGOUT_UPSELL_LAYER = "Website.LogoutUpsell";
 
 // From modals-eligibility-service config
 const PROMPT_TYPE_LOGOUT_EMAIL_UPSELL_V1 = "LogoutEmailUpsellV1";
+const PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_V1 = "LogoutPasskeyUpsellV1";
+const PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_WITH_EMAIL_V1 =
+	"LogoutPasskeyUpsellWithEmailV1";
 
 export type HandleLogoutUpsellOptions = {
 	/** Called when the upsell flow is finished and the page should log out. */
@@ -91,13 +102,76 @@ const openLegacyEmailUpsellModal = (onLogout: () => void): void => {
 	}
 };
 
+const PASSKEY_UPSELL_FALLBACKS = {
+	title: "Stay signed in easily next time",
+	body: "Add a passkey for faster, more secure sign in with Face ID, fingerprint, or your device PIN.",
+	bodyWithEmail:
+		"Add a passkey for faster, more secure sign in with Face ID, fingerprint, or your device PIN. Or add an email as a backup.",
+	addPasskeyLabel: "Add passkey",
+	addEmailLabel: "Add email",
+	signOutLabel: "Sign out anyway",
+	closeLabel: "Close",
+};
+
+const buildPasskeyTranslations = (
+	promptTranslations: Record<string, string>,
+	{ withEmail }: { withEmail: boolean },
+): PasskeyUpsellTranslations => {
+	const pick = (key: string, fallback: string): string =>
+		promptTranslations[key] ?? fallback;
+	const base: PasskeyUpsellTranslations = {
+		title: pick("title", PASSKEY_UPSELL_FALLBACKS.title),
+		body: pick(
+			"body",
+			withEmail
+				? PASSKEY_UPSELL_FALLBACKS.bodyWithEmail
+				: PASSKEY_UPSELL_FALLBACKS.body,
+		),
+		addPasskeyLabel: pick(
+			"primaryButton",
+			PASSKEY_UPSELL_FALLBACKS.addPasskeyLabel,
+		),
+		signOutLabel: pick("tertiaryButton", PASSKEY_UPSELL_FALLBACKS.signOutLabel),
+		closeLabel: pick("closeLabel", PASSKEY_UPSELL_FALLBACKS.closeLabel),
+	};
+	if (withEmail) {
+		base.addEmailLabel = pick(
+			"secondaryButton",
+			PASSKEY_UPSELL_FALLBACKS.addEmailLabel,
+		);
+	}
+	return base;
+};
+
+const dispatchPasskeyUpsell = (
+	prompt: LogoutPrompt,
+	onLogout: () => void,
+	withEmail: boolean,
+): void => {
+	recordLogoutPromptImpression(prompt.promptType);
+	showPasskeyUpsellModal({
+		translations: buildPasskeyTranslations(prompt.translations, { withEmail }),
+		showAddEmail: withEmail,
+		onLogout,
+		// TODO: (AA-6920) wire the "Add email" CTA to the email-add flow. The
+		// button is rendered when the prompts service tells us to (variant =
+		// WithEmail), but the click is a no-op until the follow-up PR lands.
+		onAddEmail: withEmail ? () => undefined : undefined,
+	});
+};
+
 const dispatchPrompt = (prompt: LogoutPrompt, onLogout: () => void): void => {
 	switch (prompt.promptType) {
 		case PROMPT_TYPE_LOGOUT_EMAIL_UPSELL_V1:
 			recordLogoutPromptImpression(prompt.promptType);
 			openLegacyEmailUpsellModal(onLogout);
 			return;
-		// TODO: Handle passkey upsell response (with & without email) from PS
+		case PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_V1:
+			dispatchPasskeyUpsell(prompt, onLogout, false);
+			return;
+		case PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_WITH_EMAIL_V1:
+			dispatchPasskeyUpsell(prompt, onLogout, true);
+			return;
 		default:
 			onLogout();
 	}

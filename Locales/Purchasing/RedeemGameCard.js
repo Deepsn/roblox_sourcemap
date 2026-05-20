@@ -239,7 +239,8 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 	"Label.ScanGiftCard.ValidatingPINCode": "Validating PIN code",
 	"Label.ScanGiftCard.CaptureTheBackOfYourCard":
 		"Capture the back of your card",
-	"Label.ScanGiftCard.PlacePINCodeInsideHere": "Place PIN code inside here",
+	"Label.ScanGiftCard.PlacePINCodeInsideHere":
+		"Align your PIN inside this frame",
 	"Label.ScanGiftCard.CouldNotAccessCamera": "Could not access camera",
 	"Label.ScanGiftCard.CouldNotReadCard": "Could not read card",
 	"Label.ScanGiftCard.CardDamaged": "Card damaged",
