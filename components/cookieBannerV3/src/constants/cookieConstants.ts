@@ -1,4 +1,4 @@
-const consentCookieName = "RBXcb";
+const consentCookieName = "RBXcb" as const;
 const consentExpirationDays = 180;
 const cookieBannerContent = "Description.CookieBannerContent";
 const declineBtnText = "Action.DeclineAll";

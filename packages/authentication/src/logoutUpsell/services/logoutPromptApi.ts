@@ -88,10 +88,14 @@ export const getLogoutPrompt = async (): Promise<LogoutPrompt | null> => {
 /**
  * Best-effort impression report (fire-and-forget).
  */
-export const recordLogoutPromptImpression = (promptType: string): void => {
-	post({ url: IMPRESSION_URL, withCredentials: true }, { promptType }).catch(
-		() => {
-			// ignore errors, fail open
-		},
-	);
+export const recordLogoutPromptImpression = (
+	promptType: string,
+	promptId = "",
+): void => {
+	post(
+		{ url: IMPRESSION_URL, withCredentials: true },
+		{ promptType, promptId },
+	).catch(() => {
+		// ignore errors, fail open
+	});
 };

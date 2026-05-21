@@ -6,10 +6,10 @@ import { accountSettingsRedirectTranslationConfig } from "../../app.config";
 import accessManagementUpsellConstants from "../../../accessManagementUpsell/constants/accessManagementUpsellConstants";
 
 const translationKeys = {
-	title: "Modal.Title",
-	message: "Modal.ContentText",
+	title: "Title.AgeSettingsRedirect",
+	message: "Body.AgeSettingsRedirect",
 	cancel: "Button.Cancel",
-	settings: "Button.Settings",
+	settings: "Button.Continue",
 };
 
 const AccountSettingsRedirectContainer = ({

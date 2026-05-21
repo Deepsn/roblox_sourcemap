@@ -2578,6 +2578,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.RequestData": "Request",
 	"Label.PlaytimeCompactHoursMinutes": "{hours}h {minutes}m",
 	"Label.PlaytimeCompactMinutes": "{minutes}m",
+	"Heading.Tab.Robux": "Robux",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

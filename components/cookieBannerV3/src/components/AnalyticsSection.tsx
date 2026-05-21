@@ -1,6 +1,6 @@
 import * as React from "react";
-import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
 import classNames from "classnames";
+import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
 import CookieItem from "./CookieItem";
 import consentToolConstants from "../constants/consentToolConstants";
 import urlConstants from "../constants/urlConstants";

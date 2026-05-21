@@ -26,6 +26,7 @@ Roblox.LangDynamic["Feature.DownloadLanding"] = {
 		"Download the Roblox app to use Roblox on your smartphone, tablet, computer, console, VR headset, and more.",
 	"Label.RobloxExciteToDownload":
 		"Download Roblox to play millions of experiences!",
+	"Action.Download": "Download",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

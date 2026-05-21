@@ -255,6 +255,7 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 		"I've updated my camera settings",
 	"Action.ScanGiftCard.RetakePhoto": "Retake photo",
 	"Action.ScanGiftCard.TryScanToRedeem": "Try scan to redeem",
+	"Label.ScanGiftCard.ScanYourCode": "Scan your code",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

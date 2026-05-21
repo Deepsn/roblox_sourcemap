@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
 	withTranslations,
 	WithTranslationsProps,
-} from "@rbx/core-scripts/legacy/react-utilities";
-import { getCookie } from "@rbx/core-scripts/cookie";
+} from "@rbx/core-scripts/react";
+import { get } from "@rbx/core-lib/cookie";
 import { translation } from "../../component.json";
 import cookieBannerServices from "../services/cookieBannerServices";
 import cookieConstants from "../constants/cookieConstants";
@@ -47,8 +47,8 @@ const CookieBannerV3Base = ({
 				);
 			}
 		};
-		const consentCookie = getCookie(cookieConstants.consentCookieName);
-		if (!consentCookie || consentCookie === "") {
+		const consentCookie = get(cookieConstants.consentCookieName);
+		if (consentCookie == null || consentCookie.value === "") {
 			// eslint-disable-next-line no-void
 			void updateCookiePolicy();
 		}

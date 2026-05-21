@@ -308,6 +308,8 @@ function AccessManagementContainer({
 	return (
 		<React.Fragment>
 			<Modal
+				backdrop="static"
+				keyboard={false}
 				show={showUpsellModal}
 				onHide={onHide}
 				size="sm"

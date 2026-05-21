@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { DisplayNames } from "@rbx/core-scripts/legacy/Roblox";
 import { UserProfileField, useUserProfiles } from "@rbx/user-profiles";
 import type { AuthenticatedUser } from "@rbx/core-scripts/meta/user";
 
@@ -20,10 +19,7 @@ const useLiveUserNameForDisplay = (user: AuthenticatedUser | null): string => {
 			return "";
 		}
 		const profile = data?.[userId]?.names;
-		if (DisplayNames.Enabled()) {
-			return profile?.displayName ?? user.displayName ?? "";
-		}
-		return profile?.username ?? user.name ?? "";
+		return profile?.displayName ?? user.displayName ?? "";
 	}, [data, user, userId]);
 };
 

@@ -83,6 +83,7 @@ var externals = {
 	"@rbx/core-scripts/payments-flow": ["Roblox", "core-scripts", "paymentsFlow"],
 	"@rbx/core-scripts/react": ["Roblox", "core-scripts", "react"],
 	"@rbx/core-scripts/realtime": ["Roblox", "core-scripts", "realtime"],
+	"@rbx/core-scripts/tracing": ["Roblox", "core-scripts", "tracing"],
 	"@rbx/core-scripts/util/accessibility": [
 		"Roblox",
 		"core-scripts",
@@ -169,6 +170,7 @@ var externals = {
 	"roblox-presence": "RobloxPresence",
 	"roblox-thumbnail-3d": "RobloxThumbnail3d",
 	"roblox-thumbnails": "RobloxThumbnails",
+	"roblox-tracer": ["Roblox", "core-scripts", "tracing"],
 	"roblox-user-profiles": "RobloxUserProfiles",
 };
 var addLegacyExternal = (key, external, target = window) => {

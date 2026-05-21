@@ -1,45 +1,50 @@
-import { getCookie, deleteCookie, setCookie } from "@rbx/core-scripts/cookie";
+import * as cookie from "@rbx/core-lib/cookie";
+import "@rbx/www-common/global";
+import environmentUrls from "@rbx/environment-urls";
 import cookieConstants from "../constants/cookieConstants";
 
 const setUserConsent = (
 	acceptCookieNames: string[],
 	nonEssentialCookieList: string[],
 ): void => {
-	const currentConsentCookie = getCookie(cookieConstants.consentCookieName);
-	if (currentConsentCookie && currentConsentCookie.length > 0) {
-		deleteCookie(cookieConstants.consentCookieName);
+	const currentConsentCookie = cookie.get(cookieConstants.consentCookieName);
+	if (currentConsentCookie) {
+		cookie.delete(cookieConstants.consentCookieName, {
+			domain: environmentUrls.domain,
+		});
 	}
 	let consentCookieConfig = "";
 	const cookiesToBeDeleted: string[] = [];
-	nonEssentialCookieList.forEach((cookie, index) => {
-		if (acceptCookieNames.includes(cookie)) {
-			consentCookieConfig += `${cookie}=true&`;
+	nonEssentialCookieList.forEach((cookieName, index) => {
+		if (acceptCookieNames.includes(cookieName)) {
+			consentCookieConfig += `${cookieName}=true&`;
 		} else {
-			consentCookieConfig += `${cookie}=false&`;
-			cookiesToBeDeleted.push(cookie);
+			consentCookieConfig += `${cookieName}=false&`;
+			cookiesToBeDeleted.push(cookieName);
 		}
 		if (index === nonEssentialCookieList.length - 1) {
 			consentCookieConfig = consentCookieConfig.slice(0, -1);
 		}
 	});
 
-	cookiesToBeDeleted.forEach((cookie) => {
-		deleteCookie(cookie);
+	cookiesToBeDeleted.forEach((cookieName) => {
+		cookie.delete(cookieName as keyof cookie.CookieRegistry, {
+			domain: environmentUrls.domain,
+		});
 	});
 
-	setCookie(
-		cookieConstants.consentCookieName,
-		consentCookieConfig,
-		cookieConstants.consentExpirationDays,
-	);
+	cookie.set(cookieConstants.consentCookieName, consentCookieConfig, {
+		maxAge: cookieConstants.consentExpirationDays * 24 * 60 * 60,
+		domain: environmentUrls.domain,
+	});
 };
 
 const isAnalyticsCookieAccepted = (): boolean => {
-	const consentCookie = getCookie(cookieConstants.consentCookieName);
-	if (!consentCookie || consentCookie === "") {
+	const consentCookie = cookie.get(cookieConstants.consentCookieName);
+	if (!consentCookie) {
 		return false;
 	}
-	const analyticsCookies = consentCookie.split("&");
+	const analyticsCookies = consentCookie.value.split("&");
 	const acceptedAnalyticsCookie = analyticsCookies.find((cookie) => {
 		const value = cookie.split("=")[1];
 		return value === "true";

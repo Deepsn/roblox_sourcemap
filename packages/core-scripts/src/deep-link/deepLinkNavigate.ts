@@ -905,6 +905,14 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 				urlTarget = `${UrlPart.Groups}/${params.groupId}`;
 			}
 		}
+	} else if (navigateSubPath === PathPart.SupportCenter) {
+		// roblox://navigation/support_center
+		// roblox://navigation/support_center?universeId=<universeId>&ticketId=<ticketId> → support-center#!/tickets/...
+		if (params.universeId && params.ticketId) {
+			urlTarget = `${UrlPart.SupportCenter}#!/tickets/${params.universeId}/${params.ticketId}`;
+		} else {
+			urlTarget = UrlPart.SupportCenter;
+		}
 	} else if (navigateSubPath === PathPart.SecurityAlert) {
 		// roblox://navigation/security_alert?payload={payload}&username={username}
 		// Navigate to security alert page
