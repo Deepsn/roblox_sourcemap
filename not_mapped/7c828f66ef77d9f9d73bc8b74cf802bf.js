@@ -1,4 +1,4 @@
-// bundle: pageEnd___e41670911b7a38faed8d1077f8389958_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PlacesListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GamePageResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
+// bundle: pageEnd___37312094462b8d9f7362a45f5434655d_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PlacesListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GamePageResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Common.Presence"] = {
@@ -592,6 +592,7 @@ Roblox.Lang["Feature.AccountSettings"] = {
 	"Action.Cancel": "Cancel",
 	"Action.Delete": "Delete",
 	"Action.Done": "Done",
+	"Action.EditPaymentMethod": "Edit payment method",
 	"Action.Join": "Join",
 	"Action.Next": "Next",
 	"Action.Remove": "Remove",
@@ -701,7 +702,7 @@ Roblox.Lang["Feature.AccountSettings"] = {
 	"Response.Dialog.DisableUpdateFriendsAboutMyActivity":
 		"Because you are no longer sharing your current experience with friends, your friends will also not receive updates about your activity.",
 	"Response.Dialog.ShareCurrentExperiencesWithFriends":
-		"Because you turned on friend activity updates, your friends will now also be able to see your current experience and join you.",
+		"Because you turned on friend activity updates, your friends will now also be able to see your current game and join you.",
 	"Response.VerificationError": "System error occurred during verification.",
 };
 Roblox.Lang["AccountSettingsResources"] =
@@ -1079,7 +1080,195 @@ Roblox.Lang["Common.AlertsAndOptions"] = {
 	"Title.Warning": "Warning",
 };
 Roblox.Lang["AlertsAndOptionsResources"] =
-	Roblox.Lang["Common.AlertsAndOptions"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js
+	Roblox.Lang["Common.AlertsAndOptions"]; // ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Common.VisitGame"] = {
+	"Action.GamePerformPoorly":
+		"{warning} This experience may perform poorly on your device.",
+	"Action.Retry": "Retry",
+	"Heading.ErrorStartingGame": "Error starting experience",
+	"Heading.SwitchToDesktopToPlay":
+		"Switch to Desktop Mode to Visit Experiences",
+	"Label.BuyAccess": "Buy Access for {robux} Robux",
+	"Label.Cancel": "Cancel",
+	"Label.CheckingForStudio": "Checking for Roblox Studio...",
+	"Label.ClickHereForHelp": "Click here for help",
+	"Label.ComplianceBlocked":
+		"This experience is currently unavailable to you due to compliance reasons.",
+	"Label.ConnectingToPlayers": "Connecting to People...",
+	"Label.ContextualPlayabilityAgeGated":
+		"This experience cannot be accessed due to restrictions set by the creator.",
+	"Label.ContextualPlayabilityAgeRecommendationParentalControls":
+		"This experience is restricted by your Parental Controls > Allowed Experiences setting.",
+	"Label.ContextualPlayabilityRegionalAvailability":
+		"This experience is unavailable in your region to comply with regulations.",
+	"Label.ContextualPlayabilityRegionalCompliance":
+		"This experience is unavailable in your region to comply with regulations.",
+	"Label.DevelopPageTitle": "Develop",
+	"Label.DownloadInstallRoblox": "Download and Install Roblox",
+	"Label.DownloadStudio": "Download Studio",
+	"Label.GameConfigurePageTitle": "Experience Configure",
+	"Label.GameFreeSoothsayer": "Free because you are a soothsayer",
+	"Label.GameIsPrivatePlayableByGroupOnly":
+		"Only developers can visit because this experience is private. Make it public on the {linkStart}Configure Experience{linkEnd} page.",
+	"Label.GameIsPrivatePlayableByOwnerOnly":
+		"Only you can visit because this experience is private. Make it public on the {linkStart}Configure experience{linkEnd} page.",
+	"Label.GameIsPrivatePlayableByPlaytester":
+		"This experience is private, but you can visit because you're a tester.",
+	"Label.GameUnavailableAccountResrictions":
+		"The experience is unavailable due to account restrictions settings.",
+	"Label.GameUnavailableCannotPlayGamesStudio":
+		"You cannot visit experiences from Studio. Please use a web browser to visit this experience.",
+	"Label.GameUnavailableClosedToVisitors":
+		"Sorry, this place is currently closed to visitors.",
+	"Label.GameUnavailableCurrentlyIsPrivateGroup":
+		"Only developers can visit because this experience is private. Make it public on the {linkStart}Develop{linkEnd} page.",
+	"Label.GameUnavailableCurrentlyIsPrivateOwner":
+		"Only you can visit because this experience is private. Make it public on the {linkStart}Develop{linkEnd} page.",
+	"Label.GameUnavailableCurrentlyIsPrivateVisitor":
+		"Sorry, this experience is private.",
+	"Label.GameUnavailableCurrentlyPrivate":
+		"This {gameTypeName} is currently private. Make it public on the {developPageLink} page to make it available.",
+	"Label.GameUnavailableGameInsecure":
+		"Sorry, your account is restricted from visiting Experimental Experiences unless you are friends with the creator.",
+	"Label.GameUnavailableNoRootPlace":
+		"This place is part of a experience that has no root place. Add a root place on the {gameConfigureLink} page to make it available.",
+	"Label.GameUnavailablePermissionLevels":
+		"Do not have permission to play this experience.",
+	"Label.GameUnavailablePlaceNotPartOfGame":
+		"This place is not currently part of a Experience. Add it to a experience on the {developPageLink} page to make it available.",
+	"Label.GameUnavailablePlaceUnderReview":
+		"Sorry, this place is currently under review. Try again later.",
+	"Label.GameUnavailablePlatform":
+		"This experience is not available on your platform.  Check the experience page to see all available experiences.",
+	"Label.GameUnavailableRootPlaceIsUnpublished":
+		"This experience is unavailable because its starting place is unpublished. Publish the starting place to make it available.",
+	"Label.GameWarning": "Warning",
+	"Label.InstallationInstructions": "Installation Instructions",
+	"Label.LaunchApplication": "Launch Application",
+	"Label.OperaInstallSteps":
+		"1) A window will open. Click {startBold}Open{endBold}.{breakLine}2) Doubleclick the Roblox icon.",
+	"Label.PersuadeToDevelopRoblox": "Get started creating your own experiences!",
+	"Label.PersuadeToInstallRoblox":
+		"You're moments away from getting into the experience!",
+	"Label.Play": "Join",
+	"Label.PlayInApp": "Visit in App",
+	"Label.RobloxLoadingToPlay": "Roblox is now loading. Get ready!",
+	"Label.StartingRoblox": "Starting Roblox...",
+	"Label.SwitchToDesktopMode": "Switch to Desktop Mode",
+	"Label.UniverseConfigurePageTitle": "Universe Configuration",
+	"Response.CheckAlwaysOpenRoblox":
+		"Check {startBold}Always open links for Roblox{endBold} and click {startBold2}Open Roblox{endBold2} in the dialog box above to visit experiences faster in the future!",
+	"Response.CheckAlwaysOpenRobloxURL":
+		"Check {startBold}Always open links for URL: Roblox Protocol{endBold} and click {startBold2}Open URL: Roblox Protocol{endBold2} in the dialog box above to join experiences faster in the future!",
+	"Response.CheckRememberMyChoiceOK":
+		"Check {startBold}Remember my choice{endBold} and click {startBold2}OK{endBold2} in the dialog box above to join experiences faster in the future!",
+	"Response.Dialog.ClickHere": "Click here!",
+	"Response.Dialog.ErrorLaunching":
+		"An error occurred trying to launch the experience.  Please try again later.",
+	"Response.Dialog.HavingTroubleInstallQuestion":
+		"Having trouble installing Roblox?",
+	"Response.Dialog.InstallingMessageWithLink":
+		"The Roblox installer should download shortly. If it doesn’t, start the {linkStart}download now.{linkEnd}",
+	"Response.Dialog.MacChromeFifthInstruction":
+		"After installation, click {startBold}Join{endBold} below to join the action!",
+	"Response.Dialog.MacChromeFirstInstruction":
+		"Click {startBold}Roblox.dmg{endBold} to run the Roblox installer, which just downloaded via your web browser.",
+	"Response.Dialog.MacChromeFourthInstruction":
+		"Click {startBold}Ok{endBold} once you've successfully installed Roblox.",
+	"Response.Dialog.MacChromeSecondInstruction":
+		"Double-click the Roblox app icon to begin the installation process.",
+	"Response.Dialog.MacChromeThirdInstruction":
+		"Click {startBold}Open{endBold} when prompted by your computer.",
+	"Response.Dialog.MacFirefoxFifthInstruction":
+		"Then select the {startBold}Remember my choice...{endBold} checkbox and click {startBold2}OK{endBold2}",
+	"Response.Dialog.MacFirefoxFirstInstruction":
+		"Select {startBold}Open with{endBold} and click {startBold2}OK{endBold2}",
+	"Response.Dialog.MacFirefoxFourthInstruction":
+		"Once installed, click {startBold}Join{endBold} to join the action!",
+	"Response.Dialog.MacFirefoxSecondInstruction":
+		"Double-click the {startBold}Roblox Icon{endBold} to begin the installation process",
+	"Response.Dialog.MacFirefoxThirdInstruction":
+		"You will receive a warning, click {startBold}Open{endBold}",
+	"Response.Dialog.MacSafariFirstInstruction":
+		"Go to Downloads and double-click {startBold}Roblox.dmg{endBold}",
+	"Response.Dialog.MacSafariFourthInstruction":
+		"Once installed, click {startBold}Join{endBold} to join the action!",
+	"Response.Dialog.MacSafariSecondInstruction":
+		"Double-click the {startBold}Roblox Icon{endBold} to begin the installation process",
+	"Response.Dialog.MacSafariThirdInstruction":
+		"You will receive a warning, click {startBold}Open{endBold}",
+	"Response.Dialog.PcChromeFirstInstruction":
+		"Click {startBold}RobloxPlayerInstaller.exe{endBold} to run the Roblox installer, which just downloaded via your web browser.",
+	"Response.Dialog.PcChromeFourthInstruction":
+		"After installation, click {startBold}Join{endBold} below to join the action!",
+	"Response.Dialog.PcChromeSecondInstruction":
+		"Click {startBold}Run{endBold} when prompted by your computer to begin the installation process.",
+	"Response.Dialog.PcChromeThirdInstruction":
+		"Click {startBold}Ok{endBold} once you've successfully installed Roblox.",
+	"Response.Dialog.PcEdgeFirstInstruction":
+		"Click {startBold}Run{endBold} to install Roblox after the download finishes",
+	"Response.Dialog.PcEdgeSecondInstruction":
+		"Click {startBold}Ok{endBold} to finish installing Roblox",
+	"Response.Dialog.PcEdgeThirdInstruction":
+		"Click the {startBold}Join{endBold} button to join the action!",
+	"Response.Dialog.PcFirefoxFifthInstruction":
+		"Click {startBold}Ok{endBold} when the alert pops up",
+	"Response.Dialog.PcFirefoxFirstInstruction":
+		"Click {startBold}Save File{endBold} when the download window pops up",
+	"Response.Dialog.PcFirefoxFourthInstruction":
+		"Once installed, click {startBold}Join{endBold} to join the action!",
+	"Response.Dialog.PcFirefoxSecondInstruction":
+		"Go to Downloads and double click {startBold}RobloxPlayerInstaller.exe{endBold}",
+	"Response.Dialog.PcFirefoxThirdInstruction": "Click {startBold}Run{endBold}",
+	"Response.Dialog.PcIEFirstInstruction":
+		"You will receive a warning, click {startBold}Run{endBold}",
+	"Response.Dialog.PcIeInstructionOne":
+		"You will receive a warning, click {startBold}Run{endBold}",
+	"Response.Dialog.PcIeInstructionThree": "Click {startBold}Run{endBold}",
+	"Response.Dialog.PcIeInstructionTwo":
+		"Go to Downloads and double click {startBold}RobloxPlayerInstaller.exe{endBold}",
+	"Response.Dialog.PcIESecondInstruction":
+		"Click {startBold}Ok{endBold} once you've installed Roblox",
+	"Response.Dialog.PcIEThirdInstruction":
+		"Once installed, click {startBold}Join{endBold} to join the action!",
+	"Response.Dialog.ThanksForPlayingRoblox": "Thanks for visiting Roblox",
+	"Response.GameTemporarilyUnavailable":
+		"Unable to verify that you have access to this experience.  Please try again later.",
+	"Response.RememberMyChoiceAppLaunch":
+		"Check {startBold}Remember my choice{endBold} and click {appLaunchLink} in the dialog box above to join experiences faster in the future!",
+};
+Roblox.Lang["VisitGameResources"] = Roblox.Lang["Common.VisitGame"]; // ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Feature.DownloadLanding"] = {
+	"Action.DownloadAndroidApp": "Download Android",
+	"Action.DownloadiOSApp": "Download iOS",
+	"Action.DownloadMacApp": "Download Mac App",
+	"Action.DownloadWindowsApp": "Download Windows App",
+	"Description.DownloadPage":
+		"Download the Roblox app to use Roblox on your smartphone, tablet, computer, console, VR headset, and more.",
+	"Heading.AppStoreLinks": "Also available on",
+	"Heading.DownloadConfirmation": "Thanks for downloading Roblox",
+	"Heading.DownloadPage": "Explore millions of worlds and experiences",
+	"Heading.InstallInstructions": "Install Instructions",
+	"Heading.MobileAppDownloadOption": "Don't forget the mobile app",
+	"Label.FollowInstallSteps": "Just follow the steps below to install Roblox.",
+	"Label.MobileAppQrCode":
+		"Scan this code with your phone's camera to get Roblox.",
+	"Label.RetryDownload":
+		"Download should start in a few seconds. If it doesn't, {startLink}restart the download{endLink}.",
+	"Link.AmazonStoreRobloxApp":
+		"https://www.amazon.com/Roblox-Corporation/dp/B00NUF4YOA",
+	"Link.AppleAppStoreRobloxApp":
+		"https://itunes.apple.com/us/app/roblox-mobile/id431946152",
+	"Link.GooglePlayStoreRobloxApp":
+		"https://play.google.com/store/apps/details?id=com.roblox.client&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1",
+	"Title.DownloadPage": "Download Roblox",
+};
+Roblox.Lang["DownloadLandingResources"] =
+	Roblox.Lang["Feature.DownloadLanding"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.ShopDialog"] = {
@@ -1503,7 +1692,7 @@ Roblox.Lang["Feature.NotApproved"] = {
 	"Label.AbuseType.ViolentContentAndGore.Note":
 		"Roblox does not permit violent content and gore, including excessive use of blood in images or videos.",
 	"Label.ConsoleDeviceNoticeUA":
-		"Please log in to Roblox.com on a separate device to begin reactivating your account.",
+		"Please sign in to Roblox.com on a separate device to begin reactivating your account.",
 	"Label.Decision": "Decision",
 	"Label.EmailReactivationNotice":
 		"Please verify your email address to re-activate this account. {startLink}Reload this page{endLink} when completed.",
@@ -2576,195 +2765,7 @@ Roblox.Lang["Feature.GameLaunchGuestMode"] = {
 	"Label.HaveAccount": "I have an account",
 };
 Roblox.Lang["GameLaunchGuestModeResources"] =
-	Roblox.Lang["Feature.GameLaunchGuestMode"]; // ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Common.VisitGame"] = {
-	"Action.GamePerformPoorly":
-		"{warning} This experience may perform poorly on your device.",
-	"Action.Retry": "Retry",
-	"Heading.ErrorStartingGame": "Error starting experience",
-	"Heading.SwitchToDesktopToPlay":
-		"Switch to Desktop Mode to Visit Experiences",
-	"Label.BuyAccess": "Buy Access for {robux} Robux",
-	"Label.Cancel": "Cancel",
-	"Label.CheckingForStudio": "Checking for Roblox Studio...",
-	"Label.ClickHereForHelp": "Click here for help",
-	"Label.ComplianceBlocked":
-		"This experience is currently unavailable to you due to compliance reasons.",
-	"Label.ConnectingToPlayers": "Connecting to People...",
-	"Label.ContextualPlayabilityAgeGated":
-		"This experience cannot be accessed due to restrictions set by the creator.",
-	"Label.ContextualPlayabilityAgeRecommendationParentalControls":
-		"This experience is restricted by your Parental Controls > Allowed Experiences setting.",
-	"Label.ContextualPlayabilityRegionalAvailability":
-		"This experience is unavailable in your region to comply with regulations.",
-	"Label.ContextualPlayabilityRegionalCompliance":
-		"This experience is unavailable in your region to comply with regulations.",
-	"Label.DevelopPageTitle": "Develop",
-	"Label.DownloadInstallRoblox": "Download and Install Roblox",
-	"Label.DownloadStudio": "Download Studio",
-	"Label.GameConfigurePageTitle": "Experience Configure",
-	"Label.GameFreeSoothsayer": "Free because you are a soothsayer",
-	"Label.GameIsPrivatePlayableByGroupOnly":
-		"Only developers can visit because this experience is private. Make it public on the {linkStart}Configure Experience{linkEnd} page.",
-	"Label.GameIsPrivatePlayableByOwnerOnly":
-		"Only you can visit because this experience is private. Make it public on the {linkStart}Configure experience{linkEnd} page.",
-	"Label.GameIsPrivatePlayableByPlaytester":
-		"This experience is private, but you can visit because you're a tester.",
-	"Label.GameUnavailableAccountResrictions":
-		"The experience is unavailable due to account restrictions settings.",
-	"Label.GameUnavailableCannotPlayGamesStudio":
-		"You cannot visit experiences from Studio. Please use a web browser to visit this experience.",
-	"Label.GameUnavailableClosedToVisitors":
-		"Sorry, this place is currently closed to visitors.",
-	"Label.GameUnavailableCurrentlyIsPrivateGroup":
-		"Only developers can visit because this experience is private. Make it public on the {linkStart}Develop{linkEnd} page.",
-	"Label.GameUnavailableCurrentlyIsPrivateOwner":
-		"Only you can visit because this experience is private. Make it public on the {linkStart}Develop{linkEnd} page.",
-	"Label.GameUnavailableCurrentlyIsPrivateVisitor":
-		"Sorry, this experience is private.",
-	"Label.GameUnavailableCurrentlyPrivate":
-		"This {gameTypeName} is currently private. Make it public on the {developPageLink} page to make it available.",
-	"Label.GameUnavailableGameInsecure":
-		"Sorry, your account is restricted from visiting Experimental Experiences unless you are friends with the creator.",
-	"Label.GameUnavailableNoRootPlace":
-		"This place is part of a experience that has no root place. Add a root place on the {gameConfigureLink} page to make it available.",
-	"Label.GameUnavailablePermissionLevels":
-		"Do not have permission to play this experience.",
-	"Label.GameUnavailablePlaceNotPartOfGame":
-		"This place is not currently part of a Experience. Add it to a experience on the {developPageLink} page to make it available.",
-	"Label.GameUnavailablePlaceUnderReview":
-		"Sorry, this place is currently under review. Try again later.",
-	"Label.GameUnavailablePlatform":
-		"This experience is not available on your platform.  Check the experience page to see all available experiences.",
-	"Label.GameUnavailableRootPlaceIsUnpublished":
-		"This experience is unavailable because its starting place is unpublished. Publish the starting place to make it available.",
-	"Label.GameWarning": "Warning",
-	"Label.InstallationInstructions": "Installation Instructions",
-	"Label.LaunchApplication": "Launch Application",
-	"Label.OperaInstallSteps":
-		"1) A window will open. Click {startBold}Open{endBold}.{breakLine}2) Doubleclick the Roblox icon.",
-	"Label.PersuadeToDevelopRoblox": "Get started creating your own experiences!",
-	"Label.PersuadeToInstallRoblox":
-		"You're moments away from getting into the experience!",
-	"Label.Play": "Join",
-	"Label.PlayInApp": "Visit in App",
-	"Label.RobloxLoadingToPlay": "Roblox is now loading. Get ready!",
-	"Label.StartingRoblox": "Starting Roblox...",
-	"Label.SwitchToDesktopMode": "Switch to Desktop Mode",
-	"Label.UniverseConfigurePageTitle": "Universe Configuration",
-	"Response.CheckAlwaysOpenRoblox":
-		"Check {startBold}Always open links for Roblox{endBold} and click {startBold2}Open Roblox{endBold2} in the dialog box above to visit experiences faster in the future!",
-	"Response.CheckAlwaysOpenRobloxURL":
-		"Check {startBold}Always open links for URL: Roblox Protocol{endBold} and click {startBold2}Open URL: Roblox Protocol{endBold2} in the dialog box above to join experiences faster in the future!",
-	"Response.CheckRememberMyChoiceOK":
-		"Check {startBold}Remember my choice{endBold} and click {startBold2}OK{endBold2} in the dialog box above to join experiences faster in the future!",
-	"Response.Dialog.ClickHere": "Click here!",
-	"Response.Dialog.ErrorLaunching":
-		"An error occurred trying to launch the experience.  Please try again later.",
-	"Response.Dialog.HavingTroubleInstallQuestion":
-		"Having trouble installing Roblox?",
-	"Response.Dialog.InstallingMessageWithLink":
-		"The Roblox installer should download shortly. If it doesn’t, start the {linkStart}download now.{linkEnd}",
-	"Response.Dialog.MacChromeFifthInstruction":
-		"After installation, click {startBold}Join{endBold} below to join the action!",
-	"Response.Dialog.MacChromeFirstInstruction":
-		"Click {startBold}Roblox.dmg{endBold} to run the Roblox installer, which just downloaded via your web browser.",
-	"Response.Dialog.MacChromeFourthInstruction":
-		"Click {startBold}Ok{endBold} once you've successfully installed Roblox.",
-	"Response.Dialog.MacChromeSecondInstruction":
-		"Double-click the Roblox app icon to begin the installation process.",
-	"Response.Dialog.MacChromeThirdInstruction":
-		"Click {startBold}Open{endBold} when prompted by your computer.",
-	"Response.Dialog.MacFirefoxFifthInstruction":
-		"Then select the {startBold}Remember my choice...{endBold} checkbox and click {startBold2}OK{endBold2}",
-	"Response.Dialog.MacFirefoxFirstInstruction":
-		"Select {startBold}Open with{endBold} and click {startBold2}OK{endBold2}",
-	"Response.Dialog.MacFirefoxFourthInstruction":
-		"Once installed, click {startBold}Join{endBold} to join the action!",
-	"Response.Dialog.MacFirefoxSecondInstruction":
-		"Double-click the {startBold}Roblox Icon{endBold} to begin the installation process",
-	"Response.Dialog.MacFirefoxThirdInstruction":
-		"You will receive a warning, click {startBold}Open{endBold}",
-	"Response.Dialog.MacSafariFirstInstruction":
-		"Go to Downloads and double-click {startBold}Roblox.dmg{endBold}",
-	"Response.Dialog.MacSafariFourthInstruction":
-		"Once installed, click {startBold}Join{endBold} to join the action!",
-	"Response.Dialog.MacSafariSecondInstruction":
-		"Double-click the {startBold}Roblox Icon{endBold} to begin the installation process",
-	"Response.Dialog.MacSafariThirdInstruction":
-		"You will receive a warning, click {startBold}Open{endBold}",
-	"Response.Dialog.PcChromeFirstInstruction":
-		"Click {startBold}RobloxPlayerInstaller.exe{endBold} to run the Roblox installer, which just downloaded via your web browser.",
-	"Response.Dialog.PcChromeFourthInstruction":
-		"After installation, click {startBold}Join{endBold} below to join the action!",
-	"Response.Dialog.PcChromeSecondInstruction":
-		"Click {startBold}Run{endBold} when prompted by your computer to begin the installation process.",
-	"Response.Dialog.PcChromeThirdInstruction":
-		"Click {startBold}Ok{endBold} once you've successfully installed Roblox.",
-	"Response.Dialog.PcEdgeFirstInstruction":
-		"Click {startBold}Run{endBold} to install Roblox after the download finishes",
-	"Response.Dialog.PcEdgeSecondInstruction":
-		"Click {startBold}Ok{endBold} to finish installing Roblox",
-	"Response.Dialog.PcEdgeThirdInstruction":
-		"Click the {startBold}Join{endBold} button to join the action!",
-	"Response.Dialog.PcFirefoxFifthInstruction":
-		"Click {startBold}Ok{endBold} when the alert pops up",
-	"Response.Dialog.PcFirefoxFirstInstruction":
-		"Click {startBold}Save File{endBold} when the download window pops up",
-	"Response.Dialog.PcFirefoxFourthInstruction":
-		"Once installed, click {startBold}Join{endBold} to join the action!",
-	"Response.Dialog.PcFirefoxSecondInstruction":
-		"Go to Downloads and double click {startBold}RobloxPlayerInstaller.exe{endBold}",
-	"Response.Dialog.PcFirefoxThirdInstruction": "Click {startBold}Run{endBold}",
-	"Response.Dialog.PcIEFirstInstruction":
-		"You will receive a warning, click {startBold}Run{endBold}",
-	"Response.Dialog.PcIeInstructionOne":
-		"You will receive a warning, click {startBold}Run{endBold}",
-	"Response.Dialog.PcIeInstructionThree": "Click {startBold}Run{endBold}",
-	"Response.Dialog.PcIeInstructionTwo":
-		"Go to Downloads and double click {startBold}RobloxPlayerInstaller.exe{endBold}",
-	"Response.Dialog.PcIESecondInstruction":
-		"Click {startBold}Ok{endBold} once you've installed Roblox",
-	"Response.Dialog.PcIEThirdInstruction":
-		"Once installed, click {startBold}Join{endBold} to join the action!",
-	"Response.Dialog.ThanksForPlayingRoblox": "Thanks for visiting Roblox",
-	"Response.GameTemporarilyUnavailable":
-		"Unable to verify that you have access to this experience.  Please try again later.",
-	"Response.RememberMyChoiceAppLaunch":
-		"Check {startBold}Remember my choice{endBold} and click {appLaunchLink} in the dialog box above to join experiences faster in the future!",
-};
-Roblox.Lang["VisitGameResources"] = Roblox.Lang["Common.VisitGame"]; // ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.DownloadLanding"] = {
-	"Action.DownloadAndroidApp": "Download Android",
-	"Action.DownloadiOSApp": "Download iOS",
-	"Action.DownloadMacApp": "Download Mac App",
-	"Action.DownloadWindowsApp": "Download Windows App",
-	"Description.DownloadPage":
-		"Download the Roblox app to use Roblox on your smartphone, tablet, computer, console, VR headset, and more.",
-	"Heading.AppStoreLinks": "Also available on",
-	"Heading.DownloadConfirmation": "Thanks for downloading Roblox",
-	"Heading.DownloadPage": "Explore millions of worlds and experiences",
-	"Heading.InstallInstructions": "Install Instructions",
-	"Heading.MobileAppDownloadOption": "Don't forget the mobile app",
-	"Label.FollowInstallSteps": "Just follow the steps below to install Roblox.",
-	"Label.MobileAppQrCode":
-		"Scan this code with your phone's camera to get Roblox.",
-	"Label.RetryDownload":
-		"Download should start in a few seconds. If it doesn't, {startLink}restart the download{endLink}.",
-	"Link.AmazonStoreRobloxApp":
-		"https://www.amazon.com/Roblox-Corporation/dp/B00NUF4YOA",
-	"Link.AppleAppStoreRobloxApp":
-		"https://itunes.apple.com/us/app/roblox-mobile/id431946152",
-	"Link.GooglePlayStoreRobloxApp":
-		"https://play.google.com/store/apps/details?id=com.roblox.client&hl=en&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1",
-	"Title.DownloadPage": "Download Roblox",
-};
-Roblox.Lang["DownloadLandingResources"] =
-	Roblox.Lang["Feature.DownloadLanding"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js
+	Roblox.Lang["Feature.GameLaunchGuestMode"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.PeopleList"] = {

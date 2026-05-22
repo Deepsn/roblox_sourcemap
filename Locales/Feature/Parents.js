@@ -676,7 +676,13 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.ChatAcrossAgeGroupsWithoutFilter":
 		"Trusted friends may unlock features like chat across age groups and chat without filters, depending on your child’s region and age. {linkStart}View Details{linkEnd}",
 	"Label.Contacts": "Contacts",
-	"Action.VerifyViaAgeEstimation": "Verify with an Age Check",
+	"Action.VerifyViaAgeEstimation": "Verify with camera",
+	"Description.RegionRequiresDifferentVerification":
+		"Your child's account is now in a region that requires a different form of parent verification",
+	"Heading.VerifyAgainToContinue": "Verify your age again to continue",
+	"Title.RegionalRequirements": "Regional requirements",
+	"Description.RegionalRequirements":
+		"Different regions have different rules for verifying parents. The method you used before isn't accepted where your child's account is now registered.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

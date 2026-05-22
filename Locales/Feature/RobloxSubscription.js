@@ -135,7 +135,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.PickAPlan": "Pick a plan",
 	"Label.RobuxAllowance": "{amount}/mo.",
 	"Label.Free": "Free",
-	"Description.Benefit.RobuxAllowance": "{amount} Robux every month",
+	"Description.Benefit.RobuxAllowance": "+{amount} Robux every month",
 	"Description.Benefit.AllPlus": "Includes all Plus benefits",
 	"Description.Benefit.BonusRobux": "Up to 25% bonus Robux every time",
 	"Description.Benefit.PublishItemsExpandedTitle": "Publishing and selling",
@@ -168,9 +168,9 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.MonthlyPrice": "{amount}/month",
 	"Lable.PlusLandingPage.Subtitle":
 		"{boldStart}Starts at {price}{boldEnd}/{periodType}",
-	"Description.Benefit.AllPlus.V2": "All exclusive perks and discounts in Plus",
+	"Description.Benefit.AllPlus.V2": "Everything in Plus",
 	"Description.Benefit.BetterValue": "{oldAmount} value for {newAmount}",
-	"Description.Benefit.BetterValue.V2": "{oldAmount} value",
+	"Description.Benefit.BetterValue.V2": "{oldAmount} total value",
 	"Label.PlusLandingPage.Subtitle.V2":
 		"Starts at {boldStart}{price}{boldEnd}/{periodType}",
 	"Plus.LandingPage.BottomSheet.Benefit":
