@@ -2579,6 +2579,15 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.PlaytimeCompactHoursMinutes": "{hours}h {minutes}m",
 	"Label.PlaytimeCompactMinutes": "{minutes}m",
 	"Heading.Tab.Robux": "Robux",
+	"Label.Transfers": "Transfers",
+	"Label.MonthlyLimit": "Monthly limit",
+	"Label.HigherLimitBadge": "Higher limit",
+	"Action.Label.EnableHigherLimits": "Enable higher limits",
+	"Description.EnableHigherLimits":
+		"Enable 2-step verification to unlock higher transfer limits",
+	"Label.DailyLimit": "Daily limit",
+	"Label.StandardLimitBadge": "Standard limit",
+	"Label.TransactionHistory": "Transaction history",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
