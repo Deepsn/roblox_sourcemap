@@ -2588,6 +2588,13 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.DailyLimit": "Daily limit",
 	"Label.StandardLimitBadge": "Standard limit",
 	"Label.TransactionHistory": "Transaction history",
+	"Label.RobuxTransactions": "Robux transactions",
+	"Description.PrivacyRequests":
+		"We just need a verified email address to keep you updated on your privacy requests.",
+	"Description.PrivacyRequestsWithLink":
+		"You must have a verified email address added to your account, so we can contact you about your requests. Learn more {linkStart}here{linkEnd}.",
+	"Description.PrivacyRequestsAddYourEmail":
+		"Add your email to enable these features!",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
