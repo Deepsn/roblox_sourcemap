@@ -2539,6 +2539,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.RequestAccountDataReceived": "We're processing your request",
 	"Description.RequestAccountDataReceived":
 		"You'll receive an email when your data is ready.",
+	"Heading.ShareActivityUpdatesSetting": "Share activity updates setting",
+	"Label.ShareActivityUpdatesSetting": "share activity updates setting",
 	"Description.ConfirmRevokeExperience":
 		"Your child may still be able to play this game if their content maturity setting allows it.",
 	"Heading.ConfirmRevoke": "Remove From Allowed games",
@@ -2579,12 +2581,12 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.PlaytimeCompactHoursMinutes": "{hours}h {minutes}m",
 	"Label.PlaytimeCompactMinutes": "{minutes}m",
 	"Heading.Tab.Robux": "Robux",
-	"Label.Transfers": "Transfers",
+	"Label.Transfers": "Transfer limits",
 	"Label.MonthlyLimit": "Monthly limit",
 	"Label.HigherLimitBadge": "Higher limit",
-	"Action.Label.EnableHigherLimits": "Enable higher limits",
+	"Action.Label.EnableHigherLimits": "Get higher limits",
 	"Description.EnableHigherLimits":
-		"Enable 2-step verification to unlock higher transfer limits",
+		"Set up 2-Step Verification on your account to send and receive up to 10,000 Robux every month",
 	"Label.DailyLimit": "Daily limit",
 	"Label.StandardLimitBadge": "Standard limit",
 	"Label.TransactionHistory": "Transaction history",
@@ -2595,6 +2597,12 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"You must have a verified email address added to your account, so we can contact you about your requests. Learn more {linkStart}here{linkEnd}.",
 	"Description.PrivacyRequestsAddYourEmail":
 		"Add your email to enable these features!",
+	"Description.Subscriptions.BannerTitle":
+		"Roblox Plus anniversary gift drops July 31",
+	"Description.Subscriptions.BannerBody":
+		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
+	"Heading.AccountDataDeactivationAndDeletion":
+		"Account Data, Deactivation & Deletion",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

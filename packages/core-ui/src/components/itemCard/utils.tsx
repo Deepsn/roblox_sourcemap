@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
 import environmentUrls from "@rbx/environment-urls";
 import { formatSeoName } from "@rbx/core-scripts/format/string";
+import FaeStatusBadge from "./components/FaeStatusBadge";
 import itemCardConstants from "./constants/itemCardConstants";
 import urlConfigs from "./constants/urlConfigs";
 
@@ -134,6 +136,12 @@ export type ItemStatus = {
 	type: string;
 	class: string;
 	label: string;
+	/**
+	 * Optional pre-rendered element. When provided, the renderer should render this
+	 * element directly (in place of the legacy CSS-icon `<span>`). The element
+	 * carries its own inline styling so consumers don't need any matching CSS.
+	 */
+	element?: ReactNode;
 };
 
 export const mapItemStatusIconsAndLabels = (
@@ -153,6 +161,15 @@ export const mapItemStatusIconsAndLabels = (
 				type: itemStatusIcons.SaleTimer,
 				class: "",
 				label: "",
+			});
+		}
+		if (itemStatuses.includes(itemStatusTypes.IsFae)) {
+			itemStatusIconsAndLabels.push({
+				isIcon: true,
+				type: itemStatusIcons.IsFae,
+				class: "",
+				label: "",
+				element: <FaeStatusBadge />,
 			});
 		}
 		if (itemStatuses.includes(itemStatusTypes.New)) {

@@ -179,6 +179,9 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Starts at {boldStart}{price}{boldEnd}/{periodType, select,\n Week {week}\n Month {month}\n Year {year}\n other {periodType} \n}",
 	"Description.Benefit.RobuxStipend":
 		"{amount} Robux every {periodType, select, Day {day} Week {week} Month {month} Year {year} other {periodType} }",
+	"Description.BannerTitle": "Roblox Plus anniversary gift drops July 31",
+	"Description.BannerBody":
+		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

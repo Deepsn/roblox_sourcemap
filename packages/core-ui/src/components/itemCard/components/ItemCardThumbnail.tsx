@@ -1,9 +1,10 @@
 import React, { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
-import { Badge } from "@rbx/foundation-ui";
+// import { Badge } from "@rbx/foundation-ui";
 import ItemCardStatus from "./ItemCardStatus";
 import ItemCardRestrictions from "./ItemCardRestrictions";
 import ItemCardPrice from "./ItemCardPrice";
+import itemCardConstants from "../constants/itemCardConstants";
 import {
 	ItemCardShoppingCardProps,
 	TTimedOption,
@@ -52,7 +53,12 @@ function ItemCardThumbnail({
 	timedOptions,
 }: ItemCardThumbnailProps): JSX.Element {
 	let shoppingCartButtons: JSX.Element | null = null;
-	if (shoppingCartProps && isHovered) {
+	// Items that require Facial Age Estimation can't be added to the cart —
+	// they go through the FAE unlock flow on the item details page instead, so
+	// hide the add/remove buttons here.
+	const isFaeItem =
+		itemStatus?.includes(itemCardConstants.itemStatusTypes.IsFae) === true;
+	if (shoppingCartProps && isHovered && !isFaeItem) {
 		const { isItemInCart, addItemToCart, removeItemFromCart } =
 			shoppingCartProps;
 		shoppingCartButtons = (
@@ -98,27 +104,34 @@ function ItemCardThumbnail({
 		);
 	}
 
-	const selectedTimedOption = timedOptions?.find((option) => option.selected);
+	// const selectedTimedOption = timedOptions?.find(option => option.selected);
 
 	return (
 		<div className="item-card-link">
 			<div className="item-card-thumb-container">
-				{timedOptions && timedOptions.length > 0 && (
-					<div className="timed-options-container">
-						<Badge
-							variant="Neutral"
-							icon="icon-regular-clock"
-							className="bg-surface-0"
-							label={
-								selectedTimedOption?.days
-									? translate("Label.TimedOptionDaysAbbreviation", {
-											days: selectedTimedOption.days,
-										})
-									: ""
-							}
-						/>
-					</div>
-				)}
+				{/*
+          Timed-options clock badge is intentionally disabled while we run
+          experiments to determine whether to keep it on the thumbnail. Kept
+          here (commented) so it can be re-enabled once the experiment
+          concludes; the `Badge` import and `selectedTimedOption` lookup above
+          are commented for the same reason.
+        */}
+				{/* {timedOptions && timedOptions.length > 0 && (
+          <div className="timed-options-container">
+            <Badge
+              variant="Neutral"
+              icon="icon-regular-clock"
+              className="bg-surface-0"
+              label={
+                selectedTimedOption?.days
+                  ? translate("Label.TimedOptionDaysAbbreviation", {
+                      days: selectedTimedOption.days,
+                    })
+                  : ""
+              }
+            />
+          </div>
+        )} */}
 				{enableThumbnailPrice && (
 					<ItemCardPrice
 						price={price}
