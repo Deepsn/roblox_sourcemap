@@ -1612,7 +1612,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.DailyScreenTimeLimit": "daily screen time limit",
 	"Heading.Tab.Spending": "Spending",
 	"Heading.VoiceAndCamera": "Voice and camera",
-	"Description.TradingAndInventory": "Only Premium users can trade on Roblox.",
+	"Description.TradingAndInventory": "Only Plus users can trade on Roblox.",
 	"Label.HighSpendAlerts": "High spend alerts",
 	"Label.AllTransactions": "All transactions",
 	"Description.MonthlySpendLimitV2":
@@ -2603,6 +2603,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
 	"Heading.AccountDataDeactivationAndDeletion":
 		"Account Data, Deactivation & Deletion",
+	"Label.PrivacyRequestOngoing": "Privacy request in progress",
+	"Description.PrivacyRequestOngoing":
+		"A privacy request is already in progress. Please wait for it to complete before trying again.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
