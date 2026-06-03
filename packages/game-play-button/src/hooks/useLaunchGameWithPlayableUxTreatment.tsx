@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from "react";
 import {
 	PlayableUxTreatmentEnum,
 	TPlayableUxTreatmentData,
+	type TPlayButtonPageContext,
 } from "../types/playButtonTypes";
 import { sendUnlockPlayIntentEvent } from "../utils/playButtonUtils";
 import playButtonConstants from "../constants/playButtonConstants";
@@ -38,6 +39,7 @@ type TLaunchGameWithPlayableUxTreatment = {
 const useLaunchGameWithPlayableUxTreatment = (
 	universeId: string,
 	doGameLaunch: () => void,
+	pageContext: TPlayButtonPageContext,
 ): TLaunchGameWithPlayableUxTreatment => {
 	const [isReconfirmModalOpen, setIsReconfirmModalOpen] =
 		useState<boolean>(false);
@@ -51,9 +53,10 @@ const useLaunchGameWithPlayableUxTreatment = (
 				universeId,
 				upsellName,
 				PlayabilityStatus.Playable,
+				pageContext,
 			);
 		},
-		[universeId],
+		[universeId, pageContext],
 	);
 
 	const doGameLaunchWithPlayableUxTreatment = useCallback(() => {

@@ -30,6 +30,9 @@ type THomeSortHeaderProps = {
 	// Whether the subtitle link is separate from the title link
 	shouldShowSeparateSubtitleLink: boolean;
 
+	// Optional callback for when the subtitle is activated. If provided, takes precedence over subtitle link navigation
+	subtitleAction?: () => void;
+
 	// Whether there is a background mural on the sort
 	hasBackgroundMural: boolean;
 
@@ -62,6 +65,7 @@ const HomeSortHeader = ({
 	subtitleText,
 	subtitleLink,
 	shouldShowSeparateSubtitleLink,
+	subtitleAction,
 	hasBackgroundMural,
 	tooltipText,
 	hideSeeAll,
@@ -72,6 +76,7 @@ const HomeSortHeader = ({
 	const tokens = useTokens();
 
 	const hasSubtitleLink =
+		!subtitleAction &&
 		(isSortLinkOverrideEnabled || shouldShowSeparateSubtitleLink) &&
 		subtitleLink &&
 		subtitleText;
@@ -101,6 +106,16 @@ const HomeSortHeader = ({
 
 		return undefined;
 	}, [hasSubtitleLink, hasBackgroundMural]);
+
+	const onSubtitleActivated = useMemo(() => {
+		if (subtitleAction) {
+			return subtitleAction;
+		}
+		if (hasSubtitleLink) {
+			return sendNavigateToSortLinkEvent;
+		}
+		return undefined;
+	}, [subtitleAction, hasSubtitleLink, sendNavigateToSortLinkEvent]);
 
 	return (
 		<div
@@ -133,9 +148,7 @@ const HomeSortHeader = ({
 					subtitleText ? tokens.Typography.BodyMedium : undefined
 				}
 				subtitleGap={hasSubtitleLink ? tokens.Gap.XXSmall : undefined}
-				onSubtitleActivated={
-					hasSubtitleLink ? sendNavigateToSortLinkEvent : undefined
-				}
+				onSubtitleActivated={onSubtitleActivated}
 				subtitleLinkPath={hasSubtitleLink ? subtitleLink : undefined}
 				subtitleLinkComponent={subtitleLinkComponent}
 				subtitleIconClassName={

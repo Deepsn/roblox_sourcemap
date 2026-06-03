@@ -2,7 +2,11 @@ import React, { useMemo } from "react";
 import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import HomePageCarouselDiscoveryApi from "../homePage/discoveryApi/HomePageCarouselDiscoveryApi";
 import { TGameData, TGetFriendsResponse } from "../common/types/bedev1Types";
-import { TComponentType, TGameSort } from "../common/types/bedev2Types";
+import {
+	TComponentType,
+	TGameSort,
+	TRequestIntent,
+} from "../common/types/bedev2Types";
 import { TOmniRecommendationAnalyticsData } from "../common/types/analyticsTypes";
 import { useContentMetadata } from "./utils/contentMetadataContextProvider";
 import { getNumCarouselTiles } from "../common/components/GameTileUtils";
@@ -34,6 +38,7 @@ type THomePageDiscoveryApiProps = {
 	isCarouselHorizontalScrollEnabled?: boolean;
 	isNewScrollArrowsEnabled?: boolean;
 	isNewSortHeaderEnabled?: boolean;
+	refreshFeed?: (requestIntent?: TRequestIntent) => void;
 };
 
 export const GameCarouselFeedItem = ({
@@ -51,6 +56,7 @@ export const GameCarouselFeedItem = ({
 	isCarouselHorizontalScrollEnabled,
 	isNewScrollArrowsEnabled,
 	isNewSortHeaderEnabled,
+	refreshFeed,
 }: THomePageDiscoveryApiProps): JSX.Element | null => {
 	const { contentMetadata } = useContentMetadata();
 
@@ -171,6 +177,7 @@ export const GameCarouselFeedItem = ({
 			isNewScrollArrowsEnabled={isNewArrowsEnabled}
 			isNewSortHeaderEnabled={isNewSortHeaderEnabled}
 			omniAnalyticsData={omniAnalyticsData}
+			refreshFeed={refreshFeed}
 		/>
 	);
 };

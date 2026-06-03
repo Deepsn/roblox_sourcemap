@@ -2596,11 +2596,11 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.TransactionHistory": "Transaction history",
 	"Label.RobuxTransactions": "Robux transactions",
 	"Description.PrivacyRequests":
-		"We just need a verified email address to keep you updated on your privacy requests.",
+		"We will email you to keep you updated on your requests.",
 	"Description.PrivacyRequestsWithLink":
 		"You must have a verified email address added to your account, so we can contact you about your requests. Learn more {linkStart}here{linkEnd}.",
 	"Description.PrivacyRequestsAddYourEmail":
-		"Add your email to enable these features!",
+		"Please add a verified email address to use these features, so we can keep you updated on your requests.",
 	"Description.Subscriptions.BannerTitle":
 		"Roblox Plus anniversary gift drops July 31",
 	"Description.Subscriptions.BannerBody":

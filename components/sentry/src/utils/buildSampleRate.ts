@@ -1,6 +1,6 @@
 const LOCALE_PREFIX_RE = /^\/[a-z]{2}(?:-[a-z]{2})\//i;
 
-const RegexBasedTraceSamplerSettings: Record<
+const RegexBasedSamplerSettings: Record<
 	string,
 	{ pattern: RegExp; sampleRate: number }
 > = {
@@ -15,7 +15,7 @@ export function buildSampleRate(baseRate: number) {
 		LOCALE_PREFIX_RE,
 		"/",
 	);
-	const regexSampleRate = Object.values(RegexBasedTraceSamplerSettings).find(
+	const regexSampleRate = Object.values(RegexBasedSamplerSettings).find(
 		(setting) => setting.pattern.test(currrentPathname),
 	)?.sampleRate;
 

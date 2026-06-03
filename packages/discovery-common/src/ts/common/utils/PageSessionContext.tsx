@@ -1,8 +1,22 @@
+import React, {
+	createContext,
+	useCallback,
+	useContext,
+	useMemo,
+	useState,
+} from "react";
 import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
-import React, { createContext, useContext, useState } from "react";
 import { parseQueryString } from "./parsingUtils";
 
-export const PageSessionContext = createContext("");
+type TPageSessionContext = {
+	sessionId: string;
+	rotateSessionId: () => string;
+};
+
+export const PageSessionContext = createContext<TPageSessionContext>({
+	sessionId: "",
+	rotateSessionId: () => "",
+});
 
 export const PageSessionProvider: React.FC = ({ children }) => {
 	const paramString = window.location.href?.split("?")[1];
@@ -12,13 +26,24 @@ export const PageSessionProvider: React.FC = ({ children }) => {
 		(urlParams.discoverPageSessionInfo ||
 			urlParams.homePageSessionInfo ||
 			urlParams.spotlightPageSessionInfo);
-	const [session] = useState(
+	const [session, setSession] = useState(
 		referredSession && typeof referredSession === "string"
 			? referredSession
 			: uuidService.generateRandomUuid(),
 	);
+	const rotateSessionId = useCallback(() => {
+		const newId = uuidService.generateRandomUuid();
+		setSession(newId);
+		return newId;
+	}, []);
+	const value = useMemo(() => {
+		return {
+			sessionId: session,
+			rotateSessionId,
+		};
+	}, [session, rotateSessionId]);
 	return (
-		<PageSessionContext.Provider value={session}>
+		<PageSessionContext.Provider value={value}>
 			{children}
 		</PageSessionContext.Provider>
 	);
@@ -41,5 +66,9 @@ export const withPageSession: WithPageSession = <P,>(
 };
 
 export const usePageSession = (): string => {
-	return useContext(PageSessionContext);
+	return useContext(PageSessionContext).sessionId;
+};
+
+export const useRotatePageSession = (): (() => string) => {
+	return useContext(PageSessionContext).rotateSessionId;
 };

@@ -40,6 +40,7 @@ const defaultValues = {
 		HasUpdatedRecommendedSortTitle: true,
 		IsGamePreviewVideoEnabled: false,
 		IsHigherResolutionEventTileEnabled: false,
+		HasTopSongsEnabled: false,
 	},
 	gameDetailsExposure: {},
 	searchPage: {},
@@ -53,9 +54,7 @@ const defaultValues = {
 		IsHigherResolutionWideGameTileEnabled: false,
 	},
 	playButton: {},
-	searchLandingPage: {
-		IsSearchQueryPillsEnabled: false,
-	},
+	searchLandingPage: {},
 };
 
 export default {

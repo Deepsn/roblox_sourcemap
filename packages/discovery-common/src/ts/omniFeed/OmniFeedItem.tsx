@@ -2,6 +2,7 @@ import React from "react";
 import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import {
 	TOmniRecommendationGame,
+	TRequestIntent,
 	TSort,
 	TTreatmentType,
 } from "../common/types/bedev2Types";
@@ -46,6 +47,7 @@ type TOmniFeedItemProps = {
 	hiddenUniverses?: Set<number>;
 	setHiddenUniverses?: React.Dispatch<React.SetStateAction<Set<number>>>;
 	fetchGamesPageData?: (filters: Map<string, string>) => void;
+	refreshFeed?: (requestIntent?: TRequestIntent) => void;
 };
 
 export const OmniFeedItem = ({
@@ -69,6 +71,7 @@ export const OmniFeedItem = ({
 	hiddenUniverses,
 	setHiddenUniverses,
 	fetchGamesPageData,
+	refreshFeed,
 }: TOmniFeedItemProps): JSX.Element | null => {
 	switch (sort.treatmentType) {
 		case TTreatmentType.Carousel:
@@ -88,6 +91,7 @@ export const OmniFeedItem = ({
 					isCarouselHorizontalScrollEnabled={isCarouselHorizontalScrollEnabled}
 					isNewSortHeaderEnabled={isNewSortHeaderEnabled}
 					isNewScrollArrowsEnabled={isNewScrollArrowsEnabled}
+					refreshFeed={refreshFeed}
 				/>
 			);
 		case TTreatmentType.AvatarCarousel:

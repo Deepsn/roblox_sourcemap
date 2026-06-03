@@ -54,6 +54,9 @@ const useIsEligibleForVideoPreview = (
 			PlayabilityStatus.ContextualPlayabilityAgeGatedByDescriptor,
 			PlayabilityStatus.ContextualPlayabilityExperienceBlockedParentalControls,
 			PlayabilityStatus.ContextualPlayabilityRequireParentApproval,
+			PlayabilityStatus.ContextualPlayabilityAgeCheckRequired,
+			PlayabilityStatus.ContextualPlayabilityCoreGated,
+			PlayabilityStatus.ContextualPlayabilityUnverifiedSeventeenPlusUser,
 		]);
 	}, []);
 

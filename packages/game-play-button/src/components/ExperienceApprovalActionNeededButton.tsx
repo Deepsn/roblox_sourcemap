@@ -3,17 +3,20 @@ import { sendUnlockPlayIntentEvent } from "../utils/playButtonUtils";
 import ActionNeededButton from "./ActionNeededButton";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
+import type { TPlayButtonPageContext } from "../types/playButtonTypes";
 
 const { counterEvents, unlockPlayIntentConstants } = playButtonConstants;
 
 type TExperienceApprovalActionNeededButtonProps = {
 	universeId: string;
 	buttonClassName?: string;
+	pageContext: TPlayButtonPageContext;
 };
 
 const ExperienceApprovalActionNeededButton = ({
 	universeId,
 	buttonClassName,
+	pageContext,
 }: TExperienceApprovalActionNeededButtonProps): React.JSX.Element => {
 	const onButtonClick = useCallback(
 		(e: React.MouseEvent) => {
@@ -27,6 +30,7 @@ const ExperienceApprovalActionNeededButton = ({
 				universeId,
 				unlockPlayIntentConstants.experienceApprovalUpsellName,
 				PlayabilityStatus.ContextualPlayabilityRequireParentApproval,
+				pageContext,
 			);
 
 			if (!window.Roblox.AccessManagementUpsellV2Service) {
@@ -48,7 +52,7 @@ const ExperienceApprovalActionNeededButton = ({
 				fireEvent?.(counterEvents.PlayButtonUpsellExperienceApprovalError);
 			});
 		},
-		[universeId],
+		[universeId, pageContext],
 	);
 
 	return (

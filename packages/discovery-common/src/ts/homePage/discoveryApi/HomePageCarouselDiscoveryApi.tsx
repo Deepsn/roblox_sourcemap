@@ -17,6 +17,7 @@ import {
 	TPlayButtonStyle,
 	TPlayerCountStyle,
 	THoverStyle,
+	TRequestIntent,
 } from "../../common/types/bedev2Types";
 import { TOmniRecommendationAnalyticsData } from "../../common/types/analyticsTypes";
 import { GameCarousel } from "../../common/components/GameCarousel";
@@ -42,6 +43,13 @@ import GameCarouselContainerHeader from "../../common/components/GameCarouselCon
 import { homePage } from "../../common/constants/configConstants";
 import SortBackgroundMuralWrapper from "./SortBackgroundMuralWrapper";
 import GameCarouselHorizontalScroll from "../../gamesPage/components/GameCarouselHorizontalScroll";
+import useAmpUpsellAction from "../../common/hooks/useAmpUpsellAction";
+import {
+	UpsellComponent,
+	UpsellEntrySurface,
+	UpsellPurpose,
+	UpsellStage,
+} from "../../homePageUpsellCard/constants/upsellAnalyticsConstants";
 
 type THomePageGameCarouselDiscoveryApiProps = {
 	positionId: number;
@@ -70,6 +78,15 @@ type THomePageGameCarouselDiscoveryApiProps = {
 	isNewScrollArrowsEnabled?: boolean;
 	isNewSortHeaderEnabled?: boolean;
 	omniAnalyticsData: TOmniRecommendationAnalyticsData;
+	refreshFeed?: (requestIntent?: TRequestIntent) => void;
+};
+
+const AMP_UPSELL_EVENT_CONTEXT = "gameCarousel";
+const AMP_UPSELL_ANALYTICS_CONFIG = {
+	upsellEntrySurface: UpsellEntrySurface.Homepage,
+	upsellComponent: UpsellComponent.Carousel,
+	upsellStage: UpsellStage.Fae,
+	upsellPurpose: UpsellPurpose.FacialAgeEstimation,
 };
 
 export const HomePageCarousel = ({
@@ -99,6 +116,7 @@ export const HomePageCarousel = ({
 	isNewScrollArrowsEnabled,
 	isNewSortHeaderEnabled,
 	omniAnalyticsData,
+	refreshFeed,
 }: THomePageGameCarouselDiscoveryApiProps): JSX.Element => {
 	// Type union will be cleaned up with isCarouselHorizontalScrollEnabled
 	const carouselRef = useRef<HTMLDivElement | HTMLUListElement>(null);
@@ -254,6 +272,18 @@ export const HomePageCarousel = ({
 		return seeAllLink;
 	}, [subtitleLinkPath, seeAllLink]);
 
+	const ampUpsellCompletionCallback = useCallback(() => {
+		refreshFeed?.(TRequestIntent.AmpUpsellFeatureGranted);
+	}, [refreshFeed]);
+
+	const ampUpsellCallback = useAmpUpsellAction({
+		featureName: sort.topicLayoutData?.ampUpsellFeatureName,
+		namespace: sort.topicLayoutData?.ampUpsellNamespace,
+		completionCallback: ampUpsellCompletionCallback,
+		analyticsConfig: AMP_UPSELL_ANALYTICS_CONFIG,
+		entryPointEventCtx: AMP_UPSELL_EVENT_CONTEXT,
+	});
+
 	const buildNavigateToSortLinkEventProperties: TBuildNavigateToSortLinkEventProperties =
 		useCallback(() => {
 			if (seeAllLinkPath) {
@@ -286,6 +316,7 @@ export const HomePageCarousel = ({
 				buildNavigateToSortLinkEventProperties={
 					buildNavigateToSortLinkEventProperties
 				}
+				subtitleAction={ampUpsellCallback}
 				shouldShowSponsoredTooltip={sort.topicId === homePage.adSortHomePageId}
 				tooltipInfoText={tooltipInfoText}
 				titleContainerClassName="container-header"

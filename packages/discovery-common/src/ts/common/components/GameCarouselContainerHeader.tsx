@@ -24,6 +24,8 @@ type TGameCarouselContainerHeaderProps = {
 	shouldShowSeparateSubtitleLink: boolean;
 	isSortLinkOverrideEnabled: boolean;
 	buildNavigateToSortLinkEventProperties?: TBuildNavigateToSortLinkEventProperties;
+	// subtitleAction takes precedence over the subtitleLink
+	subtitleAction?: () => void;
 	shouldShowSponsoredTooltip: boolean | undefined;
 	tooltipInfoText?: string;
 	titleContainerClassName: string;
@@ -45,6 +47,7 @@ const GameCarouselContainerHeader = ({
 	shouldShowSeparateSubtitleLink,
 	isSortLinkOverrideEnabled,
 	buildNavigateToSortLinkEventProperties,
+	subtitleAction,
 	shouldShowSponsoredTooltip,
 	tooltipInfoText,
 	titleContainerClassName,
@@ -143,6 +146,7 @@ const GameCarouselContainerHeader = ({
 			<HomeSortHeader
 				titleText={sortTitle}
 				sendNavigateToSortLinkEvent={handleSeeAllLinkClick}
+				subtitleAction={subtitleAction}
 				titleLink={seeAllLink}
 				isSortLinkOverrideEnabled={isSortLinkOverrideEnabled}
 				subtitleText={sortSubtitle}

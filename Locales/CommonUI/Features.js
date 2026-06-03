@@ -125,6 +125,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.Games": "Games",
 	"Label.RobloxPlus": "Roblox Plus",
 	"Label.SupportCenter": "Support Center",
+	"Label.SupportCenterSub": "View and manage your support tickets",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

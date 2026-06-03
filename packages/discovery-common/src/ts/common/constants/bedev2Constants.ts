@@ -32,6 +32,10 @@ const url = {
 		url: `${apiGatewayUrl}/landing-page-api/landing-page`,
 		withCredentials: true,
 	}),
+	getSpotlightData: (): UrlConfig => ({
+		url: `${apiGatewayUrl}/landing-page-api/spotlight`,
+		withCredentials: true,
+	}),
 	postUserSignal: (): UrlConfig => ({
 		url: `${apiGatewayUrl}/user-signal-http-gateway/v1/user-signal/ingest`,
 		withCredentials: true,

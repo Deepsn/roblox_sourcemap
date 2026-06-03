@@ -110,8 +110,12 @@ const avatarChatUpsellLayer = "Voice.AvatarChat.Upsell";
 const avatarChatUpsellLayerU13 = "Voice.AvatarChat.U13Upsell";
 const playButtonLayer = "Website.PlayButton";
 
+const ageCheckUpsellFeatureName = "TriggerAgeCheckUpsellIncludingVPC";
+const ageCheckUpsellNamespace = "core_content/CoreContent";
+
 const unlockPlayIntentConstants = {
 	eventName: "unlockPlayIntent",
+	ageCheckUpsellName: "AgeCheckRequired",
 	gameLaunchFallbackUpsellName: "GameLaunch",
 	restrictedUnplayableUpsellName: "RestrictedUnplayableOptionNotFound",
 	unverifiedSeventeenPlusUpsellName:
@@ -119,6 +123,11 @@ const unlockPlayIntentConstants = {
 	fiatPurchaseUpsellName: "FiatPurchase",
 	reconfirmLaunchModalUpsellName: "ReconfirmLaunchModal",
 	experienceApprovalUpsellName: "ExperienceApproval",
+};
+
+const playButtonUpsellContexts = {
+	gameJoinAgeCheckRequired: "gameJoinAgeCheckRequired",
+	gameJoinContentMaturityLock: "gameJoinContentMaturityLock",
 };
 
 export const FeatureExperienceDetails = {
@@ -141,4 +150,7 @@ export default {
 	unlockPlayIntentConstants,
 	FeatureExperienceDetails,
 	defaultAfReferralProperties,
+	playButtonUpsellContexts,
+	ageCheckUpsellFeatureName,
+	ageCheckUpsellNamespace,
 };

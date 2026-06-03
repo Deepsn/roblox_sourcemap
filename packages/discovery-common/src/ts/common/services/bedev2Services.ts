@@ -23,6 +23,7 @@ import {
 	TSortIdMapping,
 	TOmniRecommendationSort,
 	TOmniSearchTextDataModel,
+	TRequestIntent,
 } from "../types/bedev2Types";
 import {
 	TUserSignalType,
@@ -101,6 +102,7 @@ export const getOmniRecommendations = async (
 	authIntentFeatures?: UserAuthIntent,
 	interestedUniverses?: number[],
 	sduiTreatmentTypes?: TSduiTreatmentType[],
+	requestIntent?: TRequestIntent,
 ): Promise<TGetOmniRecommendationsResponse> => {
 	const params = {
 		pageType,
@@ -108,6 +110,7 @@ export const getOmniRecommendations = async (
 		supportedTreatmentTypes: [TTreatmentType.SortlessGrid],
 		sduiTreatmentTypes,
 		authIntentData: authIntentFeatures,
+		requestIntent,
 		...deviceFeatures,
 		...getInputUniverseIdsRequestParam(interestedUniverses),
 	};

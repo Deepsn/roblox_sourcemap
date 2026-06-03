@@ -10,7 +10,10 @@ import { translations } from "../constants/translations";
 import RestrictedUnplayableModal from "./RestrictedUnplayableModal";
 import useFetchParentalControlsUpsellData from "../hooks/useFetchParentalControlsUpsellData";
 import useContextualParentalControlsUpsell from "../hooks/useContextualParentalControlsUpsell";
-import { TAppsFlyerReferralProperties } from "../types/playButtonTypes";
+import {
+	TAppsFlyerReferralProperties,
+	type TPlayButtonPageContext,
+} from "../types/playButtonTypes";
 
 type TParentalControlsActionNeededButtonProps = {
 	universeId: string;
@@ -21,6 +24,7 @@ type TParentalControlsActionNeededButtonProps = {
 	gameInstanceId?: string;
 	eventProperties?: Record<string, string | number | undefined>;
 	appsFlyerReferralProperties?: TAppsFlyerReferralProperties;
+	pageContext: TPlayButtonPageContext;
 };
 
 const ParentalControlsActionNeededButton = ({
@@ -32,6 +36,7 @@ const ParentalControlsActionNeededButton = ({
 	gameInstanceId,
 	eventProperties,
 	appsFlyerReferralProperties,
+	pageContext,
 	translate,
 }: TParentalControlsActionNeededButtonProps & {
 	translate: TranslateFunction;
@@ -49,6 +54,7 @@ const ParentalControlsActionNeededButton = ({
 	} = useContextualParentalControlsUpsell(
 		placeId,
 		universeId,
+		pageContext,
 		rootPlaceId,
 		privateServerLinkCode,
 		gameInstanceId,

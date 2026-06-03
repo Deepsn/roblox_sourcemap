@@ -19,8 +19,6 @@ import { searchLandingPage } from "../common/constants/configConstants";
 import OmniFeedItem from "../omniFeed/OmniFeedItem";
 import { PageContext } from "../common/types/pageContext";
 import useFriendsPresence from "../common/hooks/useFriendsPresence";
-import useExperimentValues from "../common/hooks/useExperimentValues";
-import experimentConstants from "../common/constants/experimentConstants";
 
 function SearchLandingPageOmniFeed({
 	translate,
@@ -34,11 +32,6 @@ function SearchLandingPageOmniFeed({
 	const shouldNotifyHasContentRef = useRef(false);
 
 	const friendsPresenceData = useFriendsPresence();
-	const { ixpData, isLoading: ixpLoading } = useExperimentValues(
-		experimentConstants.layerNames.searchLandingPage,
-		experimentConstants.defaultValues.searchLandingPage,
-	);
-	const isSearchQueryPillsEnabled = ixpData.IsSearchQueryPillsEnabled;
 
 	useEffect(() => {
 		const isValidUpdateSessionInfoEvent = (
@@ -102,10 +95,7 @@ function SearchLandingPageOmniFeed({
 				window.EventTracker?.fireEvent(
 					searchLandingPage.searchLandingPageFetchRecommendationsSuccess,
 				);
-				const recs = mapExploreApiSortsResponse(
-					data,
-					isSearchQueryPillsEnabled,
-				);
+				const recs = mapExploreApiSortsResponse(data);
 				recs.sorts.forEach((sort) => {
 					if (
 						sort.treatmentType !== TTreatmentType.Carousel &&
@@ -140,12 +130,12 @@ function SearchLandingPageOmniFeed({
 				);
 				setRecommendations(undefined);
 			});
-	}, [sessionInfo, isSearchQueryPillsEnabled]);
+	}, [sessionInfo]);
 
 	useEffect(() => {
-		if (!showSearchLanding || ixpLoading) return;
+		if (!showSearchLanding) return;
 		fetchLandingRecommendations();
-	}, [fetchLandingRecommendations, showSearchLanding, ixpLoading]);
+	}, [fetchLandingRecommendations, showSearchLanding]);
 
 	useEffect(() => {
 		if (shouldNotifyHasContentRef.current) {
@@ -155,12 +145,7 @@ function SearchLandingPageOmniFeed({
 	}, [prevHasRecommendations]);
 
 	// If the SLP is disabled or the recommendations are empty, don't render the SLP
-	if (
-		ixpLoading ||
-		!showSearchLanding ||
-		!prevHasRecommendations ||
-		!recommendations
-	)
+	if (!showSearchLanding || !prevHasRecommendations || !recommendations)
 		return null;
 
 	return (

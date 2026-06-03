@@ -19,10 +19,16 @@ import {
 	TAppsFlyerReferralProperties,
 	TPlayabilityStatus,
 	TPlayabilityStatusWithUnplayableError,
+	type TPlayButtonPageContext,
 } from "../types/playButtonTypes";
 
-const { unlockPlayIntentConstants, defaultAfReferralProperties } =
-	playButtonConstants;
+const {
+	unlockPlayIntentConstants,
+	defaultAfReferralProperties,
+	ageCheckUpsellFeatureName,
+	ageCheckUpsellNamespace,
+	counterEvents,
+} = playButtonConstants;
 
 type TEventProperties = Record<string, string | number | undefined>;
 type TJoinAttemptProperties = {
@@ -248,14 +254,40 @@ export const startAvatarVideoOptInOverlayFlow = async (
 	}
 };
 
-export const startAccessManagementUpsellFlow = async (): Promise<boolean> => {
+/**
+ * @param context - Where the upsell is being shown
+ */
+export const startAgeCheckAccessManagementUpsellFlow = async ({
+	context,
+	pageContext,
+}: {
+	context: string;
+	pageContext: TPlayButtonPageContext;
+}): Promise<boolean> => {
 	try {
+		const params = {
+			featureName: ageCheckUpsellFeatureName,
+			isAsyncCall: false,
+			usePrologue: false,
+			namespace: ageCheckUpsellNamespace,
+			featureSpecificData: {
+				// We use this instead of setting the `surface` parameter to match the
+				// format on app
+				context: `${context}-${pageContext}`,
+			},
+		};
+
 		return (
-			(await window.Roblox.AccessManagementUpsellService?.showAccessManagementVerificationModal()) ??
-			false
+			(await window.Roblox.AccessManagementUpsellV2Service?.startAccessManagementUpsell(
+				params,
+			)) ?? false
 		);
-	} catch {
-		return false;
+	} catch (e) {
+		const { fireEvent } = window.EventTracker ?? {};
+		fireEvent?.(counterEvents.PlayButtonUpsellAgeRestrictionVerificationError);
+		// re-throw the error to allow clients to handle their specific requirements
+		// when an error happens
+		throw e;
 	}
 };
 
@@ -305,7 +337,9 @@ export const shouldShowUnplayableButton = (
 		playabilityStatus === PlayabilityStatus.PurchaseRequired ||
 		playabilityStatus ===
 			PlayabilityStatus.ContextualPlayabilityUnverifiedSeventeenPlusUser ||
-		playabilityStatus === PlayabilityStatus.FiatPurchaseRequired
+		playabilityStatus === PlayabilityStatus.FiatPurchaseRequired ||
+		playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityAgeCheckRequired
 	) {
 		return false;
 	}
@@ -328,11 +362,13 @@ export const sendUnlockPlayIntentEvent = (
 	universeId: string,
 	upsellName: string,
 	playabilityStatus: TPlayabilityStatus,
+	pageContext: TPlayButtonPageContext,
 ): void => {
 	const eventParams = {
 		universeId,
 		upsellName,
 		playabilityStatus,
+		pg: pageContext,
 	};
 
 	eventStreamService.sendEvent(
@@ -351,7 +387,7 @@ export default {
 	launchLogin,
 	startVerificationFlow,
 	startVoiceOptInOverlayFlow,
-	startAccessManagementUpsellFlow,
+	startAgeCheckAccessManagementUpsellFlow,
 	shouldShowUnplayableButton,
 	sendUnlockPlayIntentEvent,
 };

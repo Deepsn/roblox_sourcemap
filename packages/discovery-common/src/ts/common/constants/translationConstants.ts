@@ -77,6 +77,7 @@ export const FeatureGameDetails = {
 	LabelGenreUnderConstruction: "Label.GenreUnderConstruction",
 	LabelGenreInProgress: "Label.GenreInProgress",
 	HeadingRecommendedGames: "Heading.RecommendedGames",
+	HeadingFeaturedSongs: "Heading.FeaturedSongs",
 	ActionSwapToSource: "Action.SwapToSource",
 	ActionSwapToTranslation: "Action.SwapToTranslation",
 	ActionTranslate: "Action.Translate",
@@ -139,6 +140,8 @@ export const FeatureDeveloperProducts = {
 export const FeatureSduiLandingPage = {
 	ActionHome: "Action.Home",
 	ActionBack: "Action.Back",
+	LabelLoading: "Label.Loading",
+	ActionRetry: "Action.Retry",
 	ErrorContentFetchTitle: "Error.ContentFetch.Title",
 	ErrorContentFetchDescription: "Error.ContentFetch.Description",
 	ErrorPageErrorImageAlt: "ErrorPage.ErrorImageAlt",

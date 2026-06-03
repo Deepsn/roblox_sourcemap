@@ -1,4 +1,4 @@
-import { ValueOf } from "./common-types";
+import { ValueOf } from "./commonTypes";
 
 export const noop = (): void => {
 	// do nothing

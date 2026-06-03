@@ -11,11 +11,13 @@ const { unlockPlayIntentConstants } = playButtonConstants;
 
 type TSeventeenPlusActionNeededButtonProps = {
 	universeId: string;
+	hideButtonText?: boolean;
 	buttonClassName?: string;
 };
 
 const SeventeenPlusActionNeededButton = ({
 	universeId,
+	hideButtonText,
 	buttonClassName,
 }: TSeventeenPlusActionNeededButtonProps): React.JSX.Element => {
 	const onButtonClick = useCallback(
@@ -41,12 +43,14 @@ const SeventeenPlusActionNeededButton = ({
 			// TODO: old, migrated code
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			onButtonClick={onButtonClick}
+			hideButtonText={hideButtonText}
 			buttonClassName={buttonClassName}
 		/>
 	);
 };
 
 SeventeenPlusActionNeededButton.defaultProps = {
+	hideButtonText: undefined,
 	buttonClassName: undefined,
 };
 

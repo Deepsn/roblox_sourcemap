@@ -231,6 +231,8 @@ export const getEventContext = (
 			return EventContext.Spotlight;
 		case PageContext.SongListPage:
 			return EventContext.SongList;
+		case PageContext.GameDetailPage:
+			return EventContext.GameDetail;
 		default:
 			// direct logging to event stream to avoid recursive calls on
 			// getEventContext <-> logSduiError <-> getEventContext

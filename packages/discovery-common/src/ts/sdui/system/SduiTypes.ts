@@ -134,7 +134,8 @@ export type TSduiPageContextType =
 	| PageContext.GamesPage
 	| PageContext.SpotlightPage
 	| PageContext.SortDetailPageDiscover
-	| PageContext.SongListPage;
+	| PageContext.SongListPage
+	| PageContext.GameDetailPage;
 
 export type TSduiPageContext = {
 	pageName: TSduiPageContextType;

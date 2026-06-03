@@ -5,17 +5,19 @@ import {
 	TAppsFlyerReferralProperties,
 	TContentMaturityRating,
 	TAgeRestrictionSettingOptionValue,
+	type TPlayButtonPageContext,
 } from "../types/playButtonTypes";
 import {
 	launchGame,
-	startAccessManagementUpsellFlow,
+	startAgeCheckAccessManagementUpsellFlow,
 	sendUnlockPlayIntentEvent,
 } from "../utils/playButtonUtils";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
 import useGuacPlayButtonUI from "./useGuacPlayButtonUI";
 
-const { counterEvents, unlockPlayIntentConstants } = playButtonConstants;
+const { counterEvents, unlockPlayIntentConstants, playButtonUpsellContexts } =
+	playButtonConstants;
 
 type TContextualParentalControlUpsell = {
 	launchPlayButtonUpsell: (
@@ -38,6 +40,7 @@ type TContextualParentalControlUpsell = {
 const useContextualParentalControlsUpsell = (
 	placeId: string,
 	universeId: string,
+	pageContext: TPlayButtonPageContext,
 	rootPlaceId?: string,
 	privateServerLinkCode?: string,
 	gameInstanceId?: string,
@@ -82,6 +85,7 @@ const useContextualParentalControlsUpsell = (
 					universeId,
 					upsellName,
 					PlayabilityStatus.ContextualPlayabilityAgeRecommendationParentalControls,
+					pageContext,
 				);
 			};
 
@@ -213,15 +217,16 @@ const useContextualParentalControlsUpsell = (
 
 							sendUnlockPlayIntent(requirement);
 
-							// result can be used for success/failure callback cases in the future
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
-							const success = await startAccessManagementUpsellFlow();
+							const success = await startAgeCheckAccessManagementUpsellFlow({
+								context: playButtonUpsellContexts.gameJoinContentMaturityLock,
+								pageContext,
+							});
+
+							if (success) {
+								window.location.reload();
+							}
 						} catch {
 							launchGameFallback();
-
-							fireEvent?.(
-								counterEvents.PlayButtonUpsellAgeRestrictionVerificationError,
-							);
 
 							sendUnlockPlayIntent(
 								unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -252,7 +257,7 @@ const useContextualParentalControlsUpsell = (
 				);
 			}
 		},
-		[guacData, launchGameFallback, universeId],
+		[guacData, launchGameFallback, universeId, pageContext],
 	);
 
 	const closeSelfUpdateSettingModal = useCallback(() => {

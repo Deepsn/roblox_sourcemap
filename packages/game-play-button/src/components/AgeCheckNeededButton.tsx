@@ -38,16 +38,14 @@ export const AgeCheckNeededButton = ({
 				pageContext,
 			);
 
-			await startAgeCheckAccessManagementUpsellFlow({
+			const success = await startAgeCheckAccessManagementUpsellFlow({
 				context: playButtonUpsellContexts.gameJoinAgeCheckRequired,
 				pageContext,
 			});
 
-			// there is a bug in the wizard that causes it to return false if the user
-			// successfully verifies but closes the modal by clicking outside the
-			// modal instead of clicking the close button. the workaround here is to
-			// reload in all scenarios
-			window.location.reload();
+			if (success) {
+				window.location.reload();
+			}
 		} catch {
 			// `startAgeCheckAccessManagementUpsellFlow` emits a metric to track the
 			// error being thrown

@@ -23,6 +23,10 @@ export enum TSduiTreatmentType {
 	HeroUnit = "HeroUnit",
 }
 
+export enum TRequestIntent {
+	AmpUpsellFeatureGranted = "ampUpsellFeatureGranted",
+}
+
 export enum TSortTopic {
 	Sponsored = "Sponsored",
 	SponsoredGame = "SponsoredGame",
@@ -110,6 +114,8 @@ export type TTopicLayoutData = {
 	sponsoredFooterAdLabelText?: string;
 	sponsoredFooterAdLabelFirst?: "true" | "false";
 	sponsoredFooterIncludeRatingContent?: "true" | "false";
+	ampUpsellFeatureName?: string;
+	ampUpsellNamespace?: string;
 };
 
 type TSharedGameSort = {

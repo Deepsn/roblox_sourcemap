@@ -38,7 +38,9 @@ const UpsellModal = ({
 	isModalOpen,
 	onCloseModal,
 }: TUpsellModalProps): React.JSX.Element => {
-	const sanitizedBodyLinkText = useSanitizedHtmlLinkText(bodyText);
+	const sanitizedBodyLinkText = useSanitizedHtmlLinkText(bodyText, {
+		shouldOpenLinksInNewTab: true,
+	});
 
 	return (
 		<Dialog

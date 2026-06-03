@@ -525,6 +525,7 @@ const WideGameTile = React.forwardRef(
 												purchaseIconClassName="icon-robux-white"
 												clientReferralUrl={clientReferralUrl}
 												shouldPurchaseNavigateToDetails
+												page={page}
 											/>
 										</div>
 									)}
@@ -545,6 +546,7 @@ const WideGameTile = React.forwardRef(
 										purchaseIconClassName="icon-robux-white"
 										clientReferralUrl={clientReferralUrl}
 										shouldPurchaseNavigateToDetails
+										page={page}
 									/>
 								</div>
 							)}

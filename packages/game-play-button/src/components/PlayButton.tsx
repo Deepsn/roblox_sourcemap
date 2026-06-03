@@ -16,6 +16,7 @@ import {
 	TShowAgeVerificationOverlayResponse,
 	TUniversePlaceVoiceEnabledSettings,
 	ValueOf,
+	type TPlayButtonPageContext,
 } from "../types/playButtonTypes";
 import {
 	handleShareLinkEventLogging,
@@ -28,9 +29,9 @@ import {
 import ExperienceApprovalActionNeededButton from "./ExperienceApprovalActionNeededButton";
 import ParentalControlsActionNeededButton from "./ParentalControlsActionNeededButton";
 import PurchaseButton from "./PurchaseButtonContainer";
-import SeventeenPlusActionNeededButton from "./SeventeenPlusActionNeededButton";
 import UnplayableButton from "./UnplayableButton";
 import useLaunchGameWithPlayableUxTreatment from "../hooks/useLaunchGameWithPlayableUxTreatment";
+import { AgeCheckNeededButton } from "./AgeCheckNeededButton";
 
 const { counterEvents, avatarChatUpsellLayer, avatarChatUpsellLayerU13 } =
 	playButtonConstants;
@@ -160,6 +161,7 @@ export type TPlayButtonProps = {
 	buttonText?: string | undefined;
 	hideIcon?: boolean;
 	analyticsCallback?: () => void;
+	pageContext: TPlayButtonPageContext;
 };
 
 const PlayButtonContents = ({
@@ -178,6 +180,7 @@ const PlayButtonContents = ({
 	buttonText = undefined,
 	hideIcon = false,
 	analyticsCallback = undefined,
+	pageContext,
 }: TPlayButtonProps) => {
 	const [isExperienceVoiceEnabled, setIsExperienceVoiceEnabled] = useState<
 		boolean | undefined
@@ -287,7 +290,7 @@ const PlayButtonContents = ({
 	]);
 
 	const { doGameLaunchWithPlayableUxTreatment, playableUxTreatmentModal } =
-		useLaunchGameWithPlayableUxTreatment(universeId, doGameLaunch);
+		useLaunchGameWithPlayableUxTreatment(universeId, doGameLaunch, pageContext);
 
 	if (showVerification === undefined && !disableLoadingState) {
 		return <Loading />;
@@ -393,6 +396,7 @@ export type TDefaultPlayButtonProps = {
 	redirectPurchaseUrl?: ValidHttpUrl;
 	showDefaultPurchaseText?: boolean;
 	shouldShowVpcPlayButtonUpsells?: boolean;
+	pageContext: TPlayButtonPageContext;
 };
 
 export const DefaultPlayButton = ({
@@ -411,6 +415,7 @@ export const DefaultPlayButton = ({
 	redirectPurchaseUrl,
 	showDefaultPurchaseText,
 	shouldShowVpcPlayButtonUpsells,
+	pageContext,
 }: TDefaultPlayButtonProps): React.JSX.Element => {
 	const { fireEvent } = window.EventTracker ?? {};
 	switch (playabilityStatus) {
@@ -431,6 +436,7 @@ export const DefaultPlayButton = ({
 					appsFlyerReferralProperties={appsFlyerReferralProperties}
 					disableLoadingState={disableLoadingState}
 					buttonClassName={buttonClassName}
+					pageContext={pageContext}
 				/>
 			);
 		case PlayabilityStatus.Playable:
@@ -447,15 +453,18 @@ export const DefaultPlayButton = ({
 					appsFlyerReferralProperties={appsFlyerReferralProperties}
 					disableLoadingState={disableLoadingState}
 					buttonClassName={buttonClassName}
+					pageContext={pageContext}
 				/>
 			);
 		case PlayabilityStatus.ContextualPlayabilityUnverifiedSeventeenPlusUser:
+		case PlayabilityStatus.ContextualPlayabilityAgeCheckRequired:
 			fireEvent?.(counterEvents.ActionNeeded);
-
 			return (
-				<SeventeenPlusActionNeededButton
+				<AgeCheckNeededButton
 					universeId={universeId}
 					buttonClassName={buttonClassName}
+					playabilityStatus={playabilityStatus}
+					pageContext={pageContext}
 				/>
 			);
 		case PlayabilityStatus.PurchaseRequired:
@@ -470,6 +479,7 @@ export const DefaultPlayButton = ({
 					redirectPurchaseUrl={redirectPurchaseUrl}
 					playabilityStatus={playabilityStatus}
 					showDefaultPurchaseText={showDefaultPurchaseText}
+					pageContext={pageContext}
 				/>
 			);
 		case PlayabilityStatus.ContextualPlayabilityAgeRecommendationParentalControls:
@@ -486,6 +496,7 @@ export const DefaultPlayButton = ({
 						gameInstanceId={gameInstanceId}
 						eventProperties={eventProperties}
 						appsFlyerReferralProperties={appsFlyerReferralProperties}
+						pageContext={pageContext}
 					/>
 				);
 			}
@@ -507,6 +518,7 @@ export const DefaultPlayButton = ({
 					<ExperienceApprovalActionNeededButton
 						universeId={universeId}
 						buttonClassName={buttonClassName}
+						pageContext={pageContext}
 					/>
 				);
 			}
@@ -537,6 +549,7 @@ export const DefaultPlayButton = ({
 		case PlayabilityStatus.ContextualPlayabilityUnrated:
 		case PlayabilityStatus.ContextualPlayabilityAgeGatedByDescriptor:
 		case PlayabilityStatus.ContextualPlayabilityExperienceBlockedParentalControls:
+		case PlayabilityStatus.ContextualPlayabilityCoreGated:
 		default:
 			fireEvent?.(counterEvents.Unplayable);
 

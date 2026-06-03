@@ -31,4 +31,7 @@ export const PlayabilityStatus = {
 		"ContextualPlayabilityExperienceBlockedParentalControls",
 	ContextualPlayabilityRequireParentApproval:
 		"ContextualPlayabilityRequireParentApproval",
+	ContextualPlayabilityCoreGated: "ContextualPlayabilityCoreGated",
+	ContextualPlayabilityAgeCheckRequired:
+		"ContextualPlayabilityAgeCheckRequired",
 } as const;

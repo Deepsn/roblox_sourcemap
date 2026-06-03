@@ -286,7 +286,6 @@ export const mapExploreApiSortResponse = (
 
 export const mapExploreApiSortsResponse = (
 	data: TExploreApiSortsResponse,
-	isSearchQueryPillsEnabled?: boolean,
 ): TExploreApiSorts => {
 	return {
 		header: data.header?.sorts
@@ -297,18 +296,7 @@ export const mapExploreApiSortsResponse = (
 					layoutData: data.header.layoutData,
 				}
 			: undefined,
-		sorts: data.sorts
-			.filter((sort) => {
-				// Filter out search pills sorts if the isSearchQueryPillsEnabled IXP variable is not true
-				if (
-					isExploreApiSearchPillsSortResponse(sort) &&
-					isSearchQueryPillsEnabled !== true
-				) {
-					return false;
-				}
-				return true;
-			})
-			.map((sort) => mapExploreApiSortResponse(sort)),
+		sorts: data.sorts.map((sort) => mapExploreApiSortResponse(sort)),
 		nextSortsPageToken: data.nextSortsPageToken,
 	};
 };

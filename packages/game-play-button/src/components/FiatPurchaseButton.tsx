@@ -8,7 +8,11 @@ import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
 import playButtonService from "../services/playButtonService";
-import { TGetProductDetails, ValueOf } from "../types/playButtonTypes";
+import {
+	TGetProductDetails,
+	ValueOf,
+	type TPlayButtonPageContext,
+} from "../types/playButtonTypes";
 import { sendUnlockPlayIntentEvent } from "../utils/playButtonUtils";
 import PurchaseButtonUI from "./PurchaseButtonUI";
 
@@ -29,6 +33,7 @@ type TFiatPurchaseButtonProps = {
 	hideButtonText?: boolean;
 	redirectPurchaseUrl?: ValidHttpUrl;
 	showDefaultPurchaseText?: boolean;
+	pageContext: TPlayButtonPageContext;
 };
 
 const FiatPurchaseButton: React.FC<TFiatPurchaseButtonProps> = ({
@@ -42,6 +47,7 @@ const FiatPurchaseButton: React.FC<TFiatPurchaseButtonProps> = ({
 	hideButtonText,
 	redirectPurchaseUrl,
 	showDefaultPurchaseText = false,
+	pageContext,
 }) => {
 	const [isPurchasing, setIsPurchasing] = useState(false);
 
@@ -59,6 +65,7 @@ const FiatPurchaseButton: React.FC<TFiatPurchaseButtonProps> = ({
 					universeId,
 					unlockPlayIntentConstants.fiatPurchaseUpsellName,
 					PlayabilityStatus.FiatPurchaseRequired,
+					pageContext,
 				);
 				const stripeUrl = await playButtonService.getFiatPurchaseUrl(
 					placeId,
@@ -74,7 +81,7 @@ const FiatPurchaseButton: React.FC<TFiatPurchaseButtonProps> = ({
 				setIsPurchasing(false);
 			}
 		},
-		[placeId, productDetails, universeId],
+		[placeId, productDetails, universeId, pageContext],
 	);
 
 	return (
