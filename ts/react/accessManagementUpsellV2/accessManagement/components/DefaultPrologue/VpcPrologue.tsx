@@ -29,12 +29,14 @@ const VpcPrologue = ({
 	recourseParameters,
 	expChildModalType,
 	source,
+	onProceed,
 }: {
 	translate: TranslateFunction;
 	onHide: () => void;
 	recourseParameters: Record<string, string> | null;
 	expChildModalType?: ExpNewChildModal;
 	source?: string;
+	onProceed?: () => void;
 }): [JSX.Element, IModalService] => {
 	const dispatch = useAppDispatch();
 	const featureName = useSelector(selectFeatureName);
@@ -91,9 +93,14 @@ const VpcPrologue = ({
 				settingName,
 				recourseParameters,
 			);
-			dispatch(setVerificationStageRecourse(recourseResponses[0]));
-			dispatch(setStage(UpsellStage.Verification));
-			requireVpcModalService.close();
+			if (onProceed) {
+				requireVpcModalService.close();
+				onProceed();
+			} else {
+				dispatch(setVerificationStageRecourse(recourseResponses[0]));
+				dispatch(setStage(UpsellStage.Verification));
+				requireVpcModalService.close();
+			}
 		},
 		size: "sm",
 		onHide: () => {

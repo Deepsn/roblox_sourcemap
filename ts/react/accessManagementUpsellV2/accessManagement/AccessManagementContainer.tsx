@@ -36,7 +36,7 @@ import vpcUpsellExperimentLayer from "./constants/experimentConstants";
 import ExpNewChildModal from "../enums/ExpNewChildModal";
 import UpdateSettingsContainer from "../recourses/settings/UpdateSettingsContainer";
 import UserSetting from "../../legallySensitiveContent/enums/UserSetting";
-import AccountSettingsRedirectContainer from "../recourses/accountSettingsRedirect/AccountSettingsRedirectContainer";
+import VPCForFAETransformContainer from "../recourses/parentalRequest/VPCForFAETransformContainer";
 
 function AccessManagementContainer({
 	translate,
@@ -240,9 +240,12 @@ function AccessManagementContainer({
 						UserSetting.allowFacialAgeEstimation
 					) {
 						return (
-							<AccountSettingsRedirectContainer
+							<VPCForFAETransformContainer
 								translate={translate}
-								onHide={onHideFunction}
+								onHidecallback={onHideFunction}
+								value={recourseParameters}
+								isPrologueUsed={isPrologueUsed}
+								source={featureSpecificParams?.source}
 							/>
 						);
 					}

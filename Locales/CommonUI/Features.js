@@ -124,7 +124,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.AddFriends": "Add Friends",
 	"Label.Games": "Games",
 	"Label.RobloxPlus": "Roblox Plus",
-	"Label.SupportCenter": "Support Center",
+	"Label.SupportCenter": "Support History",
 	"Label.SupportCenterSub": "View and manage your support tickets",
 	"Label.Moments": "Moments",
 };
