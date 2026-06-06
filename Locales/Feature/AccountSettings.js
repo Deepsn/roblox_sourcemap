@@ -2606,7 +2606,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.Subscriptions.BannerBody":
 		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
 	"Heading.AccountDataDeactivationAndDeletion":
-		"Account Data, Deactivation & Deletion",
+		"Account data, deactivation & deletion",
 	"Label.PrivacyRequestOngoing": "Privacy request in progress",
 	"Description.PrivacyRequestOngoing":
 		"A privacy request is already in progress. Please wait for it to complete before trying again.",
