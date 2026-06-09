@@ -32,15 +32,31 @@ export enum ErrorCode {
 
 export type OnChallengeDisplayedData = {
 	displayed: true;
+	reason?: string;
+	inquiryId?: string;
 };
 
 export type OnChallengeCompletedData = {
 	biometricType: string;
+	inquiryId?: string;
+	reason?: string;
 };
 
 export type OnChallengeInvalidatedData = {
 	errorCode: ErrorCode;
 	errorMessage: string;
+	reason?: string;
+	inquiryId?: string;
+};
+
+/**
+ * Internal payload attached to `SET_CHALLENGE_ABANDONED`. Surfaces only on
+ * telemetry events; the public `onModalChallengeAbandoned` callback signature
+ * is unchanged.
+ */
+export type OnChallengeAbandonedData = {
+	reason?: string;
+	inquiryId?: string;
 };
 
 export type OnChallengeDisplayedCallback = (

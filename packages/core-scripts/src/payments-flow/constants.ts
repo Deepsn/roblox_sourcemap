@@ -36,7 +36,7 @@ export enum TRIGGERING_CONTEXT {
 	MOBILE_WEB_ROBLOX_PLUS_PURCHASE = "MobileWebRobloxPlusPurchase",
 	WEBVIEW_ROBLOX_PLUS_PURCHASE = "WebViewRobloxPlusPurchase",
 	WEB_CATALOG_SINGLE_ITEM_PLUS_UPSELL = "WebCatalogSingleItemPlusUpsell",
-	WEB_CATALOG_COLLECTIVE_ITEM_PLUS_UPSELL = "WebCatalogCollectiveItemPlusUpsell",
+	WEB_CATALOG_RESALE_ITEM_PLUS_UPSELL = "WebCatalogResaleItemPlusUpsell",
 	WEB_CATALOG_BUNDLE_ITEM_PLUS_UPSELL = "WebCatalogBundleItemPlusUpsell",
 	WEB_DEVELOPER_SUBSCRIPTION_PLUS_UPSELL = "WebDeveloperSubscriptionPlusUpsell",
 	WEB_GAME_PASS_PLUS_UPSELL = "WebGamePassPlusUpsell",

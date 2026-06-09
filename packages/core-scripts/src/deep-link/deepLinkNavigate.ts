@@ -43,6 +43,8 @@ import ExperienceEventStatus from "./enums/ExperienceEventStatus";
 import ExperienceAffiliateDeepLinkFallbackType from "./enums/ExperienceAffiliateDeepLinkFallbackType";
 import { getDeviceMeta } from "../meta/device";
 
+const MOMENTS_PLACE_ID = "119524072047648";
+
 const fireEvent = window.EventTracker?.fireEvent;
 
 const isItemDeeplink = (navigateSubPath: string, params: DeepLinkParams) =>
@@ -280,6 +282,24 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 
 						window.location.href = target.url;
 						window.location.href = `${UrlPart.Users}/${response.data.targetId}${UrlPart.Profile}?trustedFriendLinkCode=${code}`;
+					} else if (
+						response.data.linkType === "Moments" &&
+						response.data.targetId
+					) {
+						const resolveMomentsEvent = buildResolveLinkEvent(
+							response.data.linkStatus,
+							code,
+							ShareLinksTypeV2.MOMENTS,
+						);
+						sendEventWithTarget(
+							resolveMomentsEvent.type,
+							resolveMomentsEvent.context,
+							resolveMomentsEvent.params,
+						);
+
+						window.location.href = target.url;
+						// TODO: Update fallback once Moments is migrated off the experience
+						window.location.href = `${UrlPart.Games}/${MOMENTS_PLACE_ID}`;
 					}
 					return true;
 				})

@@ -126,6 +126,17 @@ export const translationsParametersByKey = (
 				unitOfTime: offset.unitOfTime,
 			};
 		}
+		case "Denied.TryTrusted.Body": {
+			return {
+				securitySettingsLinkStart: `<a href="${ACCOUNT_SETTINGS_SECURITY_PATH}"
+          class="text-link"
+          target="_blank">`,
+				supportLinkStart: `<a href="/support"
+        class="text-link"
+        target="_blank">`,
+				linkEnd: "</a>",
+			};
+		}
 		default: {
 			return {};
 		}

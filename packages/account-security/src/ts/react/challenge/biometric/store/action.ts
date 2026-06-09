@@ -1,4 +1,5 @@
 import {
+	OnChallengeAbandonedData,
 	OnChallengeCompletedData,
 	OnChallengeInvalidatedData,
 } from "../interface";
@@ -25,4 +26,5 @@ export type BiometricAction =
 	  }
 	| {
 			type: BiometricActionType.SET_CHALLENGE_ABANDONED;
+			onChallengeAbandonedData: OnChallengeAbandonedData;
 	  };

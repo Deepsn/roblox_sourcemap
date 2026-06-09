@@ -29,6 +29,7 @@ enum ShareLinksTypeV2 {
 	EXPERIENCE_V2 = "ExperienceV2",
 	USER_TRUSTED_CONNECTION = "UserTrustedConnection",
 	STUDIO_TRUSTED_CONNECTION = "StudioTrustedConnection",
+	MOMENTS = "Moments",
 }
 
 type ExperienceInviteData = {
@@ -103,12 +104,18 @@ type ExperienceEventData = {
 	joinData: ExperienceJoinData;
 };
 
+type MomentsData = {
+	postId: string;
+	postCreatorId: string;
+};
+
 export { ProfileShareFriendshipSourceType, ShareLinksType, ShareLinksTypeV2 };
 export type {
 	AvatarItemDetailsData,
 	ContentPostData,
 	ExperienceInviteData,
 	FriendInviteData,
+	MomentsData,
 	PrivateServerLinkData,
 	ProfileData,
 	ScreenshotInviteData,

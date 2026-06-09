@@ -2,24 +2,14 @@ import angular from "angular";
 import * as xsrfToken from "@rbx/core-scripts/auth/xsrfToken";
 import {
 	addCrossDomainOptionsToAllRequests,
+	appendUrlLocaleParam,
 	generateAbsoluteUrl,
 	getAcceptLanguageValue,
 	supportLocalizedUrls,
 } from "@rbx/core-scripts/endpoints";
-import {
-	apiSiteRequestValidator,
-	inject,
-	instrumentation,
-	isTracerEnabled,
-	logs,
-	tags,
-	tracerConstants,
-} from "@rbx/core-scripts/tracing";
-import {
-	shouldDuplicate,
-	duplicationCount,
-	retryAttemptHeader,
-} from "@rbx/core-scripts/http/util";
+import { retryAttemptHeader } from "@rbx/core-scripts/http/util";
+import { setMrRouterHeaders } from "@rbx/core-scripts/mr-router";
+import { isTestSite } from "@rbx/core-scripts/meta/environment";
 import { buildConfigBoundAuthToken } from "@rbx/core-scripts/auth/bound-auth";
 import {
 	interceptChallenge,
@@ -219,7 +209,7 @@ const angularJsUtilities = angular
 					const retryRequest = (rejection) => {
 						const $timeout = $injector.get("$timeout");
 						const rejectionConfig = rejection.config;
-						if (retryAttemptHeader.addRetryAttemptHeader()) {
+						if (retryAttemptHeader) {
 							const { headers } = rejectionConfig;
 							if (headers[RETRY_ATTEMPT_HEADER]) {
 								headers[RETRY_ATTEMPT_HEADER] += 1;
@@ -331,116 +321,15 @@ const angularJsUtilities = angular
 				}),
 			]);
 
-			// add roblox tracer for http workflow
+			// Enrich tracestate with MrRouter environment
 			$httpProvider.interceptors.push([
 				"$q",
 				"$injector",
-				($q) => {
-					const componentName = "angularjs";
-					return {
-						request: (config) => {
-							const requestConfig = config;
-							const { method, url, headers } = requestConfig;
-							if (
-								isTracerEnabled &&
-								apiSiteRequestValidator.isApiSiteAvailableForTracing(url)
-							) {
-								const fields = {
-									tags: {
-										isDuplicate: config.isDuplicate?.toString() || "false",
-									},
-								};
-
-								const requestSpan = instrumentation.createAndGetSpan(
-									tracerConstants.operationNames.httpRequest,
-									fields,
-								);
-								tags.setXHRRequestTags(requestSpan, {
-									component: componentName,
-									method,
-									url,
-								});
-								logs.setXHRRequestLogs(requestSpan);
-								const headerCarriers = inject.httpRequestCarrier(requestSpan);
-								Object.keys(headerCarriers).forEach((key) => {
-									headers[key] = headerCarriers[key];
-								});
-								requestConfig.tracerConfig = {
-									headerCarriers,
-									requestSpan,
-								};
-							}
-
-							return requestConfig;
-						},
-						response: (response) => {
-							const {
-								status,
-								config: { url, tracerConfig },
-							} = response;
-							if (
-								tracerConfig &&
-								apiSiteRequestValidator.isApiSiteAvailableForTracing(url)
-							) {
-								const { requestSpan } = tracerConfig;
-								tags.setXHRResponseTags(requestSpan, {
-									status,
-								});
-								logs.setXHRResponseSuccessLogs(requestSpan);
-								instrumentation.finalizeSpan(requestSpan);
-							}
-							return response;
-						},
-
-						responseError: (rejection) => {
-							const {
-								status,
-								config: { url, tracerConfig },
-							} = rejection;
-
-							if (
-								tracerConfig &&
-								apiSiteRequestValidator.isApiSiteAvailableForTracing(url)
-							) {
-								const { requestSpan } = tracerConfig;
-								tags.setXHRResponseErrorTags(requestSpan, {
-									status,
-								});
-								logs.setXHRResponseErrorLogs(requestSpan);
-								instrumentation.finalizeSpan(requestSpan);
-							}
-
-							// $q.reject creates a promise that is resolved as rejectedwith the specified reason.
-							return $q.reject(rejection);
-						},
-					};
-				},
-			]);
-
-			// Request Duplication
-			$httpProvider.interceptors.push([
-				"$injector",
-				"$log",
-				($injector, $log) => ({
+				() => ({
 					request: (config) => {
-						const { url, isDuplicate } = config;
-						const duplicate = shouldDuplicate(url, isDuplicate);
-
-						if (duplicate) {
-							const duplicateConfig = { ...config };
-							duplicateConfig.isDuplicate = true;
-
-							const count = duplicationCount();
-							const $http = $injector.get("$http");
-
-							for (let i = 0; i < count; i += 1) {
-								$http(duplicateConfig).catch((e) => {
-									// log error from duplicated request, then swallow it
-									$log.log(`~~~ duplicated request failed ~~~ ${e}`);
-								});
-							}
+						if (isTestSite()) {
+							setMrRouterHeaders(config.headers);
 						}
-
 						return config;
 					},
 				}),
@@ -462,7 +351,12 @@ const angularJsUtilities = angular
 							}
 						}
 
-						return config;
+						return {
+							...config,
+							url: config.isTemplateRequest
+								? config.url
+								: appendUrlLocaleParam(config.url, config.method),
+						};
 					},
 				}),
 			]);

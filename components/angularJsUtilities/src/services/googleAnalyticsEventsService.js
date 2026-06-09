@@ -1,4 +1,5 @@
 import angularJsUtilitiesModule from "../angularJsUtilitiesModule";
+import { isGoogleAnalyticsCookieConsentOptIn } from "@rbx/core-scripts/cookie";
 
 function googleAnalyticsEventsService() {
 	"ngInject";
@@ -32,11 +33,13 @@ function googleAnalyticsEventsService() {
 		},
 
 		fireEvent: function (category, action, label, value) {
+			if (!isGoogleAnalyticsCookieConsentOptIn()) return;
 			var args = getArgs(category, action, label, value);
 			GoogleAnalyticsEvents && GoogleAnalyticsEvents.FireEvent(args);
 		},
 
 		viewVirtual: function (relativeUrl) {
+			if (!isGoogleAnalyticsCookieConsentOptIn()) return;
 			GoogleAnalyticsEvents && GoogleAnalyticsEvents.ViewVirtual(relativeUrl);
 		},
 	};

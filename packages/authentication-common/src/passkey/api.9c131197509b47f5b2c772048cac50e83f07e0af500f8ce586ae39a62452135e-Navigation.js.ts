@@ -67,15 +67,12 @@ export const finishPasskeyRegistration = (
 	sessionId: string,
 	credentialNickname: string,
 	attestationResponse: string,
-	// For backend events
-	source?: string,
 ): Promise<Result<FinishRegistrationReturnType, AuthApiError | null>> =>
 	toResult(
 		post(FINISH_REGISTRATION_CONFIG, {
 			sessionId,
 			credentialNickname,
 			attestationResponse,
-			...(source ? { source } : {}),
 		}),
 		AuthApiError,
 	);

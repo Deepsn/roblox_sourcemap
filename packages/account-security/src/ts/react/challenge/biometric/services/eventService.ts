@@ -10,47 +10,58 @@ export class EventServiceDefault {
 	constructor(challengeId: string) {
 		this.challengeId = challengeId;
 	}
+	private constructEventParameters(
+		reason?: string,
+		inquiryId?: string,
+	): Record<string, string> {
+		return {
+			challengeId: this.challengeId,
+			...(reason && { reason }),
+			...(inquiryId && { inquiryId }),
+		};
+	}
 
 	sendChallengeInitializedEvent(): void {
 		Roblox.EventStream.SendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			EVENT_CONSTANTS.context.challengeInitialized,
-			{
-				challengeId: this.challengeId,
-			},
+			this.constructEventParameters(),
 			Roblox.EventStream.TargetTypes.WWW,
 		);
 	}
 
-	sendChallengeCompletedEvent(): void {
+	sendChallengeDisplayedEvent(reason?: string, inquiryId?: string): void {
+		Roblox.EventStream.SendEventWithTarget(
+			EVENT_CONSTANTS.eventName,
+			EVENT_CONSTANTS.context.challengeDisplayed,
+			this.constructEventParameters(reason, inquiryId),
+			Roblox.EventStream.TargetTypes.WWW,
+		);
+	}
+
+	sendChallengeCompletedEvent(inquiryId?: string, reason?: string): void {
 		Roblox.EventStream.SendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			EVENT_CONSTANTS.context.challengeCompleted,
-			{
-				challengeId: this.challengeId,
-			},
+			this.constructEventParameters(reason, inquiryId),
 			Roblox.EventStream.TargetTypes.WWW,
 		);
 	}
 
-	sendChallengeInvalidatedEvent(): void {
+	sendChallengeInvalidatedEvent(reason?: string, inquiryId?: string): void {
 		Roblox.EventStream.SendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			EVENT_CONSTANTS.context.challengeInvalidated,
-			{
-				challengeId: this.challengeId,
-			},
+			this.constructEventParameters(reason, inquiryId),
 			Roblox.EventStream.TargetTypes.WWW,
 		);
 	}
 
-	sendChallengeAbandonedEvent(): void {
+	sendChallengeAbandonedEvent(reason?: string, inquiryId?: string): void {
 		Roblox.EventStream.SendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			EVENT_CONSTANTS.context.challengeAbandoned,
-			{
-				challengeId: this.challengeId,
-			},
+			this.constructEventParameters(reason, inquiryId),
 			Roblox.EventStream.TargetTypes.WWW,
 		);
 	}

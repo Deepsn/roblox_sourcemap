@@ -32,6 +32,7 @@ export const BIOMETRIC_LANGUAGE_RESOURCES = [
 export const METRICS_CONSTANTS = {
 	event: {
 		challengeInitialized: "ChallengeInitialized",
+		challengeDisplayed: "ChallengeDisplayed",
 		challengeCompleted: "ChallengeCompleted",
 		challengeInvalidated: "ChallengeInvalidated",
 		challengeAbandoned: "ChallengeAbandoned",
@@ -48,6 +49,7 @@ export const EVENT_CONSTANTS = {
 	eventName: "accountSecurityChallengeBiometricEvent",
 	context: {
 		challengeInitialized: "challengeInitialized",
+		challengeDisplayed: "challengeDisplayed",
 		challengeCompleted: "challengeCompleted",
 		challengeInvalidated: "challengeInvalidated",
 		challengeAbandoned: "challengeAbandoned",

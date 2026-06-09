@@ -34,28 +34,37 @@ export class MetricsServiceDefault {
 		this.eventTimer.start(this.challengeSolveTimeSequenceName);
 	}
 
-	fireChallengeCompletedEvent(): void {
-		this.fireEvent(METRICS_CONSTANTS.event.challengeCompleted);
-		this.fireSolveTimeEvent(METRICS_CONSTANTS.event.challengeCompleted);
+	fireChallengeDisplayedEvent(reason?: string): void {
+		this.fireEvent(METRICS_CONSTANTS.event.challengeDisplayed, reason);
 	}
 
-	fireChallengeInvalidatedEvent(): void {
-		this.fireEvent(METRICS_CONSTANTS.event.challengeInvalidated);
-		this.fireSolveTimeEvent(METRICS_CONSTANTS.event.challengeInvalidated);
+	fireChallengeCompletedEvent(reason?: string): void {
+		this.fireEvent(METRICS_CONSTANTS.event.challengeCompleted, reason);
+		this.fireSolveTimeEvent(METRICS_CONSTANTS.event.challengeCompleted, reason);
 	}
 
-	fireChallengeAbandonedEvent(): void {
-		this.fireEvent(METRICS_CONSTANTS.event.challengeAbandoned);
-		this.fireSolveTimeEvent(METRICS_CONSTANTS.event.challengeAbandoned);
+	fireChallengeInvalidatedEvent(reason?: string): void {
+		this.fireEvent(METRICS_CONSTANTS.event.challengeInvalidated, reason);
+		this.fireSolveTimeEvent(
+			METRICS_CONSTANTS.event.challengeInvalidated,
+			reason,
+		);
 	}
 
-	fireEvent(metricName: string): void {
+	fireChallengeAbandonedEvent(reason?: string): void {
+		this.fireEvent(METRICS_CONSTANTS.event.challengeAbandoned, reason);
+		this.fireSolveTimeEvent(METRICS_CONSTANTS.event.challengeAbandoned, reason);
+	}
+
+	fireEvent(metricName: string, reason?: string): void {
 		this.requestServiceDefault.metrics
 			.recordMetric({
 				name: MetricName.EventPersonaLiveness,
 				value: 1,
 				labelValues: {
 					event_type: `${FEATURE_NAME}_${metricName}`,
+					reason: reason || "None",
+					application_type: this.appType || "unknown",
 				},
 			})
 			// Swallow errors if metrics failed to send; this should not be fatal.
@@ -63,7 +72,7 @@ export class MetricsServiceDefault {
 			.catch(() => {});
 	}
 
-	fireSolveTimeEvent(metricName: string): void {
+	fireSolveTimeEvent(metricName: string, reason?: string): void {
 		const eventTime = this.eventTimer.end(this.challengeSolveTimeSequenceName);
 		if (eventTime !== null) {
 			this.requestServiceDefault.metrics
@@ -72,6 +81,8 @@ export class MetricsServiceDefault {
 					value: eventTime,
 					labelValues: {
 						event_type: `${FEATURE_NAME}_${metricName}`,
+						reason: reason || "None",
+						application_type: this.appType || "unknown",
 					},
 				})
 				// Swallow errors if metrics failed to send; this should not be fatal.

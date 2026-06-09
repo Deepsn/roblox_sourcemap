@@ -16,10 +16,12 @@ import { useAppDispatch } from "./store";
 import useBiometricContext from "../../hooks/useBiometricContext";
 import { BiometricActionType } from "../../store/action";
 import {
+	selectVendorData,
 	selectVerificationStatus,
 	setVerificationStatus,
 	VerificationStatusType,
 } from "./verificationSlice";
+import { TELEMETRY_REASONS } from "./telemetryReasons";
 
 type PersonaLivenessHostedModalProps = {
 	startPolling: () => void;
@@ -39,6 +41,7 @@ const PersonaLivenessHostedModal: React.FC<PersonaLivenessHostedModalProps> = ({
 	const livenessResources = resources.personaLiveness;
 
 	const verificationStatus = useSelector(selectVerificationStatus);
+	const { sessionIdentifier } = useSelector(selectVendorData);
 	const loading = verificationStatus.status === VerificationStatusType.Polling;
 	const open =
 		verificationStatus.status === VerificationStatusType.Challenge ||
@@ -49,7 +52,20 @@ const PersonaLivenessHostedModal: React.FC<PersonaLivenessHostedModalProps> = ({
 	const [canceled, setCanceled] = useState(false);
 
 	useEffect(() => {
-		onChallengeDisplayed({ displayed: true });
+		const inquiryId = sessionIdentifier ?? undefined;
+		eventService.sendChallengeDisplayedEvent(
+			TELEMETRY_REASONS.HOSTED_DISPLAYED,
+			inquiryId,
+		);
+		metricsService.fireChallengeDisplayedEvent(
+			TELEMETRY_REASONS.HOSTED_DISPLAYED,
+		);
+		onChallengeDisplayed({
+			displayed: true,
+			reason: TELEMETRY_REASONS.HOSTED_DISPLAYED,
+			inquiryId,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleContinue = () => {
@@ -63,9 +79,12 @@ const PersonaLivenessHostedModal: React.FC<PersonaLivenessHostedModalProps> = ({
 		);
 		setCanceled(true);
 
-		// Abandon the biometric challenge
 		biometricDispatch({
 			type: BiometricActionType.SET_CHALLENGE_ABANDONED,
+			onChallengeAbandonedData: {
+				reason: TELEMETRY_REASONS.HOSTED_USER_ABANDON,
+				inquiryId: sessionIdentifier ?? undefined,
+			},
 		});
 	};
 

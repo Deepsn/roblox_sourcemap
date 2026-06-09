@@ -80,7 +80,7 @@ export const BiometricContextProvider = ({
 		// Mutable state
 		onChallengeCompletedData: null,
 		onChallengeInvalidatedData: null,
-		isAbandoned: false,
+		onChallengeAbandonedData: null,
 	}));
 	// Components will access and mutate state via these variables:
 	const [state, dispatch] = useReducer(biometricStateReducer, initialState);
@@ -91,14 +91,19 @@ export const BiometricContextProvider = ({
 		if (
 			state.onChallengeCompletedData === null ||
 			state.onChallengeInvalidatedData !== null ||
-			state.isAbandoned
+			state.onChallengeAbandonedData !== null
 		) {
 			return;
 		}
 
 		// Send events
-		eventService.sendChallengeCompletedEvent();
-		metricsService.fireChallengeCompletedEvent();
+		eventService.sendChallengeCompletedEvent(
+			state.onChallengeCompletedData.inquiryId,
+			state.onChallengeCompletedData.reason,
+		);
+		metricsService.fireChallengeCompletedEvent(
+			state.onChallengeCompletedData.reason,
+		);
 
 		onChallengeCompleted(state.onChallengeCompletedData);
 	}, [
@@ -106,7 +111,7 @@ export const BiometricContextProvider = ({
 		metricsService,
 		state.onChallengeCompletedData,
 		state.onChallengeInvalidatedData,
-		state.isAbandoned,
+		state.onChallengeAbandonedData,
 		onChallengeCompleted,
 	]);
 
@@ -115,14 +120,19 @@ export const BiometricContextProvider = ({
 		if (
 			state.onChallengeCompletedData !== null ||
 			state.onChallengeInvalidatedData === null ||
-			state.isAbandoned
+			state.onChallengeAbandonedData !== null
 		) {
 			return;
 		}
 
 		// Send events
-		eventService.sendChallengeInvalidatedEvent();
-		metricsService.fireChallengeInvalidatedEvent();
+		eventService.sendChallengeInvalidatedEvent(
+			state.onChallengeInvalidatedData.reason,
+			state.onChallengeInvalidatedData.inquiryId,
+		);
+		metricsService.fireChallengeInvalidatedEvent(
+			state.onChallengeInvalidatedData.reason,
+		);
 
 		onChallengeInvalidated(state.onChallengeInvalidatedData);
 	}, [
@@ -130,7 +140,7 @@ export const BiometricContextProvider = ({
 		metricsService,
 		state.onChallengeCompletedData,
 		state.onChallengeInvalidatedData,
-		state.isAbandoned,
+		state.onChallengeAbandonedData,
 		onChallengeInvalidated,
 	]);
 
@@ -139,14 +149,19 @@ export const BiometricContextProvider = ({
 		if (
 			state.onChallengeCompletedData !== null ||
 			state.onChallengeInvalidatedData !== null ||
-			!state.isAbandoned
+			state.onChallengeAbandonedData === null
 		) {
 			return;
 		}
 
 		// Send events
-		eventService.sendChallengeAbandonedEvent();
-		metricsService.fireChallengeAbandonedEvent();
+		eventService.sendChallengeAbandonedEvent(
+			state.onChallengeAbandonedData.reason,
+			state.onChallengeAbandonedData.inquiryId,
+		);
+		metricsService.fireChallengeAbandonedEvent(
+			state.onChallengeAbandonedData.reason,
+		);
 
 		if (onModalChallengeAbandoned !== null) {
 			// eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -157,7 +172,7 @@ export const BiometricContextProvider = ({
 		metricsService,
 		state.onChallengeCompletedData,
 		state.onChallengeInvalidatedData,
-		state.isAbandoned,
+		state.onChallengeAbandonedData,
 		onModalChallengeAbandoned,
 	]);
 

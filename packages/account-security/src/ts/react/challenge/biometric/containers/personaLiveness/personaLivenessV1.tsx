@@ -23,6 +23,7 @@ import {
 	POLLING_MAX_TIMES,
 } from "./settings";
 import PersonaLivenessHostedModal from "./personaLivenessHostedModal";
+import { TELEMETRY_REASONS } from "./telemetryReasons";
 
 function PersonaLivenessCheck(): React.ReactElement {
 	const dispatch = useAppDispatch();
@@ -63,6 +64,11 @@ function PersonaLivenessCheck(): React.ReactElement {
 		const pollingMaxTimes = isWebview
 			? POLLING_MAX_TIMES
 			: EMBEDDED_FLOW_POLLING_MAX_TIMES;
+		// Hosted-modal polling and embedded-Persona polling share this loop;
+		// pick the reason based on the active variant so analytics can split them.
+		const timeoutReason = isWebview
+			? TELEMETRY_REASONS.HOSTED_POLLING_TIMEOUT
+			: TELEMETRY_REASONS.PERSONA_POLLING_TIMEOUT;
 
 		let times = 0;
 		pollingIntervalRef.current = setInterval(() => {
@@ -74,6 +80,8 @@ function PersonaLivenessCheck(): React.ReactElement {
 					onChallengeInvalidatedData: {
 						errorCode: ErrorCode.UNKNOWN,
 						errorMessage: "Persona Liveness Check timed out",
+						reason: timeoutReason,
+						inquiryId: sessionIdentifier ?? undefined,
 					},
 				});
 			} else {
@@ -147,7 +155,19 @@ function PersonaLivenessCheck(): React.ReactElement {
 					setVerificationStatus({ status: VerificationStatusType.Challenge }),
 				);
 
-				onChallengeDisplayed({ displayed: true });
+				const inquiryId = sessionIdentifier ?? undefined;
+				eventService.sendChallengeDisplayedEvent(
+					TELEMETRY_REASONS.PERSONA_DISPLAYED,
+					inquiryId,
+				);
+				metricsService.fireChallengeDisplayedEvent(
+					TELEMETRY_REASONS.PERSONA_DISPLAYED,
+				);
+				onChallengeDisplayed({
+					displayed: true,
+					reason: TELEMETRY_REASONS.PERSONA_DISPLAYED,
+					inquiryId,
+				});
 			},
 			onComplete: () => {
 				clearInterval(pollingIntervalRef.current);
@@ -165,6 +185,10 @@ function PersonaLivenessCheck(): React.ReactElement {
 				// Abandon the biometric challenge
 				biometricDispatch({
 					type: BiometricActionType.SET_CHALLENGE_ABANDONED,
+					onChallengeAbandonedData: {
+						reason: TELEMETRY_REASONS.PERSONA_USER_ABANDON,
+						inquiryId: sessionIdentifier ?? undefined,
+					},
 				});
 			},
 			onError: (_error) => {
@@ -176,6 +200,8 @@ function PersonaLivenessCheck(): React.ReactElement {
 					onChallengeInvalidatedData: {
 						errorCode: ErrorCode.UNKNOWN,
 						errorMessage: "Persona error",
+						reason: TELEMETRY_REASONS.START_LIVENESS_FAILED,
+						inquiryId: sessionIdentifier ?? undefined,
 					},
 				});
 			},
@@ -195,6 +221,7 @@ function PersonaLivenessCheck(): React.ReactElement {
 				type: BiometricActionType.SET_CHALLENGE_COMPLETED,
 				onChallengeCompletedData: {
 					biometricType,
+					inquiryId: sessionIdentifier ?? undefined,
 				},
 			});
 		}

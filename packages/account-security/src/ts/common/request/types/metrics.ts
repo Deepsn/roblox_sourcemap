@@ -332,6 +332,8 @@ export type Metric =
 			labelValues: {
 				// eslint-disable-next-line camelcase
 				event_type: string;
+				reason: string;
+				application_type: string;
 			};
 	  }
 	| {
@@ -340,6 +342,8 @@ export type Metric =
 			labelValues: {
 				// eslint-disable-next-line camelcase
 				event_type: string;
+				reason: string;
+				application_type: string;
 			};
 	  }
 	| {

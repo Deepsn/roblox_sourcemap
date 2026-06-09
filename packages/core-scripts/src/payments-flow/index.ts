@@ -140,30 +140,26 @@ export class PaymentFlowAnalyticsService {
 	 * Helper method for the Roblox Plus upsell process to start a new flow
 	 * using asset type info.
 	 *
-	 * @param assetType
-	 * @param isReseller
-	 * @param isPrivateServer
-	 * @param isPlace
-	 * @param itemId
+	 * @param params.assetType
+	 * @param params.isReseller
+	 * @param params.itemId
 	 */
-	public startRobloxPlusUpsellFlow(
-		// TODO: remove string from here
-		assetType: ASSET_TYPE | string,
+	public startRobloxPlusUpsellFlow({
+		assetType,
 		isReseller = false,
-		// TODO: old, migrated code
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		isPrivateServer = false,
-		// TODO: old, migrated code
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		isPlace = false,
 		itemId = "",
-	): void {
+	}: {
+		// TODO: remove string from here
+		assetType: ASSET_TYPE | string;
+		isReseller?: boolean;
+		itemId?: string;
+	}): void {
 		this.eventMetadata.item_type = assetType;
 		this.eventMetadata.item_id = itemId;
 
 		if (isReseller) {
 			this.triggerContext =
-				TRIGGERING_CONTEXT.WEB_CATALOG_COLLECTIVE_ITEM_PLUS_UPSELL;
+				TRIGGERING_CONTEXT.WEB_CATALOG_RESALE_ITEM_PLUS_UPSELL;
 		} else {
 			switch (assetType) {
 				case ASSET_TYPE.GAME_PASS.valueOf():
@@ -492,7 +488,7 @@ export class PaymentFlowAnalyticsService {
 			case TRIGGERING_CONTEXT.WEB_REDEEM_PAGE:
 			case TRIGGERING_CONTEXT.WEB_PAYMENT_METHODS_SETTING:
 			case TRIGGERING_CONTEXT.WEB_CATALOG_SINGLE_ITEM_PLUS_UPSELL:
-			case TRIGGERING_CONTEXT.WEB_CATALOG_COLLECTIVE_ITEM_PLUS_UPSELL:
+			case TRIGGERING_CONTEXT.WEB_CATALOG_RESALE_ITEM_PLUS_UPSELL:
 			case TRIGGERING_CONTEXT.WEB_CATALOG_BUNDLE_ITEM_PLUS_UPSELL:
 			case TRIGGERING_CONTEXT.WEB_GAME_PASS_PLUS_UPSELL:
 			case TRIGGERING_CONTEXT.WEB_DEVELOPER_PRODUCT_PLUS_UPSELL:

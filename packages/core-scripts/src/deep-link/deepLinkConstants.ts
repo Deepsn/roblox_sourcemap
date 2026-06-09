@@ -165,6 +165,7 @@ export const CounterEvents = {
 		"DeeplinkParserUserTrustedConnectionResolutionFailed",
 	StudioTrustedConnectionResolutionFailed:
 		"DeeplinkParserStudioTrustedConnectionResolutionFailed",
+	MomentsResolutionFailed: "DeeplinkParserMomentsResolutionFailed",
 };
 
 export const buildDeepLinkLaunchGameEvent = (

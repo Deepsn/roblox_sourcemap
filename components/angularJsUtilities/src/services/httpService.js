@@ -92,12 +92,6 @@ function httpService($http, $q, $window, $log) {
 		}
 	}
 
-	function configForTracerConfig(urlConfig, config) {
-		if (urlConfig.tracerConfig) {
-			config.tracerConfig = urlConfig.tracerConfig;
-		}
-	}
-
 	function buildCustomizedConfig(config, urlConfig) {
 		// set withCredentials
 		configForCors(urlConfig, config);
@@ -113,8 +107,6 @@ function httpService($http, $q, $window, $log) {
 		configForCacheBusting(urlConfig, config);
 		// {number|Promise} – timeout in milliseconds, or promise that should abort the request when resolved.
 		configForTimeout(urlConfig, config);
-		// setup configuration for robloxtracer
-		configForTracerConfig(urlConfig, config);
 
 		return config;
 	}

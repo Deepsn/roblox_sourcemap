@@ -17,7 +17,7 @@ export const biometricStateReducer = (
 			newState.onChallengeInvalidatedData = action.onChallengeInvalidatedData;
 			return newState;
 		case BiometricActionType.SET_CHALLENGE_ABANDONED:
-			newState.isAbandoned = true;
+			newState.onChallengeAbandonedData = action.onChallengeAbandonedData;
 			return newState;
 		default:
 			return oldState;

@@ -697,8 +697,7 @@ const renderDeviceIntegrityChallengeFromQueryParameters = (
 const renderBiometricFromQueryParameters = (
 	containerId: string,
 	hybridTargetToCallbackInputId: Record<HybridTarget, string>,
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	_appType: string,
+	appType: string,
 ): boolean => {
 	const queryParameters = readQueryParametersForBiometric();
 
@@ -724,6 +723,7 @@ const renderBiometricFromQueryParameters = (
 		containerId,
 		challengeId,
 		biometricType,
+		appType,
 		renderInline: true,
 		onChallengeDisplayed: (data) =>
 			dispatchNavigateToFeatureHybridEvent(

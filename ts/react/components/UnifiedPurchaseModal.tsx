@@ -158,12 +158,12 @@ export const UnifiedPurchaseModalComponent: React.FC<
 			return;
 		}
 		hasFiredViewShown.current = true;
-		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({
-			assetType,
-			isReseller: false,
-			isPrivateServer: false,
-			isPlace: false,
-		});
+		// startRobloxPlusUpsellFlow maps assetType -> the right WEB_*_PLUS_UPSELL
+		// context and stores it on the singleton. sendUserPurchaseFlowEvent emits
+		// that stored context on the wire (the trigger_context arg here is only a
+		// fallback initializer used when no flow has started), so the literal we
+		// pass below is essentially dead once the flow is started.
+		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({ assetType });
 		const viewMessage = isFreeTrial
 			? paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_FREE_TRIAL
 			: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.ROBLOX_PLUS_SUBSCRIBE;

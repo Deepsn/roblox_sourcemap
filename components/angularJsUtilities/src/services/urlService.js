@@ -51,20 +51,10 @@ function urlService() {
 		return params && params[param] ? params[param] : undefined;
 	}
 
-	function getGameDetailReferralUrls() {
-		return {
-			home: "/games/refer?SortName={sortName}&PlaceId={placeId}&Position={position}&PageType=Home&LocalTimestamp={localTimestamp}&TotalInSort={totalInSort}&SortPosition={sortPosition}&PageId={pageId}",
-			groupDetail:
-				"/games/refer?PlaceId={placeId}&PageType=GroupDetail&LocalTimestamp={localTimestamp}",
-			chat: "/games/refer?SortName={sortName}&PlaceId={placeId}&PageType=Chat",
-		};
-	}
-
 	return {
 		getAbsoluteUrl: getAbsoluteUrl,
 		getJsonFromQueryString: getJsonFromQueryString,
 		getParam: getParam,
-		getGameDetailReferralUrls: getGameDetailReferralUrls,
 	};
 }
 
