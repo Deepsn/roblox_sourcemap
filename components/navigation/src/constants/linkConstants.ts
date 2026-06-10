@@ -15,13 +15,15 @@ const avatarSearchLink = {
 	icon: "icon-menu-shop",
 };
 
+const playersSearchLink = {
+	url: getAbsoluteUrl("/search/users?keyword="),
+	label: "Label.Players",
+	pageSort: ["users"],
+	icon: "icon-menu-profile",
+};
+
 const miscSearchLink = [
-	{
-		url: getAbsoluteUrl("/search/users?keyword="),
-		label: "Label.Players",
-		pageSort: ["users"],
-		icon: "icon-menu-profile",
-	},
+	...(authenticatedUser?.isAuthenticated ? [playersSearchLink] : []),
 	avatarSearchLink,
 	{
 		url: getAbsoluteUrl("/search/communities?keyword="),
@@ -124,12 +126,6 @@ export default {
 			labelTranslationKey: "Label.GiftCards",
 		},
 	},
-	upgradeButton: {
-		url: getAbsoluteUrl("/premium/membership?ctx=leftnav"),
-		labelTranslationKey: authenticatedUser.isPremiumUser
-			? "ActionsPremium"
-			: "ActionsGetPremium",
-	},
 	sponsorEvents: {
 		label: {
 			labelTranslationKey: "Label.sEvents",
@@ -142,11 +138,15 @@ export default {
 	avatarSearchLink,
 	miscSearchLink,
 	universalSearchUrls: [
-		{
-			url: getAbsoluteUrl("/search/users?keyword="),
-			label: "Label.Players",
-			pageSort: [],
-		},
+		...(authenticatedUser?.isAuthenticated
+			? [
+					{
+						url: getAbsoluteUrl("/search/users?keyword="),
+						label: "Label.Players",
+						pageSort: [],
+					},
+				]
+			: []),
 		{
 			url: getAbsoluteUrl("/discover/?Keyword="),
 			label: "Label.Games",

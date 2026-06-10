@@ -224,6 +224,7 @@ Roblox.LangDynamic["Feature.VerificationUpsell"] = {
 	SafetyBannerTitlePRE: "Access to games changes soon",
 	SafetyBannerBodyv3: "Get a secure age check now.",
 	SlimBannerBody: "Access to games changes soon. Get a secure age check now.",
+	DialogBodyPreCutoff: "You’ll soon need an age check to unlock more games.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

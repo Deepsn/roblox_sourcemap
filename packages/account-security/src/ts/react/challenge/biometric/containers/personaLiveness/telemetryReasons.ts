@@ -20,6 +20,10 @@ export const TELEMETRY_REASONS = {
 	// `challengeAbandoned`: who/what triggered the abandon.
 	PERSONA_USER_ABANDON: "PersonaUserAbandon",
 	HOSTED_USER_ABANDON: "HostedUserAbandon",
+
+	// `challengeCompleted`: who/what triggered the completion.
+	PERSONA_COMPLETED: "PersonaCompleted",
+	HOSTED_COMPLETED: "HostedCompleted",
 } as const;
 
 export type TelemetryReason =

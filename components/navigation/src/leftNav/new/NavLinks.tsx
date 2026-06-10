@@ -9,12 +9,10 @@ import {
 	AuthenticatedUser,
 	isBlackbirdUser,
 } from "@rbx/core-scripts/meta/user";
-import { isEnabled as isBlackbirdEnabled } from "@rbx/core-scripts/meta/subscription";
 import {
 	sendEventWithTarget,
 	targetTypes,
 } from "@rbx/core-scripts/event-stream";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
 import {
 	Icon,
 	TIconProps,
@@ -200,33 +198,6 @@ const ShopNavItem = () => {
 	);
 };
 
-const PremiumNavItem = () => {
-	const { translate } = useTranslation();
-	return (
-		<li>
-			<Button
-				as="a"
-				href={getAbsoluteUrl("/premium/membership?ctx=leftnav")}
-				variant="Standard"
-				size="Medium"
-				className="grow"
-				onClick={() => {
-					paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-						paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-							.WEB_PREMIUM_PURCHASE,
-						false,
-						paymentFlowAnalyticsService.ENUM_VIEW_NAME.LEFT_NAVIGATION_BAR,
-						paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-						paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.GET_PREMIUM,
-					);
-				}}
-			>
-				{translate("ActionsGetPremium")}
-			</Button>
-		</li>
-	);
-};
-
 const blackbirdPathRegex = /^\/plus(\/|$)/;
 
 const BlackbirdNavItem = ({ currentPath }: { currentPath: string }) => {
@@ -371,9 +342,7 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 					icon="icon-regular-person"
 					text={translate("Label.sProfile")}
 				/>
-				{isBlackbirdEnabled() ? (
-					<BlackbirdNavItem currentPath={currentPath} />
-				) : null}
+				<BlackbirdNavItem currentPath={currentPath} />
 				<NavItem
 					path="/my/messages/#!/inbox"
 					isCurrentPath={/^\/([a-z]{2}\/)?my\/messages(\/|$)/.test(currentPath)}
@@ -446,8 +415,7 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 					icon="icon-regular-gift-card"
 					text={translate("Label.GiftCards")}
 				/>
-				{!isBlackbirdEnabled() ? <PremiumNavItem /> : null}
-				{isBlackbirdEnabled() && !isBlackbirdUser() ? (
+				{!isBlackbirdUser() ? (
 					<BlackbirdUpsellNavItem currentPath={currentPath} />
 				) : null}
 			</ul>

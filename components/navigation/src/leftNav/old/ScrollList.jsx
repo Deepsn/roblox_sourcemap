@@ -2,9 +2,8 @@ import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Intl } from "@rbx/core-scripts/legacy/Roblox";
 import environmentUrls from "@rbx/environment-urls";
-import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import { SimpleModal } from "@rbx/core-ui/legacy/react-style-guide";
-import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import links from "../../constants/linkConstants";
 import layoutConstants from "../../constants/layoutConstants";
 import LeftNavItem from "./LeftNavItem";
@@ -40,27 +39,14 @@ function ScrollList({ translate, ...props }) {
 		/>
 	));
 
-	const onUpgradeBtnClick = () => {
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT.WEB_PREMIUM_PURCHASE,
-			false,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME.LEFT_NAVIGATION_BAR,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-			authenticatedUser.isPremiumUser
-				? paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.PREMIUM
-				: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.GET_PREMIUM,
-		);
-	};
-
 	const upgradeBtn = (
 		<li className="rbx-upgrade-now">
 			<a
-				href={links.upgradeButton.url}
+				href={getAbsoluteUrl("/plus")}
 				className="btn-growth-md btn-secondary-md"
-				onClick={onUpgradeBtnClick}
 				id="upgrade-now-button"
 			>
-				{translate(links.upgradeButton.labelTranslationKey)}
+				{translate("Label.Blackbird")}
 			</a>
 		</li>
 	);

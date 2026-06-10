@@ -47,6 +47,9 @@ type RawPromptsResponse = {
 	customPrompts?: Record<string, RawCustomPrompt>;
 };
 
+// Free-form capabilities the client advertises to prompts service.
+export type ClientAttributes = Record<string, string>;
+
 /**
  * Fetch the eligible prompt for the logout entry point.
  *
@@ -54,7 +57,9 @@ type RawPromptsResponse = {
  * the request fails for any reason. Callers should treat `null` as "no upsell
  * to show" — never throw.
  */
-export const getLogoutPrompt = async (): Promise<LogoutPrompt | null> => {
+export const getLogoutPrompt = async (
+	clientAttributes: ClientAttributes,
+): Promise<LogoutPrompt | null> => {
 	try {
 		const response = await get<RawPromptsResponse>(
 			{ url: PROMPTS_URL, withCredentials: true },
@@ -62,6 +67,7 @@ export const getLogoutPrompt = async (): Promise<LogoutPrompt | null> => {
 				entryPoint: LOGOUT_ENTRY_POINT,
 				hasDetectedDeepLink: false,
 				promptStyle: MODAL_PROMPT_STYLE,
+				clientAttributes: JSON.stringify(clientAttributes),
 			},
 		);
 

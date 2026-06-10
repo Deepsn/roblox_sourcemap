@@ -184,6 +184,16 @@ const EVENT_CONSTANTS = {
 			passkeyNotSupported: "passkeyNotSupported",
 			passkeyUpsellFilteredByInAppTraffic:
 				"passkeyUpsellFilteredByInAppTraffic",
+			// Fired when a duplicate handleSetupPasskey() invocation is short-circuited
+			// by the in-flight guard in useRecoveryActions. A non-zero rate confirms
+			// the dedup is doing real work (and quantifies how often the underlying
+			// race-condition pattern actually occurs in production).
+			passkeyRegistrationDuplicateBlocked:
+				"passkeyRegistrationDuplicateBlocked",
+			// Fired when the auto-OS-dialog useEffect re-runs for a recoverySessionId
+			// it has already fired for, and the per-component fire-once-per-session
+			// ref short-circuits it.
+			passkeyAutoOsDialogueDeduped: "passkeyAutoOsDialogueDeduped",
 		},
 		passkeyCreation: {
 			finishRegistration: "finishRegistration",

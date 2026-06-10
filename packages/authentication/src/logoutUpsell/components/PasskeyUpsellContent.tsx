@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@rbx/core-scripts/react";
 import {
 	Button,
@@ -9,6 +9,12 @@ import {
 import passkeyIconLight from "@rbx/foundation-images/pictograms/passkey_light.svg";
 import passkeyIconDark from "@rbx/foundation-images/pictograms/passkey_dark.svg";
 import { registerPasskey } from "../services/passkeyRegistrationService";
+import {
+	sendAddEmailClick,
+	sendAddPasskeyClick,
+	sendPasskeyUpsellShown,
+	sendSignOutClick,
+} from "../services/logoutUpsellEvents";
 
 /**
  * Body + footer for the "stay signed in with a passkey" logout upsell.
@@ -16,11 +22,11 @@ import { registerPasskey } from "../services/passkeyRegistrationService";
  * Translation strategy:
  *   Strings are passed in via `translations` rather than fetched in-component
  *   via the translation system. The dispatcher in `logoutUpsellService` is
- *   responsible for sourcing the strings (eventually from prompts service via
- *   `LogoutPrompt.translations`, with English fallbacks today). Keeping this
- *   component pure of localization machinery means it can be tested without a
- *   `TranslationProvider` and reused inside a prompts-service-driven render
- *   pipeline that already has translations in hand.
+ *   responsible for sourcing the strings from prompts service via
+ *   `LogoutPrompt.translations`. Keeping this component pure of localization
+ *   machinery means it can be tested without a `TranslationProvider` and
+ *   reused inside a prompts-service-driven render pipeline that already has
+ *   translations in hand.
  *
  * Variant selection:
  *   The "passkey + email" variant is opted into via the explicit
@@ -65,9 +71,14 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 	const theme = useTheme();
 	const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
 
+	useEffect(() => {
+		sendPasskeyUpsellShown();
+	}, []);
+
 	// The Button onClick prop is `() => void`, but registration is async.
 	// Wrap so we don't return a Promise to the click handler.
 	const handleAddPasskeyClick = () => {
+		sendAddPasskeyClick();
 		setIsPasskeyLoading(true);
 		registerPasskey()
 			.then((success) => {
@@ -119,7 +130,10 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 							className="width-full"
 							variant="Standard"
 							size="Medium"
-							onClick={onAddEmail}
+							onClick={() => {
+								sendAddEmailClick();
+								onAddEmail?.();
+							}}
 						>
 							{translations.addEmailLabel}
 						</Button>
@@ -128,7 +142,10 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 						className="width-full"
 						variant="Utility"
 						size="Medium"
-						onClick={onSignOut}
+						onClick={() => {
+							sendSignOutClick();
+							onSignOut();
+						}}
 					>
 						{translations.signOutLabel}
 					</Button>

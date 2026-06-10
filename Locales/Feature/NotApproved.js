@@ -530,6 +530,9 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 	"Action.LogOut": "Log out",
 	"Description.AppealViaSupport":
 		"To appeal this decision, {link}contact support.{linkEnd}",
+	"Title.AvatarBrokeRules": "Your avatar broke the rules",
+	"Description.AvatarBrokeRules":
+		"Please change your avatar. Soon, players with avatars that break our Community Standards will be suspended from this game.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

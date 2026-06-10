@@ -39,7 +39,7 @@ export function buildTracesSampler(perfBase: number) {
 		if (UPGRADES_RE.test(path)) traceSampleRate = 0.005; // 10x current
 		if (LOGIN_REDIRECT_RE.test(path)) traceSampleRate = 1; // 100%
 		if (DOWNLOAD_LANDING_RE.test(path)) traceSampleRate = 1; // 100%
-		if (SPOTLIGHT_PAGE_RE.test(path)) traceSampleRate = 0.5; // 50%
+		if (SPOTLIGHT_PAGE_RE.test(path)) traceSampleRate = 1; // 100%
 		return traceSampleRate ?? base;
 	};
 }

@@ -222,6 +222,9 @@ function PersonaLivenessCheck(): React.ReactElement {
 				onChallengeCompletedData: {
 					biometricType,
 					inquiryId: sessionIdentifier ?? undefined,
+					reason: isWebview
+						? TELEMETRY_REASONS.HOSTED_COMPLETED
+						: TELEMETRY_REASONS.PERSONA_COMPLETED,
 				},
 			});
 		}

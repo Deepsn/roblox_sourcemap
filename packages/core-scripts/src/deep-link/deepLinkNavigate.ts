@@ -280,7 +280,10 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							resolveLinkEvent.params,
 						);
 
-						window.location.href = target.url;
+						if (linkTypeV2 === ShareLinksTypeV2.USER_TRUSTED_CONNECTION) {
+							window.location.href = target.url;
+						}
+
 						window.location.href = `${UrlPart.Users}/${response.data.targetId}${UrlPart.Profile}?trustedFriendLinkCode=${code}`;
 					} else if (
 						response.data.linkType === "Moments" &&

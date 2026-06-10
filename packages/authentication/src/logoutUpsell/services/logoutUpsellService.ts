@@ -1,8 +1,14 @@
 // @ts-expect-error - Legacy Roblox module types
 import { EmailVerificationService } from "@rbx/core-scripts/legacy/Roblox";
+import { DeviceMeta } from "Roblox";
+import { hybridResponseService } from "core-roblox-utilities";
 import ExperimentationService from "@rbx/experimentation";
+import { isPasskeyCompatible } from "@rbx/authentication-common/passkey/compatibility";
+import { AddEmailTranslations } from "../components/AddEmailContent";
+import { VerifyEmailTranslations } from "../components/VerifyEmailContent";
 import { PasskeyUpsellTranslations } from "../components/PasskeyUpsellContent";
 import {
+	ClientAttributes,
 	getLogoutPrompt,
 	LogoutPrompt,
 	recordLogoutPromptImpression,
@@ -29,16 +35,15 @@ import { showPasskeyUpsellModal } from "./showPasskeyUpsellModal";
  *          prompts service has already decided this user should see the
  *          modal, so we skip the legacy eligibility checks (metadata flag +
  *          email-status GET) and just render.
- *        - `LogoutPasskeyUpsellV1` / `LogoutPasskeyUpsellWithEmailV1` →
- *          record an impression, build a `PasskeyUpsellTranslations` from
- *          `prompt.translations` (with English fallbacks for any keys the
- *          server hasn't filled in yet), and mount the passkey upsell modal.
- *          The "with email" variant additionally surfaces an "Add email" CTA;
- *          its click handler is a no-op until the email flow lands in a
- *          follow-up PR.
- *        - Anything else (including no prompt) → log out directly. Renderers
- *          for new prompt types land in follow-up PRs that add branches to
- *          `dispatchPrompt`.
+ *        - `LogoutPasskeyUpsellV1` → record an impression, build a
+ *          `PasskeyUpsellTranslations` from `prompt.translations`, and mount
+ *          the passkey upsell modal. The presence of a `secondaryButton`
+ *          translation toggles the "Add email" CTA; when set, we also build
+ *          `AddEmailTranslations` and `VerifyEmailTranslations` maps (same
+ *          prompt translations, different keys) and the modal owns the
+ *          in-place page transitions: passkey → add email → verify email.
+ *        - Anything else (including no prompt) → log out directly. New prompt
+ *          types render by adding a branch to `dispatchPrompt`.
  */
 
 const LOGOUT_UPSELL_LAYER = "Website.LogoutUpsell";
@@ -46,13 +51,30 @@ const LOGOUT_UPSELL_LAYER = "Website.LogoutUpsell";
 // From modals-eligibility-service config
 const PROMPT_TYPE_LOGOUT_EMAIL_UPSELL_V1 = "LogoutEmailUpsellV1";
 const PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_V1 = "LogoutPasskeyUpsellV1";
-const PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_WITH_EMAIL_V1 =
-	"LogoutPasskeyUpsellWithEmailV1";
 
 export type HandleLogoutUpsellOptions = {
 	/** Called when the upsell flow is finished and the page should log out. */
 	onLogout: () => void;
 };
+
+const browserSupportsPasskey = (): Promise<boolean> =>
+	isPasskeyCompatible({
+		producer: DeviceMeta ?? undefined,
+		hybridCallback: () =>
+			hybridResponseService.getNativeResponse(
+				hybridResponseService.FeatureTarget.CREDENTIALS_PROTOCOL_AVAILABLE,
+				{},
+				2000,
+			),
+	});
+
+// Capabilities advertised to the prompts service so its eligibility resolvers
+// don't select an upsell this client can't render. `capableUpsells` is
+// "PasskeyV1" when the client can register a passkey, and "" otherwise — the
+// prompts service reads the empty value as "passkey upsell unavailable here".
+const buildClientAttributes = async (): Promise<ClientAttributes> => ({
+	capableUpsells: (await browserSupportsPasskey()) ? "PasskeyV1" : "",
+});
 
 const isPromptsServiceEnabled = async (): Promise<boolean> => {
 	try {
@@ -102,61 +124,62 @@ const openLegacyEmailUpsellModal = (onLogout: () => void): void => {
 	}
 };
 
-const PASSKEY_UPSELL_FALLBACKS = {
-	title: "Stay signed in easily next time",
-	body: "Add a passkey for faster, more secure sign in with Face ID, fingerprint, or your device PIN.",
-	bodyWithEmail:
-		"Add a passkey for faster, more secure sign in with Face ID, fingerprint, or your device PIN. Or add an email as a backup.",
-	addPasskeyLabel: "Add passkey",
-	addEmailLabel: "Add email",
-	signOutLabel: "Sign out anyway",
-	closeLabel: "Close",
-};
-
 const buildPasskeyTranslations = (
 	promptTranslations: Record<string, string>,
 	{ withEmail }: { withEmail: boolean },
 ): PasskeyUpsellTranslations => {
-	const pick = (key: string, fallback: string): string =>
-		promptTranslations[key] ?? fallback;
 	const base: PasskeyUpsellTranslations = {
-		title: pick("title", PASSKEY_UPSELL_FALLBACKS.title),
-		body: pick(
-			"body",
-			withEmail
-				? PASSKEY_UPSELL_FALLBACKS.bodyWithEmail
-				: PASSKEY_UPSELL_FALLBACKS.body,
-		),
-		addPasskeyLabel: pick(
-			"primaryButton",
-			PASSKEY_UPSELL_FALLBACKS.addPasskeyLabel,
-		),
-		signOutLabel: pick("tertiaryButton", PASSKEY_UPSELL_FALLBACKS.signOutLabel),
-		closeLabel: pick("closeLabel", PASSKEY_UPSELL_FALLBACKS.closeLabel),
+		title: promptTranslations.title ?? "",
+		body: promptTranslations.body ?? "",
+		addPasskeyLabel: promptTranslations.primaryButton ?? "",
+		signOutLabel: promptTranslations.tertiaryButton ?? "",
+		closeLabel: promptTranslations.closeLabel ?? "",
 	};
 	if (withEmail) {
-		base.addEmailLabel = pick(
-			"secondaryButton",
-			PASSKEY_UPSELL_FALLBACKS.addEmailLabel,
-		);
+		base.addEmailLabel = promptTranslations.secondaryButton ?? "";
 	}
 	return base;
+};
+
+const buildAddEmailTranslations = (
+	promptTranslations: Record<string, string>,
+): AddEmailTranslations => {
+	return {
+		title: promptTranslations.addEmailTitle ?? "",
+		body: promptTranslations.addEmailBody ?? "",
+		placeholder: promptTranslations.addEmailPlaceholder ?? "",
+		continueLabel: promptTranslations.addEmailPrimaryButton ?? "",
+	};
+};
+
+const buildVerifyEmailTranslations = (
+	promptTranslations: Record<string, string>,
+): VerifyEmailTranslations => {
+	return {
+		title: promptTranslations.verifyEmailTitle ?? "",
+		body: promptTranslations.verifyEmailBody ?? "",
+		resendLabel: promptTranslations.verifyEmailPrimaryButton ?? "",
+		continueLabel: promptTranslations.verifyEmailSecondaryButton ?? "",
+		changeEmailLabel: promptTranslations.verifyEmailTertiaryButton ?? "",
+	};
 };
 
 const dispatchPasskeyUpsell = (
 	prompt: LogoutPrompt,
 	onLogout: () => void,
-	withEmail: boolean,
 ): void => {
+	const withEmail = Boolean(prompt.translations.secondaryButton);
 	recordLogoutPromptImpression(prompt.promptType);
 	showPasskeyUpsellModal({
 		translations: buildPasskeyTranslations(prompt.translations, { withEmail }),
 		showAddEmail: withEmail,
+		addEmailTranslations: withEmail
+			? buildAddEmailTranslations(prompt.translations)
+			: undefined,
+		verifyEmailTranslations: withEmail
+			? buildVerifyEmailTranslations(prompt.translations)
+			: undefined,
 		onLogout,
-		// TODO: (AA-6920) wire the "Add email" CTA to the email-add flow. The
-		// button is rendered when the prompts service tells us to (variant =
-		// WithEmail), but the click is a no-op until the follow-up PR lands.
-		onAddEmail: withEmail ? () => undefined : undefined,
 	});
 };
 
@@ -167,10 +190,7 @@ const dispatchPrompt = (prompt: LogoutPrompt, onLogout: () => void): void => {
 			openLegacyEmailUpsellModal(onLogout);
 			return;
 		case PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_V1:
-			dispatchPasskeyUpsell(prompt, onLogout, false);
-			return;
-		case PROMPT_TYPE_LOGOUT_PASSKEY_UPSELL_WITH_EMAIL_V1:
-			dispatchPasskeyUpsell(prompt, onLogout, true);
+			dispatchPasskeyUpsell(prompt, onLogout);
 			return;
 		default:
 			onLogout();
@@ -186,7 +206,7 @@ export const handleLogoutUpsell = async ({
 		return;
 	}
 
-	const prompt = await getLogoutPrompt();
+	const prompt = await getLogoutPrompt(await buildClientAttributes());
 	if (!prompt) {
 		onLogout();
 		return;

@@ -12,6 +12,10 @@ import {
 // just a placeholder required by the FinishRegistration request shape.
 const CREDENTIAL_NICKNAME = "Passkey";
 
+// Passed to FinishRegistration so the server emits the passkeyRegistration
+// event attributed to this flow
+const REGISTRATION_SOURCE = "passkeyUpsellPostLogin";
+
 /**
  * Performs a full WebAuthn passkey registration:
  *   StartRegistration → browser prompt → FinishRegistration
@@ -48,6 +52,7 @@ export const registerPasskey = async (): Promise<boolean> => {
 			sessionId,
 			CREDENTIAL_NICKNAME,
 			attestation,
+			REGISTRATION_SOURCE,
 		);
 		return !finishResult.isError;
 	} catch {
