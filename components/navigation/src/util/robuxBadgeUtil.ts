@@ -14,6 +14,8 @@ export const mapRobuxBadgeTypeToLocalStorageKey = (
 			return "hasSeenRobuxPersonalizedBonusItems";
 		case RobuxBadgeType.BONUS_AVATAR_ITEM:
 			return "hasSeenRobuxBonusAvatarItem";
+		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
+			return "hasSeenRobuxMultiBonusAvatarItems";
 		default:
 			return "";
 	}
@@ -24,6 +26,7 @@ export const mapRobuxBadgeTypeToStr = (robuxBadgeType: string): string => {
 		case RobuxBadgeType.VIRTUAL_ITEM:
 		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
 		case RobuxBadgeType.BONUS_AVATAR_ITEM:
+		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
 			return "Labels.NewItem";
 		case RobuxBadgeType.UPDATE:
 			return "Labels.NewUpdate";
@@ -45,6 +48,7 @@ export const setRobuxBadgeLocalStorage = (robuxBadgeType: string): void => {
 		case RobuxBadgeType.UPDATE:
 		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
 		case RobuxBadgeType.BONUS_AVATAR_ITEM:
+		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
 			localStorageService.setLocalStorage(localStorageKey, "true");
 			break;
 		default:
@@ -59,6 +63,14 @@ export const getRobuxBadgeLocalStorage = (robuxBadgeType: string): any => {
 };
 
 export const shouldShowRobuxUpdateBadge = (): string => {
+	// New launches take priority over older, already-dismissed badges.
+	if (
+		getRobuxBadgeLocalStorage(RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS) !==
+		"true"
+	) {
+		return RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS;
+	}
+
 	if (getRobuxBadgeLocalStorage(RobuxBadgeType.BONUS_AVATAR_ITEM) !== "true") {
 		return RobuxBadgeType.BONUS_AVATAR_ITEM;
 	}

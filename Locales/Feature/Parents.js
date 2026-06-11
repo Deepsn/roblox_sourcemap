@@ -687,6 +687,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Title.RegionalRequirements": "Regional requirements",
 	"Description.RegionalRequirements":
 		"Different regions have different rules for verifying parents. The method you used before isn't accepted where your child's account is now registered.",
+	"Description.ExperienceChatPresetDisclaimer":
+		"Note: your child may still be able to use Quick Words, a menu of short phrases, for gameplay coordination.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

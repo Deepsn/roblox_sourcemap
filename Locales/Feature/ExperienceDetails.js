@@ -68,6 +68,7 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 		"You need parent permission to join this game.",
 	"UnplayableError.ContextualPlayabilityRequireParentApproval":
 		"Ask your parent to unlock this game for you.",
+	"PlayButtonText.PlayDemo": "Play Demo",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

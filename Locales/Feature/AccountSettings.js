@@ -2610,6 +2610,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.PrivacyRequestOngoing": "Privacy request in progress",
 	"Description.PrivacyRequestOngoing":
 		"A privacy request is already in progress. Please wait for it to complete before trying again.",
+	"Description.Parent.ExperienceChatPresetDisclaimer":
+		"Note: your child may still be able to use Quick Words, a menu of short phrases, for gameplay coordination.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
