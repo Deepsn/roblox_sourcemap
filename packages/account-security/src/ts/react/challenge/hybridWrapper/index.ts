@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-case-declarations */
-import { EnvironmentUrls, Hybrid } from "Roblox";
+import Roblox, { EnvironmentUrls, Hybrid } from "Roblox";
 import "../../../../css/challenge/captcha/captcha.scss";
 import * as Option from "fp-ts/Option";
 import * as boolean from "fp-ts/boolean";
@@ -45,9 +45,125 @@ const HYBRID_TARGET_KEY = "feature";
 const CALLBACK_EVENT_NAME = "callbackInputChanged";
 const CLASS_LIGHT_MODE = "light-theme";
 const CLASS_DARK_MODE = "dark-theme";
+const CHALLENGE_HYBRID_WEB_PAGE_LIFECYCLE_EVENT =
+	"challengeHybridWebPageLifecycle";
 
 // For when we fail @ parsing or something, for Generic challenges.
 const unknownChallengeType = "unknown" as ChallengeType;
+
+const getCurrentUrlParts = () => {
+	const currentUrl = window.location.href;
+
+	try {
+		const parsedUrl = new URL(currentUrl);
+		return {
+			url: currentUrl,
+			baseUrl: parsedUrl.origin,
+			path: parsedUrl.pathname,
+		};
+	} catch (error) {
+		console.error(LOG_PREFIX, "Failed to parse hybrid wrapper URL", error);
+		return {
+			url: currentUrl,
+			baseUrl: "",
+			path: "",
+		};
+	}
+};
+
+type CurrentUrlParts = ReturnType<typeof getCurrentUrlParts>;
+
+const getQueryParameterValue = (parameterName: string): string => {
+	try {
+		return new URL(window.location.href).searchParams.get(parameterName) ?? "";
+	} catch {
+		return "";
+	}
+};
+
+const getChallengeId = (): string => {
+	return (
+		getQueryParameterValue("challenge-id") ||
+		getQueryParameterValue("generic-challenge-id")
+	);
+};
+
+const getLifecycleSuccess = (
+	hybridTarget: HybridTarget,
+	data: Record<string, unknown>,
+): boolean => {
+	if (hybridTarget === HybridTarget.CHALLENGE_INVALIDATED) {
+		return false;
+	}
+
+	for (const key of ["parsed", "initialized", "displayed"]) {
+		if (key in data && typeof data[key] === "boolean") {
+			return data[key];
+		}
+	}
+
+	return true;
+};
+
+type ChallengeHybridWebPageLifecycleEventOptions = {
+	appType?: string;
+	challengeId?: string;
+	urlParts?: CurrentUrlParts;
+};
+
+const sendChallengeHybridWebPageLifecycleEvent = ({
+	hybridTarget,
+	challengeType,
+	data,
+	origin,
+	options,
+}: {
+	hybridTarget: HybridTarget;
+	challengeType: Generic.ChallengeType | NewChallengeTypes.ChallengeType;
+	data: Record<string, unknown>;
+	origin?: string;
+	options?: ChallengeHybridWebPageLifecycleEventOptions;
+}): void => {
+	try {
+		const { url, baseUrl, path } = options?.urlParts ?? getCurrentUrlParts();
+		const success = getLifecycleSuccess(hybridTarget, data);
+		const eventData: Record<string, unknown> = {
+			url,
+			baseUrl,
+			path,
+			referrerUrl: document.referrer,
+			challengeType,
+			challengeId: options?.challengeId ?? getChallengeId(),
+			appType:
+				(options?.appType ?? getQueryParameterValue("app-type")) || "unknown",
+			origin: origin ?? getQueryParameterValue("origin"),
+			hybridTarget,
+			lifecycleEvent: hybridTarget,
+			success,
+		};
+
+		if (!success) {
+			eventData.errorName = `${hybridTarget}Failed`;
+			eventData.errorMessage =
+				typeof data.errorMessage === "string"
+					? data.errorMessage
+					: `Hybrid lifecycle event ${hybridTarget} failed`;
+		}
+
+		Roblox.EventStream?.SendEventWithTarget(
+			CHALLENGE_HYBRID_WEB_PAGE_LIFECYCLE_EVENT,
+			hybridTarget,
+			eventData,
+			Roblox.EventStream.TargetTypes.WWW,
+		);
+	} catch (error) {
+		console.error(
+			LOG_PREFIX,
+			"Failed to emit challenge hybrid web page lifecycle event",
+			error,
+		);
+	}
+};
 
 // Export some additional enums that are declared in the shared interface (they
 // are also defined in the shared interface, but we need to expose them in the
@@ -95,8 +211,16 @@ const dispatchNavigateToFeatureHybridEvent = (
 	hybridTarget: HybridTarget,
 	data: Record<string, unknown>,
 	origin?: string,
+	options?: ChallengeHybridWebPageLifecycleEventOptions,
 ): void => {
 	recordHybridEventMetric({ hybridTarget, challengeType, data }); // Fire & forget a metric.
+	sendChallengeHybridWebPageLifecycleEvent({
+		hybridTarget,
+		challengeType,
+		data,
+		origin,
+		options,
+	});
 
 	console.log(
 		LOG_PREFIX,
@@ -951,6 +1075,7 @@ const renderGenericChallengeFromQueryParameters = async (
 		appType,
 		shouldModifyBrowserHistory: true,
 		onChallengeCompleted: (data) => {
+			const urlParts = getCurrentUrlParts();
 			// Attempt to clear hybrid webview url to prevent re-rendering on a potential
 			// webview cache.
 			window.history.replaceState(null, "", basePath);
@@ -960,9 +1085,15 @@ const renderGenericChallengeFromQueryParameters = async (
 				HybridTarget.CHALLENGE_COMPLETED,
 				data,
 				originPassed,
+				{
+					appType,
+					challengeId: challengeSpecificProperties.challengeId,
+					urlParts,
+				},
 			);
 		},
 		onChallengeInvalidated: (data) => {
+			const urlParts = getCurrentUrlParts();
 			window.history.replaceState(null, "", basePath);
 			dispatchNavigateToFeatureHybridEvent(
 				challengeSpecificProperties.challengeType,
@@ -970,6 +1101,11 @@ const renderGenericChallengeFromQueryParameters = async (
 				HybridTarget.CHALLENGE_INVALIDATED,
 				data,
 				originPassed,
+				{
+					appType,
+					challengeId: challengeSpecificProperties.challengeId,
+					urlParts,
+				},
 			);
 		},
 		onChallengeDisplayed: (data) => {

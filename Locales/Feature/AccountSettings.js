@@ -2612,6 +2612,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"A privacy request is already in progress. Please wait for it to complete before trying again.",
 	"Description.Parent.ExperienceChatPresetDisclaimer":
 		"Note: your child may still be able to use Quick Words, a menu of short phrases, for gameplay coordination.",
+	"Label.GroupForums": "Community Forums",
+	"Label.AvatarAutoSetupJob": "Avatar Auto-Setup",
+	"Label.LuauExecutionSessions": "Luau Execution Sessions",
+	"Label.Thumbnails": "Thumbnails",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
