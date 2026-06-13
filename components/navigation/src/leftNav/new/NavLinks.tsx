@@ -32,6 +32,7 @@ import {
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import { useRealTime } from "./useRealTime";
 import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
+import { UncheckedBadge, showUncheckedBadge } from "@rbx/identity-badges";
 
 // Temporarily copied from `@rbx/foundation-ui` since the NavigationRail component is not available yet.
 const interactable =
@@ -72,13 +73,20 @@ const ProfileNavItem = ({
 					/>
 				</span>
 			</span>
-			<span className="flex gap-xsmall min-width-0 align-items-center">
-				<span className="text-truncate-end text-no-wrap">{displayName}</span>
-				{currentUserHasVerifiedBadge() ? (
-					<VerifiedBadgeIconContainer size={BadgeSizes.CAPTIONHEADER} />
-				) : null}
-				{isBlackbirdUser() ? (
-					<Icon name="icon-regular-roblox-plus" size="Small" />
+			<span className="flex flex-col gap-xsmall min-width-0 large:flex-row large:align-items-center">
+				<span className="flex gap-xsmall min-width-0 align-items-center">
+					<span className="text-truncate-end text-no-wrap">{displayName}</span>
+					{currentUserHasVerifiedBadge() ? (
+						<VerifiedBadgeIconContainer size={BadgeSizes.CAPTIONHEADER} />
+					) : null}
+					{isBlackbirdUser() ? (
+						<Icon name="icon-regular-roblox-plus" size="Small" />
+					) : null}
+				</span>
+				{showUncheckedBadge() ? (
+					<span className="flex items-center large:fill large:basis-auto large:padding-x-small large:justify-end">
+						<UncheckedBadge />
+					</span>
 				) : null}
 			</span>
 		</a>

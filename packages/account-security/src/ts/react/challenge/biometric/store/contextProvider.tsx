@@ -98,8 +98,8 @@ export const BiometricContextProvider = ({
 
 		// Send events
 		eventService.sendChallengeCompletedEvent(
-			state.onChallengeCompletedData.inquiryId,
 			state.onChallengeCompletedData.reason,
+			state.onChallengeCompletedData.inquiryId,
 		);
 		metricsService.fireChallengeCompletedEvent(
 			state.onChallengeCompletedData.reason,

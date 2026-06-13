@@ -36,9 +36,6 @@ type THeroUnitProps = {
 
 	ctaButtonComponent?: React.ReactNode;
 
-	minForegroundHeightPercent?: number;
-	maxForegroundHeightPercent?: number;
-
 	titleImageAspectRatio?: number;
 	titleImageHeightPercentage?: number;
 	minCardHeight?: number;
@@ -80,8 +77,6 @@ const HeroUnit = ({
 	badgeText,
 	asset,
 	ctaButtonComponent,
-	minForegroundHeightPercent,
-	maxForegroundHeightPercent,
 	titleImageAspectRatio,
 	titleImageHeightPercentage,
 	minCardHeight,
@@ -158,8 +153,6 @@ const HeroUnit = ({
 				backgroundClickAction={onActivated?.onActivated}
 				backgroundClickLinkPath={onActivated?.linkPath}
 				bottomRowComponent={bottomRowComponent ?? attributionRow}
-				minForegroundHeightPercent={minForegroundHeightPercent}
-				maxForegroundHeightPercent={maxForegroundHeightPercent}
 				titleImageAspectRatio={titleImageAspectRatio}
 				titleImageHeightPercentage={titleImageHeightPercentage}
 				minCardHeight={minCardHeight}
@@ -184,8 +177,6 @@ const HeroUnit = ({
 		titleImage,
 		children,
 		overlayComponent,
-		minForegroundHeightPercent,
-		maxForegroundHeightPercent,
 		titleImageAspectRatio,
 		titleImageHeightPercentage,
 		minCardHeight,

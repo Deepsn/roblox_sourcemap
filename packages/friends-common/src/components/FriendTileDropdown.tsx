@@ -23,6 +23,8 @@ const FriendTileDropdown = ({
 	canChat,
 	translate,
 	isIARCJoinCardRedesignEnabled,
+	isIARCJoinCardGameRowClickableEnabled,
+	sendGameRowClickEvent,
 }: {
 	friend: TFriend;
 	displayName: string;
@@ -34,6 +36,8 @@ const FriendTileDropdown = ({
 	canChat: boolean;
 	translate: TranslateFunction;
 	isIARCJoinCardRedesignEnabled: boolean;
+	isIARCJoinCardGameRowClickableEnabled: boolean;
+	sendGameRowClickEvent: () => void;
 }): JSX.Element => {
 	const launchGame = async () => {
 		const joinAttemptId = friend.presence.gameId ?? "";
@@ -71,8 +75,17 @@ const FriendTileDropdown = ({
 				displayName={displayName}
 				userPresence={userPresence}
 				universeId={universeId}
+				userProfileUrl={userProfileUrl}
+				canChat={canChat}
 				translate={translate}
 				launchGame={launchGame}
+				gameUrl={gameUrl}
+				placeId={friend.presence.placeId ?? null}
+				isIARCJoinCardGameRowClickableEnabled={
+					isIARCJoinCardGameRowClickableEnabled
+				}
+				sendGameRowClickEvent={sendGameRowClickEvent}
+				startChat={startChat}
 			/>
 		);
 	}

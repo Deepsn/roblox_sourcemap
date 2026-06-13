@@ -17,6 +17,12 @@ export const getResources = (translate: TranslateFunction) =>
 			loading: translate("Content.Loading"),
 			cancelButton: translate("Action.Cancel"),
 			continueButton: translate("Action.Continue"),
+			closeAffordance: translate("Action.Close"),
+			qrTitle: translate("Title.QRHandoff"),
+			qrDescription: translate("Content.ScanQR"),
+			qrFooter: translate("Content.QRHelpFull", {
+				prompt: `<b>${translate("Content.QRHelpPrompt")}</b>`,
+			}),
 		},
 	}) as const;
 

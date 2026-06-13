@@ -1,3 +1,12 @@
+/**
+ * @deprecated LEGACY (V1) open-game-details action parser.
+ *
+ * The V2 equivalent lives at `../../v2/actions/openGameDetailsHandler.ts`
+ * (`openGameDetailsResolveHref`). When adding or modifying open-game-details
+ * functionality, update the V2 handler too so the two systems stay in sync.
+ * Prefer not to extend this file unless the change is required for the legacy
+ * system specifically.
+ */
 import {
 	EventStreamMetadata,
 	TCommonReferralParams,
@@ -139,6 +148,16 @@ const buildGameDetailReferralParams = (
 	return gameDetailReferralEventProperties;
 };
 
+/**
+ * @deprecated This is the legacy (V1) open-game-details action parser. New work
+ * should target the V2 handler instead:
+ * `../../v2/actions/openGameDetailsHandler.ts` (`openGameDetailsResolveHref`).
+ *
+ * If you need to add or change open-game-details behavior, update the V2 handler
+ * as well (or instead) so the legacy and V2 systems do not drift apart. Avoid
+ * adding new functionality here unless it is strictly required for the legacy
+ * system.
+ */
 const openGameDetailsParser = (
 	actionConfig: TSduiActionConfig,
 	analyticsContext: TAnalyticsContext,

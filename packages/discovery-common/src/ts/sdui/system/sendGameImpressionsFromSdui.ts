@@ -1,16 +1,10 @@
 import { sendEvent } from "@rbx/core-scripts/event-stream";
-import eventStreamConstants, {
-	EventStreamMetadata,
-	TCarouselGameImpressions,
-} from "../../common/constants/eventStreamConstants";
+import eventStreamConstants from "../../common/constants/eventStreamConstants";
 import {
-	buildSessionAnalyticsData,
-	getSessionInfoKey,
 	isStringNumberOrBooleanValue,
-	parseBooleanField,
 	parseMaybeStringNumberField,
-	parseStringField,
 } from "../utils/analyticsParsingUtils";
+import { buildGameImpressionParams } from "../utils/gameImpressionsParamsUtils";
 import { SduiRegisteredComponents } from "./SduiComponentRegistry";
 import {
 	TCollectionAnalyticsData,
@@ -18,11 +12,6 @@ import {
 	TSduiContext,
 	TServerDrivenComponentConfig,
 } from "./SduiTypes";
-import {
-	TGameImpressionsEventSponsoredAdData,
-	TGameImpressionsEventTileBadgeContextsData,
-	TGameImpressionsEventThumbnailIdData,
-} from "../../common/utils/parsingUtils";
 import { DUMMY_ITEM_DATA } from "./buildAnalyticsData";
 
 // Returns true if the first item exists and is a 16:9 tile
@@ -46,64 +35,6 @@ const getUseGridTiles = (items: TServerDrivenComponentConfig[]): boolean => {
 	return false;
 };
 
-const getThumbnailPersonalizationData = (
-	useGridTiles: boolean,
-	indexesToSend: number[],
-	itemAnalyticsDatas: TItemAnalyticsData[],
-): TGameImpressionsEventThumbnailIdData | {} => {
-	if (useGridTiles) {
-		return {
-			[EventStreamMetadata.ThumbnailAssetIds]: indexesToSend.map((index) =>
-				parseStringField(itemAnalyticsDatas[index]?.thumbnailAssetId, "0"),
-			),
-			[EventStreamMetadata.ThumbnailListIds]: indexesToSend.map((index) =>
-				parseStringField(itemAnalyticsDatas[index]?.thumbnailListId, "0"),
-			),
-		};
-	}
-
-	return {};
-};
-
-const getTileBadgeData = (
-	indexesToSend: number[],
-	itemAnalyticsDatas: TItemAnalyticsData[],
-): TGameImpressionsEventTileBadgeContextsData => {
-	return {
-		[EventStreamMetadata.TileBadgeContexts]: indexesToSend.map((index) =>
-			parseStringField(itemAnalyticsDatas[index]?.tileBadgeIds, "0"),
-		),
-	};
-};
-
-const getSponsoredAdData = (
-	indexesToSend: number[],
-	itemAnalyticsDatas: TItemAnalyticsData[],
-	sduiContext: TSduiContext,
-): TGameImpressionsEventSponsoredAdData | {} => {
-	const adFlags = indexesToSend.map((index) =>
-		parseBooleanField(
-			itemAnalyticsDatas[index]?.adFlag,
-			false,
-			sduiContext.pageContext,
-		) === true
-			? 1
-			: 0,
-	);
-
-	if (adFlags.some((adFlag) => adFlag === 1)) {
-		return {
-			[EventStreamMetadata.AdsPositions]: adFlags,
-			[EventStreamMetadata.AdFlags]: adFlags,
-			[EventStreamMetadata.AdIds]: indexesToSend.map((index) =>
-				parseStringField(itemAnalyticsDatas[index]?.adId, "0"),
-			),
-		};
-	}
-
-	return {};
-};
-
 const sendGameImpressionsFromSdui = (
 	indexesToSend: number[],
 	itemAnalyticsDatas: TItemAnalyticsData[],
@@ -113,53 +44,14 @@ const sendGameImpressionsFromSdui = (
 ): void => {
 	const useGridTiles = getUseGridTiles(items);
 
-	const sessionInfoKey = getSessionInfoKey(sduiContext.pageContext) ?? "";
-	const pageSessionInfo = parseStringField(
-		collectionAnalyticsData?.[sessionInfoKey],
-		"",
-	);
-
-	const itemComponentType =
-		indexesToSend.length > 0
-			? parseStringField(
-					itemAnalyticsDatas[indexesToSend[0]!]?.itemComponentType,
-					DUMMY_ITEM_DATA.itemComponentType,
-				)
-			: DUMMY_ITEM_DATA.itemComponentType;
-
-	const gameImpressionParams: TCarouselGameImpressions = {
-		[EventStreamMetadata.RootPlaceIds]: indexesToSend.map((index) =>
-			parseMaybeStringNumberField(itemAnalyticsDatas[index]?.placeId, -1),
-		),
-		[EventStreamMetadata.UniverseIds]: indexesToSend.map((index) =>
-			parseMaybeStringNumberField(itemAnalyticsDatas[index]?.universeId, -1),
-		),
-
-		...getThumbnailPersonalizationData(
-			useGridTiles,
-			indexesToSend,
-			itemAnalyticsDatas,
-		),
-		...getTileBadgeData(indexesToSend, itemAnalyticsDatas),
-
-		...getSponsoredAdData(indexesToSend, itemAnalyticsDatas, sduiContext),
-
-		[EventStreamMetadata.NavigationUids]: indexesToSend.map((index) =>
-			parseStringField(itemAnalyticsDatas[index]?.navigationUniverseId, "0"),
-		),
-
-		[EventStreamMetadata.AbsPositions]: indexesToSend,
-		[EventStreamMetadata.SortPos]:
-			// Decremented since server collectionPosition will be 1-indexed for Lua
-			collectionAnalyticsData?.collectionPosition >= 0
-				? collectionAnalyticsData.collectionPosition - 1
-				: -1,
-		[EventStreamMetadata.ComponentType]: itemComponentType,
-		[EventStreamMetadata.GameSetTypeId]:
-			collectionAnalyticsData?.collectionId ?? -1,
-		[EventStreamMetadata.Page]: sduiContext.pageContext.pageName,
-		...buildSessionAnalyticsData(pageSessionInfo, sduiContext),
-	};
+	const gameImpressionParams = buildGameImpressionParams({
+		impressionIndexes: indexesToSend,
+		itemAnalyticsDatas,
+		collectionAnalyticsData,
+		pageContext: sduiContext.pageContext,
+		useGridTiles,
+		componentTypeFallback: DUMMY_ITEM_DATA.itemComponentType,
+	});
 
 	const eventStreamParams =
 		eventStreamConstants.gameImpressions(gameImpressionParams);

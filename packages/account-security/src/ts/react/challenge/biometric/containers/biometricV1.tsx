@@ -1,8 +1,6 @@
 import React from "react";
-import { Provider } from "react-redux";
 import useBiometricContext from "../hooks/useBiometricContext";
-import PersonaLivenessCheck from "./personaLiveness/personaLivenessV1";
-import { store } from "./personaLiveness/store";
+import PersonaLivenessCheckV2 from "./personaLiveness/personaLivenessV2";
 
 /**
  * This is the entry point for the biometric challenge.
@@ -15,11 +13,7 @@ const BiometricV1: React.FC = () => {
 
 	switch (biometricType) {
 		case "personaliveness":
-			return (
-				<Provider store={store}>
-					<PersonaLivenessCheck />
-				</Provider>
-			);
+			return <PersonaLivenessCheckV2 />;
 		default:
 			console.error("Biometric type not supported:", biometricType);
 			break;

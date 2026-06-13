@@ -19,6 +19,7 @@ import { searchLandingPage } from "../common/constants/configConstants";
 import OmniFeedItem from "../omniFeed/OmniFeedItem";
 import { PageContext } from "../common/types/pageContext";
 import useFriendsPresence from "../common/hooks/useFriendsPresence";
+import { LoadingGameTile } from "../common/components/LoadingGameTile";
 
 function SearchLandingPageOmniFeed({
 	translate,
@@ -29,6 +30,7 @@ function SearchLandingPageOmniFeed({
 		TExploreApiSorts | undefined
 	>(undefined);
 	const [prevHasRecommendations, setPrevHasRecommendations] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const shouldNotifyHasContentRef = useRef(false);
 
 	const friendsPresenceData = useFriendsPresence();
@@ -89,6 +91,7 @@ function SearchLandingPageOmniFeed({
 			);
 			return;
 		}
+		setIsLoading(true);
 		bedev2Services
 			.getSearchLandingRecommendations(sessionInfo)
 			.then((data) => {
@@ -129,6 +132,9 @@ function SearchLandingPageOmniFeed({
 					searchLandingPage.searchLandingPageFetchRecommendationsError,
 				);
 				setRecommendations(undefined);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, [sessionInfo]);
 
@@ -144,9 +150,34 @@ function SearchLandingPageOmniFeed({
 		}
 	}, [prevHasRecommendations]);
 
-	// If the SLP is disabled or the recommendations are empty, don't render the SLP
-	if (!showSearchLanding || !prevHasRecommendations || !recommendations)
-		return null;
+	// If the SLP is disabled, don't render the SLP or loading state
+	if (!showSearchLanding) return null;
+
+	if (isLoading && !recommendations) {
+		return (
+			<div
+				data-testid="SearchLandingPageLoadingTestId"
+				className="search-landing-container"
+				role="presentation"
+				onMouseDown={(e) => {
+					e.preventDefault();
+				}}
+			>
+				<div className="search-landing-loading-title shimmer" />
+				<div className="search-landing-loading-carousel">
+					{Array.from(
+						{ length: searchLandingPage.numberOfTilesPerCarousel },
+						(_, id) => (
+							<LoadingGameTile key={id} />
+						),
+					)}
+				</div>
+			</div>
+		);
+	}
+
+	// If the recommendations are empty, don't render the SLP
+	if (!prevHasRecommendations || !recommendations) return null;
 
 	return (
 		<SearchLandingPageSessionContext.Provider value={sessionInfo}>

@@ -22,6 +22,7 @@ type ExperimentationConfig = {
 	isBadgeEnabled: boolean;
 	isAddFriendsTileEnabledWeb: boolean;
 	isIARCJoinCardRedesignEnabled: boolean;
+	isIARCJoinCardGameRowClickableEnabled: boolean;
 };
 
 const mustHideConnectionsCheck = async (
@@ -68,6 +69,7 @@ const FriendsCarouselContainer = ({
 			isBadgeEnabled: false,
 			isAddFriendsTileEnabledWeb: false,
 			isIARCJoinCardRedesignEnabled: false,
+			isIARCJoinCardGameRowClickableEnabled: false,
 		});
 
 	const { translate } = useTranslation();
@@ -84,6 +86,8 @@ const FriendsCarouselContainer = ({
 						ixpResult.enableAddFriendsTileOnWeb === true,
 					isIARCJoinCardRedesignEnabled:
 						ixpResult.isIARCJoinCardRedesignEnabled === true,
+					isIARCJoinCardGameRowClickableEnabled:
+						ixpResult.isIARCJoinCardGameRowClickableEnabled === true,
 				};
 			} catch (error) {
 				console.error("Error fetching experimentation config:", error);
@@ -91,6 +95,7 @@ const FriendsCarouselContainer = ({
 					isBadgeEnabled: false,
 					isAddFriendsTileEnabledWeb: false,
 					isIARCJoinCardRedesignEnabled: false,
+					isIARCJoinCardGameRowClickableEnabled: false,
 				};
 			}
 		};
@@ -178,6 +183,7 @@ const FriendsCarouselContainer = ({
 							isBadgeEnabled: false,
 							isAddFriendsTileEnabledWeb: false,
 							isIARCJoinCardRedesignEnabled: false,
+							isIARCJoinCardGameRowClickableEnabled: false,
 						};
 			const mustHideConnections =
 				mustHideFriends.status === FULFILLED_PROMISE_STATUS
@@ -236,6 +242,9 @@ const FriendsCarouselContainer = ({
 				}
 				isIARCJoinCardRedesignEnabled={
 					experimentationConfig.isIARCJoinCardRedesignEnabled
+				}
+				isIARCJoinCardGameRowClickableEnabled={
+					experimentationConfig.isIARCJoinCardGameRowClickableEnabled
 				}
 			/>
 		</div>

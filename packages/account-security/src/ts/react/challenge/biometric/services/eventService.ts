@@ -39,7 +39,7 @@ export class EventServiceDefault {
 		);
 	}
 
-	sendChallengeCompletedEvent(inquiryId?: string, reason?: string): void {
+	sendChallengeCompletedEvent(reason?: string, inquiryId?: string): void {
 		Roblox.EventStream.SendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			EVENT_CONSTANTS.context.challengeCompleted,

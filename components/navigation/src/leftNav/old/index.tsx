@@ -10,6 +10,7 @@ import {
 	VerifiedBadgeIconContainer,
 	currentUserHasVerifiedBadge,
 } from "@rbx/roblox-badges";
+import { UncheckedBadge, showUncheckedBadge } from "@rbx/identity-badges";
 import links from "../../constants/linkConstants";
 import ScrollListContainer from "./ScrollListContainer";
 import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
@@ -75,8 +76,17 @@ function LeftNavigation({ ...props }: Record<string, unknown>) {
 								altName={authenticatedUser.name ?? undefined}
 							/>
 						</span>
-						<div className={displayNameDivClasses}>{nameForDisplay}</div>
-						{badgeToRender}
+						<span className="flex flex-col gap-xsmall min-width-0 large:flex-row large:align-items-center">
+							<span className="flex gap-xsmall min-width-0 align-items-center">
+								<div className={displayNameDivClasses}>{nameForDisplay}</div>
+								{badgeToRender}
+							</span>
+							{showUncheckedBadge() ? (
+								<span className="flex items-center large:fill large:basis-auto large:padding-x-small large:justify-end">
+									<UncheckedBadge />
+								</span>
+							) : null}
+						</span>
 					</Link>
 				</li>
 				<li key="divider" className="rbx-divider" />

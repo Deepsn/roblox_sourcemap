@@ -28,6 +28,7 @@ const FriendTile = ({
 	sortPosition,
 	totalNumberOfFriends,
 	isIARCJoinCardRedesignEnabled,
+	isIARCJoinCardGameRowClickableEnabled,
 }: {
 	friend: TFriend;
 	friendIndex: number;
@@ -41,6 +42,7 @@ const FriendTile = ({
 	sortPosition: number | undefined;
 	totalNumberOfFriends: number;
 	isIARCJoinCardRedesignEnabled: boolean;
+	isIARCJoinCardGameRowClickableEnabled: boolean;
 }): JSX.Element => {
 	const userProfileUrl = `${environmentUrls.websiteUrl}/users/${friend.id}/profile`;
 	const displayName = friend.combinedName ?? translate(unavailableFriendName);
@@ -67,6 +69,18 @@ const FriendTile = ({
 		sortId,
 		sortPosition,
 		totalNumberOfFriends,
+	);
+
+	const sendGameRowClickEvent = useFriendsCarouselClickTracker(
+		friend,
+		friendIndex,
+		carouselName,
+		eventContext,
+		homePageSessionInfo,
+		sortId,
+		sortPosition,
+		totalNumberOfFriends,
+		"OpenGameDetails",
 	);
 
 	return (
@@ -106,6 +120,10 @@ const FriendTile = ({
 							gameUrl={gameUrl}
 							canChat={canChat}
 							isIARCJoinCardRedesignEnabled={isIARCJoinCardRedesignEnabled}
+							isIARCJoinCardGameRowClickableEnabled={
+								isIARCJoinCardGameRowClickableEnabled
+							}
+							sendGameRowClickEvent={sendGameRowClickEvent}
 						/>
 					) : (
 						<div />

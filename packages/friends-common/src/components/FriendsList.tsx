@@ -21,6 +21,7 @@ const FriendsList = ({
 	badgeCount,
 	isAddFriendsTileEnabled,
 	isIARCJoinCardRedesignEnabled,
+	isIARCJoinCardGameRowClickableEnabled,
 }: {
 	friendsList: TFriend[] | null;
 	isOwnUser: boolean;
@@ -34,6 +35,7 @@ const FriendsList = ({
 	badgeCount: number;
 	isAddFriendsTileEnabled: boolean;
 	isIARCJoinCardRedesignEnabled: boolean;
+	isIARCJoinCardGameRowClickableEnabled: boolean;
 }): JSX.Element => {
 	const parentRef = useRef<HTMLElement | null>(null);
 	const [visibleFriendsList, setVisibleFriendsList] = useState(friendsList);
@@ -119,6 +121,9 @@ const FriendsList = ({
 									sortPosition={sortPosition}
 									totalNumberOfFriends={friendsList?.length ?? 0}
 									isIARCJoinCardRedesignEnabled={isIARCJoinCardRedesignEnabled}
+									isIARCJoinCardGameRowClickableEnabled={
+										isIARCJoinCardGameRowClickableEnabled
+									}
 								/>
 							</div>
 						))}

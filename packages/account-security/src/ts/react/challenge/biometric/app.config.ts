@@ -24,6 +24,11 @@ export const BIOMETRIC_LANGUAGE_RESOURCES = [
 	"Content.Loading",
 	"Action.Cancel",
 	"Action.Continue",
+	"Action.Close",
+	"Title.QRHandoff",
+	"Content.ScanQR",
+	"Content.QRHelpPrompt",
+	"Content.QRHelpFull",
 ] as const;
 
 /**
