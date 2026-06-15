@@ -2616,6 +2616,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.AvatarAutoSetupJob": "Avatar Auto-Setup",
 	"Label.LuauExecutionSessions": "Luau Execution Sessions",
 	"Label.Thumbnails": "Thumbnails",
+	"Description.ParentSide.PresetChatSetting":
+		'This allows your child to use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players who are in the same game.',
+	"Label.PresetChat": "Quick words",
+	"Heading.PresetChatSetting": "Quick words setting",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
