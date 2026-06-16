@@ -5,6 +5,7 @@ const RegexBasedSamplerSettings: Record<
 	{ pattern: RegExp; sampleRate: number }
 > = {
 	PaymentTeamPagesRegex: { pattern: /^\/upgrades(?:\/|$)/i, sampleRate: 0.1 },
+	SpotlightPageRegex: { pattern: /^\/spotlight\/.*/i, sampleRate: 1 }, // 100% sample rate for spotlight page. Low traffic on page.
 };
 
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
