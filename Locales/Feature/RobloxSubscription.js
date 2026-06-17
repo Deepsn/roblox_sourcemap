@@ -185,6 +185,9 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Title.AgeCheckTrial": "Get one free week of Plus",
 	"Description.AgeCheckTrial":
 		"Complete an age check to unlock Plus benefits and access features appropriate for your age.",
+	"Title.FreeTrialExpired": "Plus free trial has expired",
+	"Description.FreeTrialExpired":
+		"Subscribe to Roblox Plus to keep your benefits starting at only $4.99/ month",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

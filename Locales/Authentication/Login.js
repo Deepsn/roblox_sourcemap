@@ -216,6 +216,8 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"No sign-in methods are available for this account. Please try account recovery or contact support.",
 	"Response.EnterEmailForLoginCode":
 		"To sign in, please enter your email address instead",
+	"Title.NewPlaceVersionLiveErrorReportBanner":
+		"{placeName}: V{versionNumber} is live.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -2392,7 +2392,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.DeleteAccount": "Delete",
 	"Label.DeleteAccountReceived": "Your request has been received",
 	"Description.DeleteAccountReceived":
-		"We are processing your request to delete your account. If successful, you will be logged out of all your Roblox sessions. For questions on account deletion, please see the {openHelpTag}account deletion help pages{closeHelpTag}.",
+		"We are processing your request to delete your account. If successful, you will be logged out of all your Roblox sessions. Find more information about deleting your account on our {openHelpTag}FAQ{closeHelpTag}.",
 	"Label.Blackbird": "Roblox Plus",
 	"Action.Create": "Create",
 	"Label.AddBothOfThese": "Add both of these:",
@@ -2590,7 +2590,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.HigherLimitBadge": "Higher limit",
 	"Action.Label.EnableHigherLimits": "Get higher limits",
 	"Description.EnableHigherLimits":
-		"Set up 2-Step Verification on your account to send and receive up to 10,000 Robux every month",
+		"Turn on 2-Step verification to check whether you qualify for a higher limit.",
 	"Label.DailyLimit": "Daily limit",
 	"Label.StandardLimitBadge": "Standard limit",
 	"Label.TransactionHistory": "Transaction history",

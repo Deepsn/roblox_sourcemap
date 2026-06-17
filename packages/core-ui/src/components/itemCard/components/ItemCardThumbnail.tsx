@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
-// import { Badge } from "@rbx/foundation-ui";
+import { Badge } from "@rbx/foundation-ui";
 import ItemCardStatus from "./ItemCardStatus";
 import ItemCardRestrictions from "./ItemCardRestrictions";
 import ItemCardPrice from "./ItemCardPrice";
@@ -104,34 +104,27 @@ function ItemCardThumbnail({
 		);
 	}
 
-	// const selectedTimedOption = timedOptions?.find(option => option.selected);
+	const selectedTimedOption = timedOptions?.find((option) => option.selected);
 
 	return (
 		<div className="item-card-link">
 			<div className="item-card-thumb-container">
-				{/*
-          Timed-options clock badge is intentionally disabled while we run
-          experiments to determine whether to keep it on the thumbnail. Kept
-          here (commented) so it can be re-enabled once the experiment
-          concludes; the `Badge` import and `selectedTimedOption` lookup above
-          are commented for the same reason.
-        */}
-				{/* {timedOptions && timedOptions.length > 0 && (
-          <div className="timed-options-container">
-            <Badge
-              variant="Neutral"
-              icon="icon-regular-clock"
-              className="bg-surface-0"
-              label={
-                selectedTimedOption?.days
-                  ? translate("Label.TimedOptionDaysAbbreviation", {
-                      days: selectedTimedOption.days,
-                    })
-                  : ""
-              }
-            />
-          </div>
-        )} */}
+				{timedOptions && timedOptions.length > 0 && (
+					<div className="timed-options-container">
+						<Badge
+							variant="Neutral"
+							icon="icon-regular-clock"
+							className="bg-surface-0"
+							label={
+								selectedTimedOption?.days
+									? translate("Label.TimedOptionDaysAbbreviation", {
+											days: selectedTimedOption.days,
+										})
+									: ""
+							}
+						/>
+					</div>
+				)}
 				{enableThumbnailPrice && (
 					<ItemCardPrice
 						price={price}

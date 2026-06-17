@@ -689,8 +689,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Different regions have different rules for verifying parents. The method you used before isn't accepted where your child's account is now registered.",
 	"Description.ExperienceChatPresetDisclaimer":
 		"Note: your child may still be able to use Quick Words, a menu of short phrases, for gameplay coordination.",
+	"Description.TrustedConnectionNotConnected": "Not a friend",
 	"Heading.ConversationalRequest.PresetChat":
 		"Can your child use quick words to coordinate gameplay?",
+	"Description.TrustedConnectionNoMutualFriends": "No mutual friends",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
