@@ -2527,6 +2527,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Visit the App Store or Google Play to download the Roblox app now.",
 	"Label.DownloadOnTheAppStore": "Download on the App Store",
 	"Label.GetItOnGooglePlay": "Get it on Google Play",
+	"Label.UniverseAnalytics": "Game Analytics",
 	"Label.FreeTrial": "Free trial",
 	"Label.Subscriptions.PaypalPayment": "Paypal",
 	"Label.Subscriptions.SubscriptionBenefits": "Benefits",

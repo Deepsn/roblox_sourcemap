@@ -71,6 +71,7 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 	"UnplayableError.ContextualPlayabilityRequireParentApproval":
 		"Ask your parent to unlock this game for you.",
 	"PlayButtonText.PlayDemo": "Play Demo",
+	"PlayButtonText.Play": "Play",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

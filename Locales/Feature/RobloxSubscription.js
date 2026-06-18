@@ -188,6 +188,12 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Title.FreeTrialExpired": "Plus free trial has expired",
 	"Description.FreeTrialExpired":
 		"Subscribe to Roblox Plus to keep your benefits starting at only $4.99/ month",
+	"Description.FreeTrialConfirmation":
+		"You have unlocked the following Plus benefits. Your trial will automatically expire after 7 days, add a credit card to keep benefits.",
+	"Title.FreeTrialConfirmation": "Enjoy one week of Plus",
+	"Action.ViewDetails": "View details",
+	"Description.FeatureAccessDisclaimer":
+		"Access to features depends on your account settings and region.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
