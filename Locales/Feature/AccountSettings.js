@@ -2620,6 +2620,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.ParentSide.PresetChatSetting":
 		'This allows your child to use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players who are in the same game.',
 	"Label.PresetChat": "Quick words",
+	"Description.ChildSide.PresetChat":
+		'Use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players in the same game.',
 	"Heading.PresetChatSetting": "Quick words setting",
 };
 window.Roblox &&
