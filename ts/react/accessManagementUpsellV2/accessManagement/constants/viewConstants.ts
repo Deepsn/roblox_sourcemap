@@ -4,6 +4,7 @@ import { ExtraParameter } from "../../types/AmpTypes";
 
 export const ModalEvent = {
 	StartAccessManagementUpsell: "StartAccessManagementUpsell",
+	ShowDownloadAppModal: "ShowDownloadAppModal",
 };
 
 export type AccessManagementUpsellEventParams = {

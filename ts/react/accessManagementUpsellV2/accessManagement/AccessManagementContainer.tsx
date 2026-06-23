@@ -163,6 +163,7 @@ function AccessManagementContainer({
 
 		if (featureAccess?.data?.recourses?.length > 0 && shouldSetStagePrologue) {
 			dispatch(setStage(UpsellStage.Prologue));
+			setshouldSetStagePrologue(false);
 		}
 
 		if (

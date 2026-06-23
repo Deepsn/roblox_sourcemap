@@ -299,6 +299,7 @@ export default function createItemPurchase({
 				collectibleItemInstanceId,
 				collectibleProductId,
 				subscriptionTargetKey,
+				rentalOptionDays,
 			};
 			itemUpsellProcessParams = {
 				errorObject: {
@@ -655,8 +656,11 @@ export default function createItemPurchase({
 				});
 		};
 
-		/** @param {number} price expected price displayed to the user */
-		const purchaseCollectibleItem = async (price) => {
+		/**
+		 * @param {number} price expected price displayed to the user
+		 * @param {string[] | undefined} offerIds selected marketplace offer ids
+		 */
+		const purchaseCollectibleItem = async (price, offerIds) => {
 			const params = {
 				collectibleItemId,
 				expectedCurrency,
@@ -673,6 +677,9 @@ export default function createItemPurchase({
 			}
 			if (collectibleProductId) {
 				params.collectibleProductId = collectibleProductId;
+			}
+			if (offerIds?.length) {
+				params.offerIds = offerIds;
 			}
 
 			if (handlePurchase) {
@@ -763,6 +770,9 @@ export default function createItemPurchase({
 						assetIsWearable: true,
 						transactionVerb,
 						itemDelayed: data?.pending,
+						// Use the actual charged price (discounted via cart-pricing offers) so the
+						// post-purchase balance reflects the discount rather than the catalog price.
+						expectedPrice: price ?? expectedPrice,
 						onDecline: () => {
 							window.location.reload();
 						},
@@ -953,10 +963,13 @@ export default function createItemPurchase({
 				});
 		};
 
-		/** @param {number} price expected price displayed to the user */
-		const purchaseItem = (price) => {
+		/**
+		 * @param {number} price expected price displayed to the user
+		 * @param {string[] | undefined} offerIds selected marketplace offer ids
+		 */
+		const purchaseItem = (price, offerIds) => {
 			if (collectibleItemId) {
-				purchaseCollectibleItem(price);
+				purchaseCollectibleItem(price, offerIds);
 			} else if (assetType === "Product") {
 				purchaseDeveloperProduct(price);
 			} else if (assetType === "Game Pass") {
@@ -1011,8 +1024,8 @@ export default function createItemPurchase({
 						loading,
 						currentRobuxBalance,
 						rentalOptionDays,
-						onAction: () => {
-							purchaseItem(expectedPrice);
+						onAction: ({ purchasePrice, offerIds } = {}) => {
+							purchaseItem(purchasePrice ?? expectedPrice, offerIds);
 							return false;
 						},
 						primaryActionButtonText,
@@ -1022,6 +1035,8 @@ export default function createItemPurchase({
 						priceSuffix: priceSuffix || undefined,
 						subscriptionProductInfo: subscriptionProductInfo || undefined,
 						discountInformation: discountInformation || undefined,
+						collectibleItemId: collectibleItemId || undefined,
+						isLimited: isLimited || false,
 					}}
 				/>
 			);

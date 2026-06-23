@@ -1,18 +1,23 @@
 import Persona from "persona";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTheme, TranslateFunction } from "react-utilities";
 import {
+	CurrentUser,
 	DeviceMeta,
+	DeepLinkService,
 	ExperimentationService,
+	Guac,
 	TFeatureSpecificData,
 	Intl,
 } from "Roblox";
+import { QRDeepLinkDialog } from "@rbx/identity-verification";
 import openVerificationLink from "../../utils/verificationUtils";
 import VerificationCompletePage from "./components/VerificationCompletePage";
 import FAEQRCodeContainer from "./FAEQRCodeContainer";
 import useExperiments from "../../hooks/useExperiments";
 import { faeQrCodeExperimentLayer } from "../../accessManagement/constants/experimentConstants";
+import { ModalEvent } from "../../accessManagement/constants/viewConstants";
 import {
 	fetchFeatureAccess,
 	selectAmpFeatureCheckData,
@@ -24,6 +29,7 @@ import LoadingPage from "../../accessManagement/components/LoadingPage";
 import { VerificationStatusCode, FlowType, Access } from "../../enums";
 import { useAppDispatch } from "../../store";
 import FAEEventConstants from "./constants/eventConstants";
+import { HeadingConstants, LabelConstants } from "./constants/textConstants";
 import {
 	sendFAEModalShownEvent,
 	sendFAEButtonClickEvent,
@@ -41,6 +47,11 @@ import {
 	VerificationStatus,
 } from "./verificationSlice";
 
+type TAmpWizardPolicy = {
+	faeMobileWebDeeplinkEnabled: boolean;
+	faeDesktopDeeplinkEnabled: boolean;
+};
+
 // Constants
 const DEFAULT_THEME = "dark";
 const EMBEDDED_FLOW_POLLING_INTERVAL = 200; // .2 seconds
@@ -50,6 +61,8 @@ const POLLING_TIMEOUT = 1800000; // 30 minutes
 const FAERecourse = "AgeEstimation";
 const FEATURE_ACCESS_POLLING_INTERVAL = 1000; // 1 seconds
 const FEATURE_ACCESS_POLLING_TIMEOUT = 10000; // 10 seconds
+const QR_DEEPLINK_POLLING_INTERVAL = 5000; // 5 seconds
+const APPSFLYER_BASE_URL = "https://ro.blox.com/Ebh5";
 
 function FAEPersonaFlow({
 	translate,
@@ -396,19 +409,190 @@ function FAEContainer({
 	ageEstimation: boolean;
 	featureSpecificParams: TFeatureSpecificData;
 }): React.ReactElement {
+	const dispatch = useAppDispatch();
 	const isWebview = (DeviceMeta && DeviceMeta().isInApp) ?? false;
+	const featureName = useSelector(selectFeatureName);
+	const namespace = useSelector(selectNamespace);
+	const ampFeatureCheckData = useSelector(selectAmpFeatureCheckData);
+	const featureAccess = useSelector(selectFeatureAccess);
 	const ixpValues = useExperiments(faeQrCodeExperimentLayer);
 	const isExperimentLoaded = ixpValues !== null;
+	// TODO: remove FAE QR code experiemnt code since the new ixp is controled via guac.
 	const isFaeQrCodeEnabled = Boolean(ixpValues?.isFaeQrCodeEnabled);
 	const isFromAccountInfo = featureSpecificParams?.source === "accountInfo";
 
 	const showQrCodeFlow = !isWebview && isFaeQrCodeEnabled && isFromAccountInfo;
+	const [appsFlyerLink, setAppsFlyerLink] = useState<string | null>(null);
+
+	const { context = "defaultContext" } = featureSpecificParams || {};
+
+	// Read latest featureAccess inside the polling closure without resubscribing.
+	const featureAccessRef = useRef(featureAccess);
+	featureAccessRef.current = featureAccess;
+	const deeplinkPollingRef = useRef<NodeJS.Timeout | null>(null);
+	const deeplinkPollingEndTime = useRef<number>(0);
+
+	const clearDeeplinkPolling = () => {
+		if (deeplinkPollingRef.current) {
+			clearInterval(deeplinkPollingRef.current);
+			deeplinkPollingRef.current = null;
+		}
+	};
+
+	useEffect(() => {
+		async function checkDeeplinkPolicy() {
+			if (featureSpecificParams?.source === "parent") return;
+
+			try {
+				const policy = await Guac.callBehaviour<TAmpWizardPolicy>("amp-wizard");
+				const deviceMeta = DeviceMeta?.();
+				const isMobile =
+					deviceMeta && (deviceMeta.isPhone || deviceMeta.isTablet);
+				const isDesktopOrConsole =
+					deviceMeta && (deviceMeta.isDesktop || deviceMeta.isConsole);
+				const isAmazon = deviceMeta?.isAmazonApp ?? false;
+
+				if (isMobile && !isAmazon && policy?.faeMobileWebDeeplinkEnabled) {
+					const namespaceParam = namespace ? `&namespace=${namespace}` : "";
+					const deepLink = `roblox://navigation/amp_wizard?feature_name=${featureName}${namespaceParam}&entry_point=web`;
+					await DeepLinkService.navigateToDeepLink(deepLink);
+					window.dispatchEvent(new Event(ModalEvent.ShowDownloadAppModal));
+					onHidecallback();
+					return;
+				}
+
+				if (
+					(isDesktopOrConsole || isAmazon) &&
+					policy?.faeDesktopDeeplinkEnabled
+				) {
+					const deepLinkParams = new URLSearchParams({
+						feature_name: featureName,
+						entry_point: "web",
+						user_id: String(CurrentUser.userId),
+					});
+					if (namespace) {
+						deepLinkParams.set("namespace", namespace);
+					}
+					const deepLink = `roblox://navigation/amp_wizard?${deepLinkParams.toString()}`;
+
+					const oneLinkParams = new URLSearchParams({
+						pid: "QR_code",
+						c: "fae_onelink",
+						is_retargeting: "false",
+						af_dp: deepLink,
+						deep_link_value: deepLink,
+					});
+					setAppsFlyerLink(`${APPSFLYER_BASE_URL}?${oneLinkParams.toString()}`);
+				}
+			} catch {
+				// Guac fetch failed — fall through to normal flow
+			}
+		}
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		checkDeeplinkPolicy();
+	}, []);
 
 	useEffect(() => {
 		if (isExperimentLoaded && ExperimentationService?.logLayerExposure) {
 			ExperimentationService.logLayerExposure(faeQrCodeExperimentLayer);
 		}
 	}, [isExperimentLoaded]);
+
+	// While the desktop deeplink QR is shown, poll feature access so the modal
+	// auto-closes once the user finishes FAE on the device they scanned with.
+	useEffect(() => {
+		if (!appsFlyerLink || deeplinkPollingRef.current) {
+			return undefined;
+		}
+
+		deeplinkPollingEndTime.current = Date.now() + POLLING_TIMEOUT;
+
+		const doFetch = () => {
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			dispatch(
+				fetchFeatureAccess({
+					featureName,
+					ampFeatureCheckData,
+					namespace,
+					successfulAction: FAERecourse,
+				}),
+			);
+		};
+
+		doFetch();
+
+		deeplinkPollingRef.current = setInterval(() => {
+			if (Date.now() >= deeplinkPollingEndTime.current) {
+				clearDeeplinkPolling();
+				sendFAEPageLoadEvent(
+					context,
+					"",
+					FAEEventConstants.field.webQrCodeFaeTimeout,
+				);
+				onHidecallback();
+				return;
+			}
+
+			const { current } = featureAccessRef;
+			const isActionable = current?.data?.access === Access.Actionable;
+			const faeInRecourse = current?.data?.recourses?.find(
+				(recourse) => recourse.action === FAERecourse,
+			);
+
+			if (!faeInRecourse || !isActionable) {
+				clearDeeplinkPolling();
+				sendFAEPageLoadEvent(
+					context,
+					"",
+					FAEEventConstants.field.webQrCodeFaeComplete,
+				);
+				onHidecallback();
+			} else {
+				doFetch();
+			}
+		}, QR_DEEPLINK_POLLING_INTERVAL);
+
+		return () => clearDeeplinkPolling();
+	}, [appsFlyerLink]);
+
+	if (appsFlyerLink) {
+		return (
+			<QRDeepLinkDialog
+				open
+				onOpenChange={(isOpen) => {
+					if (isOpen) {
+						sendFAEPageLoadEvent(
+							context,
+							"",
+							FAEEventConstants.field.webQrCodeFaeStart,
+						);
+					} else if (!isOpen) {
+						clearDeeplinkPolling();
+						sendFAEPageLoadEvent(
+							context,
+							"",
+							FAEEventConstants.field.webQrCodeFaeClose,
+						);
+						onHidecallback();
+					}
+				}}
+				deeplink={appsFlyerLink}
+				title={
+					translate(HeadingConstants.CheckAgeOnMobileApp) ||
+					"Let's check your age on the mobile app"
+				}
+				description={
+					translate(LabelConstants.ScanQRCodeToAgeCheck) ||
+					"Scan this QR code with your phone or tablet camera to complete an age check"
+				}
+				footer={
+					translate(LabelConstants.DownloadAppFallback) ||
+					"Download the Roblox app on your mobile device and go to Settings > Account Info"
+				}
+				closeAffordance={translate("Action.Close") || "Close"}
+			/>
+		);
+	}
 
 	if (!isExperimentLoaded) {
 		return <LoadingPage />;

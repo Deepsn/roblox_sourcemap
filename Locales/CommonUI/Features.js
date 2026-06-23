@@ -130,6 +130,11 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.Moments": "Moments",
 	"Label.CatalogMarketplaceAvatarStore":
 		"Shop Roblox Catalog, Marketplace & Avatar Store",
+	"Label.sRobuxBalance": "Robux: {robuxAmount}",
+	"Label.sNotificationsCount": "Notifications: {notificationCount}",
+	"Label.sNotifications": "Notifications",
+	"Label.sSettings": "Settings",
+	"Label.sSettingsNotifications": "Settings: {notificationCount}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

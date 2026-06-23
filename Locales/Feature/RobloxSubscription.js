@@ -66,12 +66,12 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.BlackbirdVTDiscountSecond":
 		"{discountPercent}% off these items after {periodIndex} {periodType}",
 	"Label.BlackbirdTr": "Send Robux for free",
-	"Label.BlackbirdFPS": "Free and unlimited private servers",
+	"Label.BlackbirdFPS": "Free private servers",
 	"Label.BlackbirdUpsellBanner":
 		"Get {discountPercentage}% off with Roblox Plus",
 	"Label.BlackbirdPriceTag": "{price}/{periodType}",
 	"Label.FreeTrialText": "Get free trial",
-	"Label.BlackbirdPSDiscount": "Free and unlimited private servers",
+	"Label.BlackbirdPSDiscount": "Free private servers",
 	"Title.GenericError": "Something went wrong",
 	"Title.AlreadySubscribed": "Good news",
 	"Body.AlreadySubscribed":
@@ -95,7 +95,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.Benefit.TradeResellItemsSubtitle":
 		"Build your collection of rare avatars",
 	"Description.Benefit.PublishItemsSubtitle": "Reach millions of players",
-	"Description.Benefit.PrivateServers": "Free and unlimited private servers",
+	"Description.Benefit.PrivateServers": "Free private servers",
 	"Description.Benefit.PrivateServersSubtitle": "Choose who you play with",
 	"Title.PurchasePromoHeadline": "Our best deal.\u2028Unlock 20% off.",
 	"Disclosure.BlackbirdAgreementV2":
@@ -152,7 +152,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Keep your subscription for 2 full months and your discount jumps to 20%, so your Robux go even further on the same items starting in month 3.",
 	"Description.Benefit.PrivateServersExpandedTitle": "Free private servers",
 	"Description.Benefit.PrivateServersExpandedBody":
-		"Create as many private servers as you want so you can play only with friends across supported games at no extra cost.",
+		"Create private servers so you can play only with friends across supported games at no extra cost.",
 	"Description.Benefit.RobuxTransfersExpandedTitle": "Free Robux Transfers",
 	"Description.Benefit.RobuxTransfersExpandedBody":
 		"Instantly transfer Robux to other users without paying any fees on either side. To help keep transfers safe, there are transfer limits of up to 1000 Robux a month - which are subject to change. Additionally parent or caregiver approval is required every time users under 18 send or receive Robux.",

@@ -4,6 +4,7 @@ import { renderToString } from "react-dom/server";
 import { escapeHtml, urlService } from "core-utilities";
 import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
 import type { DiscountInformation } from "../../../../ts/react/components/discountInformation";
+import type { UnifiedPurchaseActionParams } from "../../../../ts/react/components/UnifiedPurchaseModal";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import { ROBLOX_TERMS_OF_USE_URL } from "../../../core/services/itemPurchaseUpsellService/constants/upsellConstants";
@@ -24,7 +25,7 @@ export interface UnifiedPurchaseVerificationModalProps {
 	assetTypeDisplayName?: string;
 	sellerName: string;
 	isPlace?: boolean;
-	onAction: () => void;
+	onAction: (params?: UnifiedPurchaseActionParams) => void;
 	onSecondaryAction?: () => void;
 	primaryActionButtonText?: string;
 	secondaryActionButtonText?: string;
@@ -35,6 +36,8 @@ export interface UnifiedPurchaseVerificationModalProps {
 	rentalOptionDays?: number | null;
 	subscriptionProductInfo?: SubscriptionProductInfo | null;
 	discountInformation?: DiscountInformation | null;
+	collectibleItemId?: string | null;
+	isLimited?: boolean;
 }
 export type ModalService = { open: () => void; close: () => void };
 
@@ -74,6 +77,8 @@ export default function createUnifiedPurchaseVerificationModal() {
 		rentalOptionDays = null,
 		subscriptionProductInfo = null,
 		discountInformation = null,
+		collectibleItemId = null,
+		isLimited = false,
 	}: UnifiedPurchaseVerificationModalProps) {
 		const [open, setOpen] = React.useState(false);
 		React.useEffect(() => {
@@ -183,6 +188,8 @@ export default function createUnifiedPurchaseVerificationModal() {
 					onCancel: modalService.close,
 					subscriptionProductInfo: subscriptionProductInfo ?? undefined,
 					discountInformation: discountInformation ?? undefined,
+					collectibleItemId: collectibleItemId ?? undefined,
+					isLimited,
 				}}
 			/>
 		);

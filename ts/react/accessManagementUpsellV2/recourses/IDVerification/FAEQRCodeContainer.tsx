@@ -1,3 +1,4 @@
+// deprecated since a new common component is used for QR code generation
 import { toDataURL } from "qrcode";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";

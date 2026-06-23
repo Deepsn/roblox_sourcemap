@@ -8,10 +8,12 @@ import React, {
 import { withTranslations, TranslateFunction } from "react-utilities";
 import {
 	Button,
+	Checkbox,
 	Dialog,
 	DialogBody,
 	DialogContent,
 	DialogFooter,
+	TCheckboxCheckState,
 } from "@rbx/foundation-ui";
 import type {
 	SubscriptionProductInfo,
@@ -31,11 +33,18 @@ import type { DiscountInformation } from "./discountInformation";
 import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
 import isPlusSubscriptionRolloutEnabled from "../utils/subscriptionRolloutMeta";
 import guacService from "../services/guacService";
+import useMarketplaceOffers from "../hooks/useMarketplaceOffers";
 // Reuse the legacy paymentSession hook from Roblox.Payments.WebApp so we share
 // the same `paymentSession-${userId}` localStorage cache + single-flight as
 // Buy Robux and other Plus surfaces. Cross-WebApp relative import mirrors
 // Roblox.Membership.WebApp/.../robuxUpsellItem/App.tsx.
 import usePaymentSession from "../../../../../Roblox.Payments.WebApp/Roblox.Payments.WebApp/ts/core/hooks/usePaymentSession";
+import EmbeddableText from "./EmbeddableText";
+
+export type UnifiedPurchaseActionParams = {
+	purchasePrice?: number;
+	offerIds?: string[];
+};
 
 export type UnifiedPurchaseModalProps = {
 	translate: TranslateFunction;
@@ -46,7 +55,7 @@ export type UnifiedPurchaseModalProps = {
 	assetType: string;
 	assetTypeDisplayName?: string;
 	sellerName: string;
-	onAction: () => void;
+	onAction: (params?: UnifiedPurchaseActionParams) => void;
 	onSecondaryAction?: () => void;
 	secondaryActionButtonText?: string;
 	footerDisclaimerText?: React.ReactNode;
@@ -60,6 +69,8 @@ export type UnifiedPurchaseModalProps = {
 	actionButtonText: string;
 	subscriptionProductInfo?: SubscriptionProductInfo;
 	discountInformation?: DiscountInformation | null;
+	collectibleItemId?: string | null;
+	isLimited?: boolean;
 };
 
 export const UnifiedPurchaseModalComponent: React.FC<
@@ -87,10 +98,27 @@ export const UnifiedPurchaseModalComponent: React.FC<
 	open = false,
 	subscriptionProductInfo,
 	discountInformation,
+	collectibleItemId = null,
+	isLimited = false,
 }) => {
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [upsellUuid, setUpsellUuid] = useState<string>();
 	const [redirectUrl, setRedirectUrl] = useState<string>();
+	const {
+		offerSelections,
+		resolvedPrice,
+		resolvedDiscountInformation,
+		resolvedSavingsSummary,
+		isPricingLoading,
+		selectedOfferIds,
+		handleOfferCheckedChange,
+	} = useMarketplaceOffers({
+		collectibleItemId,
+		rentalOptionDays,
+		expectedPrice,
+		isLimitedItem: isLimited,
+		open,
+	});
 	/**
 	 * GUAC `app-policy` kill switch: when true, hide Plus entrypoints (in addition to
 	 * `isPlusSubscriptionRolloutEnabled` from page meta).
@@ -124,6 +152,12 @@ export const UnifiedPurchaseModalComponent: React.FC<
 		};
 	}, []);
 
+	const effectiveExpectedPrice = resolvedPrice ?? expectedPrice;
+	const effectiveDiscountInformation =
+		resolvedDiscountInformation !== undefined
+			? resolvedDiscountInformation
+			: discountInformation;
+
 	const hideRobloxPlusEntrypoints =
 		plusEntrypointsDisabledByPolicy || !isPlusSubscriptionRolloutEnabled();
 
@@ -134,12 +168,12 @@ export const UnifiedPurchaseModalComponent: React.FC<
 
 	const normalizedDiscount = useMemo(
 		() =>
-			discountInformation &&
-			discountInformation.originalPrice &&
-			discountInformation.originalPrice > expectedPrice
-				? normalizeDiscountInformation(discountInformation)
+			effectiveDiscountInformation &&
+			effectiveDiscountInformation.originalPrice &&
+			effectiveDiscountInformation.originalPrice > effectiveExpectedPrice
+				? normalizeDiscountInformation(effectiveDiscountInformation)
 				: null,
-		[discountInformation, expectedPrice],
+		[effectiveDiscountInformation, effectiveExpectedPrice],
 	);
 
 	// Defer `startRobloxPlusUpsellFlow` + VIEW_SHOWN until both the sheet is open
@@ -248,16 +282,47 @@ export const UnifiedPurchaseModalComponent: React.FC<
 							translate={translate}
 							thumbnail={thumbnail}
 							assetName={assetName}
-							expectedPrice={expectedPrice}
+							expectedPrice={effectiveExpectedPrice}
 							displayPrice={displayPrice}
 							priceSuffix={priceSuffix}
 							rentalOptionDays={rentalOptionDays}
-							discountInformation={discountInformation}
+							discountInformation={effectiveDiscountInformation}
 						/>
+						{offerSelections.map((offer) => {
+							const offerLabelId = `purchase-offer-label-${offer.offerId}`;
+
+							return (
+								// eslint-disable-next-line jsx-a11y/label-has-associated-control -- Checkbox is a custom control associated via htmlFor + aria-labelledby
+								<label
+									key={offer.offerId}
+									htmlFor={`purchase-offer-checkbox-${offer.offerId}`}
+									className="flex flex-row items-start gap-x-small self-start cursor-pointer"
+								>
+									<Checkbox
+										id={`purchase-offer-checkbox-${offer.offerId}`}
+										aria-labelledby={offerLabelId}
+										placement="Start"
+										size="Small"
+										isChecked={offer.selected}
+										onCheckedChange={(checked: TCheckboxCheckState) => {
+											handleOfferCheckedChange(offer.offerId, checked === true);
+										}}
+										isDisabled={isPricingLoading}
+										data-testid={`purchase-promo-checkbox-${offer.offerId}`}
+									/>
+									<EmbeddableText
+										id={offerLabelId}
+										text={offer.localizedText}
+										className="text-body-medium content-default"
+									/>
+								</label>
+							);
+						})}
 						{normalizedDiscount && normalizedDiscount.savedAmount > 0 && (
 							<DiscountPriceDetail
 								translate={translate}
 								normalizedDiscount={normalizedDiscount}
+								savingsSummary={resolvedSavingsSummary}
 							/>
 						)}
 					</DialogBody>
@@ -268,8 +333,15 @@ export const UnifiedPurchaseModalComponent: React.FC<
 								<Button
 									variant="Emphasis"
 									className="fill basis-0"
-									onClick={onAction}
-									isDisabled={loading}
+									onClick={() =>
+										onAction({
+											purchasePrice: effectiveExpectedPrice,
+											...(selectedOfferIds.length
+												? { offerIds: selectedOfferIds }
+												: {}),
+										})
+									}
+									isDisabled={loading || isPricingLoading}
 									data-testid="purchase-confirm-button"
 								>
 									{actionButtonText}

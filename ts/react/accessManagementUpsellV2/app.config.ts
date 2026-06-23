@@ -7,6 +7,7 @@ export const accessManagementUpselTranslationConfig = {
 		"Amp.Upsell",
 		"Amp.FAEUpsell",
 		"Feature.Friends",
+		"Feature.AccountSettings",
 	],
 	feature: "Verification.Identity",
 };
