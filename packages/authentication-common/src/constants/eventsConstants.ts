@@ -58,6 +58,8 @@ const EVENT_CONSTANTS = {
 		resetPasswordPage: "resetPasswordPage",
 		passkeyCreationSource: "passkeyCreationSource",
 		passwordDeactivationSource: "passwordDeactivationSource",
+		kisaU14Signup: "kisaU14Signup",
+		platformRestrictedPage: "platformRestrictedPage",
 	},
 	verifiedParentalConsentContext: {
 		chargeback: {
@@ -151,6 +153,7 @@ const EVENT_CONSTANTS = {
 		addPasskeyInlineCTA: "addPasskeyInlineCTA",
 		addPasskeyModal: "addPasskeyModal",
 		skipPasskey: "skipPasskey",
+		logout: "logout",
 	},
 	input: {
 		redacted: "[Redacted]",
@@ -175,6 +178,8 @@ const EVENT_CONSTANTS = {
 		logoutAllAccountSwitcherAccounts: "logoutAllAccountSwitcherAccounts",
 	},
 	state: {
+		skipVPC: "skipVPC",
+		launchParentSignUpOtp: "launchParentSignUpOtp",
 		passkeyUpselling: {
 			passkeyRegistrationSuccess: "passkeyRegistrationSuccess",
 			passkeyRegistrationFailure: "passkeyRegistrationFailure",

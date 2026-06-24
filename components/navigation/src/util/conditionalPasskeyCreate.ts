@@ -150,10 +150,16 @@ const CREDENTIAL_NICKNAME = "Passkey";
 
 const getHttpErrorStatus = (err: unknown, ctx: string): string => {
 	try {
-		if (err != null && typeof err === "object" && "response" in err) {
-			const { response } = err as { response?: { status?: number } };
-			if (typeof response?.status === "number") {
-				return String(response.status);
+		if (err != null && typeof err === "object") {
+			// core-scripts rejects with the bare response (top-level `status`), or the
+			// full AxiosError (`response.status`) when `fullError` is set. Check both.
+			const { status, response } = err as {
+				status?: number;
+				response?: { status?: number };
+			};
+			const resolvedStatus = status ?? response?.status;
+			if (typeof resolvedStatus === "number") {
+				return String(resolvedStatus);
 			}
 		}
 	} catch {

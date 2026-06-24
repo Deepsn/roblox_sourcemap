@@ -70,10 +70,10 @@ function NavigationRobux({ translate }) {
 
 		navigationService.getVngShopSignedRedirectionUrl().then(
 			({ data: { vngShopRedirectUrl } }) => {
-				window.open(vngShopRedirectUrl || buyRobuxOnVng.url, "_blank").focus();
+				window.open(vngShopRedirectUrl || buyRobuxOnVng.url, "_blank")?.focus();
 			},
 			() => {
-				window.open(buyRobuxOnVng.url, "_blank").focus();
+				window.open(buyRobuxOnVng.url, "_blank")?.focus();
 			},
 		);
 

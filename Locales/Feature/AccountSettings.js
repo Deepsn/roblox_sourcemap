@@ -2621,8 +2621,18 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		'This allows your child to use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players who are in the same game.',
 	"Label.PresetChat": "Quick words",
 	"Description.ChildSide.PresetChat":
-		'Use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players in the same game.',
+		"Coordinate gameplay using a menu of short phrases with players of all ages. {linkStart}View details{linkEnd}",
 	"Heading.PresetChatSetting": "Quick words setting",
+	"Heading.GameplayCoordination": "Gameplay coordination",
+	"Label.AdCampaign": "Ad Campaigns",
+	"Label.AdBilling": "Ad Billing Accounts",
+	"Label.Ad": "Ads",
+	"Description.ParentSide.PresetChat":
+		"You child can coordinate gameplay using short phrases with players of all ages. {linkStart}View details{linkEnd}",
+	"Description.PresetChat.Subtitle":
+		"Roblox and creators can set Quick Words for all ages.",
+	"Description.ContentMaturityAgeRating":
+		"In your region, local age ratings determine what content you can access.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
