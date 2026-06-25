@@ -36,7 +36,6 @@ function Thumbnail({
 					className={thumbnailClass}
 					src={thumbnailUrl}
 					alt={altName}
-					title={altName}
 					onLoad={imageLoad}
 				/>
 			)}

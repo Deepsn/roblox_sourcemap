@@ -26,6 +26,7 @@ function Thumbnail2d({
 	getThumbnail,
 	version,
 	headShape,
+	includeBackground,
 }) {
 	const [startTime] = useState(new Date().getTime());
 	const [thumbnailStatus, setImageStatus] = useState(null);
@@ -105,6 +106,7 @@ function Thumbnail2d({
 			token,
 			version,
 			headShape,
+			includeBackground,
 		);
 		if (getThumbnail) {
 			requestThumbnail = customThumbnailRequester.processThumbnailBatchRequest(
@@ -149,6 +151,7 @@ function Thumbnail2d({
 		getThumbnail,
 		version,
 		headShape,
+		includeBackground,
 	]);
 
 	return (
@@ -177,6 +180,7 @@ Thumbnail2d.defaultProps = {
 	},
 	getThumbnail: null,
 	version: "",
+	includeBackground: false,
 };
 
 Thumbnail2d.propTypes = {
@@ -192,6 +196,7 @@ Thumbnail2d.propTypes = {
 	getThumbnail: PropTypes.func,
 	version: PropTypes.string,
 	headShape: PropTypes.string,
+	includeBackground: PropTypes.bool,
 };
 
 export default Thumbnail2d;

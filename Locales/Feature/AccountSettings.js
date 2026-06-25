@@ -2619,10 +2619,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.Thumbnails": "Thumbnails",
 	"Description.ParentSide.PresetChatSetting":
 		'This allows your child to use a menu of short phrases, such as "Ready" and "Help" to coordinate with other players who are in the same game.',
-	"Label.PresetChat": "Quick words",
+	"Label.PresetChat": "Quick Words",
 	"Description.ChildSide.PresetChat":
 		"Coordinate gameplay using a menu of short phrases with players of all ages. {linkStart}View details{linkEnd}",
-	"Heading.PresetChatSetting": "Quick words setting",
+	"Heading.PresetChatSetting": "Quick Words setting",
 	"Heading.GameplayCoordination": "Gameplay coordination",
 	"Label.AdCampaign": "Ad Campaigns",
 	"Label.AdBilling": "Ad Billing Accounts",

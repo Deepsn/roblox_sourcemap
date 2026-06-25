@@ -89,6 +89,7 @@ function FAEPersonaFlow({
 		vendorVerificationData,
 		status: FAEStatus,
 		error: verificationError,
+		completionPageState,
 	} = IDVState;
 	const { context = "defaultContext" } = featureSpecificParams || {};
 
@@ -383,6 +384,15 @@ function FAEPersonaFlow({
 
 	// Get FAE component (only shows loading, no success/error pages)
 	function getFAEComponent() {
+		// Cooldown: startIDVerification returned daysUntilNextVerification > 0, so no
+		// Persona session is created. Surface the temp-ban page instead of spinning forever.
+		if (
+			vendorVerificationData.daysUntilNextVerification > 0 &&
+			completionPageState
+		) {
+			return <VerificationCompletePage translate={translate} onHide={onHide} />;
+		}
+
 		// Show error page if verification failed to start (only when not loading)
 		if (verificationError && !loading) {
 			return <VerificationCompletePage translate={translate} onHide={onHide} />;

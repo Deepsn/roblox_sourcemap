@@ -160,20 +160,27 @@ export const verificationSlice = createSlice({
 				// Get ageEstimation from the thunk argument
 				const ageEstimation = action.meta.arg;
 				let completionPageState = null;
+				let { page } = state.IDVerificationState;
+				const isTempBanned =
+					daysUntilNextVerification != null && daysUntilNextVerification > 0;
 				vendorVerificationData.loading = false;
-				if (
-					daysUntilNextVerification != null &&
-					daysUntilNextVerification > 0
-				) {
+				if (isTempBanned) {
+					// Cooldown applies to both FAE and IDV, so only show the generic
+					// "verification declined" copy. The document-specific line is reserved
+					// for genuine InvalidDocument failures in the IDV retry flow.
 					completionPageState = getPageStateConstants(
 						VerificationViewState.TEMP_BAN,
-						["Label.FailedVerificationInvalidDocument"],
 					);
+					page = IDVPage.Complete;
+					// No vendor session is created in the cooldown case (sessionIdentifier
+					// is null), so nothing downstream will clear the top-level spinner.
+					state.loading = false;
 				}
 				state.IDVerificationState = {
 					...state.IDVerificationState,
 					vendorVerificationData,
 					completionPageState,
+					page,
 					loading: false,
 					isAgeEstimation: ageEstimation,
 				};

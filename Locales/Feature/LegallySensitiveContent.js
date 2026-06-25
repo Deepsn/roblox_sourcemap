@@ -44,6 +44,12 @@ Roblox.LangDynamic["Feature.LegallySensitiveContent"] = {
 	"Description.PartyJoinGamesTogether": "Join games together.",
 	"Description.FriendsChatTextWithFriends": "Text with friends.",
 	"Title.PartyVoiceChat": "Party voice chat",
+	"Heading.FriendsChat": "Friends chat",
+	"Description.FriendsChat":
+		"Text chat with friends. This does not impact public chatting in games.",
+	"Heading.VoiceChatWithFriends": "Voice chat with friends",
+	"Description.VoiceChatWithFriends":
+		"Talk to your friends when you’re in the same Party. This does not impact public voice chatting in games.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

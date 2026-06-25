@@ -40,6 +40,7 @@ const loadThumbnailImage = (
 	clearCachedValue?: boolean,
 	version?: number,
 	headShape?: string,
+	includeBackground = false,
 ) => {
 	if (!targetId && !token) {
 		return new Promise((_resolve, reject) => {
@@ -78,6 +79,8 @@ const loadThumbnailImage = (
 		size,
 		version,
 		headShape,
+		// Only include the param when enabled so the request omits it for the default case.
+		...(includeBackground ? { includeBackground } : {}),
 	};
 
 	const customHandler = [
@@ -124,6 +127,7 @@ const getThumbnailImage = (
 	token?: string,
 	version?: number,
 	headShape?: string,
+	includeBackground = false,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -134,6 +138,7 @@ const getThumbnailImage = (
 		false,
 		version,
 		headShape,
+		includeBackground,
 	);
 
 const reloadThumbnailImage = (
@@ -154,6 +159,7 @@ const reloadThumbnailImage = (
 	token?: string,
 	version?: number,
 	headShape?: string,
+	includeBackground = false,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -164,6 +170,7 @@ const reloadThumbnailImage = (
 		true,
 		version,
 		headShape,
+		includeBackground,
 	);
 
 const getCssClass = (thumbnailState: ThumbnailStates) => ({

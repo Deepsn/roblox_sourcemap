@@ -98,12 +98,11 @@ export class ThumbnailBatchHandler<BatchResponse, RequestQueueItem> {
 								};
 							}
 
-							// @ts-expect-error TODO: old, migrated code
 							results[itemKey] = {
 								...errorState,
 								errorcode: 3,
 								errorMessage: "id doesn't exist",
-							};
+							} as ThumbnailDataItem;
 						}
 					});
 
@@ -111,7 +110,7 @@ export class ThumbnailBatchHandler<BatchResponse, RequestQueueItem> {
 				})
 				// eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
 				.catch((err: HttpError) => {
-					if (err.status === 503) {
+					if (err?.status === 503) {
 						// do no retry if API is under stress
 						return;
 					}
