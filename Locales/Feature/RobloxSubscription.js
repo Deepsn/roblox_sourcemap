@@ -194,6 +194,21 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Action.ViewDetails": "View details",
 	"Description.FeatureAccessDisclaimer":
 		"Access to features depends on your account settings and region.",
+	"Header.FreeTrialBannerTitle":
+		"You're on a free trial. Enjoy all Plus benefits at no cost!",
+	"Subtext.FreeTrialBanner":
+		"You'll be able to subscribe once the trial ends on {date}.",
+	"Subtext.FreeTrialBannerFallback":
+		"You'll be able to subscribe once the trial ends.",
+	"Header.PlusPackages": "Plus packages",
+	"Description.Benefit.InstantDiscount": "10% off instantly",
+	"Description.Benefit.InstantDiscountSubtitle": "On everything you buy",
+	"Description.Benefit.OngoingDiscount": "20% off after 2 months",
+	"Description.Benefit.OngoingDiscountSubtitle": "Stay subscribed to save more",
+	"Description.Benefit.RobuxTransfersDisclaimer":
+		"Parent approval may be required",
+	"Label.SubscriptionDuration":
+		"{periodType, select, Month {{periodCount, plural, =1 {{periodCount} month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {{periodCount} week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {{periodCount} year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodCount} {periodType}} other {{periodCount} {periodType}s}}} }",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

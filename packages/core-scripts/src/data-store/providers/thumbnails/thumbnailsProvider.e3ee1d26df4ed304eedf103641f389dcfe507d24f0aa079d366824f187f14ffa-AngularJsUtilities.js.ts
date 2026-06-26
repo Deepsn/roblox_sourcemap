@@ -115,12 +115,6 @@ export interface RobloxThumbnailsApisModelsThumbnailBatchRequest {
 	 * @memberof RobloxThumbnailsApisModelsThumbnailBatchRequest
 	 */
 	headShape?: string;
-	/**
-	 * Whether to include the background in the thumbnail
-	 * @type {boolean}
-	 * @memberof RobloxThumbnailsApisModelsThumbnailBatchRequest
-	 */
-	includeBackground?: boolean;
 }
 
 /**
