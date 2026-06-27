@@ -9,7 +9,11 @@ function SettingsIcon({ accountNotificationCount }) {
 		},
 	);
 	return (
-		<span id="settings-icon" className="nav-settings-icon rbx-menu-item">
+		<span
+			id="settings-icon"
+			className="nav-settings-icon rbx-menu-item"
+			aria-hidden="true"
+		>
 			<span
 				className="icon-nav-settings roblox-popover-close"
 				id="nav-settings"

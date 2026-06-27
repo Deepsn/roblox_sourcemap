@@ -1,22 +1,22 @@
 import PropTypes from "prop-types";
 
-function UniverseSearchIcon({ toggleUniverseSearch }) {
+function UniverseSearchIcon({ translate, toggleUniverseSearch }) {
 	return (
 		<li className="rbx-navbar-right-search">
-			{/* TODO: old, migrated code. */}
-			{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
 			<button
 				type="button"
 				className="rbx-menu-item btn-navigation-nav-search-white-md"
+				aria-label={translate("Label.sSearch")}
 				onClick={toggleUniverseSearch}
 			>
-				<span className="icon-nav-search-white" />
+				<span className="icon-nav-search-white" aria-hidden="true" />
 			</button>
 		</li>
 	);
 }
 
 UniverseSearchIcon.propTypes = {
+	translate: PropTypes.func.isRequired,
 	toggleUniverseSearch: PropTypes.func.isRequired,
 };
 export default UniverseSearchIcon;

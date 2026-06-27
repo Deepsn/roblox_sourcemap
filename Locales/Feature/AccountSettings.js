@@ -2633,6 +2633,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Roblox and creators can set Quick Words for all ages.",
 	"Description.ContentMaturityAgeRating":
 		"In your region, local age ratings determine what content you can access.",
+	"Label.Subscriptions.PerThreeMonths": "/3 months",
+	"Label.Subscriptions.PerSixMonths": "/6 months",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

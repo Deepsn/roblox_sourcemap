@@ -84,7 +84,9 @@ ready(() => {
 
 	if (document.getElementById(rightNavigationHeaderContainerId)) {
 		renderWithErrorBoundary(
-			<NavigationRightHeader />,
+			<QueryClientProvider client={queryClient}>
+				<NavigationRightHeader />
+			</QueryClientProvider>,
 			document.getElementById(rightNavigationHeaderContainerId),
 		);
 	}

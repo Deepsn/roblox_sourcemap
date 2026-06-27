@@ -3,6 +3,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { Popover } from "@rbx/core-ui/legacy/react-style-guide";
 import { paymentFlowAnalyticsService as analytics } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 import BuyRobuxIcon from "./BuyRobuxIcon";
 import RobuxMenu from "./RobuxMenu";
 import navigationUtil from "../../util/navigationUtil";
@@ -126,7 +127,18 @@ function BuyRobuxPopover({
 					trigger="click"
 					placement="bottom"
 					button={
-						<button type="button" className="btn-navigation-nav-robux-md">
+						<button
+							type="button"
+							className="btn-navigation-nav-robux-md"
+							aria-label={
+								robuxAmount > 0
+									? translate("Label.sRobuxBalance", {
+											robuxAmount: formatNumber(robuxAmount),
+										}) || `Robux: ${formatNumber(robuxAmount)}`
+									: translate("Label.sRobux")
+							}
+							aria-haspopup="true"
+						>
 							<BuyRobuxIcon
 								robuxAmount={robuxAmount}
 								isGetCurrencyCallDone={isGetCurrencyCallDone}

@@ -100,9 +100,9 @@ function HeaderIconsGroup({ translate, toggleUniverseSearch }) {
 					}
 				})
 				.catch((error) => {
-					if (error.status === 403) {
+					if (error?.status === 403) {
 						setRobuxBadgeType(null);
-					} else {
+					} else if (error) {
 						throw error;
 					}
 				});
@@ -206,7 +206,7 @@ function HeaderIconsGroup({ translate, toggleUniverseSearch }) {
 	try {
 		angular.module("notificationStreamIcon");
 		angular.module("notificationStream");
-		notificationStream = <NotificationStreamPopover />;
+		notificationStream = <NotificationStreamPopover translate={translate} />;
 	} catch (err) {
 		console.error(err);
 	}

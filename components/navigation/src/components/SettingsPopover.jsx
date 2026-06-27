@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { Popover } from "@rbx/core-ui/legacy/react-style-guide";
 import { AccountSwitcherService } from "@rbx/core-scripts/legacy/Roblox";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 import SettingsIcon from "./SettingsIcon";
 import SettingsMenu from "./SettingsMenu";
 import navigationUtil from "../util/navigationUtil";
@@ -44,7 +45,18 @@ function SettingsPopover({ translate, accountNotificationCount }) {
 				className={navigationUtil.getThemeClass()}
 				containerPadding={20}
 				button={
-					<button type="button" className="btn-navigation-nav-settings-md">
+					<button
+						type="button"
+						className="btn-navigation-nav-settings-md"
+						aria-label={
+							accountNotificationCount > 0
+								? translate("Label.sSettingsNotifications", {
+										notificationCount: formatNumber(accountNotificationCount),
+									}) || `Settings: ${formatNumber(accountNotificationCount)}`
+								: translate("Label.sSettings")
+						}
+						aria-haspopup="true"
+					>
 						<SettingsIcon accountNotificationCount={accountNotificationCount} />
 					</button>
 				}
