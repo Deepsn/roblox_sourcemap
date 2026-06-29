@@ -209,6 +209,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Parent approval may be required",
 	"Label.SubscriptionDuration":
 		"{periodType, select, Month {{periodCount, plural, =1 {{periodCount} month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {{periodCount} week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {{periodCount} year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodCount} {periodType}} other {{periodCount} {periodType}s}}} }",
+	"Action.PricePerSubscriptionDuration":
+		"{price}/{periodType, select, Month {{periodCount, plural, =1 {month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodType}} other {{periodCount} {periodType}s}}} }",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
