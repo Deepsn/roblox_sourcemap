@@ -1343,7 +1343,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"A passkey has already been created on this device.",
 	"Response.PasskeyCreatedSuccessfully": "Passkey created successfully.",
 	"Response.PasskeyRemovedSuccessfully": "Passkey removed successfully.",
-	"Label.Subscriptions.PerMonth": "/month",
+	"Label.Subscriptions.PerMonth": "/ month",
 	"Heading.LoginMethods": "Login Methods",
 	"Description.Subscriptions.ExpireResubscribe":
 		"You can resubscribe with any payment method once your subscription expires",
