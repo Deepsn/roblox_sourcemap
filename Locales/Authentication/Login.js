@@ -218,6 +218,9 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"To sign in, please enter your email address instead",
 	"Title.NewPlaceVersionLiveErrorReportBanner":
 		"{placeName}: V{versionNumber} is live.",
+	"Description.LinkExpired":
+		"The link you have clicked is no longer valid. To login, continue to Roblox and request an email one-time code.",
+	"Header.LinkExpired": "Link expired",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

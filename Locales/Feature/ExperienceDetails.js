@@ -72,6 +72,9 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 		"Ask your parent to unlock this game for you.",
 	"PlayButtonText.PlayDemo": "Play Demo",
 	"PlayButtonText.Play": "Play",
+	"UnplayableError.CreatorHasntMadeAvailable":
+		"The creator hasn’t made this game available for you",
+	"UnplayableError.Moderated": "This game is no longer playable",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

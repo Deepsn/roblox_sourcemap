@@ -147,7 +147,7 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 	"Action.BuyRobux": "Buy Robux",
 	"Action.GetRobux": "Get Robux",
 	"Message.LargeCreditBalanceTooltip":
-		"Your Roblox Credit balance is large\nenough to purchase Robux Packages\nor subscribe to Premium directly. ",
+		"Your Roblox Credit balance is large\nenough to purchase Robux Packages\nor subscribe to Plus directly.",
 	"Heading.BuyRobuxWithCredit": "Buy robux with credit",
 	"Message.Step1LargestPackageYouCanBuy":
 		"Largest package you can buy with your credit:",
