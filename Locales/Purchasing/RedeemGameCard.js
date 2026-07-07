@@ -258,6 +258,10 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 	"Label.ScanGiftCard.ScanYourCode": "Scan your code",
 	"Message.UseBalanceToSubscribeToPlus":
 		"Use your available balance to subscribe to Plus. Choose a longer plan to save more.",
+	"Heading.FreeItemReceived": "Free item received",
+	"Description.FreeItemReceived":
+		"Your code has been successfully redeemed and you've received a free item.",
+	"Action.Equip": "Equip",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
