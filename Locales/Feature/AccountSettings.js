@@ -1599,7 +1599,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.GoToSettings": "Go to Settings",
 	"Label.UpdateSettingBeforeAfter": "Update {settingName} from {currentValue}",
 	"Heading.OnlineStatus": "Online status",
-	"Label.ShowCurrentExperience": "Show current experience",
+	"Label.ShowCurrentExperience": "Show current game",
 	"Label.TradingSetting": "trading setting",
 	"Label.PrivateServers": "Private servers",
 	"Label.Trading": "Trading",

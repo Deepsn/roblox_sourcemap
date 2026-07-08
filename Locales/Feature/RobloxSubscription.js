@@ -182,14 +182,14 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.BannerTitle": "Roblox Plus anniversary gift drops July 31",
 	"Description.BannerBody":
 		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
-	"Title.AgeCheckTrial": "Get one free week of Plus",
+	"Title.AgeCheckTrial": "Get 1 free week of Plus",
 	"Description.AgeCheckTrial":
 		"Complete an age check to unlock Plus benefits and access features appropriate for your age.",
-	"Title.FreeTrialExpired": "Plus free trial has expired",
+	"Title.FreeTrialExpired": "Your plus trial ended",
 	"Description.FreeTrialExpired":
-		"Subscribe to Roblox Plus to keep your benefits starting at only $4.99/ month",
+		"Subscribe to keep everything you love about Roblox Plus and more—for $4.99/month.",
 	"Description.FreeTrialConfirmation":
-		"You have unlocked the following Plus benefits. Your trial will automatically expire after 7 days, add a credit card to keep benefits.",
+		"Congratulations! You've unlocked Plus benefits free for 1 week.",
 	"Title.FreeTrialConfirmation": "Enjoy one week of Plus",
 	"Action.ViewDetails": "View details",
 	"Description.FeatureAccessDisclaimer":
@@ -211,6 +211,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"{periodType, select, Month {{periodCount, plural, =1 {month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodType}} other {{periodCount} {periodType}s}}} }",
 	"Action.PricePerSubscriptionDuration":
 		"{price} / {periodType, select, Month {{periodCount, plural, =1 {month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodType}} other {{periodCount} {periodType}s}}} }",
+	"Label.RobloxPlusSubscriber": "Roblox Plus subscriber",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

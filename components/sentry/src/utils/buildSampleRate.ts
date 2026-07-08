@@ -4,7 +4,10 @@ const RegexBasedSamplerSettings: Record<
 	string,
 	{ pattern: RegExp; sampleRate: number }
 > = {
-	PaymentTeamPagesRegex: { pattern: /^\/upgrades(?:\/|$)/i, sampleRate: 0.1 },
+	PaymentTeamPagesRegex: {
+		pattern: /^\/(?:upgrades|redeem)(?:\/|$)/i,
+		sampleRate: 1,
+	},
 	SpotlightPageRegex: { pattern: /^\/spotlight\/.*/i, sampleRate: 1 }, // 100% sample rate for spotlight page. Low traffic on page.
 };
 

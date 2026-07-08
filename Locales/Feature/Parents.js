@@ -240,9 +240,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestOnlineStatus":
 		"This allows friends to see when your child is online.",
 	"Description.VPCRequestShowCurrentExperience":
-		"This allows your child's friends to see which experience they are in and join them in that experience.",
+		"This allows your child's friends to see which game they are in and join them in that game.",
 	"Description.VPCRequestPrivateServers":
-		"This allows your child to join their friends’ private servers, and to have friends join their private servers. A private server is a Roblox experience with limits on who can join.",
+		"This allows your child to join their friends’ private servers, and to have friends join their private servers. A private server is a Roblox game with limits on who can join.",
 	"Description.VPCRequestTrading":
 		"This allows your child to trade items in their inventory with friends on Roblox.",
 	"Description.VPCRequestInventoryVisibility":
@@ -254,13 +254,13 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestChargebacks":
 		"Your child's account has been locked due to unauthorized charges.",
 	"Description.VPCRequestContentMaturityMinimal":
-		"Minimal experiences may contain occasional mild violence, light unrealistic blood, and/or occasional mild fear.",
+		"Minimal games may contain occasional mild violence, light unrealistic blood, and/or occasional mild fear.",
 	"Description.VPCRequestRobloxConnectGroupChat":
 		"This allows your child to add friends and be added by friends to group chats. They may be in group chats with friends of friends.",
 	"Description.VPCRequestExperienceChat":
 		"This allows your child to chat with people in similar age groups while playing.",
 	"Description.VPCRequestExperienceDirectChat":
-		"This allows your child to chat one-on-one with other users in the same Roblox experience server.",
+		"This allows your child to chat one-on-one with other users in the same Roblox game server.",
 	"Description.VPCRequestContentMaturityMild":
 		"Mild experiences may contain repeated mild violence, heavy unrealistic blood, mild crude humor, and/or repeated mild fear.",
 	"Description.VPCRequestContentMaturityModerate":
@@ -286,7 +286,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestContentMaturityRestricted":
 		"Restricted experiences may contain strong violence, heavy realistic blood, moderate crude humor, romantic themes, unplayable gambling content, strong language, the presence of alcohol, and/or moderate fear.",
 	"Description.VPCRequestShareActivityUpdates":
-		"This allows your child’s friends to receive updates about their recent activity in experiences.",
+		"This allows your child’s friends to receive updates about their recent activity in games.",
 	"Action.Update": "update",
 	"Message.UpdateSettingRequestApproved":
 		"Your child’s {settingName} has been updated",
@@ -310,7 +310,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Your account has not been linked to your child’s account",
 	"Action.DontLinkAccount": "Don’t link accounts",
 	"Description.VPCRequestCurrentExperienceSharing":
-		"This allows your child’s friends to see which experience they are in and join them in that experience.",
+		"This allows your child’s friends to see which game they are in and join them in that game.",
 	"Message.ExitUpdateSettingConsent":
 		"Your child won’t be able to update their {settingName} without approval",
 	"Message.TooManyAttemptAskParent":
@@ -340,9 +340,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.OneOnOnePartySettingNameInContext": "Party setting",
 	"Description.GroupPartySettingNameInContext": "Group Party setting",
 	"Description.VPCRequestOneOnOneParty":
-		"This allows your child to group up to join experiences with a friend.",
+		"This allows your child to group up to join games with a friend.",
 	"Description.VPCRequestGroupParty":
-		"This allows your child to add friends and be added by friends to Parties with more than two users. A Party is a way to group up to join experiences together. Your child may be in Parties with friends of friends.",
+		"This allows your child to add friends and be added by friends to Parties with more than two users. A Party is a way to group up to join games together. Your child may be in Parties with friends of friends.",
 	"Message.NoLongerValid": "This request is no longer valid",
 	"Title.InvalidRequest": "Invalid request",
 	"Description.LinkToChildWithControl":
@@ -392,7 +392,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestPrivateServersV2":
 		"This allows your child to join or be joined by their Connections in private servers. A private server is a game or experience that only some people can join.",
 	"Description.VPCRequestCurrentExperienceSharingV2":
-		"This allows your child’s Connections to see which experience they are in and join them.",
+		"This allows your child’s Connections to see which game they are in and join them.",
 	"Description.VPCRequestOnlineStatusV2":
 		"This allows Connections to see when your child is online.",
 	"Description.VPCRequestPhoneNumberDiscoverabilityV2":
@@ -439,20 +439,20 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Label.YourChildsRequest": "Your child's request",
 	"Heading.ContentMaturityUpsell": "Let’s review: content maturity",
 	"Description.ContentMaturityUpsell":
-		"Choose a content maturity level for your child’s account. This controls which experiences your child can join. {linkStart}Learn more{linkEnd}",
+		"Choose a content maturity level for your child’s account. This controls which games your child can join. {linkStart}Learn more{linkEnd}",
 	"Label.ConnectionCount": "{connectionCount} Connections",
 	"Label.ExperienceByCreator": "By {creatorName}",
-	"Heading.CombinedChatSettingsUpsell": "Let’s review: experience chat",
+	"Heading.CombinedChatSettingsUpsell": "Let’s review: game chat",
 	"Description.CombinedChatSettingsUpsell":
-		"This setting manages who your child can chat with in an experience.",
+		"This setting manages who your child can chat with in a game.",
 	"Description.ExperienceChatAndWhisper":
-		"Your child can chat with everyone in an experience or directly with people in similar age groups.",
+		"Your child can chat with everyone in a game or directly with people in similar age groups.",
 	"Label.ExperienceChatAndWhisper":
 		"Experience chat and experience direct chat",
 	"Description.ExperienceChatOnly":
-		"Your child can chat with everyone in similar age groups playing the same experience.",
+		"Your child can chat with everyone in similar age groups playing the same game.",
 	"Label.ExperienceChatOnly": "Experience chat only",
-	"Description.NoChat": "Your child cannot use chat in an experience.",
+	"Description.NoChat": "Your child cannot use chat in a game.",
 	"Label.NoChat": "Chat off",
 	"Description.NotAvailableForAgeGroup":
 		"Not available for your child’s age group",
@@ -481,7 +481,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.CommunityNotifications":
 		"Do you want to allow your child to enable push notifications from communities on Roblox?",
 	"Heading.ConversationalRequest.SensitiveIssues":
-		"Can your child join experiences with sensitive content?",
+		"Can your child join games with sensitive content?",
 	"Heading.ConversationalRequest.ContentMaturity":
 		"What content maturity level can your child access?",
 	"Heading.ConversationalRequest.OnlineStatus":
@@ -509,7 +509,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.FriendDiscovery":
 		"Who can add your child as a Connection on Roblox using their phone number?",
 	"Heading.ConversationalRequest.ShareActivityUpdates":
-		"Do you want your child’s Connections to receive updates about their recent activity in experiences?",
+		"Do you want your child’s Connections to receive updates about their recent activity in games?",
 	"Heading.ConversationalRequest.ThirdPartyApps":
 		"Do you want to allow your child to access third-party applications using their Roblox account?",
 	"Heading.ConversationalRequest.SocialNetworkVisibility":
@@ -521,11 +521,11 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.DesktopPushNotifications":
 		"Do you want to allow your child to enable desktop push notifications from Roblox?",
 	"Heading.ConversationalRequest.ExperienceNotifications":
-		"Do you want to allow your child to enable push notifications from experiences on Roblox?",
+		"Do you want to allow your child to enable push notifications from games on Roblox?",
 	"Heading.ConversationalRequest.UnblockUser":
 		"Do you want to unblock this user for your child?",
 	"Heading.ConversationalRequest.UnblockExperience":
-		"Do you want to unblock this experience for your child?",
+		"Do you want to unblock this game for your child?",
 	"Heading.ConversationalRequest.VoiceDataImprovements":
 		"Can Roblox use your child’s voice data for product improvements?",
 	"Heading.ConversationalRequest.Party":
@@ -597,7 +597,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestPhoneNumberDiscoverabilityV2.TFRename":
 		"This allows people who have your child's phone number to send them a friend invite.",
 	"Heading.ConversationalRequest.ShareActivityUpdates.TFRename":
-		"Do you want your child's friends to receive updates about their recent activity in experiences?",
+		"Do you want your child's friends to receive updates about their recent activity in games?",
 	"Heading.ConversationalRequest.SendTransfer.Robux":
 		"Can your child send {amount} Robux to {username}?",
 	"Heading.ConversationalRequest.ReceiveTransfer.Robux":
@@ -638,7 +638,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.PartyChat":
 		"Can your child chat with {requestedSettingValue} in a Party?",
 	"Heading.ConversationalRequest.PartySetting":
-		"Can your child join experiences together with friends?",
+		"Can your child join games together with friends?",
 	"Heading.ConversationRequest.PartyVoiceChat":
 		"Can your child voice chat with trusted friends?",
 	"Heading.ConversationalRequest.PartyVoiceChat":

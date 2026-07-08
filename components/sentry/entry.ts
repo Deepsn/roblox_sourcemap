@@ -12,7 +12,7 @@ import {
 } from "@sentry/browser";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import { buildTracesSampler } from "./src/utils/tracesSampler";
-import { filterCdnSpans } from "./src/utils/filterCdnSpans";
+import { filterSentryTransaction } from "./src/utils/filterSentryTransaction";
 import { sendToOtel } from "./src/utils/sentryToOtel";
 import { getOtelCollectorTracesEndpoint } from "./src/utils/otelEndpoint";
 import { buildSampleRate } from "./src/utils/buildSampleRate";
@@ -68,14 +68,14 @@ initSentry({
 	environment: envName ?? "staging",
 	/// Keep a base perf rate visible (docs/telemetry). If tracesSampler is present,
 	tracesSampleRate: perfBase,
-	// Cut noise: only trace XHR/fetch calls to our own API and page loads.
+	// Spans are created at source; Sentry ingest is filtered in beforeSendTransaction.
 	tracesSampler: isTransactionOff ? undefined : buildTracesSampler(perfBase),
 	sampleRate: buildSampleRate(parsedSampleRate),
 	replaysOnErrorSampleRate: parsedSampleRate,
 	beforeSendTransaction: (event) => {
-		// Fire-and-forget, doesn't block
+		// Full transaction to OTEL; filtered copy to Sentry for quota reduction.
 		sendToOtel(otelEndpoint, event);
-		return filterCdnSpans(event);
+		return filterSentryTransaction(event);
 	},
 	// Enable offline transport for Sentry to work when the user is offline or when page changes before sentry can send the events
 	transport: makeBrowserOfflineTransport(makeFetchTransport),
