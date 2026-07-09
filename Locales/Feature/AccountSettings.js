@@ -2635,6 +2635,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"In your region, local age ratings determine what content you can access.",
 	"Label.Subscriptions.PerThreeMonths": "/3 months",
 	"Label.Subscriptions.PerSixMonths": "/6 months",
+	"Heading.PartyAndPartyChatV2": "Chat and party with friends",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

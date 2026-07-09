@@ -42,6 +42,19 @@ const queryParametersToPropagate = {
 	[QUERY_KEY_FC_SUPPRESS]: queryParameterFcSuppress || undefined,
 };
 
+// Origins allowed to deliver `CaptchaElementEvent` messages to our `message`
+// listener. This is defense-in-depth for our own listener only: it does NOT
+// affect the Arkose-hosted challenge frame (arkoselabs.roblox.com), which is
+// responsible for validating the messages it receives from its parent.
+const TRUSTED_MESSAGE_ORIGINS: ReadonlySet<string> = new Set(
+	[
+		// Same-origin (legacy same-origin captcha iframe, if any).
+		typeof window !== "undefined" ? window.location.origin : "",
+		// The Arkose FunCaptcha challenge origin.
+		"https://arkoselabs.roblox.com",
+	].filter(Boolean),
+);
+
 // An instance counter for this component used to route messages from an Arkose
 // `iframe` to the instance that spawned it.
 let nextArkoseIframeId = 0;
@@ -281,6 +294,16 @@ const CaptchaV2: React.FC = () => {
 	// directly).
 	useEffect(() => {
 		const arkoseIframeListener = (event: MessageEvent) => {
+			// Reject cross-origin messages before doing any parsing. A malicious page
+			// that frames us (or that we frame) must not be able to spoof captcha
+			// lifecycle events. Also drop messages the window posts to itself, which
+			// are never a legitimate source for these events.
+			if (
+				!TRUSTED_MESSAGE_ORIGINS.has(event.origin) ||
+				event.source === window
+			) {
+				return;
+			}
 			try {
 				const captchaElementEvent: CaptchaElementEvent = JSON.parse(
 					event.data,

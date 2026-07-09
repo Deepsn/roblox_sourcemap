@@ -15,6 +15,7 @@ import * as Rostile from "../rostile/interface";
 import * as SecurityQuestions from "../securityQuestions/interface";
 import * as TwoStepVerification from "../twoStepVerification/interface";
 import * as Biometric from "../biometric/interface";
+import * as CaptchaV2 from "../captchaV2/interface";
 
 /**
  * Values of the `feature` field when sending a hybrid `navigateToFeature` back
@@ -49,6 +50,7 @@ export type OnChallengeCompletedData<T extends ChallengeType> = {
 	[ChallengeType.EMAIL_VERIFICATION]: EmailVerification.OnChallengeCompletedData;
 	[ChallengeType.BLOCK_SESSION]: never;
 	[ChallengeType.BIOMETRIC]: Biometric.OnChallengeCompletedData;
+	[ChallengeType.CAPTCHA_V2]: CaptchaV2.OnChallengeCompletedData;
 }[T];
 
 /**

@@ -147,3 +147,11 @@ export type EmailVerification = {
 export type BlockSession = {
 	challengeId: string;
 } & Shared;
+
+/**
+ * The challenge metadata type returned by the GCS for `CaptchaV2` with any
+ * custom properties added by clients.
+ */
+export type CaptchaV2 = {
+	challengeId: string;
+} & Shared;

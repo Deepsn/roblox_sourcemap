@@ -10,6 +10,7 @@ export {
 	finishPasskeyRegistration,
 	finishARPreAuthPasskeyRegistration,
 	deletePasskeyBatch,
+	PasswordDeletionSource,
 } from "@rbx/authentication-common/passkey/api";
 
 export const listAllCredentials = (

@@ -52,3 +52,15 @@ export const DELETE_CREDENTIAL_BATCH_CONFIG: UrlConfig = {
 	url: `${authApiUrl}/v1/passkey/DeleteCredentialBatch`,
 	timeout: AUTH_API_TIMEOUT,
 };
+
+/**
+ * Wire values recognized by authentication-api for the optional `source`
+ * field on FinishARPreAuthPasskeyRegistration. Unrecognized values are
+ * silently dropped from the emitted passwordDeletionEvent.
+ */
+export const PasswordDeletionSource = {
+	AccountRecoveryPasskeyOnly: "accountRecoveryPasskeyOnly",
+	AccountRecoveryPasswordAndPasskey: "accountRecoveryPasswordAndPasskey",
+} as const;
+export type PasswordDeletionSource =
+	(typeof PasswordDeletionSource)[keyof typeof PasswordDeletionSource];

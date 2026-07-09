@@ -11,6 +11,7 @@ import { withContinueMode } from "@rbx/generic-challenges";
 import * as Captcha from "../captcha";
 import * as DeviceIntegrity from "../deviceIntegrity";
 import * as Biometric from "../biometric";
+import * as CaptchaV2 from "../captchaV2";
 import * as ForceActionRedirect from "../forceActionRedirect";
 import * as Generic from "../generic";
 import {
@@ -38,8 +39,10 @@ import {
 	readQueryParametersForSecurityQuestions,
 	readQueryParametersForTwoStepVerification,
 	readQueryParametersForBiometric,
+	readQueryParametersForCaptchaV2,
 } from "./query";
 import { recordHybridEventMetric } from "./metrics";
+import { recordHybridEventCounters } from "./counters";
 
 const HYBRID_TARGET_KEY = "feature";
 const CALLBACK_EVENT_NAME = "callbackInputChanged";
@@ -214,6 +217,13 @@ const dispatchNavigateToFeatureHybridEvent = (
 	options?: ChallengeHybridWebPageLifecycleEventOptions,
 ): void => {
 	recordHybridEventMetric({ hybridTarget, challengeType, data }); // Fire & forget a metric.
+	recordHybridEventCounters({
+		hybridTarget,
+		challengeType,
+		data,
+		appType:
+			(options?.appType ?? getQueryParameterValue("app-type")) || "unknown",
+	}); // Fire & forget real-time counters.
 	sendChallengeHybridWebPageLifecycleEvent({
 		hybridTarget,
 		challengeType,
@@ -729,6 +739,81 @@ const renderRostileChallengeFromQueryParameters = (
 	}
 	dispatchNavigateToFeatureHybridEvent(
 		ChallengeType.ROSTILE,
+		hybridTargetToCallbackInputId,
+		HybridTarget.CHALLENGE_INITIALIZED,
+		{ initialized: true },
+	);
+
+	return true;
+};
+
+/**
+ * Helper function for CaptchaV2 hybrid challenges.
+ */
+const renderCaptchaV2ChallengeFromQueryParameters = (
+	containerId: string,
+	hybridTargetToCallbackInputId: Record<HybridTarget, string>,
+	appType: string,
+): boolean => {
+	const queryParameters = readQueryParametersForCaptchaV2();
+	// Handle hybrid callbacks for parse.
+	if (queryParameters === null) {
+		dispatchNavigateToFeatureHybridEvent(
+			ChallengeType.CAPTCHA_V2,
+			hybridTargetToCallbackInputId,
+			HybridTarget.CHALLENGE_PARSED,
+			{ parsed: false },
+		);
+		return false;
+	}
+	dispatchNavigateToFeatureHybridEvent(
+		ChallengeType.CAPTCHA_V2,
+		hybridTargetToCallbackInputId,
+		HybridTarget.CHALLENGE_PARSED,
+		{ parsed: true },
+	);
+
+	const { challengeId } = queryParameters;
+	const result = CaptchaV2.renderChallenge({
+		containerId,
+		challengeId,
+		appType,
+		renderInline: true,
+		onChallengeDisplayed: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.CAPTCHA_V2,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_DISPLAYED,
+				data,
+			),
+		onChallengeCompleted: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.CAPTCHA_V2,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_COMPLETED,
+				data,
+			),
+		onChallengeInvalidated: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.CAPTCHA_V2,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_INVALIDATED,
+				data,
+			),
+		onModalChallengeAbandoned: null,
+	});
+	// Handle hybrid callbacks for initialize.
+	if (result === false) {
+		dispatchNavigateToFeatureHybridEvent(
+			ChallengeType.CAPTCHA_V2,
+			hybridTargetToCallbackInputId,
+			HybridTarget.CHALLENGE_INITIALIZED,
+			{ initialized: false },
+		);
+		return false;
+	}
+	dispatchNavigateToFeatureHybridEvent(
+		ChallengeType.CAPTCHA_V2,
 		hybridTargetToCallbackInputId,
 		HybridTarget.CHALLENGE_INITIALIZED,
 		{ initialized: true },
@@ -1464,6 +1549,12 @@ export const renderChallengeFromQueryParameters: RenderChallengeFromQueryParamet
 				);
 			case ChallengeType.BIOMETRIC:
 				return renderBiometricFromQueryParameters(
+					containerId,
+					hybridTargetToCallbackInputId,
+					queryParametersBase.appType,
+				);
+			case ChallengeType.CAPTCHA_V2:
+				return renderCaptchaV2ChallengeFromQueryParameters(
 					containerId,
 					hybridTargetToCallbackInputId,
 					queryParametersBase.appType,

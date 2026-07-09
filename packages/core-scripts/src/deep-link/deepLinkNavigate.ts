@@ -990,6 +990,10 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		// amp_wizard deeplinking is mobile-only, so no desktop fallback is needed here.
 		// roblox://navigation/amp_wizard?feature_name=...&namespace=...&entry_point=...&returnpage=...
 		urlTarget = target.url;
+	} else if (navigateSubPath === PathPart.PlusUpsell) {
+		// Pass through roblox:// unchanged for protocol / in-app handling.
+		// roblox://navigation/plus_upsell
+		urlTarget = target.url;
 	}
 
 	if (urlTarget) {

@@ -7,6 +7,7 @@ import {
 	FinishRegistrationReturnType,
 	FinishARPreAuthRegistrationReturnType,
 	DeleteCredentialBatchReturnType,
+	PasswordDeletionSource,
 	START_REGISTRATION_CONFIG,
 	START_PRE_AUTH_REGISTRATION_CONFIG,
 	FINISH_REGISTRATION_CONFIG,
@@ -15,7 +16,7 @@ import {
 } from "./types";
 
 export { Result } from "./result";
-export { AuthApiError } from "./types";
+export { AuthApiError, PasswordDeletionSource } from "./types";
 export type {
 	StartRegistrationReturnType,
 	FinishRegistrationReturnType,
@@ -86,6 +87,7 @@ export const finishARPreAuthPasskeyRegistration = (
 	passkeySessionId: string,
 	passkeyRegistrationResponse: string,
 	isPostRecovery?: boolean,
+	source?: PasswordDeletionSource,
 ): Promise<
 	Result<FinishARPreAuthRegistrationReturnType, AuthApiError | null>
 > =>
@@ -96,6 +98,7 @@ export const finishARPreAuthPasskeyRegistration = (
 			passkeyRegistrationResponse,
 			userId,
 			isPostRecovery,
+			source,
 		}),
 		AuthApiError,
 	);

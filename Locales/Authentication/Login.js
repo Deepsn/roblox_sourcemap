@@ -221,6 +221,8 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Description.LinkExpired":
 		"The link you have clicked is no longer valid. To login, continue to Roblox and request an email one-time code.",
 	"Header.LinkExpired": "Link expired",
+	"Description.FunnelCompletionByCohort":
+		"Completion percentage of each step by the date user first entered the funnel",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

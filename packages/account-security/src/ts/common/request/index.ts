@@ -1,6 +1,7 @@
 /* eslint-disable lines-between-class-members */
 import * as CaptchaApi from "./apis/captcha";
 import * as EmailApi from "./apis/email";
+import * as CaptchaV2Api from "./apis/captchaV2";
 import * as GamesApi from "./apis/games";
 import * as MyAccountApi from "./apis/myAccount";
 import * as OtpApi from "./apis/otp";
@@ -39,6 +40,7 @@ export class RequestServiceDefault {
 	// Note that these names correspond to logical groupings of endpoints rather
 	// than explicit microservices.
 	captcha = CaptchaApi;
+	captchaV2 = CaptchaV2Api;
 	email = EmailApi;
 	fido2 = Fido2Api;
 	games = GamesApi;

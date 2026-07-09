@@ -43,6 +43,7 @@ export enum PathPart {
 	ProfileCard = "profile_card",
 	AmpWizard = "amp_wizard",
 	SupportCenter = "support_center",
+	PlusUpsell = "plus_upsell",
 }
 
 export enum ItemType {

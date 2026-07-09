@@ -21,6 +21,7 @@ enum ChallengeType {
 	EMAIL_VERIFICATION = "emailverification",
 	BLOCK_SESSION = "blocksession",
 	BIOMETRIC = "biometric",
+	CAPTCHA_V2 = "captchav2",
 }
 
 export default ChallengeType;

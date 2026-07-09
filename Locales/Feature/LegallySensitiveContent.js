@@ -53,6 +53,8 @@ Roblox.LangDynamic["Feature.LegallySensitiveContent"] = {
 	"Description.JoinGamesAndChatWithFriends": "Join games and chat with friends",
 	"Description.ParentSide.AllowYourChildToJoinGameWithFriends":
 		"This allows your child to join a game together with friends",
+	"Description.PlayGamesTogetherWithYourFriends":
+		"Play games together with your friends.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

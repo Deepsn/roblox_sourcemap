@@ -39,6 +39,9 @@ export enum MetricName {
 	EventPersonaLiveness = "event_persona_liveness",
 	SolveTimePersonaLiveness = "solve_time_persona_liveness",
 	EventGenericHybrid = "event_generic_hybrid",
+	EventCaptchaV2 = "event_captcha_v2",
+	SolveTimeCaptchaV2 = "solve_time_captcha_v2",
+	SensorFinishTimeCaptchaV2 = "sensor_finish_time_captcha_v2",
 }
 
 export type Metric =
@@ -354,6 +357,40 @@ export type Metric =
 				challenge_type: string;
 				// eslint-disable-next-line camelcase
 				hybrid_target: string;
+			};
+	  }
+	| {
+			name: MetricName.EventCaptchaV2;
+			value: number;
+			labelValues: {
+				// eslint-disable-next-line camelcase
+				event_type: string;
+				// `application_type` is the app type of the client
+				// such as iOS, Android, etc.
+				// eslint-disable-next-line camelcase
+				application_type: string;
+			};
+	  }
+	| {
+			name: MetricName.SolveTimeCaptchaV2;
+			value: number;
+			labelValues: {
+				// eslint-disable-next-line camelcase
+				event_type: string;
+				// `application_type` is the app type of the client
+				// such as iOS, Android, etc.
+				// eslint-disable-next-line camelcase
+				application_type: string;
+			};
+	  }
+	| {
+			name: MetricName.SensorFinishTimeCaptchaV2;
+			value: number;
+			labelValues: {
+				// `application_type` is the app type of the client
+				// such as iOS, Android, etc.
+				// eslint-disable-next-line camelcase
+				application_type: string;
 			};
 	  };
 

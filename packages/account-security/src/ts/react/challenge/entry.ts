@@ -1,5 +1,6 @@
 import Roblox from "Roblox";
 import * as Captcha from "./captcha";
+import * as CaptchaV2 from "./captchaV2";
 import * as DeviceIntegrity from "./deviceIntegrity";
 import * as ForceActionRedirect from "./forceActionRedirect";
 import * as Generic from "./generic";
@@ -17,6 +18,7 @@ import * as TwoStepVerification from "./twoStepVerification";
 // definition.
 const AccountIntegrityChallengeService: typeof Interface = {
 	Captcha,
+	CaptchaV2,
 	DeviceIntegrity,
 	ForceActionRedirect,
 	Generic,

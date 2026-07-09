@@ -75,6 +75,8 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 	"UnplayableError.CreatorHasntMadeAvailable":
 		"The creator hasn’t made this game available for you",
 	"UnplayableError.Moderated": "This game is no longer playable",
+	"UnplayableError.FiatPurchaseDeviceRestricted":
+		"This experience is not purchasable on this device",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -410,6 +410,38 @@ export const readQueryParametersForBiometric =
 		return result.data;
 	};
 
+const QueryParametersForCaptchaV2Validator = z.object({
+	challengeId: z.string(),
+});
+
+export type QueryParametersForCaptchaV2 = z.infer<
+	typeof QueryParametersForCaptchaV2Validator
+>;
+
+/**
+ * Reads query parameters to render a hybrid CaptchaV2 challenge.
+ */
+export const readQueryParametersForCaptchaV2 =
+	(): QueryParametersForCaptchaV2 | null => {
+		const queryParameters = UrlParser.getParametersAsObject();
+		const queryParametersRenamed: Record<
+			keyof QueryParametersForCaptchaV2,
+			string
+		> = {
+			challengeId: queryParameters[QueryParameterKey.CHALLENGE_ID]!,
+		};
+
+		const result = QueryParametersForCaptchaV2Validator.safeParse(
+			queryParametersRenamed,
+		);
+		if (!result.success) {
+			console.error(LOG_PREFIX, result.error);
+			return null;
+		}
+
+		return result.data;
+	};
+
 const QueryParametersForProofOfSpaceValidator = z.object({
 	challengeId: z.string(),
 	artifacts: z.object({

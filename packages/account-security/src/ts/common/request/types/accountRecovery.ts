@@ -105,12 +105,24 @@ export const VERIFY_CODE_CONFIG: UrlConfig = {
 	timeout: 10000,
 };
 
+export type VerifyBackupCodeReturnType = {};
+
+/**
+ * Request Type: `POST`
+ */
+export const VERIFY_BACKUP_CODE_CONFIG: UrlConfig = {
+	withCredentials: true,
+	url: `${accountRecoveryServiceUrl}/v1/verify-backup-code`,
+	timeout: 10000,
+};
+
 export enum RecoveryMethodType {
 	Invalid = 0,
 	CurrentEmail = 1,
 	BillingEmail = 2,
 	HistoricalEmail = 3,
 	Phone = 4,
+	BackupCode = 10,
 }
 
 export type ContinueRecoveryReturnType = {

@@ -124,6 +124,8 @@ export enum VIEW_NAME {
 	ROBLOX_PLUS_BUY_ROBUX = "RobloxPlusBuyRobux",
 	ROBUX_SEND_TRANSFERS = "RobuxSendTransfers",
 	ROBUX_PENDING_TRANSFERS = "RobuxPendingTransfers",
+	REDEEM_CREDIT_FOOTER = "RedeemCreditFooter",
+	REDEEM_CREDIT_GET_PLUS_MODAL = "RedeemCreditGetPlusModal",
 }
 
 export enum PURCHASE_EVENT_TYPE {
@@ -208,6 +210,10 @@ export enum VIEW_MESSAGE {
 	TRANSFER_PENDING_BUTTON = "TransferPendingButton",
 	TRANSFER_PENDING_SHEET = "TransferPendingSheet",
 	TRANSFER_PENDING_ACCEPT_CLICK = "TransferPendingAcceptClick",
+	GET_PLUS_CLICKED = "GetPlusClicked",
+	GET_ROBUX_CLICKED = "GetRobuxClicked",
+	TIER_SELECTED = "TierSelected",
+	SUBSCRIBE_CLICKED = "SubscribeClicked",
 }
 
 export enum PURCHASE_STATUS {

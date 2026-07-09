@@ -81,6 +81,23 @@ export const verifyCode = (
 		AccountRecovery.AccountRecoveryError,
 	);
 
+export const verifyBackupCode = (
+	recoverySessionId: string,
+	backupCode: string,
+): Promise<
+	Result<
+		AccountRecovery.VerifyBackupCodeReturnType,
+		AccountRecovery.AccountRecoveryError | null
+	>
+> =>
+	toResult(
+		httpService.post(AccountRecovery.VERIFY_BACKUP_CODE_CONFIG, {
+			recoverySessionId,
+			backupCode,
+		}),
+		AccountRecovery.AccountRecoveryError,
+	);
+
 export const continueRecovery = (
 	recoverySessionId: string,
 	userId: number,

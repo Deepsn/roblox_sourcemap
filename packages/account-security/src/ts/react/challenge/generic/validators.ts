@@ -130,6 +130,12 @@ const BiometricValidator = z
 	})
 	.and(SharedChallengeMetadataValidator);
 
+const CaptchaV2Validator = z
+	.object({
+		challengeId: z.string(),
+	})
+	.and(SharedChallengeMetadataValidator);
+
 /**
  * A dictionary of validators corresponding to the challenge metadata types
  * defined in the `interface` directory. The type constraints expressed here
@@ -155,4 +161,5 @@ export const ChallengeMetadataValidator: {
 	[ChallengeType.EMAIL_VERIFICATION]: EmailVerificationValidator,
 	[ChallengeType.BLOCK_SESSION]: BlockSessionValidator,
 	[ChallengeType.BIOMETRIC]: BiometricValidator,
+	[ChallengeType.CAPTCHA_V2]: CaptchaV2Validator,
 };
