@@ -9,7 +9,7 @@ class NumberFormatter {
 	getCustomNumber(number, options) {
 		try {
 			return new Intl.NumberFormat(this.locale, options).format(number);
-		} catch (error) {
+		} catch {
 			return number;
 		}
 	}

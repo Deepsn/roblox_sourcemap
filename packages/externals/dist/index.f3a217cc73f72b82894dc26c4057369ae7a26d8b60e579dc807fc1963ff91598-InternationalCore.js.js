@@ -1,4 +1,5 @@
-export const externals = {
+// src/index.ts
+var externals = {
 	"@rbx/core-scripts/auth/bound-auth": [
 		"Roblox",
 		"core-scripts",
@@ -40,6 +41,7 @@ export const externals = {
 		"string",
 	],
 	"@rbx/core-scripts/game": ["Roblox", "core-scripts", "game"],
+	"@rbx/core-scripts/guac": ["Roblox", "core-scripts", "guac"],
 	"@rbx/core-scripts/hybrid": ["Roblox", "core-scripts", "hybrid"],
 	"@rbx/core-scripts/intl": ["Roblox", "core-scripts", "intl", "intl"],
 	"@rbx/core-scripts/intl/translation": [
@@ -54,6 +56,10 @@ export const externals = {
 	"@rbx/core-scripts/legacy/core-roblox-utilities": "CoreRobloxUtilities",
 	"@rbx/core-scripts/legacy/header-scripts": "HeaderScripts",
 	"@rbx/core-scripts/legacy/react-utilities": "ReactUtilities",
+	"@rbx/core-scripts/legacy/Roblox": "Roblox",
+	"@rbx/legacy-webapp-types/Roblox": "Roblox",
+	"@rbx/legacy-webapp-types/roblox-event-tracker": "EventTracker",
+	"@rbx/legacy-webapp-types/roblox-item-purchase": "RobloxItemPurchase",
 	"@rbx/core-scripts/local-storage": [
 		"Roblox",
 		"core-scripts",
@@ -74,11 +80,9 @@ export const externals = {
 		"environment",
 	],
 	"@rbx/core-scripts/meta/user": ["Roblox", "core-scripts", "meta", "user"],
-	"@rbx/core-scripts/metrics": ["Roblox", "core-scripts", "metrics"],
 	"@rbx/core-scripts/payments-flow": ["Roblox", "core-scripts", "paymentsFlow"],
 	"@rbx/core-scripts/react": ["Roblox", "core-scripts", "react"],
 	"@rbx/core-scripts/realtime": ["Roblox", "core-scripts", "realtime"],
-	"@rbx/core-scripts/tracing": ["Roblox", "core-scripts", "tracing"],
 	"@rbx/core-scripts/util/accessibility": [
 		"Roblox",
 		"core-scripts",
@@ -125,12 +129,22 @@ export const externals = {
 		"pageName",
 	],
 	"@rbx/core-scripts/util/ready": ["Roblox", "core-scripts", "util", "ready"],
+	"@rbx/core-scripts/color-mode": ["Roblox", "core-scripts", "color-mode"],
+	"@rbx/core-scripts/util/theme": ["Roblox", "core-scripts", "util", "theme"],
 	"@rbx/core-scripts/util/upsell": ["Roblox", "core-scripts", "util", "upsell"],
 	"@rbx/core-scripts/util/url": ["Roblox", "core-scripts", "util", "url"],
 	"@rbx/core-scripts/util/user": ["Roblox", "core-scripts", "util", "user"],
 	"@rbx/core-ui": "ReactStyleGuide",
 	"@rbx/core-ui/legacy/react-style-guide": "ReactStyleGuide",
 	"@rbx/ui": ["Roblox", "ui"],
+	"@rbx/experimentation": ["Roblox", "ExperimentationService"],
+	"@rbx/presence": "RobloxPresence",
+	"@rbx/roblox-badges": "RobloxBadges",
+	"@rbx/prompts-orchestrator": ["Roblox", "PromptsOrchestrator"],
+	"@rbx/navigation": ["Roblox", "NavigationService"],
+	"@rbx/thumbnails": "RobloxThumbnails",
+	"@rbx/thumbnails3d": "RobloxThumbnail3d",
+	"@rbx/user-profiles": "RobloxUserProfiles",
 	angular: "angular",
 	jquery: "jQuery",
 	react: "React",
@@ -143,35 +157,40 @@ export const externals = {
 	redux: "Redux",
 	"redux-thunk": "ReduxThunk",
 	"prop-types": "PropTypes",
+	"@tanstack/react-query": "TanstackQuery",
+	// Legacy packages.
+	"core-roblox-utilities": "CoreRobloxUtilities",
+	"core-utilities": "CoreUtilities",
+	"header-scripts": "HeaderScripts",
+	"react-style-guide": "ReactStyleGuide",
+	"react-utilities": "ReactUtilities",
+	Roblox: "Roblox",
+	"roblox-badges": "RobloxBadges",
+	"roblox-event-tracker": "EventTracker",
+	"roblox-item-purchase": "RobloxItemPurchase",
+	"roblox-presence": "RobloxPresence",
+	"roblox-thumbnail-3d": "RobloxThumbnail3d",
+	"roblox-thumbnails": "RobloxThumbnails",
+	"roblox-user-profiles": "RobloxUserProfiles",
 };
-export const addLegacyExternal = (
-	key,
-	external,
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any
-	target = window,
-) => {
+var addLegacyExternal = (key, external, target = window) => {
 	if (typeof key === "string") {
-		// eslint-disable-next-line no-param-reassign
 		target[key] = external;
 	} else {
 		const keys = [...key];
-		// `key` has at least one element because of its type
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const last = keys.pop();
 		let obj = target;
 		for (const k of keys) {
 			obj[k] ??= {};
-			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 			obj = obj[k];
 		}
 		obj[last] = external;
 	}
 };
-export const addExternal = (key, external) => {
+var addExternal = (key, external) => {
 	addLegacyExternal(key, external);
 };
-export const checkLegacyExternalExists = (key) => {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+var checkLegacyExternalExists = (key) => {
 	let obj = window;
 	if (typeof key === "string") {
 		return obj[key] != null;
@@ -181,9 +200,15 @@ export const checkLegacyExternalExists = (key) => {
 		if (next == null) {
 			return false;
 		}
-		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 		obj = next;
 	}
 	return true;
 };
-export const checkExternalExists = (key) => checkLegacyExternalExists(key);
+var checkExternalExists = (key) => checkLegacyExternalExists(key);
+export {
+	addExternal,
+	addLegacyExternal,
+	checkExternalExists,
+	checkLegacyExternalExists,
+	externals,
+};

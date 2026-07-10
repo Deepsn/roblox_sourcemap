@@ -21,7 +21,6 @@ import {
 } from "../constants/dateTimeConstants";
 import numberConstants from "../constants/numberConstants";
 
-// eslint-disable-next-line no-underscore-dangle
 IntlMessageFormat.__addLocaleData(defaultLocale);
 IntlMessageFormat.defaultLocale = "en";
 
@@ -125,7 +124,6 @@ export default class International {
 	 * @returns {string}
 	 */
 	d(dateObj, options) {
-		// eslint-disable-next-line no-console
 		console.warn(
 			"This method has been deprecated in favor of the new DateTimeFormatter API, please do not use it anymore!",
 		);

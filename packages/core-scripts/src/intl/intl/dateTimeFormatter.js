@@ -43,7 +43,7 @@ export default class DateTimeFormatter {
 			}
 
 			return formatter.format(date);
-		} catch (error) {
+		} catch {
 			return "";
 		}
 	}

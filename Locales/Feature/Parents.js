@@ -693,6 +693,12 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.PresetChat":
 		"Can your child use quick words to coordinate gameplay?",
 	"Description.TrustedConnectionNoMutualFriends": "No mutual friends",
+	"Heading.VerifyYourAgeAgainToContinue": "Verify your age again to continue",
+	"Description.FaeInconclusiveChooseAnotherMethod":
+		"We couldn't confirm you're an adult with your camera. Please use one of the methods below.",
+	"Title.VerificationInconclusive": "Verification inconclusive",
+	"Description.FaeInconclusiveSecondVerification":
+		"Using your camera to verify your age wasn't sufficient, so we need a second verification to confirm you're an adult before you can link to your child's account.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
