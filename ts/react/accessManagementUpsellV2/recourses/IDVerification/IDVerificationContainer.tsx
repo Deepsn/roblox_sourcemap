@@ -7,10 +7,17 @@ import openVerificationLink from "../../utils/verificationUtils";
 import {
 	fetchFeatureAccess,
 	selectAmpFeatureCheckData,
+	selectFeatureAccess,
 	selectFeatureName,
+	selectNamespace,
 } from "../../accessManagement/accessManagementSlice";
 import LoadingPage from "../../accessManagement/components/LoadingPage";
-import { IDVPage } from "../../enums";
+import {
+	Access,
+	IDVPage,
+	PersonaTemplate,
+	VerificationStatusCode,
+} from "../../enums";
 import { useAppDispatch } from "../../store";
 import VerificationCompletePage from "./components/VerificationCompletePage";
 import ChecklistPage from "./components/ChecklistPage";
@@ -33,10 +40,12 @@ function IDVerification({
 	translate,
 	onHidecallback,
 	ageEstimation,
+	template,
 }: {
 	translate: TranslateFunction;
 	onHidecallback: () => void;
 	ageEstimation: boolean;
+	template?: PersonaTemplate;
 }): React.ReactElement {
 	const endTime = useRef(Number(new Date()) + POLLING_TIMEOUT);
 
@@ -44,16 +53,33 @@ function IDVerification({
 	const IDVState = useSelector(selectIDVState);
 	const loading = useSelector(selectLoading);
 	const featureName = useSelector(selectFeatureName);
+	const namespace = useSelector(selectNamespace);
 	const ampFeatureCheckData = useSelector(selectAmpFeatureCheckData);
+	const featureAccess = useSelector(selectFeatureAccess);
 	const { page } = useSelector(selectIDVState);
 	const pageRef = useRef(page);
 	const embeddedFlowPollingRef = useRef(false);
 	const hostedOpenedRef = useRef(false);
 	const hostedFlowTimeoutRef = useRef<NodeJS.Timeout | null>(null); // For hosted flow timeout ID
+	const autoHiddenRef = useRef(false);
+	const personaClientRef = useRef<typeof Persona.Client.prototype | null>(null);
 	const isWebview = (DeviceMeta && DeviceMeta().isInApp) ?? false;
 
-	const { vendorVerificationData, error: verificationError } = IDVState;
-	const { sessionIdentifier, verificationLink } = vendorVerificationData;
+	const {
+		vendorVerificationData,
+		error: verificationError,
+		status: idvStatus,
+	} = IDVState;
+	const { sessionIdentifier, sessionToken, verificationLink } =
+		vendorVerificationData;
+
+	// The appeals flow renders its own follow-up (appeal) modal, so it skips the
+	// wizard's built-in "Verification Successful" screen: on a successful IDV we
+	// show a brief loader (below) and auto-close the wizard once access is granted.
+	const isAppealsFlow = template === PersonaTemplate.IdvAppeal;
+	const idvSucceeded =
+		idvStatus?.sessionStatus === VerificationStatusCode.Success ||
+		idvStatus?.sessionStatus === VerificationStatusCode.Stored;
 
 	const theme = useTheme();
 
@@ -63,13 +89,17 @@ function IDVerification({
 	useEffect(() => {
 		dispatch(setLoading(true));
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		dispatch(startIDVerification(ageEstimation));
+		dispatch(startIDVerification({ ageEstimation, template }));
 		if (isWebview) {
 			endTime.current = Number(new Date()) + POLLING_TIMEOUT;
 		}
 		return () => {
 			if (hostedFlowTimeoutRef.current) {
 				clearTimeout(hostedFlowTimeoutRef.current);
+			}
+			if (personaClientRef.current) {
+				personaClientRef.current.destroy();
+				personaClientRef.current = null;
 			}
 		};
 	}, []);
@@ -93,9 +123,16 @@ function IDVerification({
 				IDVComponent = <ChecklistPage translate={translate} onHide={onHide} />;
 				break;
 			case IDVPage.Complete:
-				IDVComponent = (
-					<VerificationCompletePage translate={translate} onHide={onHide} />
-				);
+				// For appeals we suppress the "Verification Successful" screen and show a
+				// loader while the wizard tears itself down (see the auto-close effect
+				// below). Failure / retry / manual-review states still render the
+				// completion page so the user learns why IDV did not pass.
+				IDVComponent =
+					isAppealsFlow && idvSucceeded ? (
+						<LoadingPage />
+					) : (
+						<VerificationCompletePage translate={translate} onHide={onHide} />
+					);
 				break;
 			default:
 				IDVComponent = <LoadingPage />;
@@ -135,9 +172,27 @@ function IDVerification({
 	useEffect(() => {
 		if (page === IDVPage.Complete) {
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
-			dispatch(fetchFeatureAccess({ featureName, ampFeatureCheckData }));
+			dispatch(
+				fetchFeatureAccess({ featureName, ampFeatureCheckData, namespace }),
+			);
 		}
 	}, [page]);
+
+	// Appeals skips the wizard's success screen: as soon as the post-IDV access
+	// check grants access, tear the whole wizard down (resetting both the IDV and
+	// access-management stores) so the caller's promise resolves and it can open
+	// the appeal modal — with no success screen left behind to stack on top of.
+	useEffect(() => {
+		if (
+			isAppealsFlow &&
+			page === IDVPage.Complete &&
+			featureAccess?.data?.access === Access.Granted &&
+			!autoHiddenRef.current
+		) {
+			autoHiddenRef.current = true;
+			onHide();
+		}
+	}, [isAppealsFlow, page, featureAccess]);
 
 	// ===============================
 	// Embedded flow (web)
@@ -147,12 +202,15 @@ function IDVerification({
 			// Get user locale for Persona
 			const userLocale = new Intl().getLocale();
 
-			const personaClient = new Persona.Client({
+			personaClientRef.current = new Persona.Client({
 				inquiryId: sessionIdentifier,
 				styleVariant: theme || DEFAULT_THEME,
 				...(userLocale && { language: userLocale }),
+				// Relay the session token when resuming a pending inquiry so Persona
+				// reopens the in-progress session instead of starting a new one.
+				...(sessionToken && { sessionToken }),
 				onReady: () => {
-					personaClient.open();
+					personaClientRef.current?.open();
 					dispatch(setLoading(false));
 				},
 				onComplete: ({ inquiryId, status, fields }) => {
@@ -170,7 +228,7 @@ function IDVerification({
 						dispatch(setLoading(false));
 					}, EMBEDDED_FLOW_POLLING_TIMEOUT);
 				},
-				onCancel: ({ inquiryId, sessionToken }) => {
+				onCancel: () => {
 					onHide();
 				},
 				onError: (error) => {

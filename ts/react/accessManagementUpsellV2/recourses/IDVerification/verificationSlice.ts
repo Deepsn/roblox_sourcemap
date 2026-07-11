@@ -5,6 +5,7 @@ import { getPageStateConstants } from "./constants/textConstants";
 
 import {
 	IDVPage,
+	PersonaTemplate,
 	Recourse,
 	ReportEvent,
 	VerificationErrorCode,
@@ -24,6 +25,7 @@ export interface VerificationStatus {
 export interface VendorVerificationData {
 	daysUntilNextVerification: number;
 	sessionIdentifier: string;
+	sessionToken: string;
 	verificationLink: string;
 	qrCode: string;
 	loading: boolean;
@@ -32,6 +34,7 @@ export interface VendorVerificationData {
 const VendorVerificationDataInitialState: VendorVerificationData = {
 	daysUntilNextVerification: 0,
 	sessionIdentifier: null,
+	sessionToken: null,
 	verificationLink: null,
 	qrCode: null,
 	loading: false,
@@ -83,10 +86,17 @@ export const selectLoading = (state: RootState) => state.verification.loading;
 
 export const startIDVerification = createAsyncThunk(
 	"verification/startIDVerification",
-	async (ageEstimation: boolean, thunkAPI) => {
+	async (
+		{
+			ageEstimation,
+			template,
+		}: { ageEstimation: boolean; template?: PersonaTemplate },
+		thunkAPI,
+	) => {
 		try {
 			const response = (await startPersonaIdVerification(
 				ageEstimation,
+				template,
 			)) as VendorVerificationData;
 			return response;
 		} catch (error) {
@@ -158,7 +168,7 @@ export const verificationSlice = createSlice({
 				const vendorVerificationData = action.payload;
 				const { daysUntilNextVerification } = vendorVerificationData;
 				// Get ageEstimation from the thunk argument
-				const ageEstimation = action.meta.arg;
+				const { ageEstimation } = action.meta.arg;
 				let completionPageState = null;
 				let { page } = state.IDVerificationState;
 				const isTempBanned =

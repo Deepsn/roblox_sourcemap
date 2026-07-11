@@ -1,5 +1,5 @@
 import { TFeatureSpecificData } from "Roblox";
-import { Access } from "../../enums";
+import { Access, WizardIntent } from "../../enums";
 import { ExtraParameter } from "../../types/AmpTypes";
 
 export const ModalEvent = {
@@ -16,6 +16,7 @@ export type AccessManagementUpsellEventParams = {
 	ampRecourseData: any;
 	featureSpecificData: TFeatureSpecificData;
 	namespace: string;
+	wizardIntent: WizardIntent;
 	closeCallback: (access: Access) => string;
 };
 

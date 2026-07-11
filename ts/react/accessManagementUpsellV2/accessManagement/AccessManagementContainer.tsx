@@ -26,7 +26,13 @@ import {
 import EmailVerificationContainer from "../recourses/emailVerification/EmailVerificationContainer";
 import IDVerificationContainer from "../recourses/IDVerification/IDVerificationContainer";
 import FAEContainer from "../recourses/IDVerification/FAEContainer";
-import { Access, UpsellStage, Recourse } from "../enums";
+import {
+	Access,
+	UpsellStage,
+	Recourse,
+	PersonaTemplate,
+	WizardIntent,
+} from "../enums";
 import Epilogue from "./components/Epilogue";
 import ParentalRequestContainer from "../recourses/parentalRequest/ParentalRequestContainer";
 import Prologue from "./components/Prologue";
@@ -53,6 +59,7 @@ function AccessManagementContainer({
 	const verificationStageRecourse = useSelector(
 		selectVerificationStageRecourse,
 	);
+	const [wizardIntent, setWizardIntent] = useState<WizardIntent | undefined>();
 	const [onHidecallback, setOnHideCallback] = useState<
 		(access: Access) => string
 	>((access: Access) => access);
@@ -84,6 +91,7 @@ function AccessManagementContainer({
 			featureSpecificData,
 			closeCallback,
 			namespace,
+			wizardIntent: wizardIntentArg,
 		} = event.detail;
 		setOnHideCallback(
 			() =>
@@ -114,6 +122,10 @@ function AccessManagementContainer({
 
 		if (featureSpecificData) {
 			setFeatureSpecificParams(featureSpecificData);
+		}
+
+		if (wizardIntentArg) {
+			setWizardIntent(wizardIntentArg);
 		}
 
 		// Only some experiment variants include a prologue (including control)
@@ -156,7 +168,16 @@ function AccessManagementContainer({
 			featureAccess?.data?.access &&
 			noopAccessState.includes(featureAccess.data.access)
 		) {
-			if (featureAccess?.data?.featureName !== "CanCorrectAge") {
+			// For the appeals intent we intentionally do NOT fire the caller's close
+			// callback here. Appeals skips the wizard's "Verification Successful" screen
+			// and auto-closes from IDVerificationContainer once access is granted (it
+			// calls onHide, which routes back through onHideFunction below). Resolving
+			// here as well would let the caller open its appeal modal a beat early,
+			// before the wizard tears down. So we leave the single resolve to teardown.
+			if (
+				featureAccess?.data?.featureName !== "CanCorrectAge" &&
+				wizardIntent !== WizardIntent.Appeals
+			) {
 				onHidecallback(featureAccess.data.access);
 			}
 		}
@@ -215,11 +236,20 @@ function AccessManagementContainer({
 						/>
 					);
 				case Recourse.GovernmentId:
+					// The moderation-appeals flow reuses the standard GovernmentId recourse,
+					// so we key the appeals-specific Persona template off the client-only
+					// wizard intent (only the appeals flow sends a template; all other IDV
+					// is unchanged).
 					return (
 						<IDVerificationContainer
 							translate={translate}
 							onHidecallback={onHideFunction}
 							ageEstimation={false}
+							template={
+								wizardIntent === WizardIntent.Appeals
+									? PersonaTemplate.IdvAppeal
+									: undefined
+							}
 						/>
 					);
 				case Recourse.ParentConsentRequest:

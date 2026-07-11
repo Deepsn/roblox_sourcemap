@@ -216,7 +216,7 @@ function FAEPersonaFlow({
 	function initializeFAE() {
 		dispatch(setLoading(true));
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		dispatch(startIDVerification(ageEstimation));
+		dispatch(startIDVerification({ ageEstimation }));
 		if (flowType === FlowType.Embedded) {
 			Persona.Client.preload().catch((error) => {
 				console.error("Failed to preload Persona client:", error);

@@ -15,6 +15,7 @@ export const startAccessManagementUpsell = async ({
 	ampRecourseData = null,
 	featureSpecificData = null,
 	namespace = null,
+	wizardIntent = null,
 }: TAccessManagementUpsellParams): Promise<boolean> => {
 	return new Promise((resolve) => {
 		const event = new CustomEvent(ModalEvent.StartAccessManagementUpsell, {
@@ -28,6 +29,7 @@ export const startAccessManagementUpsell = async ({
 				ampRecourseData,
 				featureSpecificData,
 				namespace,
+				wizardIntent,
 				closeCallback: (access: Access) => {
 					resolve(isFeatureAccessGranted(access));
 				},

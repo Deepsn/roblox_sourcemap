@@ -3,11 +3,20 @@ import {
 	startPersonaIdVerificationUrlConfig,
 	getPersonaVerificationStatusUrlConfig,
 } from "../constants/urlConstants";
-import { VerificationErrorCode } from "../../../enums";
+import { PersonaTemplate, VerificationErrorCode } from "../../../enums";
 
-export const startPersonaIdVerification = (ageEstimation: boolean) => {
+export const startPersonaIdVerification = (
+	ageEstimation: boolean,
+	template?: PersonaTemplate,
+) => {
 	const urlConfig = startPersonaIdVerificationUrlConfig();
-	const params = { generateLink: true, ageEstimation };
+	const params = {
+		generateLink: true,
+		ageEstimation,
+		// Only appeals (and other feature-specific) recourses send a template; the
+		// default IDV/FAE paths leave it unset so the backend picks its default.
+		...(template && { template }),
+	};
 	return httpService
 		.post(urlConfig, params)
 		.then(({ data }) => {
