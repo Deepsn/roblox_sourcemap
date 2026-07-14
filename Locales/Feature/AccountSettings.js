@@ -2636,6 +2636,12 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.Subscriptions.PerThreeMonths": "/3 months",
 	"Label.Subscriptions.PerSixMonths": "/6 months",
 	"Heading.PartyAndPartyChatV2": "Chat and party with friends",
+	"Description.HigherLimitsIneligible.Moderation":
+		"You are ineligible to get higher limits because your account has been recently moderated. {linkStart}Learn More{linkEnd}.",
+	"Description.HigherLimitsIneligible.RefundOrChargeback":
+		"You are ineligible to get higher limits because there's a recent refund or chargeback on your account. {linkStart}Learn More{linkEnd}.",
+	"Description.HigherLimitsIneligible.PurchaseHistory":
+		"You are ineligible to get higher limits because your account is still too new or you don't have an established Robux purchase history yet. {linkStart}Learn More{linkEnd}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
