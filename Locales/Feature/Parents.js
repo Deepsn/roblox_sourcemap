@@ -216,7 +216,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"To keep children safe, parents on Roblox must verify their age",
 	"Title.PrivacyIsSerious": "We take privacy seriously",
 	"Description.PrivacyIsSerious":
-		"After verifying, Roblox won’t save your ID or credit card unless you give permission",
+		"After processing, Roblox won’t save your ID or credit card unless you give permission",
 	"Action.LinkToSettings": "Go to Settings for more options",
 	"Title.Current": "Current",
 	"Title.Proposed": "Proposed",

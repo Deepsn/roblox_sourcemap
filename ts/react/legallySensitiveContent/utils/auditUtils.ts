@@ -502,7 +502,19 @@ export const getAuditDataForConsent = (
 		case ConsentName.whoCanUsePartyChatWithMeTrustedFriends:
 		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriends:
 		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriends:
-		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriends: {
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriends:
+		case ConsentName.whoCanPartyWithMeV2:
+		case ConsentName.whoCanPartyWithMeParentSideV2:
+		case ConsentName.whoCanUsePartyChatWithMeV2:
+		case ConsentName.whoCanUsePartyChatWithMeParentSideV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideV2:
+		case ConsentName.whoCanPartyWithMeTrustedFriendsV2:
+		case ConsentName.whoCanPartyWithMeParentSideRemovedCommsV2:
+		case ConsentName.whoCanUsePartyChatWithMeTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriendsV2: {
 			const constants = legallySensitiveContentConstants[consentName];
 			return [
 				{

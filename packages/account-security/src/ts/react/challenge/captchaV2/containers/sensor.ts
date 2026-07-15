@@ -42,7 +42,7 @@ export const loadSensor = (onLoad?: () => void): void => {
 	if (onLoad) {
 		script.onload = onLoad;
 	}
-	document.body.appendChild(script);
+	document.head.appendChild(script);
 };
 
 // Preloads the sensor ahead of the challenge flow so its decision cookie can

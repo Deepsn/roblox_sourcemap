@@ -2635,13 +2635,17 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"In your region, local age ratings determine what content you can access.",
 	"Label.Subscriptions.PerThreeMonths": "/3 months",
 	"Label.Subscriptions.PerSixMonths": "/6 months",
+	"Label.AddPasskeyEnsureAccess":
+		"Add a passkey you will always have access to",
+	"Label.PasskeysAddedEnsureAccess":
+		"{passkeyCount} passkey(s) added. Make sure you will always have access to at least one of them",
 	"Heading.PartyAndPartyChatV2": "Chat and party with friends",
 	"Description.HigherLimitsIneligible.Moderation":
-		"You are ineligible to get higher limits because your account has been recently moderated. {linkStart}Learn More{linkEnd}.",
+		"You are ineligible to get higher limits because your account has been recently moderated. {linkStart}Learn more{linkEnd}.",
 	"Description.HigherLimitsIneligible.RefundOrChargeback":
-		"You are ineligible to get higher limits because there's a recent refund or chargeback on your account. {linkStart}Learn More{linkEnd}.",
+		"You are ineligible to get higher limits because there's a recent refund or chargeback on your account. {linkStart}Learn more{linkEnd}.",
 	"Description.HigherLimitsIneligible.PurchaseHistory":
-		"You are ineligible to get higher limits because your account is still too new or you don't have an established Robux purchase history yet. {linkStart}Learn More{linkEnd}.",
+		"You are ineligible to get higher limits because your account is still too new or you don't have an established Robux purchase history yet. {linkStart}Learn more{linkEnd}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
