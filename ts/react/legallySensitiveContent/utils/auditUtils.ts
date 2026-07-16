@@ -497,6 +497,9 @@ export const getAuditDataForConsent = (
 							.consentSourceContentId,
 				},
 			];
+		case ConsentName.whoCanPartyWithMeGamesRename:
+		case ConsentName.whoCanPartyWithMeParentSideGamesRename:
+		case ConsentName.whoCanPartyWithMeTrustedFriendsGamesRename:
 		case ConsentName.whoCanPartyWithMeTrustedFriends:
 		case ConsentName.whoCanPartyWithMeParentSideRemovedComms:
 		case ConsentName.whoCanUsePartyChatWithMeTrustedFriends:

@@ -171,7 +171,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Response.InvalidPasskeyCredential":
 		'Unable to sign in with this passkey. To regain access, go to "Forgot Password or Username."',
 	"Description.DownloadNewVersion":
-		"This version of the app is no longer available in your region. To continue playing, please download the new version of Roblox.",
+		"This version of Roblox isn’t available for your account. Please download the correct version to continue.",
 	"Action.DownloadNow": "Download Now",
 	"Url.VngDownloadNowUrl": "https://www.roblox.com",
 	"Description.EnterOneTimeCodeHelpV3":

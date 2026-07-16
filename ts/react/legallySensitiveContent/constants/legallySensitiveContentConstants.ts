@@ -116,6 +116,16 @@ const legallySensitiveContentConstants = {
 		consentTranslationKey: "Description.PartySettingV3",
 		consentSourceContentId: "7181896",
 	},
+	[ConsentName.whoCanPartyWithMeGamesRename]: {
+		pageTitleTranslationKey: "Heading.PartyAndPartyChat",
+		pageTitleSourceContentId: "7180360",
+		pageDescriptionTranslationKey: "Description.PartyAndPartyChat",
+		pageDescriptionSourceContentId: "7181640",
+		titleTranslationKey: "Label.Party",
+		titleSourceContentId: "2137161",
+		consentTranslationKey: "Description.JoinGamesAndChatWithFriends",
+		consentSourceContentId: "9447241",
+	},
 	[ConsentName.whoCanPartyWithMeV2]: {
 		pageTitleTranslationKey: "Heading.ChatAndPartyWithFriends",
 		pageTitleSourceContentId: "9225544",
@@ -135,6 +145,17 @@ const legallySensitiveContentConstants = {
 		titleSourceContentId: "2137161",
 		consentTranslationKey: "Description.PartySettingConsent",
 		consentSourceContentId: "7193928",
+	},
+	[ConsentName.whoCanPartyWithMeParentSideGamesRename]: {
+		pageTitleTranslationKey: "Heading.PartyAndPartyChat",
+		pageTitleSourceContentId: "7180360",
+		pageDescriptionTranslationKey: "Description.PartyAndPartyChatParentSide",
+		pageDescriptionSourceContentId: "7261256",
+		titleTranslationKey: "Label.Party",
+		titleSourceContentId: "2137161",
+		consentTranslationKey:
+			"Description.ParentSide.AllowYourChildToJoinGameWithFriends",
+		consentSourceContentId: "9535560",
 	},
 	[ConsentName.whoCanPartyWithMeParentSideV2]: {
 		pageTitleTranslationKey: "Heading.ChatAndPartyWithFriends",
@@ -236,6 +257,16 @@ const legallySensitiveContentConstants = {
 		titleSourceContentId: "2137161",
 		consentTranslationKey: "Description.PartySettingV3",
 		consentSourceContentId: "7181896",
+	},
+	[ConsentName.whoCanPartyWithMeTrustedFriendsGamesRename]: {
+		pageTitleTranslationKey: "Heading.PartyAndPartyChat",
+		pageTitleSourceContentId: "7180360",
+		pageDescriptionTranslationKey: "Description.PartySetting.AddToParty",
+		pageDescriptionSourceContentId: "8316488",
+		titleTranslationKey: "Label.Party",
+		titleSourceContentId: "2137161",
+		consentTranslationKey: "Description.JoinGamesAndChatWithFriends",
+		consentSourceContentId: "9447241",
 	},
 	[ConsentName.whoCanPartyWithMeTrustedFriendsV2]: {
 		pageTitleTranslationKey: "Heading.ChatAndPartyWithFriends",

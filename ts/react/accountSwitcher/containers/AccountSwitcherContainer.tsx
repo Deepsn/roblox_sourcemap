@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Dialog, DialogContent } from "@rbx/foundation-ui";
 import { Modal } from "react-style-guide";
 import { withTranslations, WithTranslationsProps } from "react-utilities";
 import { AccountSwitcherService, EnvironmentUrls, Endpoints } from "Roblox";
@@ -31,7 +32,9 @@ import {
 	deleteAccountSwitcherBlob,
 	hasAccountSwitcherInvalidSessionError,
 } from "../utils/accountSwitcherUtils";
+import { getAccountSwitcherListVariant } from "../utils/accountSwitcherListVariantUtils";
 import { AccountSwitcherBaseConfirmationModal } from "../components/AccountSwitcherBaseConfirmationModal";
+import type { AccountSwitcherListVariant } from "../components/FoundationAccountSwitcherList";
 import {
 	sendAuthClientErrorEvent,
 	sendAccountSwitchEvent,
@@ -68,6 +71,10 @@ export const AccountSwitcherContainer = ({
 }: accountSwitcherContainerProps): JSX.Element => {
 	const [isModalOpen, setIsModalOpen] = useState(!!loggedInUsers);
 	const [currentModal, setCurrentModal] = useState(modalType);
+	const [accountListVariant, setAccountListVariant] =
+		useState<AccountSwitcherListVariant>("legacy");
+	const [isAccountListVariantResolved, setIsAccountListVariantResolved] =
+		useState(false);
 	const [users, setUsers] = useState<TLoggedInUsers>({
 		activeUser: {} as TUserData,
 		usersAvailableForSwitching: [],
@@ -104,6 +111,11 @@ export const AccountSwitcherContainer = ({
 			: EVENT_CONSTANTS.context.accountSwitcherLogin;
 	};
 
+	const getAccountListVariantEventParams = () =>
+		shouldShowAsModal
+			? { accountSwitcherComponentVariant: accountListVariant }
+			: {};
+
 	const handleAccountSelection = async (accountSelectorUserId: number) => {
 		const blob = getStoredAccountSwitcherBlob();
 		if (blob) {
@@ -119,6 +131,7 @@ export const AccountSwitcherContainer = ({
 				sendAccountSwitchEvent(
 					getContextForLogging(),
 					accountSelectorUserId.toString(),
+					getAccountListVariantEventParams(),
 				);
 				const switchResponse = await switchAccount(switchParam);
 				storeAccountSwitcherBlob(switchResponse.encrypted_users_data_blob);
@@ -150,6 +163,7 @@ export const AccountSwitcherContainer = ({
 				sendAuthClientErrorEvent(
 					EVENT_CONSTANTS.context.accountSwitcherModal,
 					EVENT_CONSTANTS.clientErrorTypes.logoutAllAccountSwitcherAccounts,
+					getAccountListVariantEventParams(),
 				);
 			}
 			deleteAccountSwitcherBlob();
@@ -217,20 +231,71 @@ export const AccountSwitcherContainer = ({
 		void updateUsers().catch();
 	}, [loggedInUsers, removeInvalidActiveUser]);
 
+	useEffect(() => {
+		const updateAccountListVariant = async () => {
+			setAccountListVariant(await getAccountSwitcherListVariant());
+			setIsAccountListVariantResolved(true);
+		};
+
+		// eslint-disable-next-line no-void
+		void updateAccountListVariant().catch(() => {
+			setAccountListVariant("legacy");
+			setIsAccountListVariantResolved(true);
+		});
+	}, []);
+
 	const handleModalDismiss = () => {
 		setIsModalOpen(false);
-		sendDismissAccountSwitcherEvent();
+		sendDismissAccountSwitcherEvent(getAccountListVariantEventParams());
 	};
 
 	function handleAddAccountAndSendClickLog() {
 		sendAuthButtonClickEvent(
 			getContextForLogging(),
 			EVENT_CONSTANTS.btn.addAccount,
+			getAccountListVariantEventParams(),
 		);
 		handleAddAccount();
 	}
 
 	if (shouldShowAsModal) {
+		if (
+			currentModal === ModalType.AccountSwitcherModalType &&
+			accountListVariant === "foundation" &&
+			isAccountListVariantResolved
+		) {
+			return (
+				<Dialog
+					open={isModalOpen}
+					isModal
+					size="Small"
+					type="Default"
+					hasCloseAffordance={false}
+					onOpenChange={(open) => {
+						if (!open) {
+							handleModalDismiss();
+						}
+					}}
+				>
+					<DialogContent className="account-switcher-modal account-switcher-foundation-dialog">
+						<AccountSwitcherModal
+							users={users.usersAvailableForSwitching}
+							isAccountLimitReached={users.isAccountLimitReached}
+							onAccountSelection={handleAccountSelection}
+							handleAddAccount={handleAddAccountAndSendClickLog}
+							suppressAddAccountRow={suppressAddAccountRow}
+							handleShowLogoutAllModal={handleShowLogoutAllModal}
+							handleModalDismiss={handleModalDismiss}
+							activeUser={users.activeUser}
+							accountListVariant={accountListVariant}
+							isAccountListVariantResolved={isAccountListVariantResolved}
+							translate={translate}
+						/>
+					</DialogContent>
+				</Dialog>
+			);
+		}
+
 		return (
 			<Modal
 				className="account-switcher-modal"
@@ -248,6 +313,8 @@ export const AccountSwitcherContainer = ({
 						handleShowLogoutAllModal={handleShowLogoutAllModal}
 						handleModalDismiss={handleModalDismiss}
 						activeUser={users.activeUser}
+						accountListVariant={accountListVariant}
+						isAccountListVariantResolved={isAccountListVariantResolved}
 						translate={translate}
 					/>
 				)}

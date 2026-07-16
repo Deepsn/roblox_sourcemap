@@ -78,6 +78,9 @@ export const modalContainerId = "navigation-account-switcher-container";
 
 export const accountSwitcherLayerName = "Accounts.AccountSwitcher";
 
+export const foundationAccountSwitcherListParameter =
+	"isFoundationAccountSwitcherListEnabled";
+
 export enum ModalType {
 	AccountSwitcherModalType,
 	LogoutAllAccountsModalType,

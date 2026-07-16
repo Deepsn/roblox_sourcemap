@@ -535,6 +535,7 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 		"Please change your avatar. Soon, players with avatars that break our Community Standards will be suspended from this game.",
 	"Heading.OneDaySuspension": "1-day suspension",
 	"Heading.VariableDaySuspension": "{number}-day suspension",
+	"Label.ExploitDetected": "Exploit detected",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

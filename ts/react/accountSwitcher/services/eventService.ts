@@ -1,6 +1,7 @@
 import { eventStreamService } from "core-roblox-utilities";
 import EVENT_CONSTANTS from "../../common/constants/eventsConstants";
 import { confirmationModalOrigins } from "../constants/accountSwitcherConstants";
+import type { AccountSwitcherListVariant } from "../components/FoundationAccountSwitcherList";
 
 type Context =
 	(typeof EVENT_CONSTANTS.context)[keyof typeof EVENT_CONSTANTS.context];
@@ -8,17 +9,30 @@ type Btn = (typeof EVENT_CONSTANTS.btn)[keyof typeof EVENT_CONSTANTS.btn];
 export type ConfirmationModalOrigins =
 	(typeof confirmationModalOrigins)[keyof typeof confirmationModalOrigins];
 
+type AccountSwitcherVariantEventParams = {
+	accountSwitcherComponentVariant?: AccountSwitcherListVariant;
+};
+
+type AccountSwitcherShownEventParams = AccountSwitcherVariantEventParams & {
+	hasActiveAccount?: number;
+	switchableAccountCount?: number;
+};
+
 /**
  * Log event for account switcher modal shown
  * @param userIdsCsv comma separated list of IDs of available users to switch to
  */
-export const sendShowAccountSwitcherShownEvent = (userIdsCsv: string): void => {
+export const sendShowAccountSwitcherShownEvent = (
+	userIdsCsv: string,
+	eventParams: AccountSwitcherShownEventParams = {},
+): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authModalShown,
 		EVENT_CONSTANTS.context.accountSwitcherModal,
 		{
 			field: EVENT_CONSTANTS.field.accountSwitcher,
 			state: userIdsCsv,
+			...eventParams,
 		},
 	);
 };
@@ -26,12 +40,15 @@ export const sendShowAccountSwitcherShownEvent = (userIdsCsv: string): void => {
 /**
  * Log event for account switcher modal dismissed
  */
-export const sendDismissAccountSwitcherEvent = (): void => {
+export const sendDismissAccountSwitcherEvent = (
+	eventParams: AccountSwitcherVariantEventParams = {},
+): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
 		EVENT_CONSTANTS.context.accountSwitcherModal,
 		{
 			btn: EVENT_CONSTANTS.btn.dismiss,
+			...eventParams,
 		},
 	);
 };
@@ -44,6 +61,7 @@ export const sendDismissAccountSwitcherEvent = (): void => {
 export const sendAccountSwitchEvent = (
 	context: Context,
 	userId: string,
+	eventParams: AccountSwitcherVariantEventParams = {},
 ): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
@@ -51,6 +69,7 @@ export const sendAccountSwitchEvent = (
 		{
 			btn: EVENT_CONSTANTS.btn.switch,
 			state: userId,
+			...eventParams,
 		},
 	);
 };
@@ -60,12 +79,17 @@ export const sendAccountSwitchEvent = (
  * @param context where the error is coming from
  * @param state what the error was
  */
-export const sendAuthClientErrorEvent = (context: Context, state: string) => {
+export const sendAuthClientErrorEvent = (
+	context: Context,
+	state: string,
+	eventParams: AccountSwitcherVariantEventParams = {},
+) => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authClientError,
 		context,
 		{
 			state,
+			...eventParams,
 		},
 	);
 };
@@ -104,12 +128,17 @@ export const sendAccountSwitcherConfirmationModalButtonClickEvent = (
 	);
 };
 
-export const sendAuthButtonClickEvent = (context: Context, btn: Btn): void => {
+export const sendAuthButtonClickEvent = (
+	context: Context,
+	btn: Btn,
+	eventParams: AccountSwitcherVariantEventParams = {},
+): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
 		context,
 		{
 			btn,
+			...eventParams,
 		},
 	);
 };
