@@ -21,6 +21,41 @@ import {
 	ThumbnailQueueItem,
 } from "../constants/thumbnail2dConstant";
 
+const WEBP_SUPPORT_DATA_URI =
+	"data:image/webp;base64,UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==";
+
+let isWebPSupportedPromise: Promise<boolean> | undefined;
+
+const isWebPSupported = () => {
+	if (isWebPSupportedPromise === undefined) {
+		isWebPSupportedPromise = new Promise((resolve) => {
+			try {
+				const img = new Image();
+				img.onload = () => resolve(img.width > 0 && img.height > 0);
+				img.onerror = () => resolve(false);
+				img.src = WEBP_SUPPORT_DATA_URI;
+			} catch (_error) {
+				resolve(true);
+			}
+		});
+	}
+
+	return isWebPSupportedPromise;
+};
+
+// Test for WebP support at runtime, as we still support MacOS 10.x which doesn't support WebP.
+const resolveThumbnailFormat = (
+	format: ThumbnailFormat,
+): Promise<ThumbnailFormat> => {
+	if (format !== ThumbnailFormat.webp) {
+		return Promise.resolve(format);
+	}
+
+	return isWebPSupported().then((isSupported) =>
+		isSupported ? ThumbnailFormat.webp : ThumbnailFormat.png,
+	);
+};
+
 const loadThumbnailImage = (
 	thumbnailType: ThumbnailTypes,
 	size:
@@ -71,41 +106,45 @@ const loadThumbnailImage = (
 		formatOverride = ThumbnailFormat.webp;
 	}
 
-	const item = {
-		targetId,
-		token,
-		type: thumbnailType,
-		format: formatOverride,
-		size,
-		version,
-		headShape,
-		// Only include the param when enabled so the request omits it for the default case.
-		...(includeBackground ? { includeBackground } : {}),
-	};
+	return resolveThumbnailFormat(formatOverride).then(
+		(resolvedFormat: ThumbnailFormat) => {
+			const item = {
+				targetId,
+				token,
+				type: thumbnailType,
+				format: resolvedFormat,
+				size,
+				version,
+				headShape,
+				// Only include the param when enabled so the request omits it for the default case.
+				...(includeBackground ? { includeBackground } : {}),
+			};
 
-	const customHandler = [
-		ThumbnailTypes.universeThumbnails,
-		ThumbnailTypes.universeThumbnail,
-	];
-	// null requesterKey creates new batch request processor.
-	const requesterKey = !customHandler.includes(thumbnailType)
-		? "thumbnail2dProcessor"
-		: "universeThumbnailProcessor";
-	return defaultThumbnailRequester.processThumbnailBatchRequest(
-		item,
-		(items: QueueItem<ThumbnailQueueItem>[]) => {
-			if (thumbnailType === ThumbnailTypes.universeThumbnail) {
-				return universeThumbnailHandler.handle(items, 1);
-			}
+			const customHandler = [
+				ThumbnailTypes.universeThumbnails,
+				ThumbnailTypes.universeThumbnail,
+			];
+			// null requesterKey creates new batch request processor.
+			const requesterKey = !customHandler.includes(thumbnailType)
+				? "thumbnail2dProcessor"
+				: "universeThumbnailProcessor";
+			return defaultThumbnailRequester.processThumbnailBatchRequest(
+				item,
+				(items: QueueItem<ThumbnailQueueItem>[]) => {
+					if (thumbnailType === ThumbnailTypes.universeThumbnail) {
+						return universeThumbnailHandler.handle(items, 1);
+					}
 
-			if (thumbnailType === ThumbnailTypes.universeThumbnails) {
-				return universeThumbnailHandler.handle(items, 10);
-			}
+					if (thumbnailType === ThumbnailTypes.universeThumbnails) {
+						return universeThumbnailHandler.handle(items, 10);
+					}
 
-			return batchRequestHandler.handle(items);
+					return batchRequestHandler.handle(items);
+				},
+				requesterKey,
+				clearCachedValue,
+			);
 		},
-		requesterKey,
-		clearCachedValue,
 	);
 };
 

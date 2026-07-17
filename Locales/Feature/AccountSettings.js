@@ -2646,6 +2646,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"You are ineligible to get higher limits because there's a recent refund or chargeback on your account. {linkStart}Learn more{linkEnd}.",
 	"Description.HigherLimitsIneligible.PurchaseHistory":
 		"You are ineligible to get higher limits because your account is still too new or you don't have an established Robux purchase history yet. {linkStart}Learn more{linkEnd}.",
+	"Label.VirtualEvent": "Game Events",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
