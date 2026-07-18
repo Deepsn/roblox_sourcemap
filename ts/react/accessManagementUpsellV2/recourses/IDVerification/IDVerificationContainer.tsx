@@ -2,7 +2,7 @@ import Persona from "persona";
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useTheme, TranslateFunction } from "react-utilities";
-import { DeviceMeta, Intl } from "Roblox";
+import { DeviceMeta, Intl, TFeatureSpecificData } from "Roblox";
 import openVerificationLink from "../../utils/verificationUtils";
 import {
 	fetchFeatureAccess,
@@ -41,13 +41,16 @@ function IDVerification({
 	onHidecallback,
 	ageEstimation,
 	template,
+	featureSpecificParams,
 }: {
 	translate: TranslateFunction;
 	onHidecallback: () => void;
 	ageEstimation: boolean;
 	template?: PersonaTemplate;
+	featureSpecificParams?: TFeatureSpecificData;
 }): React.ReactElement {
 	const endTime = useRef(Number(new Date()) + POLLING_TIMEOUT);
+	const isParentVerification = featureSpecificParams?.source === "parent";
 
 	const dispatch = useAppDispatch();
 	const IDVState = useSelector(selectIDVState);
@@ -89,7 +92,13 @@ function IDVerification({
 	useEffect(() => {
 		dispatch(setLoading(true));
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		dispatch(startIDVerification({ ageEstimation, template }));
+		dispatch(
+			startIDVerification({
+				ageEstimation,
+				parentVerification: isParentVerification,
+				template,
+			}),
+		);
 		if (isWebview) {
 			endTime.current = Number(new Date()) + POLLING_TIMEOUT;
 		}

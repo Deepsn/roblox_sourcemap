@@ -13,7 +13,12 @@ import {
 	DialogTitle,
 } from "@rbx/foundation-ui";
 import "@rbx/core-types";
-import qrCode from "../images/install-app-qr-code.webp";
+import {
+	MobileAppQrPanel,
+	resolveAppDownload,
+	sendPrimaryAppDownloadClickEvent,
+	useAppDownload,
+} from "@rbx/app-download";
 import { clientStatus } from "./api";
 
 // TODO: could we do something better here? Not sure if this is consistent across translations.
@@ -44,6 +49,7 @@ const DownloadDialog = ({
 }) => {
 	const [downloaded, setDownloaded] = useState(false);
 	const { translate } = useTranslation();
+	const { logExposure } = useAppDownload({});
 	const { isLoading } = useQuery({
 		queryKey: ["client-status"],
 		queryFn: async () => {
@@ -97,6 +103,17 @@ const DownloadDialog = ({
 								className="grow"
 								// eslint-disable-next-line @typescript-eslint/no-misused-promises
 								onClick={async () => {
+									try {
+										logExposure();
+										const resolvedDownload = resolveAppDownload();
+										if (resolvedDownload) {
+											sendPrimaryAppDownloadClickEvent(
+												resolvedDownload.link.name,
+											);
+										}
+									} catch {
+										// ignore
+									}
 									setDownloaded(true);
 									await download();
 								}}
@@ -221,19 +238,7 @@ const DownloadDialog = ({
 							<div />{" "}
 							{/* Empty div to double gap (design wants super large gap) */}
 							<section className="flex flex-col fill basis-0 gap-xxlarge">
-								<div className="flex flex-col gap-small">
-									<h3 className="text-label-large content-emphasis padding-none">
-										{translate("Heading.MobileAppDownloadOption")}
-									</h3>
-									<p className="text-body-medium">
-										{translate("Label.MobileAppQrCode")}
-									</p>
-								</div>
-								<div className="flex grow justify-center items-center bg-shift-100 radius-medium padding-x-large">
-									<div className="radius-medium padding-small bg-[white]">
-										<img className="size-2100" src={qrCode} alt="" />
-									</div>
-								</div>
+								<MobileAppQrPanel translate={translate} />
 							</section>
 						</div>
 					</div>

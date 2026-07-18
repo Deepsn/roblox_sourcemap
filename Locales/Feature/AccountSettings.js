@@ -2508,7 +2508,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.ApprovedExperiences": "Allowed games",
 	"Description.ApprovedExperiences":
 		"Games you allow your child to play, even when the content rating doesn't match your child's age.",
-	"Description.NoApprovedExperiences": "No allowed games yet",
+	"Description.NoApprovedExperiences":
+		"No allowed games yet. Once you approve a game request from your child, it'll show up here.",
 	"Action.RemoveFromApproved": "Remove from Allowed games",
 	"Description.RevokeApprovalSuccess":
 		"{experienceName} has been removed from Allowed games.",
@@ -2640,6 +2641,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.PasskeysAddedEnsureAccess":
 		"{passkeyCount} passkey(s) added. Make sure you will always have access to at least one of them",
 	"Heading.PartyAndPartyChatV2": "Chat and party with friends",
+	"Label.PartySettingV2": "Chat and party with friends setting",
+	"Label.PartyChatSettingV2": "Friends chat setting",
 	"Description.HigherLimitsIneligible.Moderation":
 		"You are ineligible to get higher limits because your account has been recently moderated. {linkStart}Learn more{linkEnd}.",
 	"Description.HigherLimitsIneligible.RefundOrChargeback":

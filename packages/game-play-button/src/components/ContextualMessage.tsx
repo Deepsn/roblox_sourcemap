@@ -1,20 +1,27 @@
+import { useRef } from "react";
+import { EventContext } from "@rbx/unified-logging";
 import {
 	TranslateFunction,
 	withTranslations,
 } from "@rbx/core-scripts/legacy/react-utilities";
 import { translations } from "../constants/translations";
-import { FeatureExperienceDetails } from "../constants/playButtonConstants";
-import { PlayabilityStatus } from "../constants/playabilityStatus";
 import { TPlayabilityStatus } from "../types/playButtonTypes";
-import UnplayableError from "./UnplayableError";
-import { shouldShowUnplayableButton } from "../utils/playButtonUtils";
+import { getPlayButtonContextualMessage } from "../utils/getPlayButtonContextualMessage";
+import useContextualMessageImpression from "../hooks/useContextualMessageImpression";
+
+export type TContextualMessageAnalyticsConfig = {
+	universeId: string;
+	pageContext: EventContext;
+	attributionId: string;
+};
 
 export type TContextualMessageProps = {
 	playabilityStatus: TPlayabilityStatus | undefined;
 	shouldShowVpcPlayButtonUpsells: boolean | undefined;
 	shouldShowNoticeAgreementIfPlayable?: boolean;
-	unplayableDisplayText?: string;
+	unplayableDisplayText?: string | null;
 	contextualMessageClassName?: string;
+	analyticsConfig: TContextualMessageAnalyticsConfig;
 };
 
 const ContextualMessage = ({
@@ -24,39 +31,40 @@ const ContextualMessage = ({
 	unplayableDisplayText,
 	shouldShowNoticeAgreementIfPlayable,
 	contextualMessageClassName = "contextual-message",
+	analyticsConfig,
 }: TContextualMessageProps & {
 	translate: TranslateFunction;
 }) => {
-	if (
-		shouldShowUnplayableButton(
-			playabilityStatus,
-			shouldShowVpcPlayButtonUpsells,
-		)
-	) {
-		return (
-			<UnplayableError
-				playabilityStatus={playabilityStatus}
-				unplayableDisplayText={unplayableDisplayText}
-				errorClassName={contextualMessageClassName}
-			/>
-		);
+	const containerRef = useRef<HTMLSpanElement>(null);
+
+	const resolvedMessage = getPlayButtonContextualMessage(translate, {
+		playabilityStatus,
+		shouldShowVpcPlayButtonUpsells,
+		shouldShowNoticeAgreementIfPlayable,
+		unplayableDisplayText,
+	});
+
+	useContextualMessageImpression(containerRef, {
+		universeId: analyticsConfig.universeId,
+		playabilityStatus,
+		pageContext: analyticsConfig.pageContext,
+		attributionId: analyticsConfig.attributionId,
+		contextualMessage: resolvedMessage?.message,
+	});
+
+	if (!resolvedMessage) {
+		return null;
 	}
 
-	if (
-		playabilityStatus === PlayabilityStatus.Playable &&
-		shouldShowNoticeAgreementIfPlayable
-	) {
-		return (
-			<span
-				data-testid="play-contextual-message"
-				className={contextualMessageClassName}
-			>
-				{translate(FeatureExperienceDetails.PlayButtonMessageAgreeToNotice)}
-			</span>
-		);
-	}
-
-	return null;
+	return (
+		<span
+			ref={containerRef}
+			data-testid={resolvedMessage.testId}
+			className={contextualMessageClassName}
+		>
+			{resolvedMessage.message}
+		</span>
+	);
 };
 
 export default withTranslations<TContextualMessageProps>(

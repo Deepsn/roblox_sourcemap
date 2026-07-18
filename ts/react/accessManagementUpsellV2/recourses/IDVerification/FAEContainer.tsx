@@ -92,6 +92,7 @@ function FAEPersonaFlow({
 		completionPageState,
 	} = IDVState;
 	const { context = "defaultContext" } = featureSpecificParams || {};
+	const isParentVerification = featureSpecificParams?.source === "parent";
 
 	// ===============================
 	// Refs & Derived State
@@ -216,7 +217,12 @@ function FAEPersonaFlow({
 	function initializeFAE() {
 		dispatch(setLoading(true));
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		dispatch(startIDVerification({ ageEstimation }));
+		dispatch(
+			startIDVerification({
+				ageEstimation,
+				parentVerification: isParentVerification,
+			}),
+		);
 		if (flowType === FlowType.Embedded) {
 			Persona.Client.preload().catch((error) => {
 				console.error("Failed to preload Persona client:", error);

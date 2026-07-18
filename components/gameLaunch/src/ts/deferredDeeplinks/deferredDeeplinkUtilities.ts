@@ -1,4 +1,8 @@
 import {
+	resolveDeeplinkTokenParams,
+	downloadSourceType,
+} from "@rbx/app-download";
+import {
 	supportedDeferredDeeplinkPathPatterns,
 	deferredDeeplinkTokenQueryParameterKey,
 } from "./deferredDeeplinkConstants";
@@ -34,7 +38,10 @@ async function getDeferredDeeplinkQueryParams(url: string): Promise<string> {
 		return queryParams;
 	}
 
-	const token = await createDeeplinkToken(deeplinkUrl);
+	const token = await createDeeplinkToken(deeplinkUrl, {
+		...(await resolveDeeplinkTokenParams()),
+		downloadSource: downloadSourceType.WebGameJoin,
+	});
 	if (token) {
 		queryParams = `?${deferredDeeplinkTokenQueryParameterKey}=${token}`;
 	}

@@ -4,6 +4,7 @@ import { deferredDeeplinkGroupName } from "./deferredDeeplinkConstants";
 import sendDeeplinkTokenCreateAttempt from "./deferredDeeplinkEvents";
 
 const deferredDeeplinkTokenServiceUrl = `${environmentUrls.apiGatewayUrl}/deferred-deep-link/token-api`;
+
 export type TCreateDeeplinkTokenResponse = {
 	token?: string | null;
 	expirationTime: string;
@@ -16,7 +17,7 @@ export type CreateDeeplinkTokenOptions = {
 };
 
 const createDeeplinkToken = async (
-	experienceAffiliateReferralUrl: string,
+	linkId: string,
 	options: CreateDeeplinkTokenOptions = {},
 ): Promise<string | null> => {
 	const { authTicket, btId, downloadSource } = options;
@@ -27,10 +28,11 @@ const createDeeplinkToken = async (
 		btId?: string;
 		downloadSource?: string;
 	} = {
-		linkId: experienceAffiliateReferralUrl,
+		linkId,
 		group: deferredDeeplinkGroupName,
 	};
 
+	// Mirror the backend's IsNullOrEmpty skip on each optional key.
 	if (authTicket) {
 		createDeeplinkTokenRequestBody.authTicket = authTicket;
 	}
@@ -52,11 +54,7 @@ const createDeeplinkToken = async (
 			createDeeplinkTokenRequestBody,
 		);
 		const token = res.data.token ?? null;
-		sendDeeplinkTokenCreateAttempt(
-			token,
-			experienceAffiliateReferralUrl,
-			res.status,
-		);
+		sendDeeplinkTokenCreateAttempt(token, linkId, res.status);
 		return token;
 	} catch {
 		return null;

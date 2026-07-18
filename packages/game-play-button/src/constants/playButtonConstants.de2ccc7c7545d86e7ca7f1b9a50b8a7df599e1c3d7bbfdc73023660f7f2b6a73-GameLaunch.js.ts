@@ -33,14 +33,14 @@ const playButtonErrorStatusTranslationMap: Record<
 	[PlayabilityStatus.IncorrectConfiguration]:
 		"UnplayableError.IncorrectConfiguration",
 	[PlayabilityStatus.UniverseRootPlaceIsPrivate]:
-		"UnplayableError.UniverseRootPlaceIsPrivate",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.InsufficientPermissionFriendsOnly]:
-		"UnplayableError.InsufficientPermissionFriendsOnly",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.InsufficientPermissionGroupOnly]:
-		"UnplayableError.InsufficientPermissionGroupOnly",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.DeviceRestricted]:
 		"UnplayableError.DeviceRestrictedDefault",
-	[PlayabilityStatus.UnderReview]: "UnplayableError.UnderReview",
+	[PlayabilityStatus.UnderReview]: "UnplayableError.Moderated",
 	[PlayabilityStatus.AccountRestricted]: "UnplayableError.AccountRestricted",
 	[PlayabilityStatus.ComplianceBlocked]: "UnplayableError.ComplianceBlocked",
 	[PlayabilityStatus.ContextualPlayabilityRegionalAvailability]:
@@ -52,17 +52,19 @@ const playButtonErrorStatusTranslationMap: Record<
 	[PlayabilityStatus.ContextualPlayabilityAgeGated]:
 		"UnplayableError.ContextualPlayabilityAgeGated",
 	[PlayabilityStatus.PlaceHasNoPublishedVersion]:
-		"UnplayableError.PlaceHasNoPublishedVersion",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.ContextualPlayabilityUnrated]:
 		"UnplayableError.ContextualPlayabilityUnrated",
 	[PlayabilityStatus.ContextualPlayabilityAgeGatedByDescriptor]:
 		"UnplayableError.ContextualPlayabilityAgeGatedByDescriptor",
 	[PlayabilityStatus.ContextualPlayabilityExperienceBlockedParentalControls]:
 		"UnplayableError.ContextualPlayabilityExperienceBlockedParentalControls",
+	[PlayabilityStatus.ContextualPlayabilityRequireParentApproval]:
+		"UnplayableError.ContextualPlayabilityRequireParentApproval",
 };
 
 const playButtonTextTranslationMap = {
-	ActionNeeded: "PlayButtonText.ActionNeeded",
+	Unlock: "PlayButtonText.Unlock",
 	Unplayable: "PlayButtonText.Unavailable",
 	Buy: "PlayButtonText.Buy",
 };
@@ -87,6 +89,10 @@ const counterEvents = {
 	PlayButtonUpsellAgeRestrictionVerificationError:
 		"PlayButtonUpsellAgeRestrictionVerificationError",
 	PlayButtonUpsellUnknownRequirement: "PlayButtonUpsellUnknownRequirement",
+	PlayButtonUpsellExperienceApprovalTriggered:
+		"PlayButtonUpsellExperienceApprovalTriggered",
+	PlayButtonUpsellExperienceApprovalError:
+		"PlayButtonUpsellExperienceApprovalError",
 	PreparePurchaseUrlError: "PreparePurchaseUrlError",
 	PlayButtonShowIdentificationError: "PlayButtonShowIdentificationIssueCaught",
 	PlayabilityStatusFetchInvalidUniverseId:
@@ -104,14 +110,24 @@ const avatarChatUpsellLayer = "Voice.AvatarChat.Upsell";
 const avatarChatUpsellLayerU13 = "Voice.AvatarChat.U13Upsell";
 const playButtonLayer = "Website.PlayButton";
 
+const ageCheckUpsellFeatureName = "TriggerAgeCheckUpsellIncludingVPC";
+const ageCheckUpsellNamespace = "core_content/CoreContent";
+
 const unlockPlayIntentConstants = {
 	eventName: "unlockPlayIntent",
+	ageCheckUpsellName: "AgeCheckRequired",
 	gameLaunchFallbackUpsellName: "GameLaunch",
 	restrictedUnplayableUpsellName: "RestrictedUnplayableOptionNotFound",
 	unverifiedSeventeenPlusUpsellName:
 		"AgeVerificationUnverifiedSeventeenPlusUser",
 	fiatPurchaseUpsellName: "FiatPurchase",
 	reconfirmLaunchModalUpsellName: "ReconfirmLaunchModal",
+	experienceApprovalUpsellName: "ExperienceApproval",
+};
+
+const playButtonUpsellContexts = {
+	gameJoinAgeCheckRequired: "gameJoinAgeCheckRequired",
+	gameJoinContentMaturityLock: "gameJoinContentMaturityLock",
 };
 
 export const FeatureExperienceDetails = {
@@ -134,4 +150,7 @@ export default {
 	unlockPlayIntentConstants,
 	FeatureExperienceDetails,
 	defaultAfReferralProperties,
+	playButtonUpsellContexts,
+	ageCheckUpsellFeatureName,
+	ageCheckUpsellNamespace,
 };

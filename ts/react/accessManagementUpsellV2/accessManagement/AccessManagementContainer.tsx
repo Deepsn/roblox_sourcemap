@@ -245,6 +245,7 @@ function AccessManagementContainer({
 							translate={translate}
 							onHidecallback={onHideFunction}
 							ageEstimation={false}
+							featureSpecificParams={featureSpecificParams}
 							template={
 								wizardIntent === WizardIntent.Appeals
 									? PersonaTemplate.IdvAppeal

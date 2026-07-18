@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import {
 	TranslateFunction,
 	withTranslations,
@@ -11,29 +12,41 @@ const { playButtonErrorStatusTranslationMap } = playButtonConstants;
 
 export type TErrorProps = {
 	playabilityStatus: TPlayabilityStatusWithUnplayableError;
-	unplayableDisplayText?: string;
 	errorClassName?: string;
+	containerRef?: Ref<HTMLSpanElement>;
 };
 
+/**
+ * @deprecated Use ContextualMessage.tsx instead
+ */
 export const Error = ({
 	translate,
 	playabilityStatus,
-	unplayableDisplayText,
 	errorClassName = "error-message",
+	containerRef,
 }: TErrorProps & {
 	translate: TranslateFunction;
-}): React.JSX.Element => (
-	<span data-testid="play-error" className={errorClassName}>
-		{unplayableDisplayText == null || unplayableDisplayText === ""
-			? translate(
-					playButtonErrorStatusTranslationMap[playabilityStatus]
-						? playButtonErrorStatusTranslationMap[playabilityStatus]
-						: playButtonErrorStatusTranslationMap[
-								PlayabilityStatus.UnplayableOtherReason
-							],
-				)
-			: unplayableDisplayText}
-	</span>
-);
+}): React.JSX.Element => {
+	const text = Object.hasOwn(
+		playButtonErrorStatusTranslationMap,
+		playabilityStatus,
+	)
+		? translate(playButtonErrorStatusTranslationMap[playabilityStatus])
+		: translate(
+				playButtonErrorStatusTranslationMap[
+					PlayabilityStatus.UnplayableOtherReason
+				],
+			);
+
+	return (
+		<span
+			data-testid="play-error"
+			className={errorClassName}
+			ref={containerRef}
+		>
+			{text}
+		</span>
+	);
+};
 
 export default withTranslations<TErrorProps>(Error, translations);

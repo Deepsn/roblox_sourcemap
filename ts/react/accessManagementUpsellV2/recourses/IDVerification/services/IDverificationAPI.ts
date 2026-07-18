@@ -7,12 +7,14 @@ import { PersonaTemplate, VerificationErrorCode } from "../../../enums";
 
 export const startPersonaIdVerification = (
 	ageEstimation: boolean,
+	parentVerification: boolean,
 	template?: PersonaTemplate,
 ) => {
 	const urlConfig = startPersonaIdVerificationUrlConfig();
 	const params = {
 		generateLink: true,
 		ageEstimation,
+		parentVerification,
 		// Only appeals (and other feature-specific) recourses send a template; the
 		// default IDV/FAE paths leave it unset so the backend picks its default.
 		...(template && { template }),

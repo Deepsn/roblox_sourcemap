@@ -89,13 +89,19 @@ export const startIDVerification = createAsyncThunk(
 	async (
 		{
 			ageEstimation,
+			parentVerification = false,
 			template,
-		}: { ageEstimation: boolean; template?: PersonaTemplate },
+		}: {
+			ageEstimation: boolean;
+			parentVerification?: boolean;
+			template?: PersonaTemplate;
+		},
 		thunkAPI,
 	) => {
 		try {
 			const response = (await startPersonaIdVerification(
 				ageEstimation,
+				parentVerification,
 				template,
 			)) as VendorVerificationData;
 			return response;
