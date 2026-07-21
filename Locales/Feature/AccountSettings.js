@@ -2641,8 +2641,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.PasskeysAddedEnsureAccess":
 		"{passkeyCount} passkey(s) added. Make sure you will always have access to at least one of them",
 	"Heading.PartyAndPartyChatV2": "Chat and party with friends",
-	"Label.PartySettingV2": "Chat and party with friends setting",
-	"Label.PartyChatSettingV2": "Friends chat setting",
+	"Label.PartySettingV2": "chat and party with friends setting",
+	"Label.PartyChatSettingV2": "friends chat setting",
+	"Label.PartyVoiceChatSetting": "voice chat with friends setting",
 	"Description.HigherLimitsIneligible.Moderation":
 		"You are ineligible to get higher limits because your account has been recently moderated. {linkStart}Learn more{linkEnd}.",
 	"Description.HigherLimitsIneligible.RefundOrChargeback":
@@ -2650,6 +2651,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.HigherLimitsIneligible.PurchaseHistory":
 		"You are ineligible to get higher limits because your account is still too new or you don't have an established Robux purchase history yet. {linkStart}Learn more{linkEnd}.",
 	"Label.VirtualEvent": "Game Events",
+	"Heading.PartyVoiceChatSettingV2": "Voice chat with friends setting",
+	"Heading.PartySetting": "Chat and party with friends setting",
+	"Heading.PartyChatSettingV2": "Friends chat setting",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

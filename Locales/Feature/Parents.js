@@ -699,6 +699,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Title.VerificationInconclusive": "Verification inconclusive",
 	"Description.FaeInconclusiveSecondVerification":
 		"Using your camera to verify your age wasn't sufficient, so we need a second verification to confirm you're an adult before you can link to your child's account.",
+	"Heading.ConversationalRequest.PartySettingV2":
+		"Can your child join games or chat with friends?",
+	"Heading.ConversationalRequest.PartyChatV2":
+		"Can your child chat with {requestedSettingValue}?",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -536,6 +536,7 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 	"Heading.OneDaySuspension": "1-day suspension",
 	"Heading.VariableDaySuspension": "{number}-day suspension",
 	"Label.ExploitDetected": "Exploit detected",
+	"Label.Sublabel.Emissive": "Emissive",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
