@@ -34,6 +34,8 @@ import * as Biometric from "../biometric";
 import * as BiometricInterface from "../biometric/interface";
 import * as CaptchaV2 from "../captchaV2";
 import * as CaptchaV2Interface from "../captchaV2/interface";
+import * as Turnstile from "../turnstile";
+import * as TurnstileInterface from "../turnstile/interface";
 import { EVENT_CONSTANTS, LOG_PREFIX } from "./app.config";
 import {
 	ChallengeContainerStyling,
@@ -767,6 +769,28 @@ export const renderChallenge: RenderChallenge = async ({
 					}),
 			};
 			return Promise.resolve(CaptchaV2.renderChallenge(fullParameters));
+		}
+
+		case ChallengeType.TURNSTILE: {
+			const { challengeType, challengeMetadata } = challengeSpecificProperties;
+			const fullParameters: TurnstileInterface.ChallengeParameters = {
+				onChallengeDisplayed: () => undefined,
+				...challengeBaseProperties,
+				...challengeMetadata,
+				onChallengeInvalidated: (data) =>
+					challengeBaseProperties.onChallengeInvalidated({
+						challengeType,
+						...data,
+					}),
+				onChallengeCompleted: (data) =>
+					challengeBaseProperties.onChallengeCompleted({
+						challengeType,
+						metadata: {
+							...data,
+						},
+					}),
+			};
+			return Turnstile.renderChallenge(fullParameters);
 		}
 
 		default: {

@@ -36,8 +36,15 @@ export const GET_USER_BY_ID_CONFIG: (userId: string) => UrlConfig = (
 	timeout: USERS_API_TIMEOUT,
 });
 
+export type UserInfoListItem = {
+	hasVerifiedBadge: boolean;
+	id: number;
+	name: string;
+	displayName: string;
+};
+
 export type UserInfoListResponse = {
-	data: UserInfo[];
+	data: UserInfoListItem[];
 };
 
 /**
@@ -46,5 +53,14 @@ export type UserInfoListResponse = {
 export const GET_USER_BY_USERNAME_CONFIG: UrlConfig = {
 	withCredentials: true,
 	url: `${usersApiUrl}/v1/usernames/users`,
+	timeout: USERS_API_TIMEOUT,
+};
+
+/**
+ * Request Type: `POST`.
+ */
+export const GET_USERS_BY_IDS_CONFIG: UrlConfig = {
+	withCredentials: true,
+	url: `${usersApiUrl}/v1/users`,
 	timeout: USERS_API_TIMEOUT,
 };

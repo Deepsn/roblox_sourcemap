@@ -81,7 +81,6 @@ export type DeleteCookieOptions<
  *
  * The registry is also used to more easily audit the list of cookies in use (i.e., for compliance purposes).
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface CookieRegistry {
 	"__placeholder-cookie-do-not-use": CookieOptions;
 }

@@ -42,6 +42,8 @@ export enum MetricName {
 	EventCaptchaV2 = "event_captcha_v2",
 	SolveTimeCaptchaV2 = "solve_time_captcha_v2",
 	SensorFinishTimeCaptchaV2 = "sensor_finish_time_captcha_v2",
+	EventTurnstile = "event_turnstile",
+	SolveTimeTurnstile = "solve_time_turnstile",
 }
 
 export type Metric =
@@ -387,6 +389,30 @@ export type Metric =
 			name: MetricName.SensorFinishTimeCaptchaV2;
 			value: number;
 			labelValues: {
+				// `application_type` is the app type of the client
+				// such as iOS, Android, etc.
+				// eslint-disable-next-line camelcase
+				application_type: string;
+			};
+	  }
+	| {
+			name: MetricName.EventTurnstile;
+			value: number;
+			labelValues: {
+				// eslint-disable-next-line camelcase
+				event_type: string;
+				// `application_type` is the app type of the client
+				// such as iOS, Android, etc.
+				// eslint-disable-next-line camelcase
+				application_type: string;
+			};
+	  }
+	| {
+			name: MetricName.SolveTimeTurnstile;
+			value: number;
+			labelValues: {
+				// eslint-disable-next-line camelcase
+				event_type: string;
 				// `application_type` is the app type of the client
 				// such as iOS, Android, etc.
 				// eslint-disable-next-line camelcase

@@ -83,9 +83,10 @@ initSentry({
 
 document.addEventListener("DOMContentLoaded", () => {
 	// Set more context for Sentry exceptions.
+	const user = authenticatedUser as typeof authenticatedUser | undefined;
 	setUser({
-		id: authenticatedUser.id?.toString() ?? "1",
-		username: authenticatedUser.name ?? "unknown",
+		id: user?.id?.toString() ?? "1",
+		username: user?.name ?? "unknown",
 	});
 
 	// Set initial internal-page-name tag from meta tag

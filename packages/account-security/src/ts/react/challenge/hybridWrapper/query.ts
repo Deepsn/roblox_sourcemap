@@ -442,6 +442,38 @@ export const readQueryParametersForCaptchaV2 =
 		return result.data;
 	};
 
+const QueryParametersForTurnstileValidator = z.object({
+	challengeId: z.string(),
+});
+
+export type QueryParametersForTurnstile = z.infer<
+	typeof QueryParametersForTurnstileValidator
+>;
+
+/**
+ * Reads query parameters to render a hybrid Turnstile challenge.
+ */
+export const readQueryParametersForTurnstile =
+	(): QueryParametersForTurnstile | null => {
+		const queryParameters = UrlParser.getParametersAsObject();
+		const queryParametersRenamed: Record<
+			keyof QueryParametersForTurnstile,
+			string
+		> = {
+			challengeId: queryParameters[QueryParameterKey.CHALLENGE_ID]!,
+		};
+
+		const result = QueryParametersForTurnstileValidator.safeParse(
+			queryParametersRenamed,
+		);
+		if (!result.success) {
+			console.error(LOG_PREFIX, result.error);
+			return null;
+		}
+
+		return result.data;
+	};
+
 const QueryParametersForProofOfSpaceValidator = z.object({
 	challengeId: z.string(),
 	artifacts: z.object({

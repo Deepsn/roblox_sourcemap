@@ -155,3 +155,11 @@ export type BlockSession = {
 export type CaptchaV2 = {
 	challengeId: string;
 } & Shared;
+
+/**
+ * The challenge metadata type returned by the GCS for `Turnstile` with any
+ * custom properties added by clients.
+ */
+export type Turnstile = {
+	challengeId: string;
+} & Shared;

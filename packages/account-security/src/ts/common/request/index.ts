@@ -15,6 +15,7 @@ import * as RostileApi from "./apis/rostile";
 import * as SecurityQuestionsApi from "./apis/securityQuestions";
 import * as SessionManagementApi from "./apis/sessionManagement";
 import * as ThumbnailsApi from "./apis/thumbnails";
+import * as TurnstileApi from "./apis/turnstile";
 import * as TwoStepVerificationApi from "./apis/twoStepVerification";
 import * as UniversalAppConfigurationApi from "./apis/universalAppConfiguration";
 import * as XboxApi from "./apis/xbox";
@@ -55,6 +56,7 @@ export class RequestServiceDefault {
 	sessionManagement = SessionManagementApi;
 	rostile = RostileApi;
 	thumbnails = ThumbnailsApi;
+	turnstile = TurnstileApi;
 	twoStepVerification = TwoStepVerificationApi;
 	universalAppConfiguration = UniversalAppConfigurationApi;
 	proofOfSpace = ProofOfSpaceApi;

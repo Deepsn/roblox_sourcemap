@@ -11,6 +11,7 @@ import * as ProofOfSpace from "./proofOfSpace";
 import * as ProofOfWork from "./proofOfWork";
 import * as Rostile from "./rostile";
 import * as SecurityQuestions from "./securityQuestions";
+import * as Turnstile from "./turnstile";
 import * as TwoStepVerification from "./twoStepVerification";
 
 // This type constraint (`typeof Interface`) ensures that any changes made to
@@ -28,6 +29,7 @@ const AccountIntegrityChallengeService: typeof Interface = {
 	ProofOfWork,
 	Rostile,
 	SecurityQuestions,
+	Turnstile,
 	TwoStepVerification,
 };
 

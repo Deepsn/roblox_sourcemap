@@ -6,6 +6,10 @@ import * as thumbnailService from "../services/thumbnail2d";
 import { ThumbnailRequester } from "../util/thumbnailRequester";
 import { ThumbnailBatchHandler } from "../util/thumbnailHandler";
 import { ThumbnailStates } from "../constants/thumbnail2dConstant";
+import {
+	resolveAvatarHeadshotIncludeBackground,
+	useAvatarHeadshotBackgroundInTreatment,
+} from "../experimentation/avatarHeadshotBackgroundExperiment";
 import Thumbnail from "../components/Thumbnail";
 
 const customThumbnailRequester = new ThumbnailRequester(
@@ -36,6 +40,13 @@ function Thumbnail2d({
 	);
 	const [shimmerClass, setShimmerClass] = useState("shimmer");
 	const [performanceData, setPerformanceData] = useState(null);
+	const avatarHeadshotBackgroundInTreatment =
+		useAvatarHeadshotBackgroundInTreatment(type);
+	const resolvedIncludeBackground = resolveAvatarHeadshotIncludeBackground(
+		type,
+		includeBackground,
+		avatarHeadshotBackgroundInTreatment,
+	);
 
 	const customHandler = useMemo(
 		() =>
@@ -106,7 +117,7 @@ function Thumbnail2d({
 			token,
 			version,
 			headShape,
-			includeBackground,
+			resolvedIncludeBackground,
 		);
 		if (getThumbnail) {
 			requestThumbnail = customThumbnailRequester.processThumbnailBatchRequest(
@@ -151,7 +162,7 @@ function Thumbnail2d({
 		getThumbnail,
 		version,
 		headShape,
-		includeBackground,
+		resolvedIncludeBackground,
 	]);
 
 	return (
@@ -180,7 +191,6 @@ Thumbnail2d.defaultProps = {
 	},
 	getThumbnail: null,
 	version: "",
-	includeBackground: false,
 };
 
 Thumbnail2d.propTypes = {

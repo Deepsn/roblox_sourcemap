@@ -19,6 +19,7 @@ import * as SecurityQuestions from "../../securityQuestions/interface";
 import * as TwoStepVerification from "../../twoStepVerification/interface";
 import * as Biometric from "../../biometric/interface";
 import * as CaptchaV2 from "../../captchaV2/interface";
+import * as Turnstile from "../../turnstile/interface";
 import ChallengeType from "./challengeType";
 import * as Metadata from "./metadata/interface";
 
@@ -50,6 +51,7 @@ export type ErrorCode<T extends ChallengeType> = {
 	[ChallengeType.BLOCK_SESSION]: ForceActionRedirect.ErrorCode;
 	[ChallengeType.BIOMETRIC]: Biometric.ErrorCode;
 	[ChallengeType.CAPTCHA_V2]: CaptchaV2.ErrorCode;
+	[ChallengeType.TURNSTILE]: Turnstile.ErrorCode;
 }[T];
 
 /*

@@ -21,3 +21,14 @@ export const getUserByUsername = (
 		}),
 		Users.UsersApiError,
 	);
+
+export const getUsersByIds = (
+	userIds: number[],
+): Promise<Result<Users.UserInfoListResponse, Users.UsersApiError | null>> =>
+	toResult(
+		httpService.post(Users.GET_USERS_BY_IDS_CONFIG, {
+			userIds,
+			excludeBannedUsers: false,
+		}),
+		Users.UsersApiError,
+	);

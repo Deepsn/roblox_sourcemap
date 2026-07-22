@@ -83,7 +83,7 @@ var externals = {
 	"@rbx/core-scripts/payments-flow": ["Roblox", "core-scripts", "paymentsFlow"],
 	"@rbx/core-scripts/react": ["Roblox", "core-scripts", "react"],
 	"@rbx/core-scripts/realtime": ["Roblox", "core-scripts", "realtime"],
-	"@rbx/core-scripts/tracing": ["Roblox", "core-scripts", "tracing"],
+	"@rbx/core-scripts/theme": ["Roblox", "core-scripts", "theme"],
 	"@rbx/core-scripts/util/accessibility": [
 		"Roblox",
 		"core-scripts",
@@ -130,6 +130,7 @@ var externals = {
 		"pageName",
 	],
 	"@rbx/core-scripts/util/ready": ["Roblox", "core-scripts", "util", "ready"],
+	"@rbx/core-scripts/color-mode": ["Roblox", "core-scripts", "color-mode"],
 	"@rbx/core-scripts/util/theme": ["Roblox", "core-scripts", "util", "theme"],
 	"@rbx/core-scripts/util/upsell": ["Roblox", "core-scripts", "util", "upsell"],
 	"@rbx/core-scripts/util/url": ["Roblox", "core-scripts", "util", "url"],
@@ -140,6 +141,7 @@ var externals = {
 	"@rbx/experimentation": ["Roblox", "ExperimentationService"],
 	"@rbx/presence": "RobloxPresence",
 	"@rbx/roblox-badges": "RobloxBadges",
+	"@rbx/prompts-orchestrator": ["Roblox", "PromptsOrchestrator"],
 	"@rbx/navigation": ["Roblox", "NavigationService"],
 	"@rbx/thumbnails": "RobloxThumbnails",
 	"@rbx/thumbnails3d": "RobloxThumbnail3d",
@@ -170,7 +172,6 @@ var externals = {
 	"roblox-presence": "RobloxPresence",
 	"roblox-thumbnail-3d": "RobloxThumbnail3d",
 	"roblox-thumbnails": "RobloxThumbnails",
-	"roblox-tracer": ["Roblox", "core-scripts", "tracing"],
 	"roblox-user-profiles": "RobloxUserProfiles",
 };
 var addLegacyExternal = (key, external, target = window) => {

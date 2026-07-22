@@ -27,6 +27,9 @@ Roblox.LangDynamic["Feature.DownloadLanding"] = {
 	"Label.RobloxExciteToDownload":
 		"Download Roblox to play millions of experiences!",
 	"Action.Download": "Download",
+	"Heading.GetTheRobloxApp": "Get the Roblox app",
+	"Description.PlayExploreBuildAndMore": "Play, explore, build, and more",
+	"Action.GetTheApp": "Get the app",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

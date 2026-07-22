@@ -2654,6 +2654,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.PartyVoiceChatSettingV2": "Voice chat with friends setting",
 	"Heading.PartySetting": "Chat and party with friends setting",
 	"Heading.PartyChatSettingV2": "Friends chat setting",
+	"ScopeType.UniverseThumbnail": "Thumbnails",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

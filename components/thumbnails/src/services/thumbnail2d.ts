@@ -5,6 +5,11 @@ import {
 	universeThumbnailHandler,
 } from "../util/thumbnailHandler";
 import {
+	isAvatarHeadshotBackgroundInTreatmentFromCache,
+	prefetchAvatarHeadshotBackgroundExperiment,
+	resolveAvatarHeadshotIncludeBackground,
+} from "../experimentation/avatarHeadshotBackgroundExperiment";
+import {
 	ThumbnailTypes,
 	ThumbnailStates,
 	ThumbnailAssetsSize,
@@ -75,7 +80,7 @@ const loadThumbnailImage = (
 	clearCachedValue?: boolean,
 	version?: number,
 	headShape?: string,
-	includeBackground = false,
+	includeBackground?: boolean,
 ) => {
 	if (!targetId && !token) {
 		return new Promise((_resolve, reject) => {
@@ -106,6 +111,21 @@ const loadThumbnailImage = (
 		formatOverride = ThumbnailFormat.webp;
 	}
 
+	// Warm the treatment cache (single-flight) only when an AvatarHeadshot might
+	// rely on the experiment, so headshot-less pages issue no IXP request.
+	if (
+		thumbnailType === ThumbnailTypes.avatarHeadshot &&
+		includeBackground === undefined
+	) {
+		prefetchAvatarHeadshotBackgroundExperiment();
+	}
+
+	const resolvedIncludeBackground = resolveAvatarHeadshotIncludeBackground(
+		thumbnailType,
+		includeBackground,
+		isAvatarHeadshotBackgroundInTreatmentFromCache(),
+	);
+
 	return resolveThumbnailFormat(formatOverride).then(
 		(resolvedFormat: ThumbnailFormat) => {
 			const item = {
@@ -117,7 +137,7 @@ const loadThumbnailImage = (
 				version,
 				headShape,
 				// Only include the param when enabled so the request omits it for the default case.
-				...(includeBackground ? { includeBackground } : {}),
+				...(resolvedIncludeBackground ? { includeBackground: true } : {}),
 			};
 
 			const customHandler = [
@@ -166,7 +186,7 @@ const getThumbnailImage = (
 	token?: string,
 	version?: number,
 	headShape?: string,
-	includeBackground = false,
+	includeBackground?: boolean,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -198,7 +218,7 @@ const reloadThumbnailImage = (
 	token?: string,
 	version?: number,
 	headShape?: string,
-	includeBackground = false,
+	includeBackground?: boolean,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,

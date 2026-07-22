@@ -22,6 +22,7 @@ enum ChallengeType {
 	BLOCK_SESSION = "blocksession",
 	BIOMETRIC = "biometric",
 	CAPTCHA_V2 = "captchav2",
+	TURNSTILE = "turnstile",
 }
 
 export default ChallengeType;

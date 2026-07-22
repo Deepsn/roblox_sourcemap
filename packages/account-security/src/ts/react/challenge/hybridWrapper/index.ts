@@ -24,6 +24,7 @@ import * as ProofOfSpace from "../proofOfSpace";
 import * as ProofOfWork from "../proofOfWork";
 import * as Rostile from "../rostile";
 import * as SecurityQuestions from "../securityQuestions";
+import * as Turnstile from "../turnstile";
 import * as TwoStepVerification from "../twoStepVerification";
 import { LOG_PREFIX } from "./app.config";
 import { HybridTarget, RenderChallengeFromQueryParameters } from "./interface";
@@ -40,6 +41,7 @@ import {
 	readQueryParametersForTwoStepVerification,
 	readQueryParametersForBiometric,
 	readQueryParametersForCaptchaV2,
+	readQueryParametersForTurnstile,
 } from "./query";
 import { recordHybridEventMetric } from "./metrics";
 import { recordHybridEventCounters } from "./counters";
@@ -823,6 +825,81 @@ const renderCaptchaV2ChallengeFromQueryParameters = (
 };
 
 /**
+ * Helper function for Turnstile hybrid challenges.
+ */
+const renderTurnstileChallengeFromQueryParameters = async (
+	containerId: string,
+	hybridTargetToCallbackInputId: Record<HybridTarget, string>,
+	appType: string,
+): Promise<boolean> => {
+	const queryParameters = readQueryParametersForTurnstile();
+	// Handle hybrid callbacks for parse.
+	if (queryParameters === null) {
+		dispatchNavigateToFeatureHybridEvent(
+			ChallengeType.TURNSTILE,
+			hybridTargetToCallbackInputId,
+			HybridTarget.CHALLENGE_PARSED,
+			{ parsed: false },
+		);
+		return false;
+	}
+	dispatchNavigateToFeatureHybridEvent(
+		ChallengeType.TURNSTILE,
+		hybridTargetToCallbackInputId,
+		HybridTarget.CHALLENGE_PARSED,
+		{ parsed: true },
+	);
+
+	const { challengeId } = queryParameters;
+	const result = await Turnstile.renderChallenge({
+		containerId,
+		challengeId,
+		appType,
+		renderInline: true,
+		onChallengeDisplayed: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.TURNSTILE,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_DISPLAYED,
+				data,
+			),
+		onChallengeCompleted: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.TURNSTILE,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_COMPLETED,
+				data,
+			),
+		onChallengeInvalidated: (data) =>
+			dispatchNavigateToFeatureHybridEvent(
+				ChallengeType.TURNSTILE,
+				hybridTargetToCallbackInputId,
+				HybridTarget.CHALLENGE_INVALIDATED,
+				data,
+			),
+		onModalChallengeAbandoned: null,
+	});
+	// Handle hybrid callbacks for initialize.
+	if (result === false) {
+		dispatchNavigateToFeatureHybridEvent(
+			ChallengeType.TURNSTILE,
+			hybridTargetToCallbackInputId,
+			HybridTarget.CHALLENGE_INITIALIZED,
+			{ initialized: false },
+		);
+		return false;
+	}
+	dispatchNavigateToFeatureHybridEvent(
+		ChallengeType.TURNSTILE,
+		hybridTargetToCallbackInputId,
+		HybridTarget.CHALLENGE_INITIALIZED,
+		{ initialized: true },
+	);
+
+	return true;
+};
+
+/**
  * Helper function for device integrity hybrid challenges.
  */
 const renderDeviceIntegrityChallengeFromQueryParameters = (
@@ -1555,6 +1632,12 @@ export const renderChallengeFromQueryParameters: RenderChallengeFromQueryParamet
 				);
 			case ChallengeType.CAPTCHA_V2:
 				return renderCaptchaV2ChallengeFromQueryParameters(
+					containerId,
+					hybridTargetToCallbackInputId,
+					queryParametersBase.appType,
+				);
+			case ChallengeType.TURNSTILE:
+				return renderTurnstileChallengeFromQueryParameters(
 					containerId,
 					hybridTargetToCallbackInputId,
 					queryParametersBase.appType,
