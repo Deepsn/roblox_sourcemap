@@ -108,15 +108,19 @@ export const TurnstileContextProvider = ({
 	useEffect(() => {
 		eventService.sendChallengeInitializedEvent();
 		metricsService.fireChallengeInitializedEvent();
-
-		onChallengeDisplayed({ displayed: true });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// Displayed effect: fire once when the interactive modal becomes visible.
-	// Invisible and non-interactive sessions never reveal the modal and therefore
-	// never emit this event. Keyed on `isModalVisible` so re-dispatches that keep
-	// the flag set do not re-fire it.
+	// Displayed effect: fire once when the interactive challenge becomes visible.
+	// Invisible and non-interactive sessions never reveal the challenge and
+	// therefore never emit this event. Keyed on `isModalVisible` so re-dispatches
+	// that keep the flag set do not re-fire it.
+	//
+	// NOTE: `onChallengeDisplayed` is deliberately called here rather than on
+	// mount, so the host is only told the challenge is "displayed" when there is
+	// actually something to show (interaction required). This matches the captcha
+	// (Arkose) behavior, where invisible / suppressed sessions never notify the
+	// host and therefore render no security-prompt UI at all.
 	useEffect(() => {
 		if (!state.isModalVisible) {
 			return;
@@ -124,7 +128,13 @@ export const TurnstileContextProvider = ({
 
 		eventService.sendChallengeDisplayedEvent();
 		metricsService.fireChallengeDisplayedEvent();
-	}, [state.isModalVisible, eventService, metricsService]);
+		onChallengeDisplayed({ displayed: true });
+	}, [
+		state.isModalVisible,
+		eventService,
+		metricsService,
+		onChallengeDisplayed,
+	]);
 
 	// Completion effect:
 	useEffect(() => {

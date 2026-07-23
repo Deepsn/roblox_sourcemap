@@ -28,6 +28,7 @@ import * as hybrid from "@rbx/core-scripts/hybrid";
 import * as localStorageService from "@rbx/core-scripts/local-storage";
 import * as localStorageKeys from "@rbx/core-scripts/local-storage/keys";
 import * as paymentsFlow from "@rbx/core-scripts/payments-flow";
+import * as theme from "@rbx/core-scripts/theme";
 import * as chat from "@rbx/core-scripts/util/chat";
 import * as defer from "@rbx/core-scripts/util/defer";
 import * as elementVisibility from "@rbx/core-scripts/util/element-visibility";
@@ -36,6 +37,7 @@ import * as user from "@rbx/core-scripts/util/user";
 import * as CoreUtilities from "@rbx/core-scripts/legacy/core-utilities";
 import * as CoreRobloxUtilities from "@rbx/core-scripts/legacy/core-roblox-utilities";
 
+import { initializeTheme } from "@rbx/core-scripts/theme/internal";
 import * as directionalNavigation from "./src/directional-navigation";
 import heartbeatInit from "./src/pageHeartbeat";
 
@@ -138,6 +140,7 @@ addExternal(
 	localStorageKeys,
 );
 addExternal(["Roblox", "core-scripts", "paymentsFlow"], paymentsFlow);
+addExternal(["Roblox", "core-scripts", "theme"], theme);
 addExternal(["Roblox", "core-scripts", "util", "chat"], chat);
 addExternal(
 	["Roblox", "core-scripts", "util", "elementVisibility"],
@@ -155,12 +158,32 @@ addLegacyExternal(["Roblox", "DeepLinkService"], {
 addLegacyExternal(["Roblox", "ShareLinks"], deepLink.ShareLinks);
 addLegacyExternal(["Roblox", "ShareLinksType"], deepLink.ShareLinksType);
 
-heartbeatInit();
+try {
+	heartbeatInit();
+} catch {
+	// do nothing for now
+}
 
 try {
 	CoreRobloxUtilities.initializeGenericChallengeInterceptor();
+} catch {
+	// do nothing for now
+}
+
+try {
 	directionalNavigation.initializeGamepadNavigation();
+} catch {
+	// do nothing for now
+}
+
+try {
 	localStorageService.default.updateLocalStorageUsage();
+} catch {
+	// do nothing for now
+}
+
+try {
+	initializeTheme();
 } catch {
 	// do nothing for now
 }

@@ -1,5 +1,9 @@
-import { ValueOf } from "@rbx/core-types";
+import type { ComponentProps } from "react";
+import type { ValueOf } from "@rbx/core-types";
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
+import type { Icon } from "@rbx/foundation-ui";
+
+type FoundationIconName = ComponentProps<typeof Icon>["name"];
 
 export const appDownloadType = {
 	Unknown: 1,
@@ -14,6 +18,11 @@ export const appDownloadType = {
 export const pageName = "downloadV2";
 
 export const installInstructionsDelayMs = 1000;
+
+export const appDownloadTranslationConfig = [
+	"Feature.DownloadLanding",
+	"Common.VisitGame",
+];
 
 export const downloadPageStrings = {
 	downloadPageHeader: "Heading.DownloadPage",
@@ -78,7 +87,10 @@ export type AppDownloadLink = {
 	href: string;
 	title: string;
 	name: string;
-	icon: string;
+	/** Foundation icon used by the shared DownloadButton component. */
+	icon: FoundationIconName;
+	/** Legacy CSS icon class for existing download surfaces. */
+	legacyIcon: string;
 	isDirectDownload: boolean;
 };
 
@@ -89,35 +101,40 @@ export const appDownloadLinkConstants: Partial<
 		href: downloadPageStrings.windowsDownloadLink,
 		title: downloadPageStrings.windowsDownloadLabel,
 		name: "windows",
-		icon: "icon-logo-win",
+		icon: "icon-filled-microsoft",
+		legacyIcon: "icon-logo-win",
 		isDirectDownload: true,
 	},
 	[appDownloadType.MacDirectDownload]: {
 		href: downloadPageStrings.macDownloadLink,
 		title: downloadPageStrings.macDownloadLabel,
 		name: "mac",
-		icon: "icon-logo-apple",
+		icon: "icon-filled-apple",
+		legacyIcon: "icon-logo-apple",
 		isDirectDownload: true,
 	},
 	[appDownloadType.AmazonAppStore]: {
 		href: downloadPageStrings.amazonStoreLink,
 		title: downloadPageStrings.androidAppDownloadLabel,
 		name: "amazonStore",
-		icon: "icon-logo-android",
+		icon: "icon-filled-amazon",
+		legacyIcon: "icon-logo-android",
 		isDirectDownload: false,
 	},
 	[appDownloadType.GooglePlayStore]: {
 		href: downloadPageStrings.googlePlayStoreLink,
 		title: downloadPageStrings.androidAppDownloadLabel,
 		name: "android",
-		icon: "icon-logo-android",
+		icon: "icon-filled-android",
+		legacyIcon: "icon-logo-android",
 		isDirectDownload: false,
 	},
 	[appDownloadType.AppleAppStore]: {
 		href: downloadPageStrings.appleAppStoreLink,
 		title: downloadPageStrings.iOSDownloadLabel,
 		name: "iOS",
-		icon: "icon-logo-apple",
+		icon: "icon-filled-apple",
+		legacyIcon: "icon-logo-apple",
 		isDirectDownload: false,
 	},
 };

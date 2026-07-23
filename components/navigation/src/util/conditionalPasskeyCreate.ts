@@ -12,6 +12,11 @@ import {
 	sendPasskeyRegistrationEvent,
 } from "../services/eventService";
 import EVENT_CONSTANTS from "../constants/eventsConstants";
+import { trackCounter, trackError, publishMetric } from "../observability";
+import {
+	getBrowserInfo,
+	getCredentialCreateBrowserDims,
+} from "../observability/browserInfo";
 
 const upgradeState = EVENT_CONSTANTS.passkeyUpgradeState;
 
@@ -44,6 +49,28 @@ const CTX_TO_SOURCE: Record<string, string> = {
 		"PasskeySilentUpgradeSignupDelayed",
 };
 
+type UpgradeSource =
+	| "LoginImmediate"
+	| "LoginDelayed"
+	| "SignupDelayed"
+	| "Unknown";
+
+const CTX_TO_UPGRADE_SOURCE: Record<string, UpgradeSource> = {
+	[EVENT_CONSTANTS.context.silentPasskeyUpgradeWebLoginImmediate]:
+		"LoginImmediate",
+	[EVENT_CONSTANTS.context.silentPasskeyUpgradeWebLoginDelayed]: "LoginDelayed",
+	[EVENT_CONSTANTS.context.silentPasskeyUpgradeWebSignupDelayed]:
+		"SignupDelayed",
+};
+
+const ctxToUpgradeSource = (ctx: string): UpgradeSource =>
+	CTX_TO_UPGRADE_SOURCE[ctx] ?? "Unknown";
+
+const trackApiCall = (name: string, statusCode: string): void => {
+	publishMetric(`${name}_API`, { statusCode: "Throughput" });
+	publishMetric(`${name}_API`, { statusCode });
+};
+
 const isDelayedCtx = (ctx: string): boolean =>
 	ctx === EVENT_CONSTANTS.context.silentPasskeyUpgradeWebLoginDelayed ||
 	ctx === EVENT_CONSTANTS.context.silentPasskeyUpgradeWebSignupDelayed;
@@ -64,7 +91,10 @@ const readUpgradeIntent = (): UpgradeIntent | null => {
 		const flag = sessionStorage.getItem(PASSKEY_UPGRADE_SESSION_KEY);
 		const ctx = flag ? FLAG_TO_CTX[flag] : undefined;
 		if (!ctx) {
-			if (flag) sessionStorage.removeItem(PASSKEY_UPGRADE_SESSION_KEY);
+			if (flag) {
+				sessionStorage.removeItem(PASSKEY_UPGRADE_SESSION_KEY);
+				trackCounter("UpgradeFlagInvalid", { reason: "UnknownFlagValue" });
+			}
 			return null;
 		}
 
@@ -91,6 +121,7 @@ const readUpgradeIntent = (): UpgradeIntent | null => {
 			EVENT_CONSTANTS.context.silentPasskeyUpgrade,
 			upgradeState.consumePasskeySessionFlagError,
 		);
+		trackCounter("UpgradeFlagInvalid", { reason: "StorageReadError" });
 	}
 	return null;
 };
@@ -109,21 +140,25 @@ const clearUpgradeFlags = (): void => {
 const verifyUpgradeUserOrAbort = (
 	ctx: string,
 	expectedUserId: string | null,
+	source: UpgradeSource,
 ): boolean => {
 	const currentUserId = getCurrentUserId();
 	if (expectedUserId === null) {
 		clearUpgradeFlags();
 		sendAuthPageLoadEvent(ctx, upgradeState.expectedUserIdMissing);
+		trackCounter("UpgradeAborted", { source, reason: "ExpectedUserIdMissing" });
 		return false;
 	}
 	if (currentUserId === null) {
 		clearUpgradeFlags();
 		sendAuthPageLoadEvent(ctx, upgradeState.currentUserIdMissing);
+		trackCounter("UpgradeAborted", { source, reason: "CurrentUserIdMissing" });
 		return false;
 	}
 	if (currentUserId !== expectedUserId) {
 		clearUpgradeFlags();
 		sendAuthPageLoadEvent(ctx, upgradeState.userIdMismatch);
+		trackCounter("UpgradeAborted", { source, reason: "UserIdMismatch" });
 		return false;
 	}
 	return true;
@@ -168,17 +203,38 @@ const getHttpErrorStatus = (err: unknown, ctx: string): string => {
 	return "Unknown";
 };
 
-const checkSilentUpgradeAvailable = async (ctx: string): Promise<boolean> => {
+const checkSilentUpgradeAvailable = async (
+	ctx: string,
+	source: UpgradeSource,
+): Promise<boolean> => {
 	try {
 		const { data } = await http.get<SilentUpgradeEligibilityResponse>({
 			url: urlConstants.getSilentUpgradeAvailableUrl(),
 			withCredentials: true,
 		});
-		return data.suEligibility;
+		trackApiCall("SilentUpgradeEligibility", "200");
+		if (!data.suEligibility) {
+			trackCounter("UpgradeIneligible", { source });
+			return false;
+		}
+		trackCounter("EligibilityPassed", { source });
+		return true;
 	} catch (e) {
+		const statusCode = getHttpErrorStatus(e, ctx);
+		trackApiCall("SilentUpgradeEligibility", statusCode);
 		sendAuthPageLoadEvent(
 			ctx,
-			`${upgradeState.silentUpgradeCheckError}_${getHttpErrorStatus(e, ctx)}`,
+			`${upgradeState.silentUpgradeCheckError}_${statusCode}`,
+		);
+		trackError(
+			"UpgradeFailed",
+			{
+				source,
+				browserFamily: getBrowserInfo().browserFamily,
+				stage: "Eligibility",
+				reason: statusCode,
+			},
+			e,
 		);
 		return false;
 	}
@@ -227,9 +283,11 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 	}
 
 	const { ctx, delayMs, expectedUserId } = intent;
+	const source = ctxToUpgradeSource(ctx);
+	trackCounter("UpgradeFlagObserved", { source });
 
 	// Abort if the active account differs from the one that set the flag.
-	if (!verifyUpgradeUserOrAbort(ctx, expectedUserId)) {
+	if (!verifyUpgradeUserOrAbort(ctx, expectedUserId, source)) {
 		return false;
 	}
 
@@ -240,14 +298,14 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 
 		// Re-check because the session may have changed during the delay
 		// (e.g. switched accounts).
-		if (!verifyUpgradeUserOrAbort(ctx, expectedUserId)) {
+		if (!verifyUpgradeUserOrAbort(ctx, expectedUserId, source)) {
 			return false;
 		}
 	}
 
 	clearUpgradeFlags();
 
-	const upgradeAvailable = await checkSilentUpgradeAvailable(ctx);
+	const upgradeAvailable = await checkSilentUpgradeAvailable(ctx, source);
 	if (!upgradeAvailable) {
 		sendAuthPageLoadEvent(ctx, upgradeState.silentUpgradeNotEligible);
 		return false;
@@ -256,11 +314,25 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 	let start: StartRegistrationResponse;
 	try {
 		start = await startRegistration();
+		trackApiCall("StartRegistration", "200");
 		sendAuthPageLoadEvent(ctx, upgradeState.startRegistrationSuccess);
+		trackCounter("StartRegistrationSucceeded", { source });
 	} catch (e) {
+		const statusCode = getHttpErrorStatus(e, ctx);
+		trackApiCall("StartRegistration", statusCode);
 		sendAuthPageLoadEvent(
 			ctx,
-			`${upgradeState.startRegistrationError}_${getHttpErrorStatus(e, ctx)}`,
+			`${upgradeState.startRegistrationError}_${statusCode}`,
+		);
+		trackError(
+			"UpgradeFailed",
+			{
+				source,
+				browserFamily: getBrowserInfo().browserFamily,
+				stage: "StartRegistration",
+				reason: statusCode,
+			},
+			e,
 		);
 		return false;
 	}
@@ -272,6 +344,11 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 		JSON.stringify(makeCredentialOptions),
 	);
 
+	trackCounter("CredentialCreateAttempt", {
+		source,
+		...getCredentialCreateBrowserDims(),
+	});
+
 	let credential: PublicKeyCredential;
 	try {
 		const createOptions: CredentialCreationOptions & {
@@ -280,21 +357,47 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 		const result = await navigator.credentials.create(createOptions);
 		if (result === null) {
 			sendAuthPageLoadEvent(ctx, upgradeState.createCredentialError);
+			trackError("CredentialCreateFailed", {
+				source,
+				...getCredentialCreateBrowserDims(),
+				reason: "NullCredential",
+			});
 			return false;
 		}
 		credential = result as PublicKeyCredential;
+		trackCounter("CredentialCreated", {
+			source,
+			...getCredentialCreateBrowserDims(),
+		});
 	} catch (e) {
 		const name = e instanceof DOMException ? e.name : undefined;
-		let eventStreamState: string = upgradeState.unknownError;
+
 		if (
 			name === "InvalidStateError" &&
 			(publicKey.excludeCredentials?.length ?? 0) > 0
 		) {
-			eventStreamState = upgradeState.invalidStateErrorHasExistingPasskey;
-		} else if (name && EXPECTED_CREATE_ERRORS.has(name)) {
-			eventStreamState = name;
+			sendAuthPageLoadEvent(
+				ctx,
+				upgradeState.invalidStateErrorHasExistingPasskey,
+			);
+			trackCounter("AlreadyHasPasskey", {
+				source,
+				...getCredentialCreateBrowserDims(),
+			});
+			return false;
 		}
-		sendAuthPageLoadEvent(ctx, eventStreamState);
+
+		if (name && EXPECTED_CREATE_ERRORS.has(name)) {
+			sendAuthPageLoadEvent(ctx, name);
+			trackCounter("CredentialCreateExpectedRejection", {
+				source,
+				...getCredentialCreateBrowserDims(),
+				reason: name,
+			});
+			return false;
+		}
+
+		sendAuthPageLoadEvent(ctx, upgradeState.unknownError);
 
 		const message = e instanceof Error ? e.message : String(e);
 		const failureReason = name ? `${name}: ${message}` : message;
@@ -304,6 +407,15 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 				.navigationCredentialCreateFailure,
 			failureReason,
 		);
+		trackError(
+			"CredentialCreateFailed",
+			{
+				source,
+				...getCredentialCreateBrowserDims(),
+				reason: name ?? "UnknownError",
+			},
+			e,
+		);
 		return false;
 	}
 
@@ -311,20 +423,37 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 		formatCredentialRegistrationResponseWeb(credential);
 
 	try {
-		const source = CTX_TO_SOURCE[ctx] ?? ctx;
+		const finishSource = CTX_TO_SOURCE[ctx] ?? ctx;
 		await finishRegistration(
 			start.sessionId,
 			CREDENTIAL_NICKNAME,
 			attestationResponse,
-			source,
+			finishSource,
 		);
+		trackApiCall("FinishRegistration", "200");
 		sendAuthPageLoadEvent(ctx, upgradeState.finishRegistrationSuccess);
 		sendPasskeyCreationSourceEvent(ctx);
+		trackCounter("UpgradeSucceeded", {
+			source,
+			browserFamily: getBrowserInfo().browserFamily,
+		});
 		return true;
 	} catch (e) {
+		const statusCode = getHttpErrorStatus(e, ctx);
+		trackApiCall("FinishRegistration", statusCode);
 		sendAuthPageLoadEvent(
 			ctx,
-			`${upgradeState.finishRegistrationError}_${getHttpErrorStatus(e, ctx)}`,
+			`${upgradeState.finishRegistrationError}_${statusCode}`,
+		);
+		trackError(
+			"UpgradeFailed",
+			{
+				source,
+				browserFamily: getBrowserInfo().browserFamily,
+				stage: "FinishRegistration",
+				reason: statusCode,
+			},
+			e,
 		);
 		return false;
 	}

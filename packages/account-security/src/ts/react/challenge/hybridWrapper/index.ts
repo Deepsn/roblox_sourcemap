@@ -394,8 +394,11 @@ const renderTwoStepVerificationChallengeFromQueryParameters = (
 		appType,
 		renderInline: true,
 		// Page changes in the 2SV interface should trigger browser navigation so
-		// the back button works correctly in Lua.
-		shouldModifyBrowserHistory: true,
+		// the back button works correctly in Lua. In barista mode (web iframe),
+		// HashRouter hash changes cause Firefox to reload the iframe, so we use
+		// MemoryRouter instead.
+		shouldModifyBrowserHistory:
+			getQueryParameterValue("barista-mode") !== "true",
 		shouldShowRememberDeviceCheckbox: allowRememberDevice,
 		recoveryParameters: {
 			clientSupports2svRecovery,
@@ -1235,7 +1238,8 @@ const renderGenericChallengeFromQueryParameters = async (
 	const challengeBaseProperties: ChallengeBaseProperties = {
 		containerId,
 		appType,
-		shouldModifyBrowserHistory: true,
+		shouldModifyBrowserHistory:
+			getQueryParameterValue("barista-mode") !== "true",
 		onChallengeCompleted: (data) => {
 			const urlParts = getCurrentUrlParts();
 			// Attempt to clear hybrid webview url to prevent re-rendering on a potential

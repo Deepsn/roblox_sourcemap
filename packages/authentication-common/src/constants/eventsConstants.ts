@@ -213,7 +213,60 @@ const EVENT_CONSTANTS = {
 		accountRecoveryPage: {
 			recoveryPageShown: "recoveryPageShown",
 			recoveryPathChosen: "recoveryPathChosen",
+			// Fired once per user-initiated password-reset submit. The per-arm submit
+			// denominator for the abandon-vs-error split.
+			passwordResetSubmitted: "passwordResetSubmitted",
+			// Fired (via authMsgShown) when the resetPassword API returns an error,
+			// carrying the raw backend code in `errorcode` so error-vs-abandon is
+			// measurable per arm.
+			passwordResetFailure: "passwordResetFailure",
+			// resetPassword returned a non-error response; flow is carried in `origin`.
+			passwordResetSucceeded: "passwordResetSucceeded",
+			// Continue clicked on RecoverySuccess; flow is carried in `origin`.
+			recoverySuccessContinueClicked: "recoverySuccessContinueClicked",
+			// Fired (via authMsgShown) when a 2SV challenge during password reset
+			// does not complete (abandoned or errored). Reason is carried in `field`
+			// (see recovery2svIncompleteReason) to keep a 2SV bug separable from
+			// user abandonment.
+			passwordReset2svIncomplete: "passwordReset2svIncomplete",
 		},
+	},
+	// Which step of the account-recovery passkey registration ceremony failed.
+	// Carried in `origin` on the passkeyRegistrationFailure authMsgShown event
+	// so the single failure bucket can be split by cause. `field` carries the
+	// detail: the WebAuthn DOMException name (e.g. NotAllowedError,
+	// InvalidStateError) for osCeremony, or the raw backend error code for
+	// start/finish.
+	passkeyRegistrationErrorSource: {
+		// startPreAuthPasskeyRegistration (backend) failed.
+		start: "start",
+		// navigator.credentials.create (OS WebAuthn prompt) failed or returned null.
+		osCeremony: "osCeremony",
+		// finishARPreAuthPasskeyRegistration (backend) failed.
+		finish: "finish",
+		// Unexpected error not attributable to a specific step.
+		unknown: "unknown",
+	},
+	// Identifies which recovery UI arm emitted a reset event. Carried in `origin`
+	// so the funnel is cut per arm.
+	recoveryResetFlow: {
+		control: "control",
+		passkeyFirst: "passkeyFirst",
+		passwordFirst: "passwordFirst",
+		passkeyAutoLogin: "passkeyAutoLogin",
+	},
+	// Why a 2SV challenge during password reset did not complete, carried on the
+	// passwordReset2svIncomplete event. One event so the common "abandoned" case
+	// and the rare error cases share a denominator but stay separable.
+	recovery2svIncompleteReason: {
+		// User closed/dismissed the challenge modal.
+		abandoned: "abandoned",
+		// Challenge invalidated with a non-session-expired (unknown) error.
+		invalidated: "invalidated",
+		// AccountIntegrityChallengeService failed to render the challenge.
+		renderFailed: "renderFailed",
+		// Backend 2SV error was missing a challengeId (or userId was unavailable).
+		missingChallengeId: "missingChallengeId",
 	},
 } as const;
 

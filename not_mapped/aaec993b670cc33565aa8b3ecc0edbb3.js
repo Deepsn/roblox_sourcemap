@@ -1,4 +1,4 @@
-// bundle: pageEnd___b868abcdefb315281fbe6060e03ebafe_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PlacesListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GamePageResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
+// bundle: pageEnd___2f108816c3d7326773024677938a3bb0_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_FriendsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PeopleListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PlacesListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GamePageResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Common.Presence"] = {
@@ -51,7 +51,7 @@ Roblox.Lang["Authentication.Login"] = {
 	"Description.AccountSelectorOtpTimeWarning":
 		"Please select one within {timeLimitSec} seconds.",
 	"Description.DownloadNewVersion":
-		"This version of the app is no longer available in your region. To continue playing, please download the new version of Roblox.",
+		"This version of Roblox isn’t available for your account. Please download the correct version to continue.",
 	"Description.EnterOneTimeCodeHelp":
 		"A code was sent to your email if it is verified on your account. Enter the code to log in.",
 	"Description.EnterOneTimeCodeHelpV2":
@@ -84,7 +84,7 @@ Roblox.Lang["Authentication.Login"] = {
 	"Heading.LoginRequired": "Login Required",
 	"Heading.LoginRoblox": "Login to Roblox",
 	"Heading.LoginRobloxAccountSwitching": "Login To Existing Account",
-	"Heading.NewAppAvailable": "New App Available",
+	"Heading.NewAppAvailable": "Download New Roblox App",
 	"Heading.SignUpMakeFriends": "Sign Up to Build & Make Friends",
 	"Heading.YouHaveLoggedOut": "You've Logged Out",
 	"Label.AccountNotNeeded": "You don't need an account to play Roblox",
@@ -741,6 +741,8 @@ Roblox.Lang["CommonUI.Features"] = {
 	"Label.AvatarShop": "Avatar Shop",
 	"Label.Badges": "Badges",
 	"Label.Careers": "Careers",
+	"Label.CatalogMarketplaceAvatarStore":
+		"Shop Roblox Catalog, Marketplace & Avatar Store",
 	"Label.Charts": "Charts",
 	"Label.Configure": "Configure",
 	"Label.ConfigureGame": "Configure Experience",
@@ -1428,7 +1430,7 @@ Roblox.Lang["Purchasing.RedeemGameCard"] = {
 	"Message.CreditConversionConfirmation":
 		"By redeeming a Gift Card in a foreign currency, you consent to converting the value of the Gift Card to the currency of your registered Roblox account’s country at the rate specified in our {termsAndConditionsLinkStart}Terms and Conditions{termsAndConditionsLinkEnd}. Conversion shown below:",
 	"Message.LargeCreditBalanceTooltip":
-		"Your Roblox Credit balance is large\nenough to purchase Robux Packages\nor subscribe to Premium directly. ",
+		"Your Roblox Credit balance is large\nenough to purchase Robux Packages\nor subscribe to Plus directly.",
 	"Message.LocalCreditBanner":
 		"Beginning in April 2023 Roblox credit will no longer be denominated in U.S. Dollars. All Roblox gift cards will be redeemable for credit denominated in your local currency. We will send messages to your Roblox Inbox starting in January with more information.",
 	"Message.Step1LargestAvailablePackageYouCanBuy":
@@ -2028,7 +2030,287 @@ Roblox.Lang["Feature.Parents"] = {
 	"Title.VerifyEmail": "Verify Your Email",
 	"Title.WaitingParentPermission": "Waiting for Parent Permission",
 };
-Roblox.Lang["ParentsResources"] = Roblox.Lang["Feature.Parents"]; // ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js
+Roblox.Lang["ParentsResources"] = Roblox.Lang["Feature.Parents"]; // ~/Generated/js/Roblox_TranslationResources_Feature_FriendsResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Feature.Friends"] = {
+	"Action.Accept": "Accept",
+	"Action.AccountDeleted": "Account deleted",
+	"Action.FindFriends": "Find Friends",
+	"Action.Follow": "Follow",
+	"Action.Ignore": "Ignore",
+	"Action.IgnoreAll": "Ignore All",
+	"Action.IgnoreAllFriendRequestsPrompt":
+		"Are you sure you want to ignore all friend requests?",
+	"Action.InviteProviderFriends": "Invite {provider} Friends",
+	"Action.JoinGame": "Join",
+	"Action.Unfollow": "Unfollow",
+	"Action.Unfriend": "Unfriend",
+	"Description.FoundFromPhone": "Found you from your phone number",
+	"Description.SearchFriends":
+		"Tap the magnifying glass icon above and search for a user or {startLink}visit experiences{endLink} to meet people.",
+	"Heading.MyFriends": "My Friends",
+	"Heading.UsersFriends": "{username}'s Friends",
+	"Label.All": "All",
+	"Label.AllowContactsAccess":
+		"Allow access to your contacts to connect with friends on Roblox!",
+	"Label.Cancel": "Cancel",
+	"Label.ConnectWithFriends": "Connect With Friends",
+	"Label.ContactsRecommendations":
+		"Roblox uses your contacts to help you and your existing connections find each other through recommendations. You can change this any time in your account settings.",
+	"Label.ContactsRecommendations.FriendsRename":
+		"Roblox uses your contacts to help you and your existing friends find each other through recommendations. You can change this any time in your account settings.",
+	"Label.ErrorTitle": "Error",
+	"Label.FewestInteractions": "Fewest Interactions",
+	"Label.FewestInteractionsExplanation":
+		"Review the friends you've interacted with least. If you change your mind after removing a friend, you can send them another friend request.",
+	"Label.FilterFriends": "Search Friends",
+	"Label.Followers": "Followers",
+	"Label.Following": "Following",
+	"Label.FriendRequests": "Friend Requests",
+	"Label.Friends": "Friends",
+	"Label.IgnoreAllDoesntIgnoreAll300":
+		"Note: This will at max remove your most recent 300 friend requests each time you click the 'Ignore All' button.",
+	"Label.Inactive": "Inactive",
+	"Label.InGame": "In-Experience",
+	"Label.ManageFriendsList": "Manage Your Friends List",
+	"Label.ManageFriendsListCaption":
+		"Review the friends you've interacted with least to keep your friends list up to date.",
+	"Label.Mobile": "Mobile",
+	"Label.More": "more",
+	"Label.MutualFriend":
+		"{mutualFriendsCount, plural, =0 {# mutual friends} =1 {# mutual friend} other {# mutual friends}}",
+	"Label.MutualFriends": "Mutual Friends",
+	"Label.NearbyUpsell":
+		"You have no pending friend requests. To add friends, check out {startSpan}Nearby{endSpan}.",
+	"Label.NoResults": "No results found.",
+	"Label.Offline": "Offline",
+	"Label.Ok": "Ok",
+	"Label.Online": "Online",
+	"Label.Requests": "Requests",
+	"Label.SearchFriends": "Search for Friends",
+	"Label.SentFrom": "Sent from",
+	"Label.SentFromWithContext": "Sent From {gameName}",
+	"Label.Unfollowed": "Unfollowed",
+	"Message.ActionNotAllowedError": "Action not allowed",
+	"Message.AlreadyExistsError": "Already exists.",
+	"Message.CurrentInvalidParametersError": "Invalid parameters.",
+	"Message.CurrentUserFriendsLimitExceededError":
+		"You have reached the maximum number of Friends. Please remove a Friend before accepting any more Friend Requests.",
+	"Message.DefaultError": "An error ocurred.",
+	"Message.FloodLimitExceededError":
+		"You are performing this action too often. Please wait a minute and try again.",
+	"Message.FollowerTabTooltip":
+		"People who have chosen to follow your activity.",
+	"Message.FollowingTabTooltip":
+		"People whose activity you have chosen to follow.",
+	"Message.ForGeneralError": "Something went wrong.",
+	"Message.ForGeneralFooter": "Please check back in few minutes.",
+	"Message.ForMaxFriendsError":
+		"Unable to process Request. You currently have the max number of Friends allowed. ",
+	"Message.ForMaxFriendsFooter":
+		"Unfriend someone before accepting any more Friend Requests.",
+	"Message.ForMaxRequestsError":
+		"Unable to process Request. That user currently has the max number of Friends allowed.",
+	"Message.ForMaxRequestsFooter":
+		"You can not accept their Friend Request until they remove a Friend.",
+	"Message.FriendRequestNotExistError": "Friend request does not exist",
+	"Message.FriendsLimitExceededError": "Friends limit exceeded.",
+	"Message.FriendsTabTooltip":
+		"Friends are established when two Roblox users mutually agree to friendship.",
+	"Message.More": "{plusSign} {remainingCount} more",
+	"Message.MutualFriends": "mutual friends",
+	"Message.NotRecipientError":
+		"You are not the recipient of this friend request.",
+	"Message.OtherUserFriendsLimitExceededError": "Friends limit exceeded.",
+	"Message.RequestsTabTooltip":
+		"Friends are established when two Roblox users mutually agree to friendship.",
+	"Message.RobloxIsMoreFunWithFriends": "Roblox is more fun with friends!",
+	"Message.SelfFollowingAttemptError": "You cannot follow yourself.",
+	"Message.SelfFriendingAttemptError": "You cannot be friends with yourself.",
+	"Message.SystemUnavailableError":
+		"Friends and Followers system is unavailable.",
+	"Message.UnblockUserPinLockedError": "Pin is locked.",
+	"Message.UserBlockedError": "User is blocked",
+	"Message.UserHasNotPassedCaptchaError": "You need to pass Captcha.",
+	"Message.UsersAreNotInSameGameError":
+		"Users need to be in the same experience.",
+};
+Roblox.Lang["FriendsResources"] = Roblox.Lang["Feature.Friends"]; // ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Verification.Identity"] = {
+	"Action.Close": "Close",
+	"Action.Continue": "Continue",
+	"Action.ContinueToGame": "Continue To Experience",
+	"Action.GoBack": "Go Back",
+	"Action.RestartSession": "Restart Session",
+	"Action.SkipVoiceChat": "Join Without Voice Chat",
+	"Action.StartSession": "Start Session",
+	"Description.CameraCaptureSafety":
+		"Roblox won’t receive or store any video or personal info captured from your camera",
+	"Description.CameraPrivacy":
+		"Roblox won’t receive or store any video or personal info captured from your camera",
+	"Description.CameraUpsell":
+		"Enable your camera to animate your avatar with your movement in this experience.",
+	"Description.CameraUpsell2":
+		"Use your camera to animate your avatar with your movement",
+	"Description.CommunityStandardsUpsell":
+		"Follow our Community Standards when talking and report abuse if you hear it.",
+	"Description.CommunityStandardsUpsell2":
+		"The video from your camera never leaves your device, and Roblox does not record or store any information from it.",
+	"Description.DefaultConsentCameraUpsell":
+		"By clicking on enable, I consent to Roblox's temporary use of my movements to animate my avatar.",
+	"Description.DefaultConsentCameraUpsell2":
+		"By selecting Allow, I consent to Roblox’s temporary use of my movement data to animate my avatar.",
+	"Description.ExplicitConsentCameraUpsell":
+		"I consent to Roblox's temporary use of my movements to animate my avatar.",
+	"Description.ExplicitConsentCameraUpsell2":
+		"I consent to Roblox’s temporary use of my movement data to animate my avatar.",
+	"Description.ProcessingVerification":
+		"We are processing your ID verification.",
+	"Description.VerificationFinished":
+		"Your verification data has been successfully submitted. You can now close this window and return to Roblox.",
+	"Heading.Error": "Error",
+	"Heading.HeadsUp": "Heads Up!",
+	"Heading.IdentityVerification": "Identity Verification",
+	"Heading.LetsChat": "Let's Chat!",
+	"Heading.PleaseNote": "Please Note",
+	"Heading.ThankYou": "Thank You!",
+	"Heading.V2LetsChat": "Let's Chat",
+	"Heading.VeratadSuccess": "Processing Complete!",
+	"Heading.VerificationFailed": "Verification Failed",
+	"Heading.VerificationPending": "Verification Pending",
+	"Heading.VerificationSuccessful": "Verification Successful",
+	"Heading.VerifyAge": "Verify Your Age",
+	"Heading.VerifyEmail": "Check Your Email",
+	"Heading.Warning": "Warning",
+	"Heading.YourNewWayToChat": "Your New Way To Chat!",
+	"Label.AccessWiderVariety":
+		"You now have access to a wider variety of games.",
+	"Label.AgeVerifyPrompt": "Verify your age to get the most out of Roblox!",
+	"Label.BirthdayChangeWarning":
+		"You are about to change a birthday that has been verified.\n \nIf you change your date of birth, your age will no longer be verified and you will lose access to age restricted features. Are you sure you want to proceed?",
+	"Label.CameraLearnMoreUpsell": "Learn More about Facial Animation Privacy",
+	"Label.CheckboxConsentLabel":
+		"I consent to Roblox’s collection, use, and storage of my <b>voice recording</b> for moderation and safety purposes only.",
+	"Label.ClickToConsent":
+		"By clicking on enable, I consent to Roblox’s collection, use, and storage of my <b>voice recording</b> for moderation and safety purposes only.",
+	"Label.Connecting": "Connecting",
+	"Label.ConnectingToMobile": "Connecting to your mobile",
+	"Label.ConsentVoiceCollection":
+		"I consent to Roblox’s collection, use, and storage of my {linkStart}voice recording{linkEnd} for moderation and safety purposes only.",
+	"Label.DateOfBirthUpdated":
+		"Roblox has automatically updated the date of birth on your account to match your ID.",
+	"Label.DontShowAgain": "Don't Show Again",
+	"Label.EmailSent":
+		"We have sent you a link to {email} to verify your identity.\n\nOnce you have completed the Veratad ID scanning process, please press Continue.",
+	"Label.EnableCameraUpsell": "Enable Camera",
+	"Label.EnableChatWithVoice":
+		"Enable your microphone to Chat with your Voice in this experience.",
+	"Label.EnableChatWithVoiceWithLink":
+		"Enable your microphone to {linkStart}Chat with your Voice{linkEnd} in this experience.",
+	"Label.EnableMicrophone": "Enable Microphone",
+	"Label.EnableVoiceChat": "Enable Voice Chat",
+	"Label.EnableVoiceChat1":
+		"Enable voice chat to talk with others in this experience.",
+	"Label.EnableVoiceChat2":
+		"Follow our <b>Community Standards</b> when talking and report abuse if you hear it.",
+	"Label.EnterEmail":
+		"Before verifying your age, please enter your email address. This will be your recovery method in case you lose access to your account.",
+	"Label.ExplicitConsentVoiceCollectionWithML":
+		"I consent to Roblox’s collection, use, and storage of my voice recording for moderation and safety purposes and for the improvement of safety tools.",
+	"Label.ExternalCompleteVerification":
+		"Once you have completed the Veratad ID scanning process, please press Continue. ",
+	"Label.FailedVerification":
+		"The document provided could not be verified.\n\nPlease try again later.",
+	"Label.FailedVerificationInvalidDocument":
+		"The document provided could not be verified.\n\nPlease ensure your document is valid and try again.",
+	"Label.FailedVerificationLowQuality":
+		"The documents provided could not be verified.\n\nPlease try again, ensuring that submitted images are centered and focused on the subject.",
+	"Label.FailedVerificationMaxAccountsLinked":
+		"You’ve reached the maximum number of accounts linked to one verified ID.",
+	"Label.FailedVerificationUnsupportedDocument":
+		"The document provided is not supported by our verification provider.\n\nPlease try again with a different document.",
+	"Label.FollowCommunityStandards":
+		"Follow our {linkStart}Community Standards{linkEnd} when talking and report abuse if you hear it.",
+	"Label.GenericError":
+		"ID verification is not available at this time. \n\nPlease try again later.",
+	"Label.GenericVerified": "Your age is now verified!",
+	"Label.HavingTroubleScanCode":
+		"Having trouble? Scan the QR code above to restart the verification process.",
+	"Label.ImplicitConsentVoiceCollection":
+		"By clicking on enable, I consent to Roblox’s collection, use, and storage of my {linkStart}voice recording{linkEnd} for moderation and safety purposes only.",
+	"Label.ImplicitConsentVoiceCollectionWithML":
+		"​​By clicking on enable, I consent to Roblox’s collection, use, and storage of my voice recording for moderation and safety purposes and for the improvement of safety tools.",
+	"Label.JoinWithout": "Join Without Voice Chat",
+	"Label.JoinWithoutCameraUpsell": "Join without Camera",
+	"Label.JoinWithoutMicrophone": "Join Without Microphone",
+	"Label.LearnMoreAboutVoiceRecording": "Learn More about Voice Recording",
+	"Label.OverageVerification":
+		"Your age is now verified.\nYou now have access to:",
+	"Label.OverageVerification2": "You may turn these on and off in Settings.",
+	"Label.PendingCallback":
+		"The verification request is taking longer than usual. \n\nPlease check back in a few minutes.",
+	"Label.PendingRobloxVerification":
+		"Updating your Roblox profile...\n\nThis can take a few minutes.",
+	"Label.PendingVerification":
+		"The verification request is taking longer than usual. \n\nPlease check back in a few minutes.",
+	"Label.PleaseDoNotClose":
+		"Please do not close this window until the verification process is complete.",
+	"Label.PrepareId": "Prepare a valid ID",
+	"Label.PrivacyNotice":
+		"The information collected through the ID verification process will only be used for the purposes of securing your account and/or enabling Roblox features.  Roblox takes steps to ensure that all service providers with access to Roblox personal information are capable of protecting the information we share with them.  Our service providers are only allowed to use the personal information with them for the specific tasks they’ve been hired to do that are consistent with our Privacy Policy. Our services providers are not permitted to sell the personal information shared with them.  For more information, please visit our",
+	"Label.PrivacyNoticeAndLink":
+		"Please Note: You're about to start the ID verification process with our third party service provider. The information collected through this process will be used for the purposes of securing your account and/or enabling Roblox features. For more information, please visit our {spanStart} Roblox Biometric Privacy Notice.{spanEnd}",
+	"Label.PrivacyNoticeShort":
+		"You're about to start the ID verification process {boldStart}with our third party service provider.{boldEnd}\nThe information collected through this process will only be used for the purposes of securing your account and/or enabling Roblox features. For more information, please visit our {spanStart}Privacy Policy.{spanEnd}",
+	"Label.PrivacyPolicy": "Privacy Policy",
+	"Label.QRAlternateLink":
+		"Don't have a smartphone? {linkStart}Continue with your current device{linkEnd}",
+	"Label.ScanQRCode": "Scan the QR Code with your camera app to begin.",
+	"Label.SessionTimeout":
+		"Sorry, the verification process took too long. Please refresh the page and try again.",
+	"Label.SmartphoneRequired": "You need a smartphone in order to continue",
+	"Label.ToggleFeatures":
+		"You may turn these features on and off in privacy settings.",
+	"Label.ToggleInstruction":
+		"You can also toggle this feature on or off by accessing your Settings.",
+	"Label.UnderageVerification":
+		"Your age is now verified.\nYou will begin to unlock age-restricted features when you turn {age}:",
+	"Label.UpdatingRoblox": "Updating your Roblox profile",
+	"Label.UseSmartphone": "Use a smartphone",
+	"Label.UsesVoiceChat":
+		"This experience uses voice chat. Enabling voice chat will use your microphone input in voice enabled experiences.",
+	"Label.V2ClickToConsent":
+		"I consent to Roblox's collection, use, and storage of my voice recording to enable voice services and for moderation, safety, and improvement of our services and tools.",
+	"Label.V2EnableVoiceChat": "Enable chat with voice",
+	"Label.V2EnableVoiceChat1":
+		"Enable chat with voice to talk with others in this experience.",
+	"Label.V2JoinWithout": "Join without chat with voice",
+	"Label.ValidIdList": "Driver's License, Passport, ID Card, Residence Permit",
+	"Label.VeratadGenericResponse":
+		"Your updated age will be securely submitted to Roblox.\nThis can take a few minutes.",
+	"Label.VerificationDataSubmitted":
+		"Your verification data has been successfully submitted ",
+	"Label.VerificationDeclined":
+		"Sorry, your verification was declined. For security reasons, please wait {days} day(s) before trying again.",
+	"Label.VerificationDeclinedGeneric":
+		"Sorry, your verification was declined for security reasons. If you want to try again, please check back in a few days.",
+	"Label.VerificationWaitingForResults": "Waiting for results",
+	"Label.VerifyInBrowser":
+		"Please complete the verification flow on your mobile browser to continue.",
+	"Label.VerifyingYou": "Verifying you",
+	"Label.VoiceChat": "Spatial Voice Chat",
+	"Label.VoiceChatUpsell":
+		"This experience supports spatial voice chat. To use this feature, you need to verify you are at least 13 years old.",
+	"Label.VoiceCollectionConsent2":
+		"I consent to Roblox's collection, use, and storage of my voice recording to enable voice services and for moderation, safety, and improvement of our services and tools.",
+	"Title.CameraUpsell": "Bring Your Avatar To Life!",
+	"Title.CameraUpsell2": "Bring Your Avatar To Life",
+	"Title.ProcessingVerification": "Processing Verification",
+};
+Roblox.Lang["IdentityResources"] = Roblox.Lang["Verification.Identity"]; // ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Purchasing.PurchaseDialog"] = {
@@ -2564,181 +2846,7 @@ Roblox.Lang["Feature.ItemModel"] = {
 	"Label.XboxOneExclusiveItem": "This is a Xbox One exclusive item.",
 	"Label.YouAreSelling": "You are selling this item.",
 };
-Roblox.Lang["ItemModelResources"] = Roblox.Lang["Feature.ItemModel"]; // ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Verification.Identity"] = {
-	"Action.Close": "Close",
-	"Action.Continue": "Continue",
-	"Action.ContinueToGame": "Continue To Experience",
-	"Action.GoBack": "Go Back",
-	"Action.RestartSession": "Restart Session",
-	"Action.SkipVoiceChat": "Join Without Voice Chat",
-	"Action.StartSession": "Start Session",
-	"Description.CameraCaptureSafety":
-		"Roblox won’t receive or store any video or personal info captured from your camera",
-	"Description.CameraPrivacy":
-		"Roblox won’t receive or store any video or personal info captured from your camera",
-	"Description.CameraUpsell":
-		"Enable your camera to animate your avatar with your movement in this experience.",
-	"Description.CameraUpsell2":
-		"Use your camera to animate your avatar with your movement",
-	"Description.CommunityStandardsUpsell":
-		"Follow our Community Standards when talking and report abuse if you hear it.",
-	"Description.CommunityStandardsUpsell2":
-		"The video from your camera never leaves your device, and Roblox does not record or store any information from it.",
-	"Description.DefaultConsentCameraUpsell":
-		"By clicking on enable, I consent to Roblox's temporary use of my movements to animate my avatar.",
-	"Description.DefaultConsentCameraUpsell2":
-		"By selecting Allow, I consent to Roblox’s temporary use of my movement data to animate my avatar.",
-	"Description.ExplicitConsentCameraUpsell":
-		"I consent to Roblox's temporary use of my movements to animate my avatar.",
-	"Description.ExplicitConsentCameraUpsell2":
-		"I consent to Roblox’s temporary use of my movement data to animate my avatar.",
-	"Description.ProcessingVerification":
-		"We are processing your ID verification.",
-	"Description.VerificationFinished":
-		"Your verification data has been successfully submitted. You can now close this window and return to Roblox.",
-	"Heading.Error": "Error",
-	"Heading.HeadsUp": "Heads Up!",
-	"Heading.IdentityVerification": "Identity Verification",
-	"Heading.LetsChat": "Let's Chat!",
-	"Heading.PleaseNote": "Please Note",
-	"Heading.ThankYou": "Thank You!",
-	"Heading.V2LetsChat": "Let's Chat",
-	"Heading.VeratadSuccess": "Processing Complete!",
-	"Heading.VerificationFailed": "Verification Failed",
-	"Heading.VerificationPending": "Verification Pending",
-	"Heading.VerificationSuccessful": "Verification Successful",
-	"Heading.VerifyAge": "Verify Your Age",
-	"Heading.VerifyEmail": "Check Your Email",
-	"Heading.Warning": "Warning",
-	"Heading.YourNewWayToChat": "Your New Way To Chat!",
-	"Label.AccessWiderVariety":
-		"You now have access to a wider variety of games.",
-	"Label.AgeVerifyPrompt": "Verify your age to get the most out of Roblox!",
-	"Label.BirthdayChangeWarning":
-		"You are about to change a birthday that has been verified.\n \nIf you change your date of birth, your age will no longer be verified and you will lose access to age restricted features. Are you sure you want to proceed?",
-	"Label.CameraLearnMoreUpsell": "Learn More about Facial Animation Privacy",
-	"Label.CheckboxConsentLabel":
-		"I consent to Roblox’s collection, use, and storage of my <b>voice recording</b> for moderation and safety purposes only.",
-	"Label.ClickToConsent":
-		"By clicking on enable, I consent to Roblox’s collection, use, and storage of my <b>voice recording</b> for moderation and safety purposes only.",
-	"Label.Connecting": "Connecting",
-	"Label.ConnectingToMobile": "Connecting to your mobile",
-	"Label.ConsentVoiceCollection":
-		"I consent to Roblox’s collection, use, and storage of my {linkStart}voice recording{linkEnd} for moderation and safety purposes only.",
-	"Label.DateOfBirthUpdated":
-		"Roblox has automatically updated the date of birth on your account to match your ID.",
-	"Label.DontShowAgain": "Don't Show Again",
-	"Label.EmailSent":
-		"We have sent you a link to {email} to verify your identity.\n\nOnce you have completed the Veratad ID scanning process, please press Continue.",
-	"Label.EnableCameraUpsell": "Enable Camera",
-	"Label.EnableChatWithVoice":
-		"Enable your microphone to Chat with your Voice in this experience.",
-	"Label.EnableChatWithVoiceWithLink":
-		"Enable your microphone to {linkStart}Chat with your Voice{linkEnd} in this experience.",
-	"Label.EnableMicrophone": "Enable Microphone",
-	"Label.EnableVoiceChat": "Enable Voice Chat",
-	"Label.EnableVoiceChat1":
-		"Enable voice chat to talk with others in this experience.",
-	"Label.EnableVoiceChat2":
-		"Follow our <b>Community Standards</b> when talking and report abuse if you hear it.",
-	"Label.EnterEmail":
-		"Before verifying your age, please enter your email address. This will be your recovery method in case you lose access to your account.",
-	"Label.ExplicitConsentVoiceCollectionWithML":
-		"I consent to Roblox’s collection, use, and storage of my voice recording for moderation and safety purposes and for the improvement of safety tools.",
-	"Label.ExternalCompleteVerification":
-		"Once you have completed the Veratad ID scanning process, please press Continue. ",
-	"Label.FailedVerification":
-		"The document provided could not be verified.\n\nPlease try again later.",
-	"Label.FailedVerificationInvalidDocument":
-		"The document provided could not be verified.\n\nPlease ensure your document is valid and try again.",
-	"Label.FailedVerificationLowQuality":
-		"The documents provided could not be verified.\n\nPlease try again, ensuring that submitted images are centered and focused on the subject.",
-	"Label.FailedVerificationMaxAccountsLinked":
-		"You’ve reached the maximum number of accounts linked to one verified ID.",
-	"Label.FailedVerificationUnsupportedDocument":
-		"The document provided is not supported by our verification provider.\n\nPlease try again with a different document.",
-	"Label.FollowCommunityStandards":
-		"Follow our {linkStart}Community Standards{linkEnd} when talking and report abuse if you hear it.",
-	"Label.GenericError":
-		"ID verification is not available at this time. \n\nPlease try again later.",
-	"Label.GenericVerified": "Your age is now verified!",
-	"Label.HavingTroubleScanCode":
-		"Having trouble? Scan the QR code above to restart the verification process.",
-	"Label.ImplicitConsentVoiceCollection":
-		"By clicking on enable, I consent to Roblox’s collection, use, and storage of my {linkStart}voice recording{linkEnd} for moderation and safety purposes only.",
-	"Label.ImplicitConsentVoiceCollectionWithML":
-		"​​By clicking on enable, I consent to Roblox’s collection, use, and storage of my voice recording for moderation and safety purposes and for the improvement of safety tools.",
-	"Label.JoinWithout": "Join Without Voice Chat",
-	"Label.JoinWithoutCameraUpsell": "Join without Camera",
-	"Label.JoinWithoutMicrophone": "Join Without Microphone",
-	"Label.LearnMoreAboutVoiceRecording": "Learn More about Voice Recording",
-	"Label.OverageVerification":
-		"Your age is now verified.\nYou now have access to:",
-	"Label.OverageVerification2": "You may turn these on and off in Settings.",
-	"Label.PendingCallback":
-		"The verification request is taking longer than usual. \n\nPlease check back in a few minutes.",
-	"Label.PendingRobloxVerification":
-		"Updating your Roblox profile...\n\nThis can take a few minutes.",
-	"Label.PendingVerification":
-		"The verification request is taking longer than usual. \n\nPlease check back in a few minutes.",
-	"Label.PleaseDoNotClose":
-		"Please do not close this window until the verification process is complete.",
-	"Label.PrepareId": "Prepare a valid ID",
-	"Label.PrivacyNotice":
-		"The information collected through the ID verification process will only be used for the purposes of securing your account and/or enabling Roblox features.  Roblox takes steps to ensure that all service providers with access to Roblox personal information are capable of protecting the information we share with them.  Our service providers are only allowed to use the personal information with them for the specific tasks they’ve been hired to do that are consistent with our Privacy Policy. Our services providers are not permitted to sell the personal information shared with them.  For more information, please visit our",
-	"Label.PrivacyNoticeAndLink":
-		"Please Note: You're about to start the ID verification process with our third party service provider. The information collected through this process will be used for the purposes of securing your account and/or enabling Roblox features. For more information, please visit our {spanStart} Roblox Biometric Privacy Notice.{spanEnd}",
-	"Label.PrivacyNoticeShort":
-		"You're about to start the ID verification process {boldStart}with our third party service provider.{boldEnd}\nThe information collected through this process will only be used for the purposes of securing your account and/or enabling Roblox features. For more information, please visit our {spanStart}Privacy Policy.{spanEnd}",
-	"Label.PrivacyPolicy": "Privacy Policy",
-	"Label.QRAlternateLink":
-		"Don't have a smartphone? {linkStart}Continue with your current device{linkEnd}",
-	"Label.ScanQRCode": "Scan the QR Code with your camera app to begin.",
-	"Label.SessionTimeout":
-		"Sorry, the verification process took too long. Please refresh the page and try again.",
-	"Label.SmartphoneRequired": "You need a smartphone in order to continue",
-	"Label.ToggleFeatures":
-		"You may turn these features on and off in privacy settings.",
-	"Label.ToggleInstruction":
-		"You can also toggle this feature on or off by accessing your Settings.",
-	"Label.UnderageVerification":
-		"Your age is now verified.\nYou will begin to unlock age-restricted features when you turn {age}:",
-	"Label.UpdatingRoblox": "Updating your Roblox profile",
-	"Label.UseSmartphone": "Use a smartphone",
-	"Label.UsesVoiceChat":
-		"This experience uses voice chat. Enabling voice chat will use your microphone input in voice enabled experiences.",
-	"Label.V2ClickToConsent":
-		"I consent to Roblox's collection, use, and storage of my voice recording to enable voice services and for moderation, safety, and improvement of our services and tools.",
-	"Label.V2EnableVoiceChat": "Enable chat with voice",
-	"Label.V2EnableVoiceChat1":
-		"Enable chat with voice to talk with others in this experience.",
-	"Label.V2JoinWithout": "Join without chat with voice",
-	"Label.ValidIdList": "Driver's License, Passport, ID Card, Residence Permit",
-	"Label.VeratadGenericResponse":
-		"Your updated age will be securely submitted to Roblox.\nThis can take a few minutes.",
-	"Label.VerificationDataSubmitted":
-		"Your verification data has been successfully submitted ",
-	"Label.VerificationDeclined":
-		"Sorry, your verification was declined. For security reasons, please wait {days} day(s) before trying again.",
-	"Label.VerificationDeclinedGeneric":
-		"Sorry, your verification was declined for security reasons. If you want to try again, please check back in a few days.",
-	"Label.VerificationWaitingForResults": "Waiting for results",
-	"Label.VerifyInBrowser":
-		"Please complete the verification flow on your mobile browser to continue.",
-	"Label.VerifyingYou": "Verifying you",
-	"Label.VoiceChat": "Spatial Voice Chat",
-	"Label.VoiceChatUpsell":
-		"This experience supports spatial voice chat. To use this feature, you need to verify you are at least 13 years old.",
-	"Label.VoiceCollectionConsent2":
-		"I consent to Roblox's collection, use, and storage of my voice recording to enable voice services and for moderation, safety, and improvement of our services and tools.",
-	"Title.CameraUpsell": "Bring Your Avatar To Life!",
-	"Title.CameraUpsell2": "Bring Your Avatar To Life",
-	"Title.ProcessingVerification": "Processing Verification",
-};
-Roblox.Lang["IdentityResources"] = Roblox.Lang["Verification.Identity"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js
+Roblox.Lang["ItemModelResources"] = Roblox.Lang["Feature.ItemModel"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.GameLaunchGuestMode"] = {

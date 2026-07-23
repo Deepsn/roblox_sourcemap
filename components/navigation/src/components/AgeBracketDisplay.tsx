@@ -3,6 +3,7 @@ import {
 	authenticatedUser as authenticatedUserMeta,
 	isBlackbirdUser,
 } from "@rbx/core-scripts/meta/user";
+import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
 import { Link } from "@rbx/core-ui/legacy/react-style-guide";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import {
@@ -10,11 +11,18 @@ import {
 	VerifiedBadgeIconContainer,
 	currentUserHasVerifiedBadge,
 } from "@rbx/roblox-badges";
-import { DisplayNameBadges, useIsPlusBadgeEnabled } from "@rbx/identity-badges";
+import {
+	DisplayNameBadges,
+	useIsPlusBadgeEnabled,
+	PLUS_BADGE_ARIA_LABEL,
+	PLUS_BADGE_ARIA_LABEL_KEY,
+} from "@rbx/identity-badges";
 import links from "../constants/linkConstants";
 import useLiveUserNameForDisplay from "../hooks/useLiveUserNameForDisplay";
+import { translations } from "../../component.json";
 
-function AgeBracketDisplay() {
+function AgeBracketDisplayContent() {
+	const { translate } = useTranslation();
 	const metaUser = authenticatedUserMeta();
 	const nameForDisplay = useLiveUserNameForDisplay(metaUser);
 
@@ -49,11 +57,29 @@ function AgeBracketDisplay() {
 				{badgeToRender}
 				{showPlusBadge ? (
 					<section className="age-bracket-label-plus-badge">
-						<DisplayNameBadges isRobloxPlus size="Small" />
+						<DisplayNameBadges
+							isRobloxPlus
+							size="Small"
+							plusBadgeAriaLabel={translate(
+								PLUS_BADGE_ARIA_LABEL_KEY,
+								undefined,
+								PLUS_BADGE_ARIA_LABEL,
+							)}
+						/>
 					</section>
 				) : null}
 			</Link>
 		</div>
+	);
+}
+
+// `useTranslation` needs a `TranslationProvider` ancestor; this component is
+// mounted standalone, so wrap it the same way navigation's leftNav does.
+function AgeBracketDisplay() {
+	return (
+		<TranslationProvider config={translations}>
+			<AgeBracketDisplayContent />
+		</TranslationProvider>
 	);
 }
 

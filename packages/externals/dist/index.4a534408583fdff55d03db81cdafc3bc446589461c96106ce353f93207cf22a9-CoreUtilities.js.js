@@ -83,6 +83,7 @@ var externals = {
 	"@rbx/core-scripts/payments-flow": ["Roblox", "core-scripts", "paymentsFlow"],
 	"@rbx/core-scripts/react": ["Roblox", "core-scripts", "react"],
 	"@rbx/core-scripts/realtime": ["Roblox", "core-scripts", "realtime"],
+	"@rbx/core-scripts/theme": ["Roblox", "core-scripts", "theme"],
 	"@rbx/core-scripts/util/accessibility": [
 		"Roblox",
 		"core-scripts",
@@ -129,6 +130,7 @@ var externals = {
 		"pageName",
 	],
 	"@rbx/core-scripts/util/ready": ["Roblox", "core-scripts", "util", "ready"],
+	"@rbx/core-scripts/color-mode": ["Roblox", "core-scripts", "color-mode"],
 	"@rbx/core-scripts/util/theme": ["Roblox", "core-scripts", "util", "theme"],
 	"@rbx/core-scripts/util/upsell": ["Roblox", "core-scripts", "util", "upsell"],
 	"@rbx/core-scripts/util/url": ["Roblox", "core-scripts", "util", "url"],
