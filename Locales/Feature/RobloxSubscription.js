@@ -184,13 +184,13 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Keep your Plus subscription active to unbox an exclusive collectible inspired by classic Roblox gifts.",
 	"Title.AgeCheckTrial": "Get 1 free week of Plus",
 	"Description.AgeCheckTrial":
-		"Complete an age check to unlock Plus benefits and access features appropriate for your age.",
+		"Verify your age with an age check and get 1 free week of Roblox Plus as our thank you. No payment method is needed to enjoy this free trial.",
 	"Title.FreeTrialExpired": "Your plus trial ended",
 	"Description.FreeTrialExpired":
 		"Subscribe to keep everything you love about Roblox Plus and more—for $4.99/month.",
 	"Description.FreeTrialConfirmation":
-		"Congratulations! You've unlocked Plus benefits free for 1 week.",
-	"Title.FreeTrialConfirmation": "Enjoy one week of Plus",
+		"Congratulations! You’ve unlocked Plus benefits, free for 1 week.",
+	"Title.FreeTrialConfirmation": "Enjoy 1 free week of Plus",
 	"Action.ViewDetails": "View details",
 	"Description.FeatureAccessDisclaimer":
 		"Access to features depends on your account settings and region.",

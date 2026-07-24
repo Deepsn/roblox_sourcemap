@@ -121,6 +121,12 @@ export interface RobloxThumbnailsApisModelsThumbnailBatchRequest {
 	 * @memberof RobloxThumbnailsApisModelsThumbnailBatchRequest
 	 */
 	includeBackground?: boolean;
+	/**
+	 * Whether to include the equipped Plus profile frame in the thumbnail
+	 * @type {boolean}
+	 * @memberof RobloxThumbnailsApisModelsThumbnailBatchRequest
+	 */
+	includeProfileFrame?: boolean;
 }
 
 /**

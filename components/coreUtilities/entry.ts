@@ -183,7 +183,11 @@ try {
 }
 
 try {
-	initializeTheme();
+	// For CS site which loads CoreUtilities before document body
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	if (document.body != null) {
+		initializeTheme();
+	}
 } catch {
 	// do nothing for now
 }

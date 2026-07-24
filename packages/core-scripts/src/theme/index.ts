@@ -3,21 +3,28 @@
 import { arrayIncludes } from "@rbx/core-lib";
 import { AppTheme, AgeTheme, appThemes, ageThemes, Theme } from "./constants";
 
-const appThemeClass = (theme: AppTheme) => `${theme}-theme`;
+const appThemeClass = (theme: Exclude<AppTheme, "default">) => `${theme}-theme`;
 const ageThemeClass = (theme: AgeTheme) => `age-${theme}-theme`;
-const themeClass = (theme: Theme) =>
+const themeClass = (theme: Exclude<Theme, "default">) =>
 	arrayIncludes(ageThemes, theme) ? ageThemeClass(theme) : appThemeClass(theme);
 
-const { classList } = document.body;
-
 const initialTheme = () => {
+	// For CS site which loads CoreUtilities before document body
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	if (document.body == null) {
+		return "default";
+	}
+	const { classList } = document.body;
 	if (classList.contains("age-kids-variant1-theme")) {
 		// TODO: remove after IXP is done
 		return "kids";
 	}
 	return (
 		ageThemes.find((theme) => classList.contains(ageThemeClass(theme))) ??
-		appThemes.find((theme) => classList.contains(appThemeClass(theme))) ??
+		appThemes.find(
+			(theme) =>
+				theme !== "default" && classList.contains(appThemeClass(theme)),
+		) ??
 		"default"
 	);
 };
@@ -25,8 +32,17 @@ const initialTheme = () => {
 let accountTheme: Theme = initialTheme();
 let previewTheme: AppTheme | null = null;
 
+const addAppThemeClass = (theme: AppTheme) => {
+	if (theme !== "default") {
+		document.body.classList.add(appThemeClass(theme));
+	}
+};
+
 const clearTheme = () => {
-	classList.remove(themeClass(previewTheme ?? accountTheme));
+	const theme = previewTheme ?? accountTheme;
+	if (theme !== "default") {
+		document.body.classList.remove(themeClass(theme));
+	}
 };
 
 /** Returns the currently stored account level theme in memory. */
@@ -36,7 +52,7 @@ export const getTheme = (): Theme => accountTheme;
 export const setTheme = (theme: AppTheme) => {
 	if (previewTheme == null) {
 		clearTheme();
-		classList.add(appThemeClass(theme));
+		addAppThemeClass(theme);
 	}
 	accountTheme = theme;
 };
@@ -47,14 +63,16 @@ export const getPreviewTheme = (): AppTheme | null => previewTheme;
 /** Sets the app theme to preview on the page. */
 export const setPreviewTheme = (theme: AppTheme) => {
 	clearTheme();
-	classList.add(appThemeClass(theme));
+	addAppThemeClass(theme);
 	previewTheme = theme;
 };
 
 /** Clears the theme being previewed and restores the page to the account level theme. */
 export const clearPreviewTheme = () => {
 	clearTheme();
-	classList.add(themeClass(accountTheme));
+	if (accountTheme !== "default") {
+		document.body.classList.add(themeClass(accountTheme));
+	}
 	previewTheme = null;
 };
 
