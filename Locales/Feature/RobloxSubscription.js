@@ -6,7 +6,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.Benefit.DiscountAnnualSavingsEstimate":
 		"Save up to {amount} a year",
 	"Description.Benefit.DiscountBase":
-		"{discountPercent} off in-game items, avatars and more",
+		"{discountPercent} off in-game items, avatars, and more",
 	"Description.Benefit.DiscountNext":
 		"{discountPercent} off these items after {discountPeriodUnit, select,\n  Month {{discountPeriodCount, plural, =1 {{discountPeriodCount} month} other {{discountPeriodCount} months}}}\n  Week  {{discountPeriodCount, plural, =1 {{discountPeriodCount} week}  other {{discountPeriodCount} weeks}}}\n  Year  {{discountPeriodCount, plural, =1 {{discountPeriodCount} year}  other {{discountPeriodCount} years}}}\n  other {{discountPeriodCount, plural, one {{discountPeriodCount} {discountPeriodUnit}} other {{discountPeriodCount} {discountPeriodUnit}s}}}\n}",
 	"Description.Benefit.RobuxTransfers": "Send Robux for free",
@@ -87,14 +87,15 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		'By clicking "Subscribe", you agree to the {linkStart}Roblox Subscription Terms{linkEnd}. You will be automatically charged each month until you cancel.',
 	"Disclosure.BlackbirdTermsAgreement":
 		'By clicking \\u{201C}{ctaText}\\u{201D}, you agree to the <a href="{termsUrl}">Roblox Subscription Terms</a>. You will be automatically charged each month until you cancel.',
-	"Description.Benefit.DiscountBaseSubtitle": "Spend less Robux starting now",
+	"Description.Benefit.DiscountBaseSubtitle":
+		"Get more from your Robux—starting now",
 	"Description.Benefit.DiscountNextSubtitle":
 		"Double your discount and lock it in",
-	"Description.Benefit.RobuxTransfersSubtitle":
-		"Transfers may need parental approval",
+	"Description.Benefit.RobuxTransfersSubtitle": "May need parental approval",
 	"Description.Benefit.TradeResellItemsSubtitle":
 		"Build your collection of rare avatars",
-	"Description.Benefit.PublishItemsSubtitle": "Reach millions of players",
+	"Description.Benefit.PublishItemsSubtitle":
+		"Reach millions of players on Marketplace",
 	"Description.Benefit.PrivateServers": "Free private servers",
 	"Description.Benefit.PrivateServersSubtitle": "Choose who you play with",
 	"Title.PurchasePromoHeadline": "Our best deal.\u2028Unlock 20% off.",

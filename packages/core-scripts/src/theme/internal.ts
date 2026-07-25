@@ -34,7 +34,9 @@ export const initializeTheme = () => {
 					withCredentials: true,
 				})
 				.then((response) => {
-					const theme = response.data.accountTheme.currentValue.toLowerCase();
+					const theme = response.data.accountTheme.currentValue
+						.replaceAll(/([a-z])([A-Z])/g, "$1-$2")
+						.toLowerCase();
 					if (!cancellation.cancelled && arrayIncludes(appThemes, theme)) {
 						setTheme(theme);
 					}
