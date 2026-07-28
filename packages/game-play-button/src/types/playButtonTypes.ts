@@ -87,6 +87,7 @@ export type TGetPlayabilityStatus = {
 	unplayableDisplayText: string | null;
 	playableUxTreatment?: TPlayableUxTreatment;
 	upsellUxTreatment?: TUpsellUxTreatment;
+	demoModeAvailable?: boolean;
 };
 
 export type TGuacPlayButtonUIResponse = {
@@ -98,6 +99,7 @@ export type TGuacPlayButtonUIResponse = {
 	useCameraU13Design: boolean;
 	useVoiceUpsellV2Design: boolean;
 	useExperienceApprovalForParentalConsent: boolean;
+	isDemoModeEnabled: boolean;
 };
 
 export type TUniversePlaceVoiceEnabledSettings = {

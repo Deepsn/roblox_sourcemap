@@ -29,13 +29,19 @@ type TVariableItemWidthCarouselProps<TItem> = {
 	getKey: (item: TItem, index: number) => string;
 
 	// Class name defining the gap between items
-	itemGapClassName: string;
+	itemGapClassName?: string;
 
 	// Whether to use new scroll arrows
 	isNewScrollArrowsEnabled?: boolean;
 
+	/** When false, hides scroll arrow controls but keeps horizontal scrolling. */
+	scrollButtonsEnabled?: boolean;
+
 	// Class name for the carousel container
 	containerClassName?: string;
+
+	/** Inline style applied to the scroll container (e.g. for dynamic gap override). */
+	scrollContainerStyle?: React.CSSProperties;
 };
 
 const SCROLL_DEBOUNCE_MS = 100;
@@ -52,7 +58,9 @@ const VariableItemWidthCarousel = <TItem,>({
 	getKey,
 	itemGapClassName,
 	isNewScrollArrowsEnabled,
+	scrollButtonsEnabled = true,
 	containerClassName,
+	scrollContainerStyle,
 }: TVariableItemWidthCarouselProps<TItem>): React.JSX.Element => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [isScrollBackDisabled, setIsScrollBackDisabled] = useState(true);
@@ -162,18 +170,21 @@ const VariableItemWidthCarousel = <TItem,>({
 					scrollPaddingLeft: isNewScrollArrowsEnabled
 						? "0px"
 						: `${gamesPage.scrollerWidth}px`,
+					...(scrollContainerStyle ?? {}),
 				}}
 			>
 				{renderedItems}
 			</div>
-			<ScrollArrows
-				hideScrollBackWhenDisabled
-				isScrollBackDisabled={isScrollBackDisabled}
-				isScrollForwardDisabled={isScrollForwardDisabled}
-				onScrollBack={onScrollBack}
-				onScrollForward={onScrollForward}
-				isNewScrollArrowsEnabled={isNewScrollArrowsEnabled}
-			/>
+			{scrollButtonsEnabled ? (
+				<ScrollArrows
+					hideScrollBackWhenDisabled
+					isScrollBackDisabled={isScrollBackDisabled}
+					isScrollForwardDisabled={isScrollForwardDisabled}
+					onScrollBack={onScrollBack}
+					onScrollForward={onScrollForward}
+					isNewScrollArrowsEnabled={isNewScrollArrowsEnabled}
+				/>
+			) : null}
 		</div>
 	);
 

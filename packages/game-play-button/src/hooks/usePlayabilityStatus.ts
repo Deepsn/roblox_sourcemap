@@ -21,6 +21,7 @@ type TPlayabilityData = {
 	unplayableDisplayText: string | undefined | null;
 	playableUxTreatment: TPlayableUxTreatment | undefined;
 	upsellUxTreatment: TUpsellUxTreatment | undefined;
+	demoModeAvailable: boolean | undefined;
 };
 
 const failedPlayabilityData: TPlayabilityData = {
@@ -29,6 +30,7 @@ const failedPlayabilityData: TPlayabilityData = {
 	unplayableDisplayText: undefined,
 	playableUxTreatment: undefined,
 	upsellUxTreatment: undefined,
+	demoModeAvailable: undefined,
 };
 
 /**
@@ -57,6 +59,7 @@ export const usePlayabilityStatus = (
 	unplayableDisplayText: string | undefined | null;
 	playableUxTreatment: TPlayableUxTreatment | undefined;
 	upsellUxTreatment: TUpsellUxTreatment | undefined;
+	demoModeAvailable: boolean | undefined;
 	isFetchingPlayability: boolean;
 	refetchPlayabilityData: () => void;
 } => {
@@ -95,6 +98,7 @@ export const usePlayabilityStatus = (
 				unplayableDisplayText: response.unplayableDisplayText,
 				playableUxTreatment: response.playableUxTreatment,
 				upsellUxTreatment: response.upsellUxTreatment,
+				demoModeAvailable: response.demoModeAvailable,
 			};
 		},
 		staleTime: STALE_TIME_MS,
@@ -128,6 +132,7 @@ export const usePlayabilityStatus = (
 				unplayableDisplayText: failedPlayabilityData.unplayableDisplayText,
 				playableUxTreatment: failedPlayabilityData.playableUxTreatment,
 				upsellUxTreatment: failedPlayabilityData.upsellUxTreatment,
+				demoModeAvailable: failedPlayabilityData.demoModeAvailable,
 				isFetchingPlayability: isFetching,
 				refetchPlayabilityData,
 			};
@@ -139,6 +144,7 @@ export const usePlayabilityStatus = (
 			unplayableDisplayText: data?.unplayableDisplayText,
 			playableUxTreatment: data?.playableUxTreatment,
 			upsellUxTreatment: data?.upsellUxTreatment,
+			demoModeAvailable: data?.demoModeAvailable,
 			isFetchingPlayability: isFetching,
 			refetchPlayabilityData,
 		};

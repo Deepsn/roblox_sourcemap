@@ -10,7 +10,6 @@ import type {
 import type {
 	TAnalyticsData,
 	TCollectionAnalyticsData,
-	TSduiContext,
 	TSduiPageContext,
 } from "../system/SduiTypes";
 import {
@@ -100,7 +99,6 @@ export const buildGameImpressionParams = ({
 	useGridTiles,
 	componentTypeFallback,
 }: TBuildGameImpressionParamsArgs): TCarouselGameImpressions => {
-	const sduiContext = { pageContext } as TSduiContext;
 	const sessionInfoKey = getSessionInfoKey(pageContext) ?? "";
 	const pageSessionInfo = parseStringField(
 		collectionAnalyticsData[sessionInfoKey],
@@ -142,7 +140,11 @@ export const buildGameImpressionParams = ({
 		[EventStreamMetadata.ComponentType]: itemComponentType,
 		[EventStreamMetadata.GameSetTypeId]:
 			collectionAnalyticsData.collectionId ?? -1,
+		[EventStreamMetadata.GameSetTargetId]: parseMaybeStringNumberField(
+			collectionAnalyticsData.gameSetTargetId,
+			-1,
+		),
 		[EventStreamMetadata.Page]: pageContext.pageName,
-		...buildSessionAnalyticsData(pageSessionInfo, sduiContext),
+		...buildSessionAnalyticsData(pageSessionInfo, pageContext),
 	};
 };

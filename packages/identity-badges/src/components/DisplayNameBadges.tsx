@@ -1,5 +1,4 @@
 import { Icon } from "@rbx/foundation-ui";
-import { PLUS_BADGE_ARIA_LABEL } from "../constants";
 
 export type DisplayNameBadgesSize = "XSmall" | "Small" | "Medium" | "Large";
 
@@ -14,6 +13,15 @@ export type DisplayNameBadgesProps = {
 	 * `"Small"` so the badge matches the display-name text scale.
 	 */
 	size?: DisplayNameBadgesSize;
+	/**
+	 * Localized a11y label for the Roblox Plus icon. Required so every surface
+	 * makes a conscious choice rather than silently shipping English. Surfaces
+	 * should pass
+	 * `translate("Label.RobloxPlusSubscriber", undefined, PLUS_BADGE_ARIA_LABEL)`
+	 * (namespace `Feature.RobloxSubscription`); `PLUS_BADGE_ARIA_LABEL` is the
+	 * English fallback to hand to `translate`.
+	 */
+	plusBadgeAriaLabel: string;
 };
 
 /**
@@ -34,6 +42,7 @@ const DisplayNameBadges = ({
 	isPremium,
 	isRobloxAdmin,
 	size = "Large",
+	plusBadgeAriaLabel,
 }: DisplayNameBadgesProps) => {
 	const showPlus = isRobloxPlus === true;
 	const showPremium = isPremium === true && !showPlus;
@@ -66,7 +75,7 @@ const DisplayNameBadges = ({
 					name="icon-regular-roblox-plus"
 					className="content-system-contrast"
 					size={size}
-					aria-label={PLUS_BADGE_ARIA_LABEL}
+					aria-label={plusBadgeAriaLabel}
 				/>
 			)}
 			{showPremium && (

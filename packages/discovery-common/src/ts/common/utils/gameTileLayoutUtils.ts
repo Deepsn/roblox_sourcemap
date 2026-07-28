@@ -5,6 +5,7 @@ import {
 	TGameTileBadgeType,
 	TGameTileIconClass,
 	TGameTilePillData,
+	TGameTileRatingWithGenreFooter,
 	TGameTileTextFooter,
 	TLayoutComponentType,
 	TLayoutMetadata,
@@ -179,11 +180,27 @@ export const getGameTileTextFooterData = (
 		: null;
 };
 
+export const getGameTileRatingWithGenreFooterData = (
+	gameLayoutData: TLayoutMetadata | undefined,
+): TGameTileRatingWithGenreFooter | null => {
+	const footer = gameLayoutData?.footer;
+	if (footer?.type !== TLayoutComponentType.RatingWithGenre) {
+		return null;
+	}
+
+	if (!footer.genre?.textLiteral) {
+		return null;
+	}
+
+	return footer;
+};
+
 export default {
 	extractTileBadgesByPositionFromContentMetadata,
 	getGameTilePillsData,
 	getGameTilePillsIconClass,
 	getGameTilePillsAnimationClass,
 	getGameTilePillsPositionClass,
+	getGameTileRatingWithGenreFooterData,
 	getGameTileTextFooterData,
 };

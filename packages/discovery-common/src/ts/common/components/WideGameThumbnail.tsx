@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import {
 	Thumbnail2d,
 	ThumbnailTypes,
@@ -8,7 +8,7 @@ import {
 import { getThumbnailOverrideAssetId } from "../utils/parsingUtils";
 import { TGameData } from "../types/bedev1Types";
 import { TComponentType } from "../types/bedev2Types";
-import useIsHigherResolutionWideGameTileThumbnailEnabled from "../hooks/useIsHigherResolutionWideGameTileThumbnailEnabled";
+import useValidatedThumbnailOverride from "../hooks/useValidatedThumbnailOverride";
 
 type TWideGameThumbnailProps = {
 	gameData: TGameData;
@@ -23,41 +23,33 @@ const WideGameThumbnail = ({
 	wideTileType,
 	sizeOverride,
 }: TWideGameThumbnailProps): JSX.Element => {
-	const { isHigherResolutionWideThumbnailEnabled, isIxpLoading } =
-		useIsHigherResolutionWideGameTileThumbnailEnabled();
-
 	const thumbnailAssetId: number | null = useMemo(() => {
 		return getThumbnailOverrideAssetId(gameData, topicId);
 	}, [gameData, topicId]);
 
-	const thumbnailSize = useMemo<ThumbnailGameThumbnailSize | undefined>(() => {
+	const thumbnailSize = useMemo<ThumbnailGameThumbnailSize>(() => {
 		if (sizeOverride) {
 			return sizeOverride;
 		}
 		if (wideTileType === TComponentType.EventTile) {
 			return ThumbnailGameThumbnailSize.width576;
 		}
-		// Only GridTile without a sizeOverride is affected by IXP; other tile types
-		// and overridden sizes are independent of the experiment and render immediately.
-		if (wideTileType === TComponentType.GridTile) {
-			// Defer until the IXP size is known to prevent a fetch at the wrong size
-			// followed by an immediate re-fetch once the flag resolves.
-			if (isIxpLoading) {
-				return undefined;
-			}
-			if (isHigherResolutionWideThumbnailEnabled) {
-				return ThumbnailGameThumbnailSize.width480;
-			}
-		}
 		return ThumbnailGameThumbnailSize.width384;
-	}, [
-		sizeOverride,
-		wideTileType,
-		isIxpLoading,
-		isHigherResolutionWideThumbnailEnabled,
-	]);
+	}, [sizeOverride, wideTileType]);
 
-	if (thumbnailSize === undefined) {
+	const thumbnailOverride = useValidatedThumbnailOverride({
+		assetId: thumbnailAssetId,
+		size: thumbnailSize,
+		topicId,
+		telemetrySource: "WideGameThumbnail",
+	});
+
+	const shouldShowShimmer = thumbnailOverride.status === "loading";
+
+	const shouldUseGameThumbnail =
+		thumbnailAssetId === null || thumbnailOverride.status === "fallback";
+
+	if (shouldShowShimmer) {
 		return (
 			<span
 				data-testid="wide-game-thumbnail-shimmer"
@@ -66,27 +58,28 @@ const WideGameThumbnail = ({
 		);
 	}
 
-	if (thumbnailAssetId !== null) {
-		return (
-			<Thumbnail2d
-				type={ThumbnailTypes.assetThumbnail}
-				size={thumbnailSize}
-				targetId={thumbnailAssetId}
-				containerClass="brief-game-icon"
-				format={ThumbnailFormat.jpeg}
-				altName={gameData.name}
-			/>
-		);
-	}
+	const thumbnailType = shouldUseGameThumbnail
+		? ThumbnailTypes.gameThumbnail
+		: ThumbnailTypes.assetThumbnail;
+
+	const thumbnailTargetId = shouldUseGameThumbnail
+		? gameData.placeId
+		: thumbnailAssetId;
+
+	const validatedThumbnailProps =
+		thumbnailOverride.status === "override"
+			? { getThumbnail: thumbnailOverride.getThumbnail }
+			: {};
 
 	return (
 		<Thumbnail2d
-			type={ThumbnailTypes.gameThumbnail}
+			type={thumbnailType}
 			size={thumbnailSize}
-			targetId={gameData.placeId}
+			targetId={thumbnailTargetId}
 			containerClass="brief-game-icon"
 			format={ThumbnailFormat.jpeg}
 			altName={gameData.name}
+			{...validatedThumbnailProps}
 		/>
 	);
 };

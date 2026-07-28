@@ -91,20 +91,31 @@ export type TMediaLayoutData = {
 
 export enum TLayoutComponentType {
 	TextLabel = "TextLabel",
+	RatingWithGenre = "RatingWithGenre",
 }
+
+type TGameTileFooterAnalytics = {
+	textLiteral?: string;
+	locKey?: string;
+};
 
 export type TGameTileTextFooter = {
 	type: TLayoutComponentType.TextLabel;
 	text: {
 		textLiteral: string;
 	};
-	analytics?: {
-		textLiteral?: string;
-		locKey?: string;
-	};
+	analytics?: TGameTileFooterAnalytics;
 };
 
-type TGameTileFooter = TGameTileTextFooter;
+export type TGameTileRatingWithGenreFooter = {
+	type: TLayoutComponentType.RatingWithGenre;
+	genre: {
+		textLiteral: string;
+	};
+	analytics?: TGameTileFooterAnalytics;
+};
+
+type TGameTileFooter = TGameTileTextFooter | TGameTileRatingWithGenreFooter;
 
 export type TGameTilePillComponent = {
 	types: string[];
@@ -326,6 +337,7 @@ export type TGetGameDetails = {
 	refundLink?: string;
 	localizedFiatPrice?: string;
 	refundPolicy?: TRefundPolicy;
+	isContentRestricted?: boolean;
 };
 
 // GetFriends

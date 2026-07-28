@@ -33,14 +33,16 @@ const playButtonErrorStatusTranslationMap: Record<
 	[PlayabilityStatus.IncorrectConfiguration]:
 		"UnplayableError.IncorrectConfiguration",
 	[PlayabilityStatus.UniverseRootPlaceIsPrivate]:
-		"UnplayableError.UniverseRootPlaceIsPrivate",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.InsufficientPermissionFriendsOnly]:
-		"UnplayableError.InsufficientPermissionFriendsOnly",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.InsufficientPermissionGroupOnly]:
-		"UnplayableError.InsufficientPermissionGroupOnly",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.DeviceRestricted]:
 		"UnplayableError.DeviceRestrictedDefault",
-	[PlayabilityStatus.UnderReview]: "UnplayableError.UnderReview",
+	[PlayabilityStatus.FiatPurchaseDeviceRestricted]:
+		"UnplayableError.FiatPurchaseDeviceRestricted",
+	[PlayabilityStatus.UnderReview]: "UnplayableError.Moderated",
 	[PlayabilityStatus.AccountRestricted]: "UnplayableError.AccountRestricted",
 	[PlayabilityStatus.ComplianceBlocked]: "UnplayableError.ComplianceBlocked",
 	[PlayabilityStatus.ContextualPlayabilityRegionalAvailability]:
@@ -52,7 +54,7 @@ const playButtonErrorStatusTranslationMap: Record<
 	[PlayabilityStatus.ContextualPlayabilityAgeGated]:
 		"UnplayableError.ContextualPlayabilityAgeGated",
 	[PlayabilityStatus.PlaceHasNoPublishedVersion]:
-		"UnplayableError.PlaceHasNoPublishedVersion",
+		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.ContextualPlayabilityUnrated]:
 		"UnplayableError.ContextualPlayabilityUnrated",
 	[PlayabilityStatus.ContextualPlayabilityAgeGatedByDescriptor]:
@@ -67,6 +69,7 @@ const playButtonTextTranslationMap = {
 	Unlock: "PlayButtonText.Unlock",
 	Unplayable: "PlayButtonText.Unavailable",
 	Buy: "PlayButtonText.Buy",
+	PlayDemo: "PlayButtonText.PlayDemo",
 };
 
 const counterEvents = {

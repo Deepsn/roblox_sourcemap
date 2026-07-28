@@ -28,10 +28,6 @@ const url = {
 		url: `${apiGatewayUrl}/search-landing-page-api/v1`,
 		withCredentials: true,
 	},
-	getLandingPageData: (): UrlConfig => ({
-		url: `${apiGatewayUrl}/landing-page-api/landing-page`,
-		withCredentials: true,
-	}),
 	getSpotlightData: (): UrlConfig => ({
 		url: `${apiGatewayUrl}/landing-page-api/spotlight`,
 		withCredentials: true,

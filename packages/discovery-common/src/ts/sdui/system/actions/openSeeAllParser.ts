@@ -51,7 +51,7 @@ const buildSortDetailReferralParams = (
 		[EventStreamMetadata.Page]: sduiContext.pageContext.pageName as
 			| PageContext.HomePage
 			| PageContext.GamesPage,
-		...buildSessionAnalyticsData(pageSessionInfo, sduiContext),
+		...buildSessionAnalyticsData(pageSessionInfo, sduiContext.pageContext),
 	};
 };
 

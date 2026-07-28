@@ -1,7 +1,12 @@
 import { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
 import { BadgeSizes, VerifiedBadgeIconContainer } from "@rbx/roblox-badges";
-import { DisplayNameBadges, useIsPlusBadgeEnabled } from "@rbx/identity-badges";
+import {
+	DisplayNameBadges,
+	useIsPlusBadgeEnabled,
+	PLUS_BADGE_ARIA_LABEL,
+	PLUS_BADGE_ARIA_LABEL_KEY,
+} from "@rbx/identity-badges";
 import AvatarHeadshot from "./AvatarHeadshot";
 
 const FriendTileContent = ({
@@ -51,7 +56,17 @@ const FriendTileContent = ({
 								/>
 							</div>
 						)}
-						{showPlus && <DisplayNameBadges isRobloxPlus size="Small" />}
+						{showPlus && (
+							<DisplayNameBadges
+								isRobloxPlus
+								size="Small"
+								plusBadgeAriaLabel={translate(
+									PLUS_BADGE_ARIA_LABEL_KEY,
+									undefined,
+									PLUS_BADGE_ARIA_LABEL,
+								)}
+							/>
+						)}
 					</div>
 				</div>
 				<div className="friends-carousel-tile-sublabel">

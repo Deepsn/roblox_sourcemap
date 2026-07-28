@@ -29,8 +29,10 @@ import {
 import ExperienceApprovalActionNeededButton from "./ExperienceApprovalActionNeededButton";
 import ParentalControlsActionNeededButton from "./ParentalControlsActionNeededButton";
 import PurchaseButton from "./PurchaseButtonContainer";
+import { DemoButton } from "./DemoButton";
 import UnplayableButton from "./UnplayableButton";
 import useLaunchGameWithPlayableUxTreatment from "../hooks/useLaunchGameWithPlayableUxTreatment";
+import usePurchaseProductData from "../hooks/usePurchaseProductData";
 import { AgeCheckNeededButton } from "./AgeCheckNeededButton";
 
 const { counterEvents, avatarChatUpsellLayer, avatarChatUpsellLayerU13 } =
@@ -388,6 +390,7 @@ export type TDefaultPlayButtonProps = {
 	gameInstanceId?: string;
 	refetchPlayabilityStatus: () => void;
 	playabilityStatus: TPlayabilityStatus | undefined;
+	demoModeAvailable?: boolean;
 	hideButtonText?: boolean;
 	eventProperties?: Record<string, number | string | undefined>;
 	appsFlyerReferralProperties?: TAppsFlyerReferralProperties;
@@ -407,6 +410,7 @@ export const DefaultPlayButton = ({
 	gameInstanceId,
 	refetchPlayabilityStatus,
 	playabilityStatus,
+	demoModeAvailable,
 	hideButtonText,
 	eventProperties = EMPTY_OBJECT,
 	appsFlyerReferralProperties = EMPTY_OBJECT,
@@ -418,6 +422,47 @@ export const DefaultPlayButton = ({
 	pageContext,
 }: TDefaultPlayButtonProps): React.JSX.Element => {
 	const { fireEvent } = window.EventTracker ?? {};
+
+	// Share the purchase button's product-data loading (react-query dedupes the
+	// fetch) so Play Demo is withheld until the purchase button is ready, rather
+	// than showing next to a spinner.
+	const isPurchaseStatus =
+		playabilityStatus === PlayabilityStatus.PurchaseRequired ||
+		playabilityStatus === PlayabilityStatus.FiatPurchaseRequired;
+	const { isLoading: isPurchaseProductLoading } = usePurchaseProductData(
+		universeId,
+		placeId,
+		isPurchaseStatus,
+	);
+
+	const demoButton = demoModeAvailable ? (
+		<DemoButton
+			universeId={universeId}
+			placeId={placeId}
+			rootPlaceId={rootPlaceId}
+			privateServerLinkCode={privateServerLinkCode}
+			gameInstanceId={gameInstanceId}
+			eventProperties={eventProperties}
+			appsFlyerReferralProperties={appsFlyerReferralProperties}
+		/>
+	) : null;
+
+	// Stack the primary button and Play Demo button when a demo is available.
+	// showDemo=false keeps the container but holds Play Demo back until the
+	// primary button has loaded.
+	const withDemoButton = (
+		primaryButton: React.JSX.Element,
+		showDemo = true,
+	): React.JSX.Element =>
+		demoButton ? (
+			<div className="stacked-play-buttons-container">
+				{primaryButton}
+				{showDemo && demoButton}
+			</div>
+		) : (
+			primaryButton
+		);
+
 	switch (playabilityStatus) {
 		case undefined:
 			if (!disableLoadingState) {
@@ -469,7 +514,7 @@ export const DefaultPlayButton = ({
 			);
 		case PlayabilityStatus.PurchaseRequired:
 		case PlayabilityStatus.FiatPurchaseRequired:
-			return (
+			return withDemoButton(
 				<PurchaseButton
 					refetchPlayabilityStatus={refetchPlayabilityStatus}
 					universeId={universeId}
@@ -480,7 +525,18 @@ export const DefaultPlayButton = ({
 					playabilityStatus={playabilityStatus}
 					showDefaultPurchaseText={showDefaultPurchaseText}
 					pageContext={pageContext}
-				/>
+				/>,
+				!isPurchaseProductLoading,
+			);
+		case PlayabilityStatus.FiatPurchaseDeviceRestricted:
+		case PlayabilityStatus.ContextualPlayabilityRegionalAvailability:
+			fireEvent?.(counterEvents.Unplayable);
+
+			return withDemoButton(
+				<UnplayableButton
+					hideButtonText={hideButtonText}
+					buttonClassName={buttonClassName}
+				/>,
 			);
 		case PlayabilityStatus.ContextualPlayabilityAgeRecommendationParentalControls:
 			if (shouldShowVpcPlayButtonUpsells) {
@@ -542,7 +598,6 @@ export const DefaultPlayButton = ({
 		case PlayabilityStatus.AccountRestricted:
 		case PlayabilityStatus.TemporarilyUnavailable:
 		case PlayabilityStatus.ComplianceBlocked:
-		case PlayabilityStatus.ContextualPlayabilityRegionalAvailability:
 		case PlayabilityStatus.ContextualPlayabilityRegionalCompliance:
 		case PlayabilityStatus.ContextualPlayabilityAgeGated:
 		case PlayabilityStatus.PlaceHasNoPublishedVersion:

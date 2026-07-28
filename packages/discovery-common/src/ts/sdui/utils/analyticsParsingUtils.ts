@@ -8,7 +8,6 @@ import { PageContext } from "../../common/types/pageContext";
 import {
 	TAnalyticsContext,
 	TAnalyticsData,
-	TSduiContext,
 	TSduiPageContext,
 } from "../system/SduiTypes";
 import logSduiError, { SduiErrorNames } from "./logSduiError";
@@ -196,17 +195,17 @@ export const getSessionInfoKey = (
 
 export const buildSessionAnalyticsData = (
 	pageSessionInfo: string,
-	sduiContext: TSduiContext,
+	pageContext: TSduiPageContext,
 ): TPageSessionAnalyticsData => {
-	const currentPage = sduiContext.pageContext.pageName;
-	const sessionInfoKey = getSessionInfoKey(sduiContext.pageContext);
+	const currentPage = pageContext.pageName;
+	const sessionInfoKey = getSessionInfoKey(pageContext);
 	if (!sessionInfoKey) {
 		logSduiError(
 			SduiErrorNames.InvalidPageForSessionAnalytics,
 			`Invalid page context for session analytics: ${
 				currentPage ? JSON.stringify(currentPage) : "undefined"
 			} with session info: ${pageSessionInfo}`,
-			sduiContext.pageContext,
+			pageContext,
 		);
 		return {};
 	}

@@ -14,7 +14,11 @@ import useFocused from "../hooks/useFocused";
 import useFriendsPresence from "../hooks/useFriendsPresence";
 import useGetGameLayoutData from "../hooks/useGetGameLayoutData";
 import bedev1Services from "../services/bedev1Services";
-import { TGetPlaceDetails } from "../types/bedev1Types";
+import {
+	TGameData,
+	TGetPlaceDetails,
+	TLayoutMetadata,
+} from "../types/bedev1Types";
 import { buildGameDetailUrl } from "../utils/browserUtils";
 import {
 	getInGameFriends,
@@ -26,13 +30,50 @@ import GameTilePlayButtonV2 from "./GameTilePlayButtonV2";
 import WideGameThumbnail from "./WideGameThumbnail";
 import {
 	GameTileFriendsInGame,
+	GameTileRatingWithGenreFooter,
 	GameTileStats,
 	GameTileTextFooter,
 	TSharedGameTileProps,
 } from "./GameTileUtils";
-import { getGameTileTextFooterData } from "../utils/gameTileLayoutUtils";
+import {
+	getGameTileRatingWithGenreFooterData,
+	getGameTileTextFooterData,
+} from "../utils/gameTileLayoutUtils";
 import { TComponentType } from "../types/bedev2Types";
 import type { PageContext } from "../types/pageContext";
+
+const FeaturedGameTileFooter = ({
+	gameLayoutData,
+	gameData,
+}: {
+	gameLayoutData: TLayoutMetadata | undefined;
+	gameData: TGameData;
+}): JSX.Element => {
+	const ratingWithGenreFooterData =
+		getGameTileRatingWithGenreFooterData(gameLayoutData);
+	if (ratingWithGenreFooterData) {
+		return (
+			<GameTileRatingWithGenreFooter
+				footerData={ratingWithGenreFooterData}
+				totalUpVotes={gameData.totalUpVotes}
+				totalDownVotes={gameData.totalDownVotes}
+			/>
+		);
+	}
+
+	const textFooterData = getGameTileTextFooterData(gameLayoutData);
+	if (textFooterData) {
+		return <GameTileTextFooter footerData={textFooterData} />;
+	}
+
+	return (
+		<GameTileStats
+			totalUpVotes={gameData.totalUpVotes}
+			totalDownVotes={gameData.totalDownVotes}
+			playerCount={gameData.playerCount}
+		/>
+	);
+};
 
 export const FeaturedGridTile = forwardRef(
 	(
@@ -110,8 +151,6 @@ export const FeaturedGridTile = forwardRef(
 			id,
 		) as Record<string, string | number | undefined>;
 
-		const gameLayoutFooterData = getGameTileTextFooterData(gameLayoutData);
-
 		const isWideTile = isWideTileComponentType(componentType);
 
 		const thumbnailComponent = useMemo(() => {
@@ -172,15 +211,10 @@ export const FeaturedGridTile = forwardRef(
 							>
 								{gameData.name}
 							</div>
-							{gameLayoutFooterData ? (
-								<GameTileTextFooter footerData={gameLayoutFooterData} />
-							) : (
-								<GameTileStats
-									totalUpVotes={gameData.totalUpVotes}
-									totalDownVotes={gameData.totalDownVotes}
-									playerCount={gameData.playerCount}
-								/>
-							)}
+							<FeaturedGameTileFooter
+								gameLayoutData={gameLayoutData}
+								gameData={gameData}
+							/>
 						</div>
 						<GameTilePlayButtonV2
 							universeId={gameData.universeId.toString()}

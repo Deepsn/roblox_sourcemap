@@ -145,6 +145,7 @@ export enum EventStreamMetadata {
 	TreatmentType = "treatmentType",
 	UniverseId = "universeId",
 	UniverseIds = "universeIds",
+	UnplayableReason = "unplayableReason",
 	FriendId = "friendId",
 	VideoAssetId = "videoAssetId",
 	VideoThumbnailAssetIds = "videoThumbnailAssetIds",
@@ -181,6 +182,7 @@ export enum EventType {
 	QuerySuggestionClicked = "querySuggestionClicked",
 	QueryImpressions = "queryImpressions",
 	ExpandableTextImpression = "expandableTextImpression",
+	GameDetailUnavailable = "gameDetailUnavailable",
 }
 
 export enum SessionInfoType {
@@ -210,6 +212,7 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.PositionsInTopic]?: number[];
 	[EventStreamMetadata.UniverseIds]: number[];
 	[EventStreamMetadata.GameSetTypeId]?: number | string;
+	[EventStreamMetadata.GameSetTargetId]?: number | string;
 	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.AdsPositions]?: number[];
 	[EventStreamMetadata.AdFlags]?: number[];
@@ -532,6 +535,13 @@ export type TQueryImpressions = {
 	[SessionInfoType.SearchLandingPageSessionInfo]?: string;
 };
 
+export type TGameDetailUnavailable = {
+	[EventStreamMetadata.UniverseId]?: string;
+	[EventStreamMetadata.PlaceId]?: string;
+	[EventStreamMetadata.UnplayableReason]?: string;
+	[EventStreamMetadata.HttpReferrer]?: string;
+};
+
 export type TExpandableTextImpressions = {
 	[EventStreamMetadata.ImpressionThreshold]: number;
 	/**
@@ -723,6 +733,19 @@ export default {
 			...params,
 			[EventStreamMetadata.PageContext]: getEventContext(pageContext),
 			[EventStreamMetadata.InteractionUuid]: uuidService.generateRandomUuid(),
+		}),
+	],
+	[EventType.GameDetailUnavailable]: (
+		params: TGameDetailUnavailable = {},
+	): TEvent => [
+		{
+			name: EventType.GameDetailUnavailable,
+			type: EventType.GameDetailUnavailable,
+			context: pageLoad,
+		},
+		parseEventParams({
+			[EventStreamMetadata.HttpReferrer]: getHttpReferrer(),
+			...params,
 		}),
 	],
 };

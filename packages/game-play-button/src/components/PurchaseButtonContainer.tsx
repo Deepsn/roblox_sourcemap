@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { ValidHttpUrl } from "@rbx/core-scripts/util/url";
 import { Button, Loading } from "@rbx/core-ui/legacy/react-style-guide";
 import {
@@ -7,10 +6,9 @@ import {
 } from "@rbx/core-scripts/legacy/react-utilities";
 import { translations } from "../constants/translations";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
-import playButtonService from "../services/playButtonService";
+import usePurchaseProductData from "../hooks/usePurchaseProductData";
 import {
 	TGetProductDetails,
-	TGetProductInfo,
 	TPlayabilityStatusPurchaseRequired,
 	ValueOf,
 	type TPlayButtonPageContext,
@@ -66,38 +64,12 @@ export const PurchaseButtonContainer = ({
 }: TPurchaseButtonContainerProps & {
 	translate: TranslateFunction;
 }): React.JSX.Element => {
-	const [productInfo, setProductInfo] = useState<TGetProductInfo | undefined>(
-		undefined,
+	const { productInfo, productDetails, isLoading } = usePurchaseProductData(
+		universeId,
+		placeId,
 	);
-	const [productDetails, setProductDetails] = useState<
-		TGetProductDetails | undefined
-	>(undefined);
-	useEffect(() => {
-		const fetchProductInfo = async () => {
-			try {
-				const response = await playButtonService.getProductInfo([universeId]);
-				setProductInfo(response);
-			} catch (e) {
-				console.error(e);
-			}
-		};
 
-		const fetchProductDetails = async () => {
-			try {
-				const response = await playButtonService.getProductDetails([placeId]);
-				setProductDetails(response);
-			} catch (e) {
-				console.error(e);
-			}
-		};
-
-		// eslint-disable-next-line no-void
-		void fetchProductInfo();
-		// eslint-disable-next-line no-void
-		void fetchProductDetails();
-	}, [placeId, universeId]);
-
-	if (productInfo === undefined || productDetails === undefined) {
+	if (isLoading) {
 		return <Loading />;
 	}
 

@@ -39,7 +39,6 @@ const defaultValues = {
 		IsGameStorePreviewEnabled: false,
 		HasUpdatedRecommendedSortTitle: true,
 		IsGamePreviewVideoEnabled: false,
-		IsHigherResolutionEventTileEnabled: false,
 		HasTopSongsEnabled: false,
 	},
 	gameDetailsExposure: {},
@@ -50,9 +49,7 @@ const defaultValues = {
 		IsMusicChartsCarouselEnabled: false,
 		IsNewScrollArrowsAndHeaderEnabled: false,
 	},
-	tileLayer: {
-		IsHigherResolutionWideGameTileEnabled: false,
-	},
+	tileLayer: {},
 	playButton: {},
 	searchLandingPage: {},
 };

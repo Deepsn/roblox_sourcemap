@@ -100,7 +100,7 @@ export const buildCommonReferralParams = (
 		[EventStreamMetadata.NumberOfLoadedTiles]: numberOfLoadedTiles,
 		[EventStreamMetadata.GameSetTypeId]: gameSetTypeId,
 		[EventStreamMetadata.Page]: sduiContext.pageContext.pageName,
-		...buildSessionAnalyticsData(pageSessionInfo, sduiContext),
+		...buildSessionAnalyticsData(pageSessionInfo, sduiContext.pageContext),
 	};
 };
 

@@ -27,6 +27,7 @@ import {
 	TGameData,
 	TGetPlaceDetails,
 	TGetFriendsResponse,
+	TGameTileRatingWithGenreFooter,
 	TGameTileTextFooter,
 } from "../types/bedev1Types";
 import { TComponentType, TTreatmentType } from "../types/bedev2Types";
@@ -202,6 +203,34 @@ export const GameTileTextFooter = ({
 	return (
 		<div className="game-card-info" data-testid="game-tile-stats-text-footer">
 			<span className="info-label">{footerData.text.textLiteral}</span>
+		</div>
+	);
+};
+
+export const GameTileRatingWithGenreFooter = ({
+	footerData,
+	totalDownVotes,
+	totalUpVotes,
+}: {
+	footerData: TGameTileRatingWithGenreFooter;
+	totalUpVotes: number | undefined;
+	totalDownVotes: number | undefined;
+}): JSX.Element => {
+	const votes = parsingUtils.getVotePercentageValue(
+		totalUpVotes,
+		totalDownVotes,
+	);
+	const voteDisplayValue = votes?.toString() ?? GAME_STATS_PLACEHOLDER_STRING;
+
+	return (
+		<div
+			className="game-card-info"
+			data-testid="game-tile-stats-rating-with-genre"
+		>
+			<span className="info-label icon-votes-gray" />
+			<span className="info-label text-label-with-icon">
+				{`${voteDisplayValue}% \u2022 ${footerData.genre.textLiteral}`}
+			</span>
 		</div>
 	);
 };

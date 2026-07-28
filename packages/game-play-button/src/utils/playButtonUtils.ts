@@ -56,12 +56,14 @@ function sendPlayGameClickedEvent(
 	eventProperties: TEventProperties,
 	placeId: string,
 	joinDataProperties: JoinDataProperties,
+	actionType?: string,
 ): TEventProperties {
-	const mergedProperties = {
+	const mergedProperties: TEventProperties = {
 		placeId,
 		...eventProperties,
 		...getJoinAttemptProperties(eventProperties),
 		...joinDataProperties,
+		...(actionType == null ? {} : { actionType }),
 	};
 
 	eventStreamService.sendEventWithTarget(
@@ -115,6 +117,7 @@ export const launchGame = (
 	eventProperties: TEventProperties = {},
 	joinData: JoinDataProperties = {},
 	appsFlyerReferralProperties: TAppsFlyerReferralProperties = {},
+	actionType?: string,
 ): void => {
 	const deviceMeta = DeviceMeta.getDeviceMeta();
 	if (
@@ -127,6 +130,7 @@ export const launchGame = (
 			eventProperties,
 			placeId,
 			joinData,
+			actionType,
 		);
 
 		const encodedUniversalLink = getEncodedUniversalLink(
@@ -169,6 +173,7 @@ export const launchGame = (
 				joinData,
 			),
 			playButtonConstants.eventStreamProperties(placeId, eventProperties),
+			actionType,
 		);
 		if (window.localStorage.getItem("ref_info")) {
 			window.localStorage.removeItem("ref_info");

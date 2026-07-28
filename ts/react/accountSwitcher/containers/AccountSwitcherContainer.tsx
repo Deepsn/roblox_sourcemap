@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent } from "@rbx/foundation-ui";
 import { Modal } from "react-style-guide";
 import { withTranslations, WithTranslationsProps } from "react-utilities";
@@ -32,7 +32,10 @@ import {
 	deleteAccountSwitcherBlob,
 	hasAccountSwitcherInvalidSessionError,
 } from "../utils/accountSwitcherUtils";
-import { getAccountSwitcherListVariant } from "../utils/accountSwitcherListVariantUtils";
+import {
+	getAccountSwitcherListExperiment,
+	logAccountSwitcherListExperimentExposure,
+} from "../utils/accountSwitcherListVariantUtils";
 import { AccountSwitcherBaseConfirmationModal } from "../components/AccountSwitcherBaseConfirmationModal";
 import type { AccountSwitcherListVariant } from "../components/FoundationAccountSwitcherList";
 import {
@@ -75,6 +78,9 @@ export const AccountSwitcherContainer = ({
 		useState<AccountSwitcherListVariant>("legacy");
 	const [isAccountListVariantResolved, setIsAccountListVariantResolved] =
 		useState(false);
+	const [isAccountListExperimentEnrolled, setIsAccountListExperimentEnrolled] =
+		useState(false);
+	const hasLoggedAccountListExperimentExposure = useRef(false);
 	const [users, setUsers] = useState<TLoggedInUsers>({
 		activeUser: {} as TUserData,
 		usersAvailableForSwitching: [],
@@ -233,16 +239,39 @@ export const AccountSwitcherContainer = ({
 
 	useEffect(() => {
 		const updateAccountListVariant = async () => {
-			setAccountListVariant(await getAccountSwitcherListVariant());
+			const { isEnrolled, variant } = await getAccountSwitcherListExperiment();
+			setAccountListVariant(variant);
+			setIsAccountListExperimentEnrolled(isEnrolled);
 			setIsAccountListVariantResolved(true);
 		};
 
 		// eslint-disable-next-line no-void
 		void updateAccountListVariant().catch(() => {
 			setAccountListVariant("legacy");
+			setIsAccountListExperimentEnrolled(false);
 			setIsAccountListVariantResolved(true);
 		});
 	}, []);
+
+	useEffect(() => {
+		if (
+			!hasLoggedAccountListExperimentExposure.current &&
+			shouldShowAsModal &&
+			currentModal === ModalType.AccountSwitcherModalType &&
+			isModalOpen &&
+			isAccountListVariantResolved &&
+			isAccountListExperimentEnrolled
+		) {
+			hasLoggedAccountListExperimentExposure.current = true;
+			logAccountSwitcherListExperimentExposure();
+		}
+	}, [
+		currentModal,
+		isAccountListExperimentEnrolled,
+		isAccountListVariantResolved,
+		isModalOpen,
+		shouldShowAsModal,
+	]);
 
 	const handleModalDismiss = () => {
 		setIsModalOpen(false);

@@ -29,29 +29,50 @@ function getPage() {
 	return "gameDetail";
 }
 
-function getProperties(placeId, referrerId, joinAttemptId) {
+function getProperties(placeId, referrerId, joinAttemptId, actionType) {
 	return {
 		lType: "protocol",
 		pid: placeId,
 		refuid: referrerId,
 		pg: getPage(),
 		joinAttemptId,
+		...(actionType != null && { actionType }),
 	};
 }
 
-function sendEvent(eventName, context, placeId, referrerId, joinAttemptId) {
+function sendEvent(
+	eventName,
+	context,
+	placeId,
+	referrerId,
+	joinAttemptId,
+	actionType,
+) {
 	if (context !== null && context !== "" && context !== "unknown") {
 		gamePlayEvents.lastContext = context;
 	}
 	EventStream.SendEvent(
 		eventName,
 		gamePlayEvents.lastContext,
-		getProperties(placeId, referrerId, joinAttemptId),
+		getProperties(placeId, referrerId, joinAttemptId, actionType),
 	);
 }
 
-function sendGamePlayIntent(context, placeId, referrerId, joinAttemptId) {
-	sendEvent("gamePlayIntent", context, placeId, referrerId, joinAttemptId);
+function sendGamePlayIntent(
+	context,
+	placeId,
+	referrerId,
+	joinAttemptId,
+	actionType,
+) {
+	sendEvent(
+		"gamePlayIntent",
+		context,
+		placeId,
+		referrerId,
+		joinAttemptId,
+		actionType,
+	);
 	$(document).trigger("playButton:gamePlayIntent");
 }
 

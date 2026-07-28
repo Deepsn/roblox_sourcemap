@@ -8,12 +8,16 @@ import bedev1Services from "../services/bedev1Services";
 import { TGetFriendsResponse, TGetPlaceDetails } from "../types/bedev1Types";
 import { THoverStyle } from "../types/bedev2Types";
 import { PageContext } from "../types/pageContext";
-import { getGameTileTextFooterData } from "../utils/gameTileLayoutUtils";
+import {
+	getGameTileRatingWithGenreFooterData,
+	getGameTileTextFooterData,
+} from "../utils/gameTileLayoutUtils";
 import { getInGameFriends } from "../utils/parsingUtils";
 import {
 	GameTileBase,
 	GameTileFriendActivityFooter,
 	GameTileFriendsInGame,
+	GameTileRatingWithGenreFooter,
 	GameTileSponsoredFooter,
 	GameTileStats,
 	GameTileTextFooter,
@@ -87,9 +91,23 @@ export const GameTile = forwardRef<HTMLDivElement, TGameTileProps>(
 			) {
 				return <GameTileSponsoredFooter translate={translate} />;
 			}
-			const gameLayoutFooterData = getGameTileTextFooterData(gameLayoutData);
-			if (gameLayoutFooterData) {
-				return <GameTileTextFooter footerData={gameLayoutFooterData} />;
+
+			const gameLayoutRatingWithGenreFooterData =
+				getGameTileRatingWithGenreFooterData(gameLayoutData);
+			if (gameLayoutRatingWithGenreFooterData) {
+				return (
+					<GameTileRatingWithGenreFooter
+						footerData={gameLayoutRatingWithGenreFooterData}
+						totalUpVotes={gameData.totalUpVotes}
+						totalDownVotes={gameData.totalDownVotes}
+					/>
+				);
+			}
+
+			const gameLayoutTextFooterData =
+				getGameTileTextFooterData(gameLayoutData);
+			if (gameLayoutTextFooterData) {
+				return <GameTileTextFooter footerData={gameLayoutTextFooterData} />;
 			}
 			if (friendsInGame.length > 0 && gameDetails) {
 				return (

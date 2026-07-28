@@ -47,7 +47,7 @@ const SduiFeedItem = ({
 		}
 
 		const localAnalyticsData = {
-			...buildSessionAnalyticsData(pageSessionInfo, sduiContext),
+			...buildSessionAnalyticsData(pageSessionInfo, sduiContext.pageContext),
 		};
 
 		return (

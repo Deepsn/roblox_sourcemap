@@ -32,7 +32,7 @@ const SongsSeeAllGrid = ({
 	const pageSessionInfo = usePageSession();
 
 	const localAnalyticsData = useMemo(() => {
-		return buildSessionAnalyticsData(pageSessionInfo, sduiContext);
+		return buildSessionAnalyticsData(pageSessionInfo, sduiContext.pageContext);
 	}, [pageSessionInfo, sduiContext]);
 
 	useVerticalScrollTracker(currentPage);

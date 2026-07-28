@@ -36,19 +36,12 @@ import {
 import { TPageType } from "../types/bedev1Types";
 import { TDeviceFeatures } from "../utils/deviceFeaturesUtils";
 import { getInputUniverseIdsRequestParam } from "../utils/parsingUtils";
-import {
-	TOmniRecommendationSduiTree,
-	TSduiPageResponseData,
-} from "../../sdui/system/SduiTypes";
+import { TOmniRecommendationSduiTree } from "../../sdui/system/SduiTypes";
 
 export type TGetOmniRecommendationsResponse = {
 	sorts: TOmniRecommendationSort[];
 	sdui?: TOmniRecommendationSduiTree;
 } & TGetOmniRecommendationsMetadataResponse;
-
-export type TLandingPageResponse = {
-	sdui: TSduiPageResponseData;
-};
 
 const getExperimentationValues = async <
 	T extends Record<string, number | string | boolean>,
@@ -78,21 +71,6 @@ const getExperimentationValues = async <
 	} catch {
 		return defaultValues;
 	}
-};
-
-export const getLandingPageData = async (
-	pageSlug: string,
-	sessionId: string,
-): Promise<TLandingPageResponse> => {
-	const params = {
-		pageSlug,
-		sessionId,
-	};
-	const { data } = await http.get<TLandingPageResponse>(
-		bedev2Constants.url.getLandingPageData(),
-		params,
-	);
-	return data;
 };
 
 export const getOmniRecommendations = async (
@@ -423,7 +401,6 @@ export default {
 	getOmniSearch,
 	getExploreSorts,
 	getExploreSortContents,
-	getLandingPageData,
 	postUserSignal,
 	getThumbnailForAsset,
 	getGuacAppPolicyBehaviorData,

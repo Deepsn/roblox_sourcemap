@@ -34,4 +34,5 @@ export const PlayabilityStatus = {
 	ContextualPlayabilityCoreGated: "ContextualPlayabilityCoreGated",
 	ContextualPlayabilityAgeCheckRequired:
 		"ContextualPlayabilityAgeCheckRequired",
+	FiatPurchaseDeviceRestricted: "FiatPurchaseDeviceRestricted",
 } as const;

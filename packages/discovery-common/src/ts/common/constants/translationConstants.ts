@@ -35,6 +35,7 @@ export const SearchGlobalSearch = {
 
 export const CommonUIMessages = {
 	ActionClose: "Action.Close",
+	ActionReturnHome: "Action.ReturnHome",
 	ResponseUnexpectedError: "Response.UnexpectedError",
 };
 
@@ -113,6 +114,11 @@ export const FeatureGameDetails = {
 	MessageSponsoredDisclosureU18: "Message.SponsoredDisclosure.U18",
 };
 
+export const FeatureExperienceDetails = {
+	UpdateMaturitySettingModalLabelTitle:
+		"UpdateMaturitySettingModal.Label.Title",
+};
+
 export const FeatureCommunityLinks = {
 	HeadingCommunityTitle: "Heading.CommunityTitle",
 	DescriptionCommunityDefault: "Description.CommunityDefault",
@@ -178,4 +184,5 @@ export default {
 	FeatureSduiLandingPage,
 	FeatureSocialShare,
 	FeatureCommunityLinks,
+	FeatureExperienceDetails,
 };

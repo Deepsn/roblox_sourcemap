@@ -27,7 +27,7 @@ export const GameTilePlayButtonV2 = ({
 	redirectPurchaseUrl?: ValidHttpUrl;
 	page?: PageContext;
 }): JSX.Element => {
-	const { playabilityStatus, refetchPlayabilityData } =
+	const { playabilityStatus, demoModeAvailable, refetchPlayabilityData } =
 		usePlayabilityStatus(universeId);
 
 	const { shouldShowVpcPlayButtonUpsells, isFetchingPolicy } =
@@ -87,6 +87,7 @@ export const GameTilePlayButtonV2 = ({
 				playabilityStatus === PlayabilityStatus.FiatPurchaseRequired
 			}
 			shouldShowVpcPlayButtonUpsells={shouldShowVpcPlayButtonUpsells}
+			demoModeAvailable={demoModeAvailable}
 			pageContext={pageContext}
 		/>
 	);
