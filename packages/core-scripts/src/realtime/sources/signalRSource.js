@@ -1,13 +1,11 @@
 // TODO: old, migrated code
 /* eslint-disable no-invalid-this */
-import $ from "jquery";
 import * as signalR from "@microsoft/signalr";
 import {
 	pubSub,
 	kingmaker,
 } from "@rbx/core-scripts/util/cross-tab-communication";
 import { realtimeEvents, topicChannels } from "../constants/events";
-import SignalRConnectionWrapper from "../lib/signalRConnectionWrapper";
 import CoreSignalRConnectionWrapper from "../lib/coreSignalRConnectionWrapper";
 import { sendConnectionEventToDataLake as sendConnectionEventToDataLakeUtil } from "../utils/events";
 
@@ -305,8 +303,15 @@ const signalRSource = function (settings, logger) {
 		}
 	};
 
+	// Holds the current "focus" listener so it can be removed later. Named (rather
+	// than anonymous) because native removeEventListener requires a stable reference,
+	// whereas the legacy jQuery implementation removed it by the "focus.enforceMaxTimeout" namespace.
+	let enforceMaxTimeoutFocusHandler = null;
+
 	const stopExistingSignalRTimeout = () => {
-		$(window).unbind("focus.enforceMaxTimeout");
+		if (enforceMaxTimeoutFocusHandler) {
+			window.removeEventListener("focus", enforceMaxTimeoutFocusHandler);
+		}
 		if (signalRConnectionTimeout !== null) {
 			clearTimeout(signalRConnectionTimeout);
 			signalRConnectionTimeout = null;
@@ -318,12 +323,11 @@ const signalRSource = function (settings, logger) {
 		signalRConnectionTimeout = setTimeout(() => {
 			processConnectionEvent(false); // This is done before endConnection so that the replicator doesnt get nulled out. We want to replicate this message.
 			signalRConnection.Stop();
-			$(window)
-				.unbind("focus.enforceMaxTimeout")
-				.bind("focus.enforceMaxTimeout", () => {
-					signalRConnection.Start();
-					setupSignalRTimeout();
-				});
+			enforceMaxTimeoutFocusHandler = () => {
+				signalRConnection.Start();
+				setupSignalRTimeout();
+			};
+			window.addEventListener("focus", enforceMaxTimeoutFocusHandler);
 		}, settings.maxConnectionTimeInMs);
 	};
 
@@ -466,32 +470,18 @@ const signalRSource = function (settings, logger) {
 
 		setupReplication();
 
-		if (settings.notificationsClientType === "CoreSignalR") {
-			signalRConnection = new CoreSignalRConnectionWrapper(
-				settings,
-				logger,
-				handleSignalRConnectionChanged,
-				handleNotificationMessage,
-				handleSubscriptionStatusUpdateMessage,
-				handleTopicNotificationMessage,
-				sendConnectionEventToDataLake,
-				handleTopicSubscriptionErrorMessage,
-				handleTopicTokenExpiryMessage,
-			);
-			log("Started Core SignalR connection");
-		} else {
-			signalRConnection = new SignalRConnectionWrapper(
-				settings,
-				logger,
-				handleSignalRConnectionChanged,
-				handleNotificationMessage,
-				handleSubscriptionStatusUpdateMessage,
-				handleTopicNotificationMessage,
-				handleTopicSubscriptionErrorMessage,
-				handleTopicTokenExpiryMessage,
-			);
-			log("Started Legacy SignalR connection");
-		}
+		signalRConnection = new CoreSignalRConnectionWrapper(
+			settings,
+			logger,
+			handleSignalRConnectionChanged,
+			handleNotificationMessage,
+			handleSubscriptionStatusUpdateMessage,
+			handleTopicNotificationMessage,
+			sendConnectionEventToDataLake,
+			handleTopicSubscriptionErrorMessage,
+			handleTopicTokenExpiryMessage,
+		);
+		log("Started Core SignalR connection");
 
 		signalRConnection.Start();
 		setupSignalRTimeout();

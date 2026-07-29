@@ -42,6 +42,7 @@ export enum TRIGGERING_CONTEXT {
 	WEB_GAME_PASS_PLUS_UPSELL = "WebGamePassPlusUpsell",
 	WEB_DEVELOPER_PRODUCT_PLUS_UPSELL = "WebDeveloperProductPlusUpsell",
 	WEB_PRIVATE_SERVER_PLUS_UPSELL = "WebPrivateServerPlusUpsell",
+	WEB_APP_THEME_PLUS_UPSELL = "WebAppThemePlusUpsell",
 }
 
 export enum VIEW_NAME {

@@ -280,6 +280,11 @@ const appendUrlLocaleParam = (url: string, method?: string): string => {
 		return url;
 	}
 
+	// if url already has urlLocale query param, don't add it again
+	if (/[?&]urlLocale=/.test(url)) {
+		return url;
+	}
+
 	// use correct query param separator
 	const separator = url.includes("?") ? "&" : "?";
 	return `${url}${separator}urlLocale=${encodeURIComponent(pageLocaleCode)}`;

@@ -79,7 +79,6 @@ export const sendGamePlayEvent = (
 	placeId: string,
 	referrerId: string,
 	joinAttemptId: string,
-	actionType?: string,
 ): void => {
 	// @ts-expect-error TODO: add types or dummy import
 	const { GamePlayEvents } = window.Roblox;
@@ -93,7 +92,6 @@ export const sendGamePlayEvent = (
 			placeId,
 			referrerId,
 			joinAttemptId,
-			actionType,
 		);
 	}
 };

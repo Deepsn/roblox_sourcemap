@@ -37,9 +37,10 @@ const sendGamePlayIntentEvent = (
 	ctx: string,
 	rootPlaceId: string,
 	joinAttemptId?: string,
+	actionType?: string,
 ) => {
 	// @ts-expect-error TODO: old, migrated code
-	sendGamePlayEvent(ctx, rootPlaceId, undefined, joinAttemptId);
+	sendGamePlayEvent(ctx, rootPlaceId, undefined, joinAttemptId, actionType);
 };
 
 export const buildPlayGameProperties = (
@@ -63,6 +64,7 @@ export const buildPlayGameProperties = (
 export const launchGame = (
 	playGameProperties: PlayGameProperties,
 	eventStreamProperties: EventStreamProperties,
+	actionType?: string,
 ): void => {
 	const { GameLauncher } = window.Roblox;
 	if (GameLauncher) {
@@ -72,6 +74,10 @@ export const launchGame = (
 		const currentESProperties = eventStreamProperties;
 		if (GameLauncher.isJoinAttemptIdEnabled()) {
 			currentESProperties.properties.joinAttemptId = joinAttemptId;
+		}
+
+		if (actionType != null) {
+			currentESProperties.properties.actionType = actionType;
 		}
 
 		const {
@@ -95,6 +101,7 @@ export const launchGame = (
 				currentESProperties.gamePlayIntentEventCtx,
 				rootPlaceId,
 				joinAttemptId,
+				actionType,
 			);
 			GameLauncher.joinGameInstance(
 				placeId,
@@ -112,6 +119,7 @@ export const launchGame = (
 				currentESProperties.gamePlayIntentEventCtx,
 				rootPlaceId,
 				joinAttemptId,
+				actionType,
 			);
 			GameLauncher.followPlayerIntoGame(
 				playerId,
@@ -124,6 +132,7 @@ export const launchGame = (
 				currentESProperties.gamePlayIntentEventCtx,
 				placeId,
 				joinAttemptId,
+				actionType,
 			);
 			GameLauncher.joinPrivateGame(
 				placeId,
@@ -139,6 +148,7 @@ export const launchGame = (
 				currentESProperties.gamePlayIntentEventCtx,
 				placeId,
 				joinAttemptId,
+				actionType,
 			);
 			GameLauncher.joinMultiplayerGame(
 				placeId,

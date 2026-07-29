@@ -136,6 +136,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.sSettings": "Settings",
 	"Label.sSettingsNotifications": "Settings: {notificationCount}",
 	"Actions.GetPlus": "Get Plus",
+	"Label.Newsroom": "Newsroom",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

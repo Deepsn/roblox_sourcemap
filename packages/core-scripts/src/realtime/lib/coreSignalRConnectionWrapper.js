@@ -79,7 +79,7 @@ const coreSignalRConnectionWrapper = function (
 			}
 			isConnected = true;
 			onConnectionStatusChangedCallback(true);
-		} else if (connectionState === signalR.HubConnection.Disconnected) {
+		} else if (connectionState === signalR.HubConnectionState.Disconnected) {
 			isConnected = false;
 			onConnectionStatusChangedCallback(false);
 		}

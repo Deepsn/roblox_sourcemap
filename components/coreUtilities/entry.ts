@@ -36,6 +36,7 @@ import * as upsell from "@rbx/core-scripts/util/upsell";
 import * as user from "@rbx/core-scripts/util/user";
 import * as CoreUtilities from "@rbx/core-scripts/legacy/core-utilities";
 import * as CoreRobloxUtilities from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import * as webTelemetry from "@rbx/web-telemetry/fire";
 
 import { initializeTheme } from "@rbx/core-scripts/theme/internal";
 import * as directionalNavigation from "./src/directional-navigation";
@@ -125,6 +126,7 @@ addExternal(["Roblox", "core-scripts", "dataStore"], dataStore);
 addExternal(["Roblox", "core-scripts", "deepLink"], deepLink);
 addExternal(["Roblox", "core-scripts", "entityUrl"], entityUrl);
 addExternal(["Roblox", "core-scripts", "eventStream"], eventStream);
+addExternal(["Roblox", "web-telemetry", "fire"], webTelemetry);
 addExternal(["Roblox", "core-scripts", "game"], game);
 
 addExternal(["Roblox", "core-scripts", "guac"], guac);

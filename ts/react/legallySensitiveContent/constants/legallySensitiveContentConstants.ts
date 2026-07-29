@@ -162,8 +162,8 @@ const legallySensitiveContentConstants = {
 		pageTitleSourceContentId: "9225544",
 		pageDescriptionTranslationKey: "Description.PartyAndPartyChatParentSide",
 		pageDescriptionSourceContentId: "7261256",
-		titleTranslationKey: "Heading.PartyAndPartyChat",
-		titleSourceContentId: "7180360",
+		titleTranslationKey: "Heading.ChatAndPartyWithFriends",
+		titleSourceContentId: "9225544",
 		consentTranslationKey:
 			"Description.ParentSide.AllowYourChildGamesChatWithFriends",
 		consentSourceContentId: "9620552",

@@ -255,6 +255,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 		"Only add people you know and trust. Manage this friend anytime from their profile.",
 	"Description.NotAFriend": "Not a friend",
 	"Description.NoMutualFriends": "No mutual friends",
+	"Heading.Friends": "Friends",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

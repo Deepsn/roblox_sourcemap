@@ -516,11 +516,18 @@ function FAEContainer({
 
 	// While the desktop deeplink QR is shown, poll feature access so the modal
 	// auto-closes once the user finishes FAE on the device they scanned with.
+	// Fire start here: QRDeepLinkDialog mounts already open, so onOpenChange(true)
+	// never runs (Foundation only calls it on dismiss).
 	useEffect(() => {
 		if (!appsFlyerLink || deeplinkPollingRef.current) {
 			return undefined;
 		}
 
+		sendFAEPageLoadEvent(
+			context,
+			"",
+			FAEEventConstants.field.webQrCodeFaeStart,
+		);
 		deeplinkPollingEndTime.current = Date.now() + POLLING_TIMEOUT;
 
 		const doFetch = () => {
@@ -576,13 +583,7 @@ function FAEContainer({
 			<QRDeepLinkDialog
 				open
 				onOpenChange={(isOpen) => {
-					if (isOpen) {
-						sendFAEPageLoadEvent(
-							context,
-							"",
-							FAEEventConstants.field.webQrCodeFaeStart,
-						);
-					} else if (!isOpen) {
+					if (!isOpen) {
 						clearDeeplinkPolling();
 						sendFAEPageLoadEvent(
 							context,

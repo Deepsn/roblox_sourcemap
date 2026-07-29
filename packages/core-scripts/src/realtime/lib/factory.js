@@ -18,8 +18,6 @@ const getSettings = () => {
 				RealTimeSettings.IsSignalRClientTransportRestrictionEnabled;
 			settings.isLocalStorageEnabled =
 				RealTimeSettings.IsLocalStorageInRealTimeEnabled;
-			settings.notificationsClientType =
-				RealTimeSettings.NotificationsClientType;
 			settings.isRealtimeWebAnalyticsEnabled =
 				RealTimeSettings.IsRealtimeWebAnalyticsEnabled;
 			settings.isRealtimeWebAnalyticsConnectionEventsEnabled =
@@ -32,7 +30,6 @@ const getSettings = () => {
 			settings.userId = CurrentUser ? parseInt(CurrentUser.userId, 10) : -1;
 			settings.isSignalRClientTransportRestrictionEnabled = false;
 			settings.isLocalStorageEnabled = false;
-			settings.notificationsClientType = "SignalR"; // Default should be legacy SignalR
 			settings.isRealtimeWebAnalyticsEnabled = false;
 			settings.isRealtimeWebAnalyticsConnectionEventsEnabled = false;
 		}

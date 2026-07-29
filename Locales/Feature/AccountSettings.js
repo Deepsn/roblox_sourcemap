@@ -2655,6 +2655,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.PartySetting": "Chat and party with friends setting",
 	"Heading.PartyChatSettingV2": "Friends chat setting",
 	"ScopeType.UniverseThumbnail": "Thumbnails",
+	"Description.PresetChat.RestrictiveSubtitle":
+		"Roblox can set Quick Words for all ages.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

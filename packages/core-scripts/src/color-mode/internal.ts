@@ -221,10 +221,14 @@ export const initialize = (
 				"SecurityNotification",
 				"SupportedBrowsers",
 				"ShopGiftCards",
+				"PreAuthLanding",
 			],
 			pageName,
 		) ||
-		[/^\/([^/]+\/)?spotlight\/[^/]+\/?$/i].some((r) => r.test(route))
+		[
+			/^\/([^/]+\/)?spotlight\/[^/]+\/?$/i,
+			/^\/(?:[a-z]{2}\/)?giftcards(?:$|\/|-).*/i,
+		].some((r) => r.test(route))
 	) {
 		// Temporary fix, some routes force dark mode.
 		return;
