@@ -32,6 +32,8 @@ const initialTheme = () => {
 let accountTheme: Theme = initialTheme();
 let previewTheme: AppTheme | null = null;
 
+const themeListeners = new Set<(theme: AppTheme) => void>();
+
 const addAppThemeClass = (theme: AppTheme) => {
 	if (theme !== "default") {
 		document.body.classList.add(appThemeClass(theme));
@@ -50,11 +52,27 @@ export const getTheme = (): Theme => accountTheme;
 
 /** Sets the currently stored account level theme in memory (does not persist). */
 export const setTheme = (theme: AppTheme) => {
+	if (theme === accountTheme) {
+		return;
+	}
 	if (previewTheme == null) {
 		clearTheme();
 		addAppThemeClass(theme);
 	}
 	accountTheme = theme;
+	for (const listener of themeListeners) {
+		listener(theme);
+	}
+};
+
+/** Subscribes to account level theme changes. Returns a function that removes the listener. */
+export const subscribeToThemeChange = (
+	listener: (theme: AppTheme) => void,
+): (() => void) => {
+	themeListeners.add(listener);
+	return () => {
+		themeListeners.delete(listener);
+	};
 };
 
 /** Returns the current app theme being previewed, if any. */

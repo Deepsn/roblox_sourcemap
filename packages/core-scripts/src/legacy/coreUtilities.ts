@@ -75,7 +75,9 @@ export const pageName = {
 };
 export const quote = { quoteText: (text: string): string => `"${text}"` };
 export { default as ready } from "../util/ready";
+/** @deprecated Use `formatSeoName` from `@rbx/core-scripts/format/string` instead. */
 export const seoName = { formatSeoName: fmtString.formatSeoName };
+/** @deprecated Use `getAbsoluteUrl` from `@rbx/core-scripts/endpoints` instead. */
 export const urlService = {
 	composeQueryString: url.composeQueryString,
 	extractQueryString: url.extractQueryString,

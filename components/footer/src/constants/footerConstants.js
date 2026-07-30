@@ -12,9 +12,9 @@ export const linksList = [
 		labelTranslationKey: "Label.Jobs",
 	},
 	{
-		name: "blog",
+		name: "newsroom",
 		path: "/info/blog",
-		labelTranslationKey: "Label.sBlog",
+		labelTranslationKey: "Label.Newsroom",
 	},
 	{
 		name: "parents",
@@ -66,9 +66,9 @@ export const linksListWithGiftCardLabel = [
 		labelTranslationKey: "Label.Jobs",
 	},
 	{
-		name: "blog",
+		name: "newsroom",
 		path: "/info/blog",
-		labelTranslationKey: "Label.sBlog",
+		labelTranslationKey: "Label.Newsroom",
 	},
 	{
 		name: "parents",
