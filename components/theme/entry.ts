@@ -2,7 +2,6 @@ import { addExternal } from "@rbx/externals";
 import * as mode from "@rbx/core-scripts/color-mode";
 import { initialize } from "@rbx/core-scripts/color-mode/internal";
 
-addExternal(["Roblox", "core-scripts", "util", "theme"], mode);
 addExternal(["Roblox", "core-scripts", "color-mode"], mode);
 
 const userId = (): number | null => {

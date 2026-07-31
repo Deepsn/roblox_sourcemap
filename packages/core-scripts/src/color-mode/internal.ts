@@ -1,7 +1,7 @@
 // Do not import anything here without checking if you need to update the rspack config for the theme component.
 
 import { arrayIncludes } from "@rbx/core-types";
-import { get } from "@rbx/core-lib/cookie";
+import * as cookie from "@rbx/core-lib/cookie";
 import "@rbx/www-common/global";
 
 // Note: "modes" used to be called "themes". So for legacy reasons, some things still refer to "themes":
@@ -198,39 +198,23 @@ export const initialize = (
 	currentUserId: number,
 	options: InitializeOptions = {},
 ): void => {
-	const override = get("RBXThemeOverride");
-	if (override != null) {
-		initializeUsingOverride(override.value);
+	const { classList } = document.body;
+	if (classList.contains("system-theme")) {
+		setModeWithoutLocalStorage("system");
+		return;
+	}
+	if (classList.contains("light-theme")) {
+		setModeWithoutLocalStorage("light");
+		return;
+	}
+	if (classList.contains("dark-theme")) {
+		setModeWithoutLocalStorage("dark");
 		return;
 	}
 
-	const pageName = document.querySelector<HTMLMetaElement>(
-		'meta[name="page-meta"]',
-	)?.dataset.internalPageName;
-	const route = new URL(window.location.href).pathname;
-	if (
-		arrayIncludes(
-			[
-				"Login",
-				"CreateAccount",
-				"Landing",
-				"MobileAppCreateAccount",
-				"MobileAppLanding",
-				"DownloadV2",
-				"ForgotCredentials",
-				"SecurityNotification",
-				"SupportedBrowsers",
-				"ShopGiftCards",
-				"PreAuthLanding",
-			],
-			pageName,
-		) ||
-		[
-			/^\/([^/]+\/)?spotlight\/[^/]+\/?$/i,
-			/^\/(?:[a-z]{2}\/)?giftcards(?:$|\/|-).*/i,
-		].some((r) => r.test(route))
-	) {
-		// Temporary fix, some routes force dark mode.
+	const override = cookie.get("RBXThemeOverride");
+	if (override != null) {
+		initializeUsingOverride(override.value);
 		return;
 	}
 
@@ -253,7 +237,7 @@ export const initialize = (
 	}
 
 	if (mode === null) {
-		// No mode is in local storage. We'll ignore any existing mode class on body and initialize to the default mode.
+		// No mode is in local storage, so we'll initialize to the default mode.
 		setModeWithLocalStorage(defaultMode);
 	} else if (mode === undefined) {
 		// We encountered either:
@@ -271,9 +255,6 @@ export const initialize = (
 
 export const getMode = (): Mode => currentMode;
 
-/** @deprecated use {@link getMode} instead. */
-export const getTheme = getMode;
-
 export const setMode = (mode: Mode): void => {
 	if (!arrayIncludes(modes, mode)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -286,10 +267,6 @@ export const setMode = (mode: Mode): void => {
 	setModeWithLocalStorage(mode);
 };
 
-/** @deprecated use {@link setMode} instead. */
-export const setTheme = setMode;
-
-/** @deprecated For testing only, unstable interface. */
 export const resetData = (): void => {
 	currentMode = defaultMode;
 	userId = -1;
