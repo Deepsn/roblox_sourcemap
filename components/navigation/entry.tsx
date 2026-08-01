@@ -13,6 +13,10 @@ import NavigationRightHeader from "./src/containers/NavigationRightHeader";
 import NavigationRobux from "./src/containers/NavigationRobux";
 import { cacheUserId } from "./src/util/authUtil";
 import PasskeyUpgradeSnackbar from "./src/components/PasskeyUpgradeSnackbar";
+import PostSignupDownloadModalRoot, {
+	newUserSessionStorageKey,
+	newUserSessionStorageValue,
+} from "./src/components/PostSignupDownloadModal";
 import developUtil from "./src/util/developUtil";
 import navClickUtil from "./src/util/navClickUtil";
 import MenuIcon from "./src/containers/MenuIcon";
@@ -108,6 +112,20 @@ ready(() => {
 				<LeftNavigation />
 			</QueryClientProvider>,
 			document.getElementById(leftNavigationContainerId),
+		);
+	}
+
+	if (
+		window.sessionStorage.getItem(newUserSessionStorageKey) ===
+		newUserSessionStorageValue
+	) {
+		const downloadModalContainer = document.createElement("div");
+		document.body.appendChild(downloadModalContainer);
+		renderWithErrorBoundary(
+			<QueryClientProvider client={queryClient}>
+				<PostSignupDownloadModalRoot />
+			</QueryClientProvider>,
+			downloadModalContainer,
 		);
 	}
 });

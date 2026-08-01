@@ -1,16 +1,24 @@
 import { useRef } from "react";
 import PropTypes from "prop-types";
 import { Popover } from "@rbx/core-ui/legacy/react-style-guide";
-import { eventStreamService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { useUnreadNotificationCount } from "../hooks/useUnreadNotificationCount";
+import { useClearUnreadOnOpen } from "../hooks/useClearUnreadOnOpen";
+import getIsReactNotificationBellEnabled from "../util/getIsReactNotificationBellEnabled";
 import NotificationStreamIcon from "../containers/NotificationStreamIcon";
+import ReactNotificationBell from "./ReactNotificationBell";
 import NotificationStreamBase from "../containers/NotificationStreamBase";
 import events from "../constants/notificationsEventStreamConstants";
 
 function NotificationStreamPopover({ translate }) {
 	const ref = useRef();
 	const unreadCount = useUnreadNotificationCount();
+	const isReactBell = getIsReactNotificationBellEnabled();
+
+	// Flag-on only: React owns clear-unread-on-open, since the Angular indicator
+	// directive that used to do it isn't bootstrapped when the React bell renders.
+	const handleReactBellStreamOpen = useClearUnreadOnOpen(unreadCount);
 
 	const formattedCount = formatNumber(unreadCount);
 	const ariaLabel =
@@ -39,15 +47,20 @@ function NotificationStreamPopover({ translate }) {
 						aria-label={ariaLabel}
 						aria-haspopup="true"
 					>
-						<NotificationStreamIcon />
+						{isReactBell ? (
+							<ReactNotificationBell unreadCount={unreadCount} />
+						) : (
+							<NotificationStreamIcon />
+						)}
 					</button>
 				}
 				container={ref.current}
+				onEnter={isReactBell ? handleReactBellStreamOpen : undefined}
 				onExit={() => {
 					window.dispatchEvent(
 						new Event("Roblox.NotificationStream.StreamClosed"),
 					);
-					eventStreamService.sendEventWithTarget(
+					sendEventWithTarget(
 						events.onExit.name,
 						events.onExit.context,
 						events.onExit.additionalProperties,

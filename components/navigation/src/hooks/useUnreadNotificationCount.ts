@@ -4,7 +4,10 @@ import * as http from "@rbx/core-scripts/http";
 import environmentUrls from "@rbx/environment-urls";
 import { useRealTime } from "../leftNav/new/useRealTime";
 
-const QUERY_KEY = ["notification-stream-unread-count"];
+export const NOTIFICATION_STREAM_UNREAD_COUNT_QUERY_KEY = [
+	"notification-stream-unread-count",
+];
+const QUERY_KEY = NOTIFICATION_STREAM_UNREAD_COUNT_QUERY_KEY;
 
 export function useUnreadNotificationCount(): number {
 	const queryClient = useQueryClient();

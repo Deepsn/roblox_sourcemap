@@ -30,6 +30,12 @@ import {
 	VerifiedBadgeIconContainer,
 } from "@rbx/roblox-badges";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
+import {
+	EntrypointExposure,
+	logCmntyEntrypointClickEvent,
+	logCmntyEntrypointExposureEvent,
+	useEntrypointImpressionId,
+} from "@rbx/community-telemetry";
 import { useRealTime } from "./useRealTime";
 import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
 import { UncheckedBadge, showUncheckedBadge } from "@rbx/identity-badges";
@@ -99,38 +105,88 @@ const NavItem = ({
 	icon,
 	text,
 	notification,
+	onExpose,
+	onActivate,
 }: {
 	path: `/${string}` | URL;
 	isCurrentPath: boolean;
 	icon: TIconProps["name"];
 	text: string;
 	notification?: string;
+	onExpose?: () => void;
+	onActivate?: () => void;
 }) => {
 	const href = path instanceof URL ? path.href : getAbsoluteUrl(path);
+	const anchor = (
+		<a
+			href={href}
+			className={classNames(
+				navItemClasses,
+				interactable,
+				isCurrentPath && "bg-surface-300",
+			)}
+			onClick={onActivate}
+		>
+			<StateLayer />
+			<span className={iconContainer}>
+				<Icon name={icon} size="Large" />
+			</span>
+			<span className="min-width-0 text-truncate-end text-no-wrap">{text}</span>
+			{notification && (
+				<span className="fill basis-auto padding-x-small flex justify-end items-center">
+					<Badge label={notification} variant="Contrast" />
+				</span>
+			)}
+		</a>
+	);
 	return (
 		<li key={href}>
-			<a
-				href={href}
-				className={classNames(
-					navItemClasses,
-					interactable,
-					isCurrentPath && "bg-surface-300",
-				)}
-			>
-				<StateLayer />
-				<span className={iconContainer}>
-					<Icon name={icon} size="Large" />
-				</span>
-				<span className="min-width-0 text-truncate-end text-no-wrap">
-					{text}
-				</span>
-				{notification && (
-					<span className="fill basis-auto padding-x-small flex justify-end items-center">
-						<Badge label={notification} variant="Contrast" />
-					</span>
-				)}
-			</a>
+			{onExpose ? (
+				<EntrypointExposure onExposure={onExpose}>{anchor}</EntrypointExposure>
+			) : (
+				anchor
+			)}
 		</li>
+	);
+};
+
+const LEFT_NAV_CONTEXT = "leftNav";
+const LEFT_NAV_ENTRY_POINT = "leftNav";
+
+const CommunitiesNavItem = ({ currentPath }: { currentPath: string }) => {
+	const { translate } = useTranslation();
+	const entrypointImpressionId = useEntrypointImpressionId();
+	// Don't count the entry point when already inside communities.
+	const isCurrentPath = /^\/([a-z]{2}\/)?communities(\/|$)/.test(currentPath);
+	return (
+		<NavItem
+			path="/communities"
+			isCurrentPath={isCurrentPath}
+			icon="icon-regular-three-people"
+			text={translate("Label.sGroups")}
+			onExpose={
+				isCurrentPath
+					? undefined
+					: () => {
+							logCmntyEntrypointExposureEvent({
+								context: LEFT_NAV_CONTEXT,
+								entryPoint: LEFT_NAV_ENTRY_POINT,
+								entrypointImpressionId,
+							});
+						}
+			}
+			onActivate={
+				isCurrentPath
+					? undefined
+					: () => {
+							logCmntyEntrypointClickEvent({
+								context: LEFT_NAV_CONTEXT,
+								entryPoint: LEFT_NAV_ENTRY_POINT,
+								entrypointImpressionId,
+							});
+						}
+			}
+		/>
 	);
 };
 
@@ -404,12 +460,7 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 							: undefined
 					}
 				/>
-				<NavItem
-					path="/communities"
-					isCurrentPath={/^\/([a-z]{2}\/)?communities(\/|$)/.test(currentPath)}
-					icon="icon-regular-three-people"
-					text={translate("Label.sGroups")}
-				/>
+				<CommunitiesNavItem currentPath={currentPath} />
 				<NavItem
 					path={new URL("https://blog.roblox.com")}
 					isCurrentPath={false}
