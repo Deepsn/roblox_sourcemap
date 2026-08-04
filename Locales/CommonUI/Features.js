@@ -111,7 +111,7 @@ Roblox.LangDynamic["CommonUI.Features"] = {
 	"Label.AddConnections": "Add Connections",
 	"Label.AddConnection": "Add Connection",
 	"Label.AcceptConnection": "Accept Connection",
-	"Label.RemoveConnection": "Remove Connection",
+	"Label.RemoveConnection": "Remove Friend",
 	"Label.InviteConnections": "Invite Connections",
 	"Label.JoinConnections": "Join Connections",
 	"Label.Connection": "Connection",

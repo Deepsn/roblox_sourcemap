@@ -138,19 +138,6 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 						consent: translate(languageConstants.consentTranslationKey),
 					},
 				};
-			case ConsentName.whoCanPartyWithMeGamesRename:
-				languageConstants =
-					legallySensitiveContentConstants.whoCanPartyWithMeGamesRename;
-				return {
-					wordsOfConsent: {
-						pageTitle: translate(languageConstants.pageTitleTranslationKey),
-						pageDescription: translate(
-							languageConstants.pageDescriptionTranslationKey,
-						),
-						title: translate(languageConstants.titleTranslationKey),
-						consent: translate(languageConstants.consentTranslationKey),
-					},
-				};
 			case ConsentName.whoCanPartyWithMeV2:
 				languageConstants =
 					legallySensitiveContentConstants.whoCanPartyWithMeV2;
@@ -167,19 +154,6 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 			case ConsentName.whoCanPartyWithMeParentSide:
 				languageConstants =
 					legallySensitiveContentConstants.whoCanPartyWithMeParentSide;
-				return {
-					wordsOfConsent: {
-						pageTitle: translate(languageConstants.pageTitleTranslationKey),
-						pageDescription: translate(
-							languageConstants.pageDescriptionTranslationKey,
-						),
-						title: translate(languageConstants.titleTranslationKey),
-						consent: translate(languageConstants.consentTranslationKey),
-					},
-				};
-			case ConsentName.whoCanPartyWithMeParentSideGamesRename:
-				languageConstants =
-					legallySensitiveContentConstants.whoCanPartyWithMeParentSideGamesRename;
 				return {
 					wordsOfConsent: {
 						pageTitle: translate(languageConstants.pageTitleTranslationKey),
@@ -310,19 +284,6 @@ export const useTranslatedLegallySensitiveContentAndActions = (
 			case ConsentName.whoCanPartyWithMeTrustedFriends:
 				languageConstants =
 					legallySensitiveContentConstants.whoCanPartyWithMeTrustedFriends;
-				return {
-					wordsOfConsent: {
-						pageTitle: translate(languageConstants.pageTitleTranslationKey),
-						pageDescription: translate(
-							languageConstants.pageDescriptionTranslationKey,
-						),
-						title: translate(languageConstants.titleTranslationKey),
-						consent: translate(languageConstants.consentTranslationKey),
-					},
-				};
-			case ConsentName.whoCanPartyWithMeTrustedFriendsGamesRename:
-				languageConstants =
-					legallySensitiveContentConstants.whoCanPartyWithMeTrustedFriendsGamesRename;
 				return {
 					wordsOfConsent: {
 						pageTitle: translate(languageConstants.pageTitleTranslationKey),

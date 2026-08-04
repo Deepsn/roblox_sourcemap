@@ -264,259 +264,28 @@ export const getAuditDataForConsent = (
 				},
 			];
 		case ConsentName.whoCanPartyWithMe:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMe
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanPartyWithMeParentSide:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanPartyWithMeParentSide
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanUsePartyChatWithMe:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMe
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanUsePartyChatWithMeParentSide:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyChatWithMeParentSide
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanUsePartyVoiceWithMe:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMe
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanUsePartyVoiceWithMeParentSide:
-			return [
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.pageTitleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.pageTitleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.pageDescriptionTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.pageDescriptionSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.titleTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.titleSourceContentId,
-				},
-				{
-					consentStringTemplate: translate(
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.consentTranslationKey,
-					),
-					sourceContentId:
-						legallySensitiveContentConstants.whoCanUsePartyVoiceWithMeParentSide
-							.consentSourceContentId,
-				},
-			];
-		case ConsentName.whoCanPartyWithMeGamesRename:
-		case ConsentName.whoCanPartyWithMeParentSideGamesRename:
-		case ConsentName.whoCanPartyWithMeTrustedFriendsGamesRename:
-		case ConsentName.whoCanPartyWithMeTrustedFriends:
-		case ConsentName.whoCanPartyWithMeParentSideRemovedComms:
-		case ConsentName.whoCanUsePartyChatWithMeTrustedFriends:
-		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriends:
-		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriends:
-		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriends:
 		case ConsentName.whoCanPartyWithMeV2:
+		case ConsentName.whoCanPartyWithMeParentSide:
 		case ConsentName.whoCanPartyWithMeParentSideV2:
-		case ConsentName.whoCanUsePartyChatWithMeV2:
-		case ConsentName.whoCanUsePartyChatWithMeParentSideV2:
-		case ConsentName.whoCanUsePartyVoiceWithMeV2:
-		case ConsentName.whoCanUsePartyVoiceWithMeParentSideV2:
+		case ConsentName.whoCanPartyWithMeTrustedFriends:
 		case ConsentName.whoCanPartyWithMeTrustedFriendsV2:
+		case ConsentName.whoCanPartyWithMeParentSideRemovedComms:
 		case ConsentName.whoCanPartyWithMeParentSideRemovedCommsV2:
+		case ConsentName.whoCanUsePartyChatWithMe:
+		case ConsentName.whoCanUsePartyChatWithMeV2:
+		case ConsentName.whoCanUsePartyChatWithMeParentSide:
+		case ConsentName.whoCanUsePartyChatWithMeParentSideV2:
+		case ConsentName.whoCanUsePartyChatWithMeTrustedFriends:
 		case ConsentName.whoCanUsePartyChatWithMeTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriends:
 		case ConsentName.whoCanUsePartyChatWithMeParentSideTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyVoiceWithMe:
+		case ConsentName.whoCanUsePartyVoiceWithMeV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSide:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriends:
 		case ConsentName.whoCanUsePartyVoiceWithMeTrustedFriendsV2:
+		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriends:
 		case ConsentName.whoCanUsePartyVoiceWithMeParentSideTrustedFriendsV2: {
 			const constants = legallySensitiveContentConstants[consentName];
 			return [
