@@ -6,13 +6,12 @@ export type FooterButtonConfig = {
 	/** Used primarily for accessibility labeling. */
 	label: string;
 	enabled: boolean;
-	action: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+	action: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 type Props = {
 	positiveButton: FooterButtonConfig;
 	negativeButton: FooterButtonConfig | null;
-	// eslint-disable-next-line react/require-default-props
 	children?: React.ReactNode;
 };
 
@@ -31,7 +30,7 @@ export const FragmentModalFooter: React.FC<Props> = ({
 				{negativeButton !== null && (
 					<button
 						type="button"
-						className="btn-secondary-md modal-modern-footer-button"
+						className="btn-secondary-md modal-modern-footer-button focus-visible:outline-focus"
 						aria-label={negativeButton.label}
 						disabled={!negativeButton.enabled}
 						onClick={negativeButton.action}
@@ -41,7 +40,7 @@ export const FragmentModalFooter: React.FC<Props> = ({
 				)}
 				<button
 					type="button"
-					className="btn-cta-md modal-modern-footer-button"
+					className="btn-cta-md modal-modern-footer-button focus-visible:outline-focus"
 					aria-label={positiveButton.label}
 					disabled={!positiveButton.enabled}
 					onClick={positiveButton.action}

@@ -5,7 +5,7 @@ export type InlineFooterButtonConfig = {
 	/** Used primarily for accessibility labeling. */
 	label: string;
 	enabled: boolean;
-	action: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+	action: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 type Props = {
@@ -30,7 +30,7 @@ export const InlineChallengeFooter: React.FC<Props> = ({
 				{negativeButton !== null && (
 					<button
 						type="button"
-						className="btn-secondary-md inline-challenge-footer-button"
+						className="btn-secondary-md inline-challenge-footer-button focus-visible:outline-focus"
 						aria-label={negativeButton.label}
 						disabled={!negativeButton.enabled}
 						onClick={negativeButton.action}
@@ -40,7 +40,7 @@ export const InlineChallengeFooter: React.FC<Props> = ({
 				)}
 				<button
 					type="button"
-					className="btn-cta-md inline-challenge-footer-button"
+					className="btn-cta-md inline-challenge-footer-button focus-visible:outline-focus"
 					aria-label={positiveButton.label}
 					disabled={!positiveButton.enabled}
 					onClick={positiveButton.action}

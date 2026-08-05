@@ -312,7 +312,7 @@ const CD2SVInput: React.FC<Props> = ({
 				{showRetryButton ? (
 					<button
 						type="button"
-						className={actionButtonClassName}
+						className={`${actionButtonClassName} focus-visible:outline-focus`}
 						aria-label={resources.Action.Retry}
 						disabled={requestInFlight}
 						onClick={retryPrompt}
@@ -326,7 +326,7 @@ const CD2SVInput: React.FC<Props> = ({
 				) : (
 					<button
 						type="button"
-						className={ackErrorButtonClassName}
+						className={`${ackErrorButtonClassName} focus-visible:outline-focus`}
 						aria-label={resources.Action.Okay}
 						disabled={requestInFlight}
 						onClick={closeModal}

@@ -8,7 +8,6 @@ type Props = {
 	requestInFlight: boolean;
 	originalMediaType: MediaType;
 	actionType: ActionType;
-	// eslint-disable-next-line react/require-default-props
 	className?: string;
 };
 
@@ -39,7 +38,7 @@ const SwitchMediaType: React.FC<Props> = ({
 		<p className={className}>
 			<button
 				type="button"
-				className={`${buttonLinkClassName} small`}
+				className={`${buttonLinkClassName} small focus-visible:outline-focus`}
 				onClick={clearMediaType}
 				disabled={requestInFlight}
 			>

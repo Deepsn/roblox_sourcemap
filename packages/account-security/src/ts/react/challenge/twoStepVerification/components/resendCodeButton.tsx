@@ -103,7 +103,7 @@ const ResendCodeButton: React.FC<Props> = ({
 		<p className={className}>
 			<button
 				type="button"
-				className={`${buttonLinkClassName} small`}
+				className={`${buttonLinkClassName} small focus-visible:outline-focus`}
 				onClick={resendCode}
 				disabled={disabled || requestInFlight}
 			>

@@ -278,7 +278,7 @@ const SecurityKeyInput: React.FC<Props> = ({
 				<button
 					ref={buttonRef}
 					type="button"
-					className={actionButtonClassName}
+					className={`${actionButtonClassName} focus-visible:outline-focus`}
 					aria-label={resources.Action.Verify}
 					disabled={requestInFlight}
 					onClick={verifyCode}
