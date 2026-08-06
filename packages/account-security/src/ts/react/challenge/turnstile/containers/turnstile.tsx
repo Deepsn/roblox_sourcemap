@@ -8,6 +8,21 @@ import { ErrorCode } from "../interface";
 import { TurnstileActionType } from "../store/action";
 
 /**
+ * Park the Turnstile widget off-screen while Cloudflare evaluates, without
+ * using `display: none` (Tailwind `hidden`).
+ *
+ * Chromium throttles timers inside `display: none` iframes, which can stall
+ * Turnstile solves. Cloudflare themselves avoid `display: none` on the widget
+ * iframe for that reason:
+ * https://community.cloudflare.com/t/turnstile-accessibility-bug/526342
+ *
+ * Prefer an off-screen + opacity park that keeps the iframe layout-participating
+ * enough for timers to run, while remaining invisible and non-interactive.
+ */
+const TURNSTILE_OFFSCREEN_WHILE_EVALUATING_CLASS =
+	"fixed left-[-10000px] top-0 z-[-1] h-px w-px overflow-hidden opacity-0 pointer-events-none";
+
+/**
  * A container element for the Turnstile UI.
  */
 const TurnstileV1: React.FC = () => {
@@ -116,16 +131,24 @@ const TurnstileV1: React.FC = () => {
 	if (renderInline) {
 		/*
 		 * Mirror the modal path's visibility model: keep the widget mounted at all
-		 * times (Cloudflare still evaluates while `display:none`), but reveal no
-		 * UI at all — not even the title — until interaction is actually required.
-		 * Invisible / non-interactive sessions never fire `onBeforeInteractive`, so
-		 * `isModalVisible` stays false and nothing is shown; they simply resolve via
-		 * `onSuccess` (or error). Only interactive sessions flip `isModalVisible`
-		 * true and reveal the title + widget. Hiding via CSS (never unmounting)
-		 * keeps the `<Turnstile>` widget from being reparented/remounted.
+		 * times so Cloudflare can evaluate, but reveal no UI at all — not even the
+		 * title — until interaction is actually required. Invisible / non-interactive
+		 * sessions never fire `onBeforeInteractive`, so `isModalVisible` stays false
+		 * and the widget stays parked off-screen; they simply resolve via `onSuccess`
+		 * (or error). Only interactive sessions flip `isModalVisible` true and reveal
+		 * the title + widget. Park via off-screen CSS (never `display: none`, never
+		 * unmounting) so Chromium does not throttle Turnstile iframe timers and the
+		 * `<Turnstile>` widget is not reparented/remounted.
 		 */
 		return (
-			<div className={isModalVisible ? undefined : "hidden"}>
+			<div
+				className={
+					isModalVisible
+						? undefined
+						: TURNSTILE_OFFSCREEN_WHILE_EVALUATING_CLASS
+				}
+				aria-hidden={!isModalVisible}
+			>
 				<InlineChallenge
 					titleText={resources.Description.VerifyingYouAreNotBot}
 				>
@@ -153,8 +176,9 @@ const TurnstileV1: React.FC = () => {
 			className={
 				isModalVisible
 					? "fixed inset-[0] flex items-center justify-center bg-[var(--color-common-backdrop)] [z-index:1050]"
-					: "hidden"
+					: TURNSTILE_OFFSCREEN_WHILE_EVALUATING_CLASS
 			}
+			aria-hidden={!isModalVisible}
 			onClick={
 				isModalVisible
 					? (event) => {

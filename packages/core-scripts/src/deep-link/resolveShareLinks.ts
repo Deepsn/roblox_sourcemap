@@ -42,7 +42,7 @@ export type ResolveShareLinksV2Response = {
 	linkType: string;
 	targetId: string;
 	customData: string | null;
-	linkStatus: "Valid" | "Invalid" | "Expired";
+	status: "Valid" | "Invalid" | "Expired";
 };
 
 export const resolveShareLinks = (

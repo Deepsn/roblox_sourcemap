@@ -2655,6 +2655,15 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.PartySetting": "Chat and party with friends setting",
 	"Heading.PartyChatSettingV2": "Friends chat setting",
 	"ScopeType.UniverseThumbnail": "Thumbnails",
+	"Action.AddRobux": "Add Robux",
+	"Label.RobuxBalance": "Robux balance",
+	"Heading.Robux": "Robux",
+	"Description.AddRobuxSelectPackage":
+		"Select a Robux package for {recipientUsername}.",
+	"Message.Error.LoadRobuxPackagesFailed": "Unable to load Robux packages.",
+	"Message.Error.NoRobuxPackages": "No Robux packages are available right now.",
+	"Message.Error.RecipientDailyLimit":
+		"This recipient has reached their daily limit, please try again later.",
 	"Description.PresetChat.RestrictiveSubtitle":
 		"Roblox can set Quick Words for all ages.",
 };

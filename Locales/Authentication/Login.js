@@ -223,6 +223,11 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Header.LinkExpired": "Link expired",
 	"Description.FunnelCompletionByCohort":
 		"Completion percentage of each step by the date user first entered the funnel",
+	"Header.RequestExpired": "This request expired",
+	"Description.RequestExpiredNewRequest":
+		"Ask your child to send a new request from their Roblox account.",
+	"Description.LinkNoLongerActive": "This request is no longer active.",
+	"Action.ContinueToRoblox": "Continue to Roblox",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

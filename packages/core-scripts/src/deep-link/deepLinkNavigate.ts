@@ -164,11 +164,11 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			const code = params.code || "";
 			return resolveShareLinksV2(params.code)
 				.then((response) => {
-					if (response.data.linkStatus === "Invalid") {
+					if (response.data.status === "Invalid") {
 						return false;
 					}
 					const resolveLinkEvent = buildResolveLinkEvent(
-						response.data.linkStatus,
+						response.data.status,
 						code,
 						ShareLinksTypeV2.EXPERIENCE_V2,
 					);
@@ -197,7 +197,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							buildDeepLinkLaunchGameEvent(
 								response.data.targetId,
 								code,
-								response.data.linkStatus,
+								response.data.status,
 							),
 						);
 					} else if (
@@ -270,7 +270,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								? ShareLinksTypeV2.USER_TRUSTED_CONNECTION
 								: ShareLinksTypeV2.STUDIO_TRUSTED_CONNECTION;
 						const resolveLinkEvent = buildResolveLinkEvent(
-							response.data.linkStatus,
+							response.data.status,
 							code,
 							linkTypeV2,
 						);
@@ -290,7 +290,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						response.data.targetId
 					) {
 						const resolveMomentsEvent = buildResolveLinkEvent(
-							response.data.linkStatus,
+							response.data.status,
 							code,
 							ShareLinksTypeV2.MOMENTS,
 						);
@@ -303,6 +303,32 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						window.location.href = target.url;
 						// TODO: Update fallback once Moments is migrated off the experience
 						window.location.href = `${UrlPart.Games}/${MOMENTS_PLACE_ID}`;
+					} else if (response.data.linkType === "SchoolInvite") {
+						const resolveSchoolInviteEvent = buildResolveLinkEvent(
+							response.data.status,
+							code,
+							ShareLinksTypeV2.SCHOOL_INVITE,
+						);
+						sendEventWithTarget(
+							resolveSchoolInviteEvent.type,
+							resolveSchoolInviteEvent.context,
+							resolveSchoolInviteEvent.params,
+						);
+
+						if (response.data.status !== "Valid") {
+							fireEvent?.(CounterEvents.SchoolInviteResolutionFailed);
+							return false;
+						}
+
+						if (
+							window.Roblox.ProtocolHandlerClientInterface?.startDeepLinkFlow
+						) {
+							window.Roblox.ProtocolHandlerClientInterface.startDeepLinkFlow(
+								target.url,
+							);
+						} else {
+							window.location.href = target.url;
+						}
 					}
 					return true;
 				})

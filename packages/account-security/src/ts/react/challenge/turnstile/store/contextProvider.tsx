@@ -85,10 +85,10 @@ export const TurnstileContextProvider = ({
 		onChallengeCompletedData: null,
 		onChallengeInvalidatedData: null,
 		isAbandoned: false,
-		// Start hidden. The widget is mounted immediately (off-screen for the modal
-		// case) so Cloudflare can evaluate the request, but the dialog is only
-		// revealed for interactive sessions (via `onBeforeInteractive`). Invisible
-		// and non-interactive sessions show no UI at all.
+		// Start parked off-screen (not `display: none`). The widget is mounted
+		// immediately so Cloudflare can evaluate without Chromium timer throttling,
+		// but the dialog is only revealed for interactive sessions (via
+		// `onBeforeInteractive`). Invisible and non-interactive sessions show no UI.
 		isModalVisible: false,
 	}));
 

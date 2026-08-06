@@ -11,6 +11,7 @@ import {
 	TranslationResourceProvider,
 } from "@rbx/core-scripts/legacy/Roblox";
 import { getCurrentBrowser } from "@rbx/core-scripts/legacy/core-utilities";
+import { isMac, isWindows } from "@rbx/core-scripts/meta/device";
 import {
 	queryClient,
 	renderWithErrorBoundary,
@@ -40,6 +41,7 @@ const ProtocolHandlerClientInterface = {
 	isDuarAutoOptInEnabled: false,
 	isDuarOptOutDisabled: false,
 	isJoinAttemptIdEnabled: false,
+	isOmitPlayerChannelForWinAndMacEnabled: false,
 };
 
 const distributorTypes = {
@@ -203,15 +205,16 @@ function startGame(gameLaunchDefaultParams) {
 		ProtocolHandlerClientInterface.robloxLocale;
 	gameLaunchParams.otherParams.gameLocale =
 		ProtocolHandlerClientInterface.gameLocale;
-	gameLaunchParams.otherParams.channel = ProtocolHandlerClientInterface.channel;
-
 	if (
 		gameLaunchParams.protocolName ===
 		ProtocolHandlerClientInterface.protocolNameForStudio
 	) {
 		gameLaunchParams.otherParams.channel =
 			ProtocolHandlerClientInterface.studioChannel;
-	} else {
+	} else if (
+		!ProtocolHandlerClientInterface.isOmitPlayerChannelForWinAndMacEnabled ||
+		(!isWindows() && !isMac())
+	) {
 		gameLaunchParams.otherParams.channel =
 			ProtocolHandlerClientInterface.playerChannel;
 	}
@@ -731,6 +734,8 @@ $(document).ready(() => {
 	ProtocolHandlerClientInterface.isDuarOptOutDisabled = placeLauncherPanel.data(
 		"is-duar-opt-out-disabled",
 	);
+	ProtocolHandlerClientInterface.isOmitPlayerChannelForWinAndMacEnabled =
+		placeLauncherPanel.data("is-omit-player-channel-for-win-and-mac-enabled");
 });
 
 // todo: set Roblox.ProtocolHandlerClientInterface to be this.

@@ -132,7 +132,6 @@ var externals = {
 	],
 	"@rbx/core-scripts/util/ready": ["Roblox", "core-scripts", "util", "ready"],
 	"@rbx/core-scripts/color-mode": ["Roblox", "core-scripts", "color-mode"],
-	"@rbx/core-scripts/util/theme": ["Roblox", "core-scripts", "util", "theme"],
 	"@rbx/core-scripts/util/upsell": ["Roblox", "core-scripts", "util", "upsell"],
 	"@rbx/core-scripts/util/url": ["Roblox", "core-scripts", "util", "url"],
 	"@rbx/core-scripts/util/user": ["Roblox", "core-scripts", "util", "user"],

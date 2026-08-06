@@ -703,6 +703,28 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Can your child join games or chat with friends?",
 	"Heading.ConversationalRequest.PartyChatV2":
 		"Can your child chat with {requestedSettingValue}?",
+	"Description.VPCRequestIarcAcbG":
+		"The content is very mild in impact. The G classification is suitable for everyone",
+	"Description.VPCRequestIarcAcbPg":
+		"The content is mild in impact. Parental guidance is recommended for younger viewers.",
+	"Description.VPCRequestIarcAcbM":
+		"The content is moderate in impact. Games and films with an M rating are not recommended for children under 15 years.",
+	"Description.VPCRequestIarcAcbMa15":
+		"The content is strong in impact. MA 15+ rated content is legally restricted to persons 15 years and over, unless accompanied by a parent or adult guardian.",
+	"Description.VPCRequestIarcAcbR18":
+		"The content is high in impact. R 18+ rated content is legally restricted to adults aged 18 and over.",
+	"Description.VPCRequestIarcAgeRating":
+		"This rating is assigned by the official classification authority for your child's region and indicates how mature the content in an experience may be.",
+	"Description.VPCRequestIarcEsrbE":
+		"Content is generally suitable for all ages. May contain minimal cartoon, fantasy or mild violence and/or infrequent use of mild language.",
+	"Description.VPCRequestIarcEsrbE10":
+		"Content is generally suitable for ages 10 and up. May contain more cartoon, fantasy or mild violence, mild language and/or minimal suggestive themes.",
+	"Description.VPCRequestIarcEsrbT":
+		"Content is generally suitable for ages 13 and up. May contain violence, suggestive themes, crude humor, minimal blood, simulated gambling and/or infrequent use of strong language.",
+	"Description.VPCRequestIarcEsrbM":
+		"Content is generally suitable for ages 17 and up. May contain intense violence, blood and gore, sexual content and/or strong language.",
+	"Description.VPCRequestIarcEsrbAo":
+		"Content suitable only for adults ages 18 and up. May include prolonged scenes of intense violence, graphic sexual content and/or gambling with real currency.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

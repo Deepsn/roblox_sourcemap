@@ -16,6 +16,8 @@ import { filterSentryTransaction } from "./src/utils/filterSentryTransaction";
 import { sendToOtel } from "./src/utils/sentryToOtel";
 import { getOtelCollectorTracesEndpoint } from "./src/utils/otelEndpoint";
 import { buildSampleRate } from "./src/utils/buildSampleRate";
+import environmentUrls from "@rbx/environment-urls";
+import { reportWebVitals } from "@rbx/www-common/webVitals";
 
 declare global {
 	interface Window {
@@ -56,6 +58,11 @@ const parsedTracesSampleRate =
 const isTransactionOff = parsedTracesSampleRate === 0;
 const perfBase = Math.min(parsedTracesSampleRate, 0.0005);
 
+// Derived once and reused by beforeSendTransaction and the DOMContentLoaded handler.
+const user = authenticatedUser as typeof authenticatedUser | undefined;
+const getPageMetaTag = () =>
+	document.querySelector<HTMLMetaElement>('meta[name="page-meta"]');
+
 initSentry({
 	dsn:
 		dsn ??
@@ -81,18 +88,24 @@ initSentry({
 	transport: makeBrowserOfflineTransport(makeFetchTransport),
 });
 
+// Send Core Web Vitals to the event stream (Superset) at 100% on page hide.
+// Hosted here to reuse the sentry SCS that loads on every legacy (.NET) page; it
+// does NOT use the Sentry API (a send-hook would be trace-sampled, never 100%).
+// Next.js has its own implementation (packages/www-nextjs ReportWebVitals).
+reportWebVitals(
+	environmentUrls.apiGatewayUrl,
+	() => user?.id,
+	() => getPageMetaTag()?.dataset.internalPageName,
+);
+
 document.addEventListener("DOMContentLoaded", () => {
-	// Set more context for Sentry exceptions.
-	const user = authenticatedUser as typeof authenticatedUser | undefined;
 	setUser({
-		id: user?.id?.toString() ?? "1",
+		id: user?.id?.toString() ?? "-1",
 		username: user?.name ?? "unknown",
 	});
 
 	// Set initial internal-page-name tag from meta tag
-	const pageMetaTag = document.querySelector<HTMLMetaElement>(
-		'meta[name="page-meta"]',
-	);
+	const pageMetaTag = getPageMetaTag();
 	if (pageMetaTag?.dataset.internalPageName) {
 		setTag("internal-page-name", pageMetaTag.dataset.internalPageName);
 	}
