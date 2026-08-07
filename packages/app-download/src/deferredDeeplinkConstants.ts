@@ -2,8 +2,6 @@ const deferredDeeplinkDownloadInstallerContext = "EdpDownloadRobloxInstaller";
 const deferredDeeplinkCreateTokenEventName = "tokenAction";
 const deferredDeeplinkCreateTokenAction = "create-token-attempt";
 
-const deferredDeeplinkTokenQueryParameterKey = "token";
-
 const downloadSourceType = {
 	Installer: "installer",
 	WebGameJoin: "web_game_join",
@@ -17,6 +15,5 @@ export {
 	deferredDeeplinkDownloadInstallerContext,
 	deferredDeeplinkCreateTokenAction,
 	deferredDeeplinkGroupName,
-	deferredDeeplinkTokenQueryParameterKey,
 	downloadSourceType,
 };

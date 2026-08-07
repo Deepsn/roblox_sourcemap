@@ -265,7 +265,7 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 	"Label.Days": "{number} days",
 	"Label.Hours": "{hours}:{minutes} hours",
 	"Description.Behavior": "Your behavior",
-	"Heading.Error": "An unknown error occurred.",
+	"Heading.Error": "An unknown error occurred. Please try again later.",
 	"Action.ViewLess": "View less",
 	"Description.BrokeRulesBanned":
 		"We banned your account because of repeated or serious rule-breaking.",

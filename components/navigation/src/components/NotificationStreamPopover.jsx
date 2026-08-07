@@ -1,11 +1,15 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { Popover } from "@rbx/core-ui/legacy/react-style-guide";
 import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { useUnreadNotificationCount } from "../hooks/useUnreadNotificationCount";
 import { useClearUnreadOnOpen } from "../hooks/useClearUnreadOnOpen";
+import navigationUtil from "../util/navigationUtil";
+import { NotificationStreamShell } from "@rbx/notifications/notificationStreamShell";
 import getIsReactNotificationBellEnabled from "../util/getIsReactNotificationBellEnabled";
+import getIsReactNotificationStreamEnabled from "../util/getIsReactNotificationStreamEnabled";
+import { logNotificationStreamExposureIfEnabled } from "../util/notificationStreamIxpUtil";
 import NotificationStreamIcon from "../containers/NotificationStreamIcon";
 import ReactNotificationBell from "./ReactNotificationBell";
 import NotificationStreamBase from "../containers/NotificationStreamBase";
@@ -15,10 +19,18 @@ function NotificationStreamPopover({ translate }) {
 	const ref = useRef();
 	const unreadCount = useUnreadNotificationCount();
 	const isReactBell = getIsReactNotificationBellEnabled();
+	const isReactStream = getIsReactNotificationStreamEnabled();
 
 	// Flag-on only: React owns clear-unread-on-open, since the Angular indicator
 	// directive that used to do it isn't bootstrapped when the React bell renders.
 	const handleReactBellStreamOpen = useClearUnreadOnOpen(unreadCount);
+
+	const handleStreamOpen = useCallback(() => {
+		logNotificationStreamExposureIfEnabled();
+		if (isReactBell) {
+			handleReactBellStreamOpen();
+		}
+	}, [isReactBell, handleReactBellStreamOpen]);
 
 	const formattedCount = formatNumber(unreadCount);
 	const ariaLabel =
@@ -55,7 +67,7 @@ function NotificationStreamPopover({ translate }) {
 					</button>
 				}
 				container={ref.current}
-				onEnter={isReactBell ? handleReactBellStreamOpen : undefined}
+				onEnter={handleStreamOpen}
 				onExit={() => {
 					window.dispatchEvent(
 						new Event("Roblox.NotificationStream.StreamClosed"),
@@ -68,7 +80,13 @@ function NotificationStreamPopover({ translate }) {
 				}}
 				role="menu"
 			>
-				<NotificationStreamBase />
+				{isReactStream ? (
+					<NotificationStreamShell
+						themeClass={navigationUtil.getThemeClass()}
+					/>
+				) : (
+					<NotificationStreamBase />
+				)}
 			</Popover>
 		</li>
 	);

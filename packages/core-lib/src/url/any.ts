@@ -135,6 +135,14 @@ export class AnyUrl extends BaseUrl {
 		return new AnyUrl(url, params);
 	}
 
+	/** Makes a copy of this {@link AnyUrl} and appends the provided search parameters. */
+	withSearchParamsAppended(searchParams: IntoSearchParams): AnyUrl {
+		const params = this.searchParams.copyAndAppendAll(searchParams);
+		const url = cloneURL(this.url);
+		url.search = params.toString();
+		return new AnyUrl(url, params);
+	}
+
 	/**
 	 * Makes a copy of this {@link AnyUrl} and replaces the fragment identifier.
 	 *

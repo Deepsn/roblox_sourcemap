@@ -703,6 +703,29 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Can your child join games or chat with friends?",
 	"Heading.ConversationalRequest.PartyChatV2":
 		"Can your child chat with {requestedSettingValue}?",
+	"Title.KoreaTermsConsent":
+		"Please review and provide consent to let your child use Roblox",
+	"Description.KoreaTermsConsent":
+		"Please review and consent to the following terms on your child's behalf. You may choose to agree or disagree to individual terms. Your child may still use Roblox if you do not agree to the optional terms.",
+	"Label.KoreaConsentToAllTerms":
+		"Consent to all terms, including required and optional terms.",
+	"Label.Required": "Required",
+	"Label.Optional": "Optional",
+	"Action.Agree": "Agree",
+	"Action.Continue": "Continue",
+	"Action.Back": "Back",
+	"Label.KoreaTermsOfServiceAndPrivacyPolicy":
+		"I've reviewed and agree to the {termsLinkStart}Terms and Conditions{termsLinkEnd} of the User Agreement and acknowledge the {privacyLinkStart}Privacy Policy{privacyLinkEnd}",
+	"Label.KoreaThirdPartyPersonalInformationPolicy":
+		"I consent to {linkStart}third party provision of personal information{linkEnd}",
+	"Label.KoreaTransferPersonalInformationPolicy":
+		"I consent to the {linkStart}transfer of personal information overseas{linkEnd}",
+	"Label.KoreaPersonalInformationPolicy":
+		"I consent to the collection and processing of {linkStart}required personal information{linkEnd}",
+	"Label.KoreaOptionalPersonalInformationPolicy":
+		"I consent to the collection and processing of {linkStart}optional personal information{linkEnd}",
+	"Description.KoreaUserAgreementExplanation":
+		"By selecting “Continue,” you represent that you are this child’s parent or legal guardian and agree to receive communications regarding their account.",
 	"Description.VPCRequestIarcAcbG":
 		"The content is very mild in impact. The G classification is suitable for everyone",
 	"Description.VPCRequestIarcAcbPg":

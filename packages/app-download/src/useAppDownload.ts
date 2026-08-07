@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ExperimentationService from "@rbx/experimentation";
 import { AnyUrl } from "@rbx/core-lib/url/any";
-import { deferredDeeplinkTokenQueryParameterKey } from "./deferredDeeplinkConstants";
 import createDeeplinkToken from "./deferredDeeplinkTokenService";
 import {
 	resolveDeeplinkTokenParams,
@@ -54,12 +53,7 @@ export const useAppDownload = ({
 			if (!token) {
 				return baseUrl;
 			}
-			return baseUrl.withSearchParams(
-				baseUrl.searchParams.copyAndAppend(
-					deferredDeeplinkTokenQueryParameterKey,
-					token,
-				),
-			);
+			return baseUrl.withSearchParamsAppended({ token });
 		},
 		[linkId, downloadSource, ixpQuery.data],
 	);

@@ -9,7 +9,7 @@ import { Unique } from "./types";
  *
  * Possible error cases are:
  * - `ForbiddenScheme`: the scheme was not allowed for the URL type.
- * - `ForbiddenHost`: the host was not in the whitelist.
+ * - `ForbiddenHost`: the host was not in the allowlist.
  */
 export type CreateUrlErrorCause =
 	| { readonly code: "ForbiddenScheme"; readonly scheme: string }
@@ -20,7 +20,7 @@ export type CreateUrlErrorCause =
  *
  * Possible error cases are:
  * - `ForbiddenScheme`: the scheme was not allowed for the URL type.
- * - `ForbiddenHost`: the host was not in the whitelist.
+ * - `ForbiddenHost`: the host was not in the allowlist.
  * - `InvalidUrl`: the string was not a valid url and could not be parsed.
  */
 export type ParseUrlErrorCause =
@@ -46,7 +46,7 @@ const errorMessage = (cause: ParseUrlErrorCause) => {
  *
  * Possible error cases are:
  * - `ForbiddenScheme`: the scheme was not allowed for the URL type.
- * - `ForbiddenHost`: the host was not in the whitelist.
+ * - `ForbiddenHost`: the host was not in the allowlist.
  */
 export class CreateUrlError extends Error {
 	constructor(readonly cause: CreateUrlErrorCause) {
@@ -59,7 +59,7 @@ export class CreateUrlError extends Error {
  *
  * Possible error cases are:
  * - `ForbiddenScheme`: the scheme was not allowed for the URL type.
- * - `ForbiddenHost`: the host was not in the whitelist.
+ * - `ForbiddenHost`: the host was not in the allowlist.
  * - `InvalidUrl`: the string was not a valid url and could not be parsed.
  */
 export class ParseUrlError extends Error {
@@ -81,25 +81,25 @@ const parseURL = (url: string): Result<Unique<URL>, ParseUrlError> => {
 };
 
 export type BaseUrlOptions = {
-	readonly schemeWhitelist?: readonly `${string}:`[];
-	readonly domainWhitelist?: readonly string[];
+	readonly schemeAllowlist?: readonly `${string}:`[];
+	readonly domainAllowlist?: readonly string[];
 	readonly sanitize?: boolean;
 };
 
 const fromUniqueURL = <T>(
 	url: Unique<URL>,
-	{ schemeWhitelist, domainWhitelist, sanitize }: Required<BaseUrlOptions>,
+	{ schemeAllowlist, domainAllowlist, sanitize }: Required<BaseUrlOptions>,
 	constructor: (url: Unique<URL>, searchParams: UrlSearchParams) => T,
 ): Result<T, CreateUrlErrorCause> => {
 	/* eslint-disable no-param-reassign */
 	url.password = "";
 	url.username = "";
 	/* eslint-enable no-param-reassign */
-	if (!arrayIncludes(schemeWhitelist, url.protocol)) {
+	if (!arrayIncludes(schemeAllowlist, url.protocol)) {
 		return err({ code: "ForbiddenScheme", scheme: url.protocol });
 	}
 	if (
-		!domainWhitelist.some((domain) =>
+		!domainAllowlist.some((domain) =>
 			domain.startsWith(".")
 				? url.hostname.endsWith(domain)
 				: url.hostname === domain,

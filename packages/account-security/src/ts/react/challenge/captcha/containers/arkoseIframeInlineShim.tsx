@@ -1,3 +1,4 @@
+import environmentUrls from "@rbx/environment-urls";
 import React, { Ref, useCallback, useEffect } from "react";
 import {
 	CaptchaElementEvent,
@@ -6,6 +7,8 @@ import {
 
 const QUERY_KEY_FC_NOSUPPRESS = "fc_nosuppress" as const;
 const QUERY_KEY_FC_SUPPRESS = "fc_suppress" as const;
+
+const ARKOSE_SCRIPT_HOST = `arkoselabs.${environmentUrls.domain}`;
 
 type Props = {
 	arkoseIframeId: string;
@@ -75,7 +78,7 @@ const ArkoseIframeInlineShim: React.FC<Props> = ({
 		script.id = arkoseScriptId;
 		script.type = "text/javascript";
 		const publicKeySanitized = publicKey.replace(/[^a-zA-Z0-9-]+/g, "");
-		script.src = `//arkoselabs.roblox.com/v2/${publicKeySanitized}/api.js`;
+		script.src = `//${ARKOSE_SCRIPT_HOST}/v2/${publicKeySanitized}/api.js`;
 		script.setAttribute("data-callback", setupEnforcementName);
 		script.async = true;
 		script.defer = true;
