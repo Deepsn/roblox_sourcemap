@@ -22,6 +22,10 @@ const getSettings = () => {
 				RealTimeSettings.IsRealtimeWebAnalyticsEnabled;
 			settings.isRealtimeWebAnalyticsConnectionEventsEnabled =
 				RealTimeSettings.IsRealtimeWebAnalyticsConnectionEventsEnabled;
+			settings.isRealtimeDurableReplayEnabled =
+				RealTimeSettings.IsRealtimeDurableReplayEnabled;
+			settings.realtimeMessageDedupeLruCacheSize =
+				parseInt(RealTimeSettings.RealtimeMessageDedupeLruCacheSize, 10) || 32;
 		} else {
 			settings.notificationsUrl = "https://realtime.roblox.com";
 			settings.maxConnectionTimeInMs = 21600000; // six hours
@@ -32,6 +36,8 @@ const getSettings = () => {
 			settings.isLocalStorageEnabled = false;
 			settings.isRealtimeWebAnalyticsEnabled = false;
 			settings.isRealtimeWebAnalyticsConnectionEventsEnabled = false;
+			settings.isRealtimeDurableReplayEnabled = false;
+			settings.realtimeMessageDedupeLruCacheSize = 32;
 		}
 	}
 

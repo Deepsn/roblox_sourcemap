@@ -39,6 +39,7 @@ const signalRSource = function (settings, logger) {
 	// State
 	let isCurrentlyConnected = false;
 	let isReplicationEnabled = false;
+	let durableReplayerRef = null;
 
 	let signalRConnectionTimeout = null;
 	let hasConnectionSucceeded = false;
@@ -300,6 +301,7 @@ const signalRSource = function (settings, logger) {
 		// Notify topic ready on connection
 		if (isConnected) {
 			notifyTopicReady();
+			durableReplayerRef?.maybeRequestReplay();
 		}
 	};
 
@@ -516,11 +518,21 @@ const signalRSource = function (settings, logger) {
 		topicTokenExpiryHandler = handler;
 	};
 
+	const setDurableReplayer = (replayer) => {
+		durableReplayerRef = replayer;
+		if (replayer) {
+			replayer.fetchConfig();
+		}
+	};
+
 	// Public API
 	this.IsAvailable = isAvailable;
 	this.Start = start;
 	this.Stop = stop;
 	this.Name = "SignalRSource";
+
+	// Durable replay support
+	this.SetDurableReplayer = setDurableReplayer;
 
 	// Topic support
 	this.SubscribeTopic = subscribeTopic;

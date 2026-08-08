@@ -1,7 +1,11 @@
+import { pubSub } from "@rbx/core-scripts/util/cross-tab-communication";
 import realtimeFactory from "./factory";
 import realtimeStateTracker from "./stateTracker";
 import { maybeSendEventToDataLake } from "../utils/events";
 import createTopicManager from "./topicManager";
+import createDurableReplayer from "./durableReplayer";
+import createMessageDeduper from "./messageDeduper";
+import { realtimeEvents } from "../constants/events";
 import signalRSource from "../sources/signalRSource";
 import hybridSource from "../sources/hybridSource";
 import crossTabReplicatedSource from "../sources/crossTabReplicatedSource";
@@ -34,6 +38,10 @@ const RealtimeClient = function (sourceConstructors) {
 
 	// Topic-based notifications manager
 	const topicManager = createTopicManager({ log });
+
+	// Durable replay manager (initialized after stateTracker is ready)
+	let durableReplayer = null;
+	let messageDeduper = null;
 
 	const setCustomLogger = (loggerCallback) => {
 		customLogger = loggerCallback;
@@ -100,12 +108,18 @@ const RealtimeClient = function (sourceConstructors) {
 
 	const onNotification = (notificationSource, notification) => {
 		if (notificationSource !== currentSource) {
-			// Ignore notifications from old sources
 			return;
 		}
 
 		const namespaceId = notification.namespace;
 		const details = notification.detail;
+
+		if (messageDeduper) {
+			const messageId = details && details.RealtimeMessageIdentifier;
+			if (!messageDeduper.tryAdd(messageId)) {
+				return;
+			}
+		}
 
 		const settings = realtimeFactory.GetSettings();
 		if (settings.isRealtimeWebAnalyticsEnabled) {
@@ -136,6 +150,24 @@ const RealtimeClient = function (sourceConstructors) {
 				namespaceId,
 				notification.namespaceSequenceNumber,
 			);
+		}
+	};
+
+	const getLastSeenSequenceNumbers = () => {
+		if (!stateTracker) return {};
+		const state = stateTracker.GetLatestState();
+		return (state && state.namespaceSequenceNumbersObj) || {};
+	};
+
+	const processReplayedNotification = (namespace, detail, seqNum) => {
+		const notification = { namespace, detail, namespaceSequenceNumber: seqNum };
+		onNotification(currentSource, notification);
+		pubSub.publish(realtimeEvents.Notification, JSON.stringify(notification));
+	};
+
+	const updateSequenceNumber = (namespace, seqNum) => {
+		if (stateTracker) {
+			stateTracker.UpdateSequenceNumber(namespace, seqNum);
 		}
 	};
 
@@ -240,14 +272,28 @@ const RealtimeClient = function (sourceConstructors) {
 	};
 
 	const fireConnectionEventPerNamespace = (namespace, sequenceNumber) => {
-		const isDataReloadRequired = stateTracker
-			? stateTracker.IsDataRefreshRequired(namespace, sequenceNumber)
-			: null;
+		// For durable namespaces, the durable replayer handles catch-up — skip the
+		// data-reload signal entirely (gap-reset pattern, matching game engine behavior).
+		const isDurable = durableReplayer?.isDurableNamespace(namespace);
+
+		const isDataReloadRequired =
+			stateTracker && !isDurable
+				? stateTracker.IsDataRefreshRequired(namespace, sequenceNumber)
+				: null;
+
+		// For non-durable namespaces (or when durableReplayer isn't active), update
+		// stateTracker from the subscription status so IsDataRefreshRequired works.
+		// For durable namespaces, do NOT update here — the replayer needs the
+		// pre-reconnect seq nums to know what gap to fill. stateTracker will be
+		// advanced later by processNamespaceSeqNum when replay responses arrive.
+		if (stateTracker && !isDurable) {
+			stateTracker.UpdateSequenceNumber(namespace, sequenceNumber);
+		}
 
 		const connectionStatus = getConnectionStatus(namespace);
 
 		// If currently connected, but the event indicates missed messages, trigger disconnect logic so data can be refreshed
-		// But only if we are sure we need to refresh
+		// But only if we are sure we need to refresh (never for durable namespaces)
 		if (
 			connectionStatus.isConnected &&
 			isDataReloadRequired === stateTracker.RefreshRequiredEnum.IS_REQUIRED
@@ -264,18 +310,19 @@ const RealtimeClient = function (sourceConstructors) {
 			connectionStatus.isConnected = true;
 
 			if (connectionStatus.hasEverBeenConnected) {
-				// reconnect if we know we have to, or if we aren't sure
-				onReconnected(
-					isDataReloadRequired === null ||
+				// For durable namespaces, never signal data reload — the replayer handles catch-up
+				const needsReload = isDurable
+					? false
+					: isDataReloadRequired === null ||
 						isDataReloadRequired ===
 							stateTracker.RefreshRequiredEnum.IS_REQUIRED ||
-						isDataReloadRequired === stateTracker.RefreshRequiredEnum.UNCLEAR,
-					namespace,
-				);
+						isDataReloadRequired === stateTracker.RefreshRequiredEnum.UNCLEAR;
+				onReconnected(needsReload, namespace);
 			} else {
-				const isHardReloadRequired =
-					isDataReloadRequired !==
-					stateTracker.RefreshRequiredEnum.NOT_REQUIRED;
+				const isHardReloadRequired = isDurable
+					? false
+					: isDataReloadRequired !==
+						stateTracker.RefreshRequiredEnum.NOT_REQUIRED;
 
 				connectionStatus.hasEverBeenConnected = true;
 				const { Performance } = window.Roblox;
@@ -318,6 +365,8 @@ const RealtimeClient = function (sourceConstructors) {
 					fireConnectionEventPerNamespace(namespace, sequenceNumber);
 				}
 			}
+
+			// Replay is triggered by the source itself via SetDurableReplayer
 		} else if (connectionEvent.namespace) {
 			const { namespace } = connectionEvent;
 			fireDisconnectedEventPerNamespace(namespace);
@@ -367,6 +416,12 @@ const RealtimeClient = function (sourceConstructors) {
 				// but ensuring topic subscriptions work even if connection event timing varies
 				topicManager.onSourceChanged(newSource);
 
+				// Delegate durable replay to the source — leader sources fetch config and
+				// trigger replay on connect; follower sources no-op.
+				if (durableReplayer) {
+					newSource.SetDurableReplayer(durableReplayer);
+				}
+
 				break;
 			}
 		}
@@ -385,6 +440,22 @@ const RealtimeClient = function (sourceConstructors) {
 				realtimeFactory.IsEventPublishingEnabled(),
 			);
 		}
+
+		const settings = realtimeFactory.GetSettings();
+		if (settings.isRealtimeDurableReplayEnabled) {
+			messageDeduper = createMessageDeduper({
+				maxSize: settings.realtimeMessageDedupeLruCacheSize || 32,
+				log,
+			});
+
+			durableReplayer = createDurableReplayer({
+				getLastSeenSequenceNumbers,
+				processNotification: processReplayedNotification,
+				updateSequenceNumber,
+				log,
+			});
+		}
+
 		refreshSource();
 
 		const { Performance } = window.Roblox;

@@ -52,3 +52,7 @@ export const sendConnectionEventToDataLake = (
 		EventStream.TargetTypes.WWW,
 	);
 };
+
+export const sendDurableReplayEvent = (action) => {
+	window.EventTracker?.fireEvent(`RealtimeDurableReplay_${action}`);
+};

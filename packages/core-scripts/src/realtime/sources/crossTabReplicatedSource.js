@@ -242,6 +242,9 @@ const crossTabReplicatedSource = function (_settings, logger) {
 	this.Stop = stop;
 	this.Name = "CrossTabReplicatedSource";
 
+	// Durable replay: no-op for follower tabs (leader handles replay)
+	this.SetDurableReplayer = () => undefined;
+
 	// Topic support
 	this.SubscribeTopic = subscribeTopic;
 	this.UnsubscribeTopic = unsubscribeTopic;

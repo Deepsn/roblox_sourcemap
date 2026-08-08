@@ -22,6 +22,7 @@ const hybridSource = function (_settings, logger) {
 	let topicSubscriptionErrorHandler = null;
 	let topicTokenExpiryHandler = null;
 	let connectionReady = false;
+	let durableReplayerRef = null;
 
 	let heartbeatTriggerTime;
 	const heartbeatInterval = 5000;
@@ -145,11 +146,14 @@ const hybridSource = function (_settings, logger) {
 			namespaceSequenceNumbersObj: result.params.namespaceSequenceNumbers || {},
 		});
 		connectionReady = isConnected;
-		if (isConnected && topicReadyHandler) {
-			log(
-				"Reconnection detected, notifying TopicManager to resubscribe topics",
-			);
-			topicReadyHandler();
+		if (isConnected) {
+			if (topicReadyHandler) {
+				log(
+					"Reconnection detected, notifying TopicManager to resubscribe topics",
+				);
+				topicReadyHandler();
+			}
+			durableReplayerRef?.maybeRequestReplay();
 		}
 	};
 
@@ -315,11 +319,21 @@ const hybridSource = function (_settings, logger) {
 		topicTokenExpiryHandler = handler;
 	};
 
+	const setDurableReplayer = (replayer) => {
+		durableReplayerRef = replayer;
+		if (replayer) {
+			replayer.fetchConfig();
+		}
+	};
+
 	// Public API
 	this.IsAvailable = isAvailable;
 	this.Start = start;
 	this.Stop = stop;
 	this.Name = "HybridSource";
+
+	// Durable replay support
+	this.SetDurableReplayer = setDurableReplayer;
 
 	// Topic support
 	this.SubscribeTopic = subscribeTopic;

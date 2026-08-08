@@ -228,6 +228,10 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"Ask your child to send a new request from their Roblox account.",
 	"Description.LinkNoLongerActive": "This request is no longer active.",
 	"Action.ContinueToRoblox": "Continue to Roblox",
+	"Description.PasskeyMobileOnly":
+		"Passkeys are only available on mobile. Choose another way to sign in.",
+	"Label.EnterEmail": "Enter email",
+	"Action.SendCodeSentenceCase": "Send code",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
