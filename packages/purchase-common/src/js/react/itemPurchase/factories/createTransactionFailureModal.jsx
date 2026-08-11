@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withTranslations } from "react-utilities";
-import { createModal } from "react-style-guide";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 

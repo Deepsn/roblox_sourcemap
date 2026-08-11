@@ -1,7 +1,7 @@
 import React from "react";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import PropTypes from "prop-types";
-import { numberFormat } from "core-utilities";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import translationConfig from "../translation.config";
 
@@ -18,7 +18,7 @@ function PriceLabel({ translate, price, color, useFreeText }) {
 	return (
 		<React.Fragment>
 			<span className={`icon-robux${color ? `-${color}` : ""}-16x16`} />
-			<span className="text-robux">{numberFormat.getNumberFormat(price)}</span>
+			<span className="text-robux">{formatNumber(price)}</span>
 		</React.Fragment>
 	);
 }

@@ -1,4 +1,4 @@
-import { httpService } from "core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 import { EnvironmentUrls } from "@rbx/environment-urls";
 import { PurchaseWarning } from "../constants/serviceTypeDefinitions";
 import {

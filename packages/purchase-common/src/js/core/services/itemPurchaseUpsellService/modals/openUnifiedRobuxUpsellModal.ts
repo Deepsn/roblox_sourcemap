@@ -1,7 +1,7 @@
-import { RobloxIntlInstance } from "Roblox";
+import { RobloxIntlInstance } from "@rbx/legacy-webapp-types/Roblox";
 import React from "react";
 import ReactDOM from "react-dom";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import UnifiedRobuxUpsellModal, {
 	UnifiedRobuxUpsellModalProps,
 } from "../../../../../ts/react/components/UnifiedRobuxUpsellModal";

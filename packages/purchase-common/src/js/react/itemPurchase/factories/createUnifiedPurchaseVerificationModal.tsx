@@ -1,7 +1,8 @@
 import React from "react";
-import { withTranslations, TranslateFunction } from "react-utilities";
+import { withTranslations, TranslateFunction } from "@rbx/core-scripts/react";
 import { renderToString } from "react-dom/server";
-import { escapeHtml, urlService } from "core-utilities";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
 import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
 import type { DiscountInformation } from "../../../../ts/react/components/discountInformation";
 import type { UnifiedPurchaseActionParams } from "../../../../ts/react/components/UnifiedPurchaseModal";
@@ -94,7 +95,7 @@ export default function createUnifiedPurchaseVerificationModal() {
 		const assetInfo = {
 			assetName: renderToString(<AssetName name={assetName} />),
 			assetType: assetTypeDisplayName || assetType,
-			seller: escapeHtml()(sellerName),
+			seller: escapeHtml(sellerName),
 			robux: renderToString(
 				<PriceLabel
 					translate={translate}

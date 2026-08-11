@@ -1,7 +1,7 @@
-import { uuidService } from "core-utilities";
-import { CurrentUser } from "Roblox";
+import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
+import { CurrentUser } from "@rbx/legacy-webapp-types/Roblox";
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { upsellUtil } from "core-roblox-utilities";
+import { upsellUtil } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	ItemDetailElementDataset,
 	ItemPurchaseAjaxDataObject,

@@ -1,4 +1,4 @@
-import { numberFormat } from "core-utilities";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 
 export default function formattingRobux(
 	robuxAmount: number,
@@ -6,7 +6,7 @@ export default function formattingRobux(
 	strikeThrough = false,
 	forceLightMode = false,
 ) {
-	const robuxAmountNumber = numberFormat.getNumberFormat(robuxAmount);
+	const robuxAmountNumber = formatNumber(robuxAmount);
 	const formattedRobuxAmount = strikeThrough
 		? `<s>${robuxAmountNumber}</s>`
 		: robuxAmountNumber;

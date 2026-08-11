@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import PropTypes from "prop-types";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import translationConfig from "../translation.config";

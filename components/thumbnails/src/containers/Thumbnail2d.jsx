@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import ClassNames from "classnames";
 import PropTypes from "prop-types";
 import { logMeasurement } from "../metrics";
@@ -31,15 +31,10 @@ function Thumbnail2d({
 	version,
 	headShape,
 	includeBackground,
+	includeProfileFrame,
+	seedFromCache,
 }) {
 	const [startTime] = useState(new Date().getTime());
-	const [thumbnailStatus, setImageStatus] = useState(null);
-	const [thumbnailUrl, setImageUrl] = useState(null);
-	const errorIconClass = ClassNames(
-		thumbnailService.getCssClass(thumbnailStatus),
-	);
-	const [shimmerClass, setShimmerClass] = useState("shimmer");
-	const [performanceData, setPerformanceData] = useState(null);
 	const avatarHeadshotBackgroundInTreatment =
 		useAvatarHeadshotBackgroundInTreatment(type);
 	const resolvedIncludeBackground = resolveAvatarHeadshotIncludeBackground(
@@ -47,6 +42,38 @@ function Thumbnail2d({
 		includeBackground,
 		avatarHeadshotBackgroundInTreatment,
 	);
+	// When opted in, seed the first render from the resolved-URL cache so an already-loaded thumbnail
+	// (e.g. an avatar shown again after a chat screen change) shows immediately instead of flashing the
+	// loading shimmer on remount. Computed once on mount via the lazy initializer.
+	const [seededThumbnail] = useState(() =>
+		seedFromCache
+			? thumbnailService.peekThumbnailImage(
+					type,
+					size,
+					format,
+					targetId,
+					token,
+					version,
+					headShape,
+					resolvedIncludeBackground,
+					includeProfileFrame,
+				)
+			: undefined,
+	);
+	const hasSeededRef = useRef(Boolean(seededThumbnail));
+	const [thumbnailStatus, setImageStatus] = useState(
+		seededThumbnail?.state ?? null,
+	);
+	const [thumbnailUrl, setImageUrl] = useState(
+		seededThumbnail?.imageUrl ?? null,
+	);
+	const errorIconClass = ClassNames(
+		thumbnailService.getCssClass(thumbnailStatus),
+	);
+	const [shimmerClass, setShimmerClass] = useState(
+		seededThumbnail ? "" : "shimmer",
+	);
+	const [performanceData, setPerformanceData] = useState(null);
 
 	const customHandler = useMemo(
 		() =>
@@ -104,9 +131,16 @@ function Thumbnail2d({
 	}, [performanceData]);
 
 	useEffect(() => {
-		setShimmerClass("shimmer");
-		setImageStatus(null);
-		setImageUrl(null);
+		// On a cache-seeded first mount, keep the seeded image instead of resetting to the shimmer; the
+		// request below still runs and (for a cache hit) resolves to the same URL. Later dep changes
+		// reset as usual.
+		if (hasSeededRef.current) {
+			hasSeededRef.current = false;
+		} else {
+			setShimmerClass("shimmer");
+			setImageStatus(null);
+			setImageUrl(null);
+		}
 
 		let isUnmounted = false;
 		let requestThumbnail = thumbnailService.getThumbnailImage(
@@ -118,6 +152,7 @@ function Thumbnail2d({
 			version,
 			headShape,
 			resolvedIncludeBackground,
+			includeProfileFrame,
 		);
 		if (getThumbnail) {
 			requestThumbnail = customThumbnailRequester.processThumbnailBatchRequest(
@@ -163,6 +198,7 @@ function Thumbnail2d({
 		version,
 		headShape,
 		resolvedIncludeBackground,
+		includeProfileFrame,
 	]);
 
 	return (
@@ -191,6 +227,8 @@ Thumbnail2d.defaultProps = {
 	},
 	getThumbnail: null,
 	version: "",
+	includeProfileFrame: false,
+	seedFromCache: false,
 };
 
 Thumbnail2d.propTypes = {
@@ -207,6 +245,8 @@ Thumbnail2d.propTypes = {
 	version: PropTypes.string,
 	headShape: PropTypes.string,
 	includeBackground: PropTypes.bool,
+	includeProfileFrame: PropTypes.bool,
+	seedFromCache: PropTypes.bool,
 };
 
 export default Thumbnail2d;

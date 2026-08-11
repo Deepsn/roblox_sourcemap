@@ -1,5 +1,5 @@
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { httpService } from "core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 import {
 	GET_PRODUCT_INFO_API,
 	PRODUCT_INFO_API_SUCCESS_REASON,

@@ -1,8 +1,8 @@
 import {
 	ItemDetailElementDataset,
 	RobloxTranslationResourceProviderInstance,
-} from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import { UPSELL_COUNTER_NAMES } from "../../constants/upsellConstants";
 import openPurchaseWarningModal from "../../modals/openPurchaseWarningModal";
 import reportCounter from "../common/reportCounter";

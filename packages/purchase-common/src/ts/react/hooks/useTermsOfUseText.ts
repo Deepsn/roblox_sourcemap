@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { RobloxIntlInstance } from "Roblox";
-import { TranslateFunction } from "react-utilities";
-import { urlService } from "core-utilities";
+import { RobloxIntlInstance } from "@rbx/legacy-webapp-types/Roblox";
+import { TranslateFunction } from "@rbx/core-scripts/react";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
 import { translateHtml } from "@rbx/translation-utils";
 import type { TranslateHtmlTag } from "@rbx/translation-utils";
 import {

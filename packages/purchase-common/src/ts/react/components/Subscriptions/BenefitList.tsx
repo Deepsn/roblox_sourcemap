@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { TranslateFunction } from "react-utilities";
+import { TranslateFunction } from "@rbx/core-scripts/react";
 import { Icon } from "@rbx/foundation-ui";
 import type {
 	PeriodType,

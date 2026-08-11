@@ -1,4 +1,4 @@
-import { EventStream } from "Roblox";
+import { EventStream } from "@rbx/legacy-webapp-types/Roblox";
 import { ITEM_UPSELL_EVENTS } from "../../constants/upsellConstants";
 
 export default function sendEvent(

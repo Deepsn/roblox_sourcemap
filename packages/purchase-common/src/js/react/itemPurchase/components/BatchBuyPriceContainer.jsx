@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { authenticatedUser } from "header-scripts";
-import { withTranslations } from "react-utilities";
-import { Button } from "react-style-guide";
+import { isAuthenticated, userId } from "@rbx/core-scripts/meta/user";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { Button } from "@rbx/core-ui/legacy/react-style-guide";
 import batchLoadItemDetails from "../factories/batchLoadItemDetails";
 import itemDetailsService from "../services/itemDetailsService";
 import { BatchBuyItemsButton } from "./BatchBuyItems";
@@ -27,7 +27,7 @@ function PriceContainer({
 
 	const getCurrentUserBalance = () => {
 		itemDetailsService
-			.getCurrentUserBalance(authenticatedUser.id)
+			.getCurrentUserBalance(userId())
 			.then((result) => {
 				setCurrentUserBalance(result.data.robux);
 			})
@@ -36,7 +36,7 @@ function PriceContainer({
 			});
 	};
 	useEffect(() => {
-		if (authenticatedUser.isAuthenticated) {
+		if (isAuthenticated()) {
 			getCurrentUserBalance();
 		}
 	}, []);

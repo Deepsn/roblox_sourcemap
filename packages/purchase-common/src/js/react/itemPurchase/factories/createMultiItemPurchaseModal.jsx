@@ -3,17 +3,17 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
-import { createModal } from "react-style-guide";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
 import {
 	Thumbnail2d,
 	ThumbnailTypes,
 	ThumbnailFormat,
 	DefaultThumbnailSize,
-} from "roblox-thumbnails";
-import { CurrentUser } from "Roblox";
-import { authenticatedUser } from "header-scripts";
-import { uuidService } from "core-utilities";
+} from "@rbx/thumbnails";
+import { CurrentUser } from "@rbx/legacy-webapp-types/Roblox";
+import { isPremiumUser } from "@rbx/core-scripts/meta/user";
+import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
 import { Badge } from "@rbx/foundation-ui";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
@@ -351,7 +351,7 @@ export default function createMultiItemPurchaseModal() {
 		async function purchaseItem(item) {
 			const params = {
 				expectedPrice:
-					item.premiumPriceInRobux && authenticatedUser.isPremiumUser
+					item.premiumPriceInRobux && isPremiumUser()
 						? item.premiumPriceInRobux
 						: item.price,
 				expectedSellerId: item.firstReseller
@@ -564,7 +564,7 @@ export default function createMultiItemPurchaseModal() {
 				} else {
 					itemToPurchase.virtualEconomyProductId = `${item.productId}`;
 					itemToPurchase.agreedPriceRobux =
-						item.premiumPriceInRobux && authenticatedUser.isPremiumUser
+						item.premiumPriceInRobux && isPremiumUser()
 							? item.premiumPriceInRobux
 							: item.price;
 				}

@@ -1,6 +1,6 @@
-import { escapeHtml } from "core-utilities";
-import { upsellUtil } from "core-roblox-utilities";
-import { MetaDataValues } from "Roblox";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
+import { upsellUtil } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { MetaDataValues } from "@rbx/legacy-webapp-types/Roblox";
 import {
 	redirectToCatalogShop,
 	redirectToItemPath,
@@ -222,7 +222,7 @@ export async function preProcessData(
 	const item = {
 		itemContainerElemClassList: itemContainerElement?.classList,
 		assetType: itemDetail.assetType,
-		assetName: escapeHtml()(itemDetail.itemName),
+		assetName: escapeHtml(itemDetail.itemName),
 		expectedSellerId: expSellerId,
 		expectedCurrency: expCurrency,
 		expectedPrice: expPrice,

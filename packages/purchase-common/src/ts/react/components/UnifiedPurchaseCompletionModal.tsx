@@ -1,5 +1,5 @@
 import React from "react";
-import { TranslateFunction, withTranslations } from "react-utilities";
+import { TranslateFunction, withTranslations } from "@rbx/core-scripts/react";
 import {
 	Dialog,
 	DialogContent,

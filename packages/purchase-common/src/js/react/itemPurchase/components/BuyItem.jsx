@@ -1,15 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Loading } from "react-style-guide";
-import { GameLauncher } from "Roblox";
+import { Button, Loading } from "@rbx/core-ui/legacy/react-style-guide";
+import { GameLauncher } from "@rbx/legacy-webapp-types/Roblox";
 import {
 	Thumbnail2d,
 	ThumbnailTypes,
 	ThumbnailFormat,
 	DefaultThumbnailSize,
-} from "roblox-thumbnails";
-import { withTranslations } from "react-utilities";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+} from "@rbx/thumbnails";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import createItemPurchase from "../factories/createItemPurchase";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import urlConstants from "../constants/urlConstants";

@@ -1,5 +1,5 @@
-import { httpService } from "core-utilities";
-import { CurrentUser } from "Roblox";
+import * as httpService from "@rbx/core-scripts/http";
+import { CurrentUser } from "@rbx/legacy-webapp-types/Roblox";
 import { EnvironmentUrls } from "@rbx/environment-urls";
 import { PurchaseWarning } from "../constants/serviceTypeDefinitions";
 import {

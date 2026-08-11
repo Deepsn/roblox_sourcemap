@@ -166,3 +166,6 @@ export const getSanitizedReferrer = (referrer: string): string => {
 		return "invalid";
 	}
 };
+
+export const getCommunitySessionEnterFrom = (): string =>
+	getSanitizedReferrer(document.referrer);

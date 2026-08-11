@@ -1,6 +1,6 @@
 import React from "react";
-import { TranslateFunction } from "react-utilities";
-import { DeviceMeta } from "Roblox";
+import { TranslateFunction } from "@rbx/core-scripts/react";
+import { DeviceMeta } from "@rbx/legacy-webapp-types/Roblox";
 import { translateHtml } from "@rbx/translation-utils";
 import {
 	SheetRoot,

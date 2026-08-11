@@ -1,5 +1,5 @@
-import { escapeHtml } from "core-utilities";
-import { RobloxTranslationResource } from "Roblox";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
+import { RobloxTranslationResource } from "@rbx/legacy-webapp-types/Roblox";
 import {
 	ItemDetailObject,
 	ItemPurchaseAjaxDataObject,
@@ -39,7 +39,7 @@ export default async function initiateDirectCollectiblePurchase({
 	const item = {
 		itemContainerElemClassList: undefined,
 		assetType: dataset?.assetType ?? "",
-		assetName: escapeHtml()(itemDetail.assetName),
+		assetName: escapeHtml(itemDetail.assetName),
 		productId: dataset?.productId ?? "",
 		expectedPrice: purchasePrice,
 		expectedCurrency: Number(dataset?.expectedCurrency) || 1,

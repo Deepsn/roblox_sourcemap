@@ -26,6 +26,7 @@ import {
 import { ReviewCategoryType } from "./services/playerFeedbackService";
 import playerFeedbackConstants from "./constants/playerFeedbackConstants";
 import PlayerFeedbackContainer from "./components/PlayerFeedbackContainer";
+import instrumentCreatorByline from "./utils/instrumentCreatorByline";
 
 export default (): void => {
 	// Don't show the rest of the details page if the experience is unavailable
@@ -38,6 +39,9 @@ export default (): void => {
 		);
 		return;
 	}
+
+	// EDP creator-byline telemetry (GRPS-3058/3059): instrument the byline after the availability guard.
+	instrumentCreatorByline();
 
 	const { referralSessionInfo, referralPage } =
 		sessionReferralUtils.extractReferralInfo();

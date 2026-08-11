@@ -1,5 +1,5 @@
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { httpService } from "core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 
 export default function ampFeatureService() {
 	const DMCCALegalTextFeature = "ShouldUseDMCCALegalDisclosure";

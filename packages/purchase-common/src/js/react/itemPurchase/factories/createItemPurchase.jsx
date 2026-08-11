@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { withTranslations, queryClient } from "react-utilities";
-import { createSystemFeedback } from "react-style-guide";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import { withTranslations, queryClient } from "@rbx/core-scripts/react";
+import { createSystemFeedback } from "@rbx/core-ui/legacy/react-style-guide";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	ItemPurchaseUpsellService,
 	CurrentUser,
 	AccountIntegrityChallengeService,
-} from "Roblox";
-import { uuidService } from "core-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import translationConfig from "../translation.config";
 import { getMetaData } from "../util/itemPurchaseUtil";

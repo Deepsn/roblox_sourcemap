@@ -1,6 +1,6 @@
 import React from "react";
-import { withTranslations, TranslateFunction } from "react-utilities";
-import { numberFormat } from "core-utilities";
+import { withTranslations, TranslateFunction } from "@rbx/core-scripts/react";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 import itemPurchaseConstants from "../../../js/react/itemPurchase/constants/itemPurchaseConstants";
 import translationConfig from "../../../js/react/itemPurchase/translation.config";
 
@@ -30,7 +30,7 @@ function UnifiedPriceLabel({
 		<React.Fragment>
 			<span className={`icon-robux${color ? `-${color}` : ""}-16x16`} />
 			<span className="text-robux ml-1 text-body-medium">
-				{numberFormat.getNumberFormat(price)}
+				{formatNumber(price)}
 			</span>
 		</React.Fragment>
 	);

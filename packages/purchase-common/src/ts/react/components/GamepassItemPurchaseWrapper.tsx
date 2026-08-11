@@ -1,5 +1,5 @@
 import React from "react";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import itemPurchaseTranslationConfig from "../../../js/react/itemPurchase/translation.config";
 
 export type GamepassItemPurchaseWrapperProps = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import PropTypes from "prop-types";
 import PriceLabel from "./PriceLabel";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";

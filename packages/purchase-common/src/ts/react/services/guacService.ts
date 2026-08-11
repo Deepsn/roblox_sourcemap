@@ -3,7 +3,7 @@
  * Multiple copies of this file exist in the codebase given that there currently is not a way
  * to share code across WebApps. If updating this file, please update all copies in the codebase.
  */
-import { Guac } from "Roblox";
+import { Guac } from "@rbx/legacy-webapp-types/Roblox";
 
 type AppPolicyResponse = {
 	/**

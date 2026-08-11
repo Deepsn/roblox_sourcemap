@@ -1,5 +1,9 @@
-import { Dialog, RobloxTranslationResource, Endpoints } from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import {
+	Dialog,
+	RobloxTranslationResource,
+	Endpoints,
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	ASSET_TYPE_ENUM,
 	GAMES_PAGE_PREFIX,

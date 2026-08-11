@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Loading } from "react-style-guide";
-import { withTranslations } from "react-utilities";
-import { urlService, numberFormat, httpService } from "core-utilities";
-import { authenticatedUser } from "header-scripts";
+import { Button, Loading } from "@rbx/core-ui/legacy/react-style-guide";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
+import { formatNumber } from "@rbx/core-scripts/format/number";
+import * as httpService from "@rbx/core-scripts/http";
+import { isAuthenticated, isPremiumUser } from "@rbx/core-scripts/meta/user";
 import createMultiItemPurchaseModal from "../factories/createMultiItemPurchaseModal";
 import createInsufficientFundsModal from "../factories/createInsufficientFundsModal";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
@@ -80,7 +82,7 @@ export function BatchBuyItems({
 		);
 	};
 
-	if (!authenticatedUser.isAuthenticated) {
+	if (!isAuthenticated()) {
 		return (
 			<div className="sign-in">
 				<Button
@@ -131,7 +133,7 @@ export function BatchBuyItems({
 					<div className="purchase-price">
 						<span className="icon-robux-white-28x28" />
 						<span className="purchase-price-text text-robux-lg">
-							{numberFormat.getNumberFormat(price)}
+							{formatNumber(price)}
 						</span>
 					</div>
 				) : (
@@ -156,7 +158,7 @@ export function BatchBuyItems({
 			} else if (item.collectibleItemId.price) {
 				price += item.collectibleItemDetails.price;
 			}
-		} else if (item.premiumPriceInRobux && authenticatedUser.isPremiumUser) {
+		} else if (item.premiumPriceInRobux && isPremiumUser()) {
 			premiumPrice += item.premiumPriceInRobux;
 		} else if (item.lowestPrice) {
 			price += item.lowestPrice;
@@ -228,7 +230,7 @@ export function BatchBuyItems({
 			<div className="purchase-price">
 				<span className="icon-robux-white-28x28" />
 				<span className="purchase-price-text text-robux-lg">
-					{numberFormat.getNumberFormat(price)}
+					{formatNumber(price)}
 				</span>
 			</div>
 		) : (

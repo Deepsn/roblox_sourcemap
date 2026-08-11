@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
-import { createModal } from "react-style-guide";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import urlConstants from "../constants/urlConstants";

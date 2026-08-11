@@ -5,8 +5,8 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { withTranslations, TranslateFunction } from "react-utilities";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import { withTranslations, TranslateFunction } from "@rbx/core-scripts/react";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	Button,
 	Checkbox,

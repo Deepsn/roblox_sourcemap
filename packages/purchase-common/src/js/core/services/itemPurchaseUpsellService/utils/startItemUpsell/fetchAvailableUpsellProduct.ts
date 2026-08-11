@@ -1,4 +1,5 @@
-import { AxiosResponse, httpService } from "core-utilities";
+import type { AxiosResponse } from "@rbx/core-scripts/http";
+import * as httpService from "@rbx/core-scripts/http";
 import { EnvironmentUrls } from "@rbx/environment-urls";
 import {
 	ItemDetailObject,

@@ -1,4 +1,4 @@
-import { BatchRequestFactory } from "@rbx/core-scripts/legacy/core-utilities";
+import BatchRequestFactory from "@rbx/core-scripts/util/batch-request";
 import {
 	getBatchMetricsUrl,
 	Measure,

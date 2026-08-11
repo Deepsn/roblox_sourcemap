@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { TranslateFunction } from "react-utilities";
+import { TranslateFunction } from "@rbx/core-scripts/react";
 import { Badge, Icon } from "@rbx/foundation-ui";
 import type {
 	SubscriptionProductInfo,

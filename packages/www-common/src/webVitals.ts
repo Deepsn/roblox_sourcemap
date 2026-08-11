@@ -101,6 +101,33 @@ export function sendWebVitals(
 }
 
 /**
+ * web-vitals reports TTFB only after `load` and, unlike LCP/CLS/INP/FCP, has no
+ * page-hide fallback — so it's missing on sessions backgrounded before load,
+ * even though `responseStart` is available from the first byte. Read it directly
+ * (matching onTTFB: `responseStart - activationStart`, clamped at 0).
+ *
+ * Returns `undefined` (no backfill) when TTFB is already set, no other vital was
+ * captured (avoids TTFB-only rows), or the value is unavailable.
+ */
+export function getFallbackTtfb(
+	measurements: Record<string, { value: number }>,
+): { value: number } | undefined {
+	if (measurements.ttfb != null || Object.keys(measurements).length === 0) {
+		return undefined;
+	}
+	if (typeof performance === "undefined") {
+		return undefined;
+	}
+	const [nav] = performance.getEntriesByType("navigation");
+	if (nav && nav.responseStart > 0) {
+		const activationStart =
+			(nav as { activationStart?: number }).activationStart ?? 0;
+		return { value: Math.max(nav.responseStart - activationStart, 0) };
+	}
+	return undefined;
+}
+
+/**
  * Captures Core Web Vitals for the current page load at 100% — independent of
  * Sentry/OTEL trace sampling — and sends a single WebVitals event on page hide.
  *
@@ -136,6 +163,10 @@ export function reportWebVitals(
 			return;
 		}
 		sent = true;
+		const ttfb = getFallbackTtfb(measurements);
+		if (ttfb) {
+			measurements.ttfb = ttfb;
+		}
 		sendWebVitals(baseUrl, measurements, getUserId(), getPageName());
 	};
 

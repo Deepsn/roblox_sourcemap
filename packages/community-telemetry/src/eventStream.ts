@@ -100,6 +100,10 @@ import {
 	CmntySearchResultsReturnedEventSchema,
 	CmntySearchResultsReturnedEvent,
 } from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_search_results_returned_event_pb";
+import {
+	CmntyHomepageScrollExposureEventSchema,
+	CmntyHomepageScrollExposureEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_homepage_scroll_exposure_event_pb";
 
 import { EventStreamClient, webEventBase } from "./eventStreamClient";
 
@@ -337,6 +341,11 @@ export const CommunityMetric = {
 		getMetricEvent(
 			CmntySearchResultsReturnedEventSchema,
 			msg as unknown as CmntySearchResultsReturnedEvent,
+		),
+	HomepageScrollExposure: (msg: SafeEvent<CmntyHomepageScrollExposureEvent>) =>
+		getMetricEvent(
+			CmntyHomepageScrollExposureEventSchema,
+			msg as unknown as CmntyHomepageScrollExposureEvent,
 		),
 };
 

@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
-import { createModal } from "react-style-guide";
-import { escapeHtml } from "core-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
 import UnifiedPurchaseCompletionModal from "../../../../ts/react/components/UnifiedPurchaseCompletionModal";
 import urlConstants from "../constants/urlConstants";
 import translationConfig from "../translation.config";
@@ -92,7 +92,7 @@ export default function createPurchaseConfirmationModal({
 		const assetInfo = {
 			assetName: renderToString(<AssetName name={assetName} />),
 			assetType: assetTypeDisplayName || assetType,
-			seller: escapeHtml()(sellerName),
+			seller: escapeHtml(sellerName),
 			robux: renderToString(<PriceLabel {...{ price: expectedPrice }} />),
 		};
 		let messagePromptResource;

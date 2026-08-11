@@ -1,4 +1,4 @@
-import { Guac } from "Roblox";
+import { Guac } from "@rbx/legacy-webapp-types/Roblox";
 import { VngGuacResponse } from "../constants/serviceTypeDefinitions";
 
 export default async function getShouldShowVng(): Promise<boolean> {

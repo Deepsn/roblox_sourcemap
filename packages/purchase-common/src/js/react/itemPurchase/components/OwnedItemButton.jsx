@@ -1,7 +1,8 @@
 import React from "react";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import PropTypes from "prop-types";
-import { authenticatedUser, deviceMeta as DeviceMeta } from "header-scripts";
+import { userId } from "@rbx/core-scripts/meta/user";
+import { deviceMeta as DeviceMeta } from "@rbx/core-scripts/legacy/header-scripts";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import translationConfig from "../translation.config";
 import urlConstants from "../constants/urlConstants";
@@ -12,7 +13,7 @@ const { getInventoryUrl } = urlConstants;
 function OwnedItemButton({ translate, assetType }) {
 	const deviceMetaData = DeviceMeta.getDeviceMeta();
 	const isInPhone = deviceMetaData.deviceType === "phone";
-	const inventoryUrl = getInventoryUrl(authenticatedUser.id);
+	const inventoryUrl = getInventoryUrl(userId());
 	let assetCategoryType;
 	if (
 		assetType === assetTypes.Plugin ||

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import { renderToString } from "react-dom/server";
-import { createModal } from "react-style-guide";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import PriceLabel from "../components/PriceLabel";

@@ -1,5 +1,5 @@
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { urlService } from "core-utilities";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
 
 const {
 	economyApi,

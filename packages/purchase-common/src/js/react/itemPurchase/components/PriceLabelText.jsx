@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 

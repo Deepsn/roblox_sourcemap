@@ -2666,6 +2666,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"This recipient has reached their daily limit, please try again later.",
 	"Description.PresetChat.RestrictiveSubtitle":
 		"Roblox can set Quick Words for all ages.",
+	"Label.NumPasskeysAddedSingular": "1 passkey added",
+	"Label.NumPasskeysAddedPlural": "{numPasskeysAdded} passkeys added",
+	"Label.IARCRatingSetting": "Content Maturity",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

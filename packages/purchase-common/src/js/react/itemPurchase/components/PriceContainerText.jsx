@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Loading } from "react-style-guide";
+import { Loading } from "@rbx/core-ui/legacy/react-style-guide";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
-import { numberFormat } from "core-utilities";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { formatNumber } from "@rbx/core-scripts/format/number";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import PriceLabel from "./PriceLabel";
 import PriceLabelText from "./PriceLabelText";
@@ -165,8 +165,8 @@ function PriceContainerText({
 					)}
 					<span className="text-robux-lg wait-for-i18n-format-render">
 						{userQualifiesForPremiumPrices && premiumPriceInRobux != null
-							? numberFormat.getNumberFormat(premiumPriceInRobux)
-							: numberFormat.getNumberFormat(price)}
+							? formatNumber(premiumPriceInRobux)
+							: formatNumber(price)}
 					</span>
 				</div>
 			</div>

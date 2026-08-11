@@ -2,9 +2,9 @@ import {
 	Dialog,
 	RobloxTranslationResource,
 	RobloxTranslationResourceProviderInstance,
-} from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
-import { escapeHtml } from "core-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
 import {
 	ItemDetailObject,
 	ItemPurchaseAjaxDataObject,
@@ -27,7 +27,7 @@ export default function openVngInsufficientRobuxModal(
           <img alt='item preview' src='${itemPurchaseAjaxData.thumbnailImageUrl ?? ""}' />
         </div>
         <div class='item-info text-name'>
-        <div class='text-overflow item-card-name'>${escapeHtml()(itemDetail.assetName)}</div>
+        <div class='text-overflow item-card-name'>${escapeHtml(itemDetail.assetName)}</div>
           <div class='text-robux item-card-price'>${robuxItemPrice}</div>
         </div>
       </div>`;

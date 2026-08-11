@@ -13,6 +13,10 @@ export const getMetaData = (): {
 	performanceMetricsBatchWaitTime?: number;
 	performanceMetricsBatchSize?: number;
 } => {
+	// No document during SSR; the performance meta tag is client-only.
+	if (typeof document === "undefined") {
+		return {};
+	}
 	const metaElement = document.getElementsByName("performance")[0];
 	if (metaElement) {
 		return {

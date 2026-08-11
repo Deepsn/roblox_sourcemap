@@ -1,4 +1,7 @@
-import { Dialog, RobloxTranslationResourceProviderInstance } from "Roblox";
+import {
+	Dialog,
+	RobloxTranslationResourceProviderInstance,
+} from "@rbx/legacy-webapp-types/Roblox";
 import {
 	COMMON_UI_CONTROLS_NAMESPACE,
 	FEATURE_PREMIUM_NAMESPACE,

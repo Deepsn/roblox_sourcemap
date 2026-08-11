@@ -5,7 +5,7 @@ import {
 	ThumbnailTypes,
 	ThumbnailFormat,
 	ThumbnailGamePassIconSize,
-} from "roblox-thumbnails";
+} from "@rbx/thumbnails";
 import { ASSET_TYPE_ENUM } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import createItemPurchase from "../../../js/react/itemPurchase/factories/createItemPurchase";
 import GamepassItemPurchaseWrapper from "../components/GamepassItemPurchaseWrapper";

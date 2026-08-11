@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { authenticatedUser } from "header-scripts";
+import { isAuthenticated, isPremiumUser } from "@rbx/core-scripts/meta/user";
 import loadItemDetails from "../factories/loadItemDetails";
 import itemDetailsService from "../services/itemDetailsService";
 import itemDetailData from "../util/itemDetailData";
@@ -55,9 +55,9 @@ function PriceContainer({ translate }) {
 						itemDetailItemId,
 						loading: itemDetail.loading,
 						hasLimitedPrivateSales: itemDetail.hasLimitedPrivateSales,
-						userQualifiesForPremiumPrices: authenticatedUser.isPremiumUser,
+						userQualifiesForPremiumPrices: isPremiumUser(),
 						premiumPriceInRobux: itemDetail.premiumPriceInRobux,
-						isAuthenticated: authenticatedUser.isAuthenticated,
+						isAuthenticated: isAuthenticated(),
 						unitsAvailableForConsumption:
 							itemDetail.unitsAvailableForConsumption,
 						isLimited: itemDetail.isLimited,
@@ -85,7 +85,7 @@ function PriceContainer({ translate }) {
 					itemDetailItemId,
 					premiumPriceInRobux: itemDetail.premiumPriceInRobux,
 					premiumDiscountPercentage: itemDetail.premiumDiscountPercentage,
-					userQualifiesForPremiumPrices: authenticatedUser.isPremiumUser,
+					userQualifiesForPremiumPrices: isPremiumUser(),
 					isOwned: itemDetail.owned,
 					loading: itemDetail.loading,
 					loadFailure: itemDetail.loadFailure,

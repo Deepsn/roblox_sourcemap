@@ -1,6 +1,6 @@
-import { RobloxIntlInstance } from "Roblox";
+import { RobloxIntlInstance } from "@rbx/legacy-webapp-types/Roblox";
 import React, { useCallback, useMemo } from "react";
-import { TranslateFunction } from "react-utilities";
+import { TranslateFunction } from "@rbx/core-scripts/react";
 import {
 	Button,
 	Checkbox,

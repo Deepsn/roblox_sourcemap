@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { TranslateFunction } from "react-utilities";
-import { numberFormat } from "core-utilities";
+import { TranslateFunction } from "@rbx/core-scripts/react";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 import {
 	Accordion,
 	AccordionItem,
@@ -32,9 +32,7 @@ const RobuxAmount: React.FC<{ amount: number }> = ({ amount }) => {
 		<React.Fragment>
 			{isNegative && <span className="text-robux">{minusSign}</span>}
 			<span className="icon-robux-16x16" />
-			<span className="text-robux">
-				{numberFormat.getNumberFormat(absAmount)}
-			</span>
+			<span className="text-robux">{formatNumber(absAmount)}</span>
 		</React.Fragment>
 	);
 };
@@ -71,12 +69,12 @@ const DiscountPriceDetail: React.FC<DiscountPriceDetailProps> = ({
 				"Description.SavingWithPlus",
 				savingsTags,
 				{
-					robuxAmount: numberFormat.getNumberFormat(savedAmount),
+					robuxAmount: formatNumber(savedAmount),
 				},
 			);
 		}
 		return translate("Description.SavingRobux", {
-			robuxAmount: numberFormat.getNumberFormat(savedAmount),
+			robuxAmount: formatNumber(savedAmount),
 		});
 	};
 

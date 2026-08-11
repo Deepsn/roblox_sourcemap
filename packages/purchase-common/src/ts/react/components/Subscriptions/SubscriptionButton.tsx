@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { upsellUtil } from "core-roblox-utilities";
-import { DeviceMeta } from "Roblox";
+import { upsellUtil } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { DeviceMeta } from "@rbx/legacy-webapp-types/Roblox";
 import { Button } from "@rbx/foundation-ui";
 
 type SubscriptionButtonProps = {

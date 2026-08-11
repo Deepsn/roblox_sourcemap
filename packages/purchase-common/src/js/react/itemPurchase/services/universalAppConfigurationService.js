@@ -1,7 +1,7 @@
-import { Guac } from "Roblox";
+import { callBehaviour } from "@rbx/core-scripts/guac";
 
 export default {
 	getVngBuyRobuxBehavior: () => {
-		return Guac.callBehaviour("vng-buy-robux");
+		return callBehaviour("vng-buy-robux");
 	},
 };

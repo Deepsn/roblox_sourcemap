@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { renderToString } from "react-dom/server";
-import { withTranslations } from "react-utilities";
-import { createModal } from "react-style-guide";
-import { escapeHtml } from "core-utilities";
+import { withTranslations } from "@rbx/core-scripts/react";
+import { createModal } from "@rbx/core-ui/legacy/react-style-guide";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
 import translationConfig from "../translation.config";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import PriceLabel from "../components/PriceLabel";
@@ -36,9 +36,9 @@ export default function createPurchaseVerificationModal() {
 		const assetInfo = {
 			assetName: renderToString(<AssetName name={assetName} />),
 			assetType: assetTypeDisplayName || assetType,
-			seller: escapeHtml()(sellerName),
+			seller: escapeHtml(sellerName),
 			robux: isFiatSubscription
-				? `<span class="text-robux">${escapeHtml()(displayPrice)}</span>`
+				? `<span class="text-robux">${escapeHtml(displayPrice)}</span>`
 				: renderToString(<PriceLabel {...{ price: expectedPrice }} />),
 		};
 		let bodyMessageResource = isPlace

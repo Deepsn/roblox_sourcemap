@@ -168,10 +168,11 @@ function defaultThumbnailProcessorKeySerializer({
 	version = 0,
 	headShape,
 	includeBackground = false,
+	includeProfileFrame = false,
 }: ThumbnailQueueItem): string {
 	return `${targetId.toString()}:${token}:${type}:${size}:${format}:${
 		isCircular ? "circular" : "regular"
-	}:${version}:${headShape ?? ""}:${includeBackground}`;
+	}:${version}:${headShape ?? ""}:${includeBackground}:${includeProfileFrame}`;
 }
 
 export const defaultThumbnailRequester =

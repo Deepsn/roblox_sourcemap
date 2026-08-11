@@ -4,9 +4,12 @@ import {
 	RobloxTranslationResource,
 	RobloxTranslationResourceProviderInstance,
 	TranslationResourceProvider,
-} from "Roblox";
-import { AxiosResponse } from "core-utilities";
-import { upsellUtil, paymentFlowAnalyticsService } from "core-roblox-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import type { AxiosResponse } from "@rbx/core-scripts/http";
+import {
+	upsellUtil,
+	paymentFlowAnalyticsService,
+} from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	InsufficientFundsErrorObject,
 	ItemDetailElementDataset,
@@ -347,7 +350,7 @@ export default class ItemPurchaseUpsellService {
 			if (!this._state.purchased) {
 				if (this._state.retryRemainTimes > 0) {
 					// recursively check for remaining times
-					this._state.timeoutHandle = setTimeout(async () => {
+					this._state.timeoutHandle = window.setTimeout(async () => {
 						await this._checkBalanceAndPurchase(
 							itemPurchaseObj,
 							purchaseCallback,

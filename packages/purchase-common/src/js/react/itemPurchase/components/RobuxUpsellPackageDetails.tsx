@@ -1,5 +1,5 @@
 import React from "react";
-import { numberFormat } from "core-utilities";
+import { formatNumber } from "@rbx/core-scripts/format/number";
 
 export type RobuxPackageDetailsProps = {
 	robuxAmount: number;
@@ -19,7 +19,7 @@ const RobuxUpsellPackageDetails: React.FC<RobuxPackageDetailsProps> = ({
 				<div className="flex flex-row items-center">
 					<span className="icon-robux-16x16" />
 					<span className="text-heading-small margin-left-xsmall">
-						{numberFormat.getNumberFormat(robuxAmount)}
+						{formatNumber(robuxAmount)}
 					</span>
 				</div>
 				<div className="text-label-large">{price}</div>

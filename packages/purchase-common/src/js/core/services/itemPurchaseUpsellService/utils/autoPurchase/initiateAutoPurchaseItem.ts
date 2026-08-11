@@ -10,8 +10,9 @@ import {
 	UrlParser,
 	EnvironmentUrls,
 	RobloxTranslationResource,
-} from "Roblox";
-import { httpService, uuidService } from "core-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 import {
 	ItemPurchaseObject,
 	PurchaseResponse,

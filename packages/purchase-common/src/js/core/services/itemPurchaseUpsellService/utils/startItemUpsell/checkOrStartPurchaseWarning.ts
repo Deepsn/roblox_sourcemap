@@ -1,8 +1,8 @@
 import {
 	EmailVerificationService,
 	RobloxTranslationResourceProviderInstance,
-} from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import getPurchaseWarningAction from "../../api/getPurchaseWarningAction";
 import {
 	ItemDetailElementDataset,

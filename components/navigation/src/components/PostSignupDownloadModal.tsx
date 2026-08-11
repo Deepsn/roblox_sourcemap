@@ -24,6 +24,7 @@ import {
 } from "@rbx/app-download";
 import { translations } from "../../component.json";
 import { useDownloadModalIxp } from "../util/postSignupDownloadModalIxp";
+import { sendSignupDownloadModalEvent } from "../util/postSignupDownloadModalEvent";
 
 const headingTranslationKey = "Heading.GetTheRobloxApp";
 const subtitleTranslationKey = "Description.PlayExploreBuildAndMore";
@@ -75,6 +76,7 @@ export function PostSignupDownloadModal() {
 		logExposure();
 		if (isDownloadModalEnabled) {
 			setOpen(true);
+			sendSignupDownloadModalEvent(window.location.href);
 		}
 	}, [isEligible, isDownloadModalEnabled, logExposure]);
 

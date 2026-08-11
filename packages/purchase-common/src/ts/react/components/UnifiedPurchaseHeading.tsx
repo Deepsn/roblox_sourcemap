@@ -1,5 +1,5 @@
 import React from "react";
-import { TranslateFunction } from "react-utilities";
+import { TranslateFunction } from "@rbx/core-scripts/react";
 
 import UnifiedPriceLabel from "./UnifiedPriceLabel";
 

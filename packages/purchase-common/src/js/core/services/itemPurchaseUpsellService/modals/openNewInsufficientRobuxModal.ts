@@ -1,12 +1,13 @@
-import { urlService, escapeHtml } from "core-utilities";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
 import {
 	CurrentUser,
 	Dialog,
 	RobloxIntlInstance,
 	RobloxTranslationResource,
 	RobloxTranslationResourceProviderInstance,
-} from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	InsufficientFundsErrorObject,
 	ItemDetailElementDataset,
@@ -369,7 +370,7 @@ export default function openNewInsufficientRobuxModal(
           <img alt='item preview' src='${itemPurchaseAjaxData.thumbnailImageUrl ?? ""}' />
         </div>
         <div class='item-info text-name'>
-        <div class='text-overflow item-card-name'>${escapeHtml()(itemDetail.assetName)}</div>
+        <div class='text-overflow item-card-name'>${escapeHtml(itemDetail.assetName)}</div>
           <div class='text-robux item-card-price'>${robuxItemPrice}</div>
         </div>
       </div>`;

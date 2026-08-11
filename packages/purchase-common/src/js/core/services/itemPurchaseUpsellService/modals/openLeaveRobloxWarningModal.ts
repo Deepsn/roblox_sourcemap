@@ -1,5 +1,8 @@
-import { Dialog, RobloxTranslationResourceProviderInstance } from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import {
+	Dialog,
+	RobloxTranslationResourceProviderInstance,
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import {
 	COMMON_UI_CONTROLS_NAMESPACE,
 	FEATURE_PREMIUM_NAMESPACE,

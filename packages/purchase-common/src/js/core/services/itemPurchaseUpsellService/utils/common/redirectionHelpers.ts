@@ -1,7 +1,8 @@
-import { Endpoints, DeviceMeta } from "Roblox";
+import { Endpoints, DeviceMeta } from "@rbx/legacy-webapp-types/Roblox";
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { urlService, httpService } from "core-utilities";
-import { upsellUtil } from "core-roblox-utilities";
+import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
+import { upsellUtil } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import { GET_VNG_SHOP_URL_PATH } from "../../constants/upsellConstants";
 import { GetVngShopUrlResponse } from "../../constants/serviceTypeDefinitions";
 

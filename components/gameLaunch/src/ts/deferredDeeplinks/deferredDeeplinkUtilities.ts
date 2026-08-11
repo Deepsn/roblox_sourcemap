@@ -40,7 +40,7 @@ async function getDeferredDeeplinkQueryParams(url: string): Promise<string> {
 
 	const token = await createDeeplinkToken(deeplinkUrl, {
 		...(await resolveDeeplinkTokenParams()),
-		downloadSource: downloadSourceType.WebGameJoin,
+		downloadSource: downloadSourceType.Installer,
 	});
 	if (token) {
 		queryParams = `?${deferredDeeplinkTokenQueryParameterKey}=${token}`;

@@ -2,7 +2,7 @@ import type {
 	QueueItem,
 	ItemProcessorResult,
 } from "@rbx/core-scripts/util/batch-request";
-import { dataStores } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import dataStores from "@rbx/core-scripts/data-store";
 import { transformThumbnailType } from "./thumbnailUtil";
 import {
 	ThumbnailStates,

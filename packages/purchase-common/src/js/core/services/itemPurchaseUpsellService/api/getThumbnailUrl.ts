@@ -1,5 +1,5 @@
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { httpService } from "core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 import {
 	ASSET_TYPE_ENUM,
 	THUMBNAIL_APIS,

@@ -1,4 +1,7 @@
-import { Dialog, RobloxTranslationResource } from "Roblox";
+import {
+	Dialog,
+	RobloxTranslationResource,
+} from "@rbx/legacy-webapp-types/Roblox";
 import { LANG_KEYS } from "../constants/upsellConstants";
 import { ItemPurchaseObject } from "../constants/serviceTypeDefinitions";
 

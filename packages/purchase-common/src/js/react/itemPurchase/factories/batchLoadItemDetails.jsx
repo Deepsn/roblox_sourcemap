@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { authenticatedUser } from "header-scripts";
+import { isAuthenticated } from "@rbx/core-scripts/meta/user";
 import {
 	ItemDetailsHydrationService,
 	TDetailEntry,
 	TItemDetailRequestEntry,
-} from "Roblox";
+} from "@rbx/legacy-webapp-types/Roblox";
 import itemDetailsService from "../services/itemDetailsService";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
 import itemDetailParsingUtils from "../util/itemDetailParsingUtils";
@@ -39,7 +39,7 @@ function BatchLoadItemDetails(items) {
 	};
 
 	const loadEconomyMetadata = useCallback(() => {
-		if (!authenticatedUser.isAuthenticated) {
+		if (!isAuthenticated()) {
 			const unauthedEconomyMetadata = {
 				data: {
 					isMarketplaceEnabled: false,
@@ -73,7 +73,7 @@ function BatchLoadItemDetails(items) {
 			}
 		}
 		if (data.productId !== undefined) {
-			if (authenticatedUser.isAuthenticated) {
+			if (isAuthenticated()) {
 				if (item.collectibleItemId === undefined) {
 					const res = await itemDetailsService.getItemPurchasableDetail(
 						data.productId,

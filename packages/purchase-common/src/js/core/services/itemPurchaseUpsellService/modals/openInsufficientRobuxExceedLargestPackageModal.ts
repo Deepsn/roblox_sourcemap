@@ -1,8 +1,12 @@
 import React from "react";
-import { escapeHtml } from "core-utilities";
-import { deviceMeta } from "header-scripts";
-import { Dialog, RobloxTranslationResource, Endpoints } from "Roblox";
-import { paymentFlowAnalyticsService } from "core-roblox-utilities";
+import { escapeHtml } from "@rbx/core-scripts/format/string";
+import { deviceMeta } from "@rbx/core-scripts/legacy/header-scripts";
+import {
+	Dialog,
+	RobloxTranslationResource,
+	Endpoints,
+} from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import { ItemDetailElementDataset } from "../constants/serviceTypeDefinitions";
 import formattingRobux from "../utils/common/formattingRobux";
 import {
@@ -42,7 +46,7 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
           <img alt='item preview' src='${thumbnailImageUrl}' />
         </div>
         <div class='item-info text-name'>
-        <div class='text-overflow item-card-name'>${escapeHtml()(itemDetail.itemName)}</div>
+        <div class='text-overflow item-card-name'>${escapeHtml(itemDetail.itemName)}</div>
           <div class='text-robux item-card-price'>${robuxItemPrice}</div>
         </div>
       </div>`;

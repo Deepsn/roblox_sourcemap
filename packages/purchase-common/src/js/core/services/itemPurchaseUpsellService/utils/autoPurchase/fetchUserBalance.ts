@@ -1,6 +1,6 @@
-import { CurrentUser } from "Roblox";
+import { CurrentUser } from "@rbx/legacy-webapp-types/Roblox";
 import { EnvironmentUrls } from "@rbx/environment-urls";
-import { httpService } from "core-utilities";
+import * as httpService from "@rbx/core-scripts/http";
 import { GET_USER_BALANCE_API } from "../../constants/upsellConstants";
 import { UserBalance } from "../../constants/serviceTypeDefinitions";
 

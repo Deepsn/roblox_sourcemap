@@ -61,6 +61,49 @@ const resolveThumbnailFormat = (
 	);
 };
 
+type ThumbnailSize =
+	| ThumbnailAssetsSize
+	| ThumbnailGameIconSize
+	| ThumbnailGameThumbnailSize
+	| ThumbnailUniverseThumbnailSize
+	| ThumbnailGamePassIconSize
+	| ThumbnailAvatarsSize
+	| ThumbnailAvatarHeadshotSize
+	| ThumbnailGroupIconSize
+	| ThumbnailBadgeIconSize
+	| ThumbnailDeveloperProductIconSize;
+
+type ResolvedThumbnail = { state: ThumbnailStates; imageUrl: string };
+
+// In-memory mirror of resolved thumbnail URLs, keyed by the caller's request params (not the
+// internally webp-resolved format), so a remounted Thumbnail2d can seed its first render
+// synchronously and skip the loading shimmer for an already-loaded target. Only Completed
+// thumbnails are stored; Pending/blocked results re-resolve on the next mount.
+const resolvedThumbnailCache = new Map<string, ResolvedThumbnail>();
+
+const serializeSeedKey = (
+	thumbnailType: ThumbnailTypes,
+	size: ThumbnailSize,
+	format: ThumbnailFormat,
+	targetId?: number,
+	token?: string,
+	version?: number,
+	headShape?: string,
+	includeBackground?: boolean,
+	includeProfileFrame = false,
+): string =>
+	[
+		thumbnailType,
+		size,
+		format,
+		targetId ?? "",
+		token ?? "",
+		version ?? "",
+		headShape ?? "",
+		includeBackground ? "bg" : "",
+		includeProfileFrame ? "frame" : "",
+	].join(":");
+
 const loadThumbnailImage = (
 	thumbnailType: ThumbnailTypes,
 	size:
@@ -81,6 +124,7 @@ const loadThumbnailImage = (
 	version?: number,
 	headShape?: string,
 	includeBackground?: boolean,
+	includeProfileFrame = false,
 ) => {
 	if (!targetId && !token) {
 		return new Promise((_resolve, reject) => {
@@ -138,6 +182,7 @@ const loadThumbnailImage = (
 				headShape,
 				// Only include the param when enabled so the request omits it for the default case.
 				...(resolvedIncludeBackground ? { includeBackground: true } : {}),
+				...(includeProfileFrame ? { includeProfileFrame } : {}),
 			};
 
 			const customHandler = [
@@ -148,22 +193,50 @@ const loadThumbnailImage = (
 			const requesterKey = !customHandler.includes(thumbnailType)
 				? "thumbnail2dProcessor"
 				: "universeThumbnailProcessor";
-			return defaultThumbnailRequester.processThumbnailBatchRequest(
-				item,
-				(items: QueueItem<ThumbnailQueueItem>[]) => {
-					if (thumbnailType === ThumbnailTypes.universeThumbnail) {
-						return universeThumbnailHandler.handle(items, 1);
-					}
+			return defaultThumbnailRequester
+				.processThumbnailBatchRequest(
+					item,
+					(items: QueueItem<ThumbnailQueueItem>[]) => {
+						if (thumbnailType === ThumbnailTypes.universeThumbnail) {
+							return universeThumbnailHandler.handle(items, 1);
+						}
 
-					if (thumbnailType === ThumbnailTypes.universeThumbnails) {
-						return universeThumbnailHandler.handle(items, 10);
-					}
+						if (thumbnailType === ThumbnailTypes.universeThumbnails) {
+							return universeThumbnailHandler.handle(items, 10);
+						}
 
-					return batchRequestHandler.handle(items);
-				},
-				requesterKey,
-				clearCachedValue,
-			);
+						return batchRequestHandler.handle(items);
+					},
+					requesterKey,
+					clearCachedValue,
+				)
+				.then((result) => {
+					// Non-throwing read: this runs for every thumbnail consumer, so it must never turn a
+					// resolved request into a rejection regardless of the result shape.
+					const thumbnail = (
+						result as { thumbnail?: Partial<ResolvedThumbnail> } | undefined
+					)?.thumbnail;
+					if (
+						thumbnail?.state === ThumbnailStates.complete &&
+						thumbnail.imageUrl
+					) {
+						resolvedThumbnailCache.set(
+							serializeSeedKey(
+								thumbnailType,
+								size,
+								format,
+								targetId,
+								token,
+								version,
+								headShape,
+								includeBackground,
+								includeProfileFrame,
+							),
+							{ state: thumbnail.state, imageUrl: thumbnail.imageUrl },
+						);
+					}
+					return result;
+				});
 		},
 	);
 };
@@ -187,6 +260,7 @@ const getThumbnailImage = (
 	version?: number,
 	headShape?: string,
 	includeBackground?: boolean,
+	includeProfileFrame = false,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -198,6 +272,7 @@ const getThumbnailImage = (
 		version,
 		headShape,
 		includeBackground,
+		includeProfileFrame,
 	);
 
 const reloadThumbnailImage = (
@@ -219,6 +294,7 @@ const reloadThumbnailImage = (
 	version?: number,
 	headShape?: string,
 	includeBackground?: boolean,
+	includeProfileFrame = false,
 ) =>
 	loadThumbnailImage(
 		thumbnailType,
@@ -230,6 +306,7 @@ const reloadThumbnailImage = (
 		version,
 		headShape,
 		includeBackground,
+		includeProfileFrame,
 	);
 
 const getCssClass = (thumbnailState: ThumbnailStates) => ({
@@ -239,4 +316,36 @@ const getCssClass = (thumbnailState: ThumbnailStates) => ({
 	"icon-pending": thumbnailState === ThumbnailStates.pending,
 });
 
-export { getThumbnailImage, getCssClass, reloadThumbnailImage };
+// Synchronous read of a previously-resolved thumbnail (see resolvedThumbnailCache). Returns undefined
+// on a miss. Used by Thumbnail2d to seed its initial render when `seedFromCache` is set.
+const peekThumbnailImage = (
+	thumbnailType: ThumbnailTypes,
+	size: ThumbnailSize,
+	format: ThumbnailFormat = ThumbnailFormat.webp,
+	targetId?: number,
+	token?: string,
+	version?: number,
+	headShape?: string,
+	includeBackground?: boolean,
+	includeProfileFrame = false,
+): ResolvedThumbnail | undefined =>
+	resolvedThumbnailCache.get(
+		serializeSeedKey(
+			thumbnailType,
+			size,
+			format,
+			targetId,
+			token,
+			version,
+			headShape,
+			includeBackground,
+			includeProfileFrame,
+		),
+	);
+
+export {
+	getThumbnailImage,
+	getCssClass,
+	reloadThumbnailImage,
+	peekThumbnailImage,
+};

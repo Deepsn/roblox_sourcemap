@@ -178,6 +178,7 @@ export interface ThumbnailQueueItem {
 	version?: number;
 	headShape?: string;
 	includeBackground?: boolean;
+	includeProfileFrame?: boolean;
 }
 
 export interface CustomThumbnailQueueItem {

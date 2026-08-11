@@ -4,9 +4,9 @@ import {
 	Endpoints,
 	AccountIntegrityChallengeService,
 	CurrentUser,
-} from "Roblox";
-import { withTranslations, TranslateFunction } from "react-utilities";
-import { TSystemFeedbackService } from "react-style-guide";
+} from "@rbx/legacy-webapp-types/Roblox";
+import { withTranslations, TranslateFunction } from "@rbx/core-scripts/react";
+import { TSystemFeedbackService } from "@rbx/core-ui/legacy/react-style-guide";
 import {
 	checkTwoStepVerificationEnabled,
 	generateTwoStepVerificationToken,
