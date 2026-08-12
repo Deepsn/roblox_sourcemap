@@ -42,6 +42,7 @@ Roblox.LangDynamic["Feature.PersonalizedBonus"] = {
 	"Notification.Body.LimitedTimeAvatarItemBonus":
 		"You received the {itemName}, check your inventory!",
 	"Notification.Action.TryOn": "Try on",
+	"Description.GoldCrownOfOzymandias": "Gold Crown of Ozymandias",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

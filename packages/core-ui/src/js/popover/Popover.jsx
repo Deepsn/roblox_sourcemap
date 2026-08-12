@@ -13,6 +13,7 @@ function Popover({
 	closeOnClick,
 	container,
 	containerPadding,
+	onEnter,
 	onExit,
 }) {
 	const overlayRef = useRef();
@@ -37,6 +38,7 @@ function Popover({
 			placement={placement}
 			overlay={popover}
 			rootClose={rootClose}
+			onEnter={onEnter}
 			onExit={onExit}
 		>
 			{button}
@@ -49,6 +51,7 @@ Popover.defaultProps = {
 	closeOnClick: true,
 	container: undefined,
 	containerPadding: 0,
+	onEnter: undefined,
 	onExit: undefined,
 	button: undefined,
 };
@@ -64,6 +67,7 @@ Popover.propTypes = {
 	closeOnClick: PropTypes.bool,
 	container: PropTypes.element,
 	containerPadding: PropTypes.number,
+	onEnter: PropTypes.func,
 	onExit: PropTypes.func,
 };
 

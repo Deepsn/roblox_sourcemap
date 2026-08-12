@@ -232,6 +232,19 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"Passkeys are only available on mobile. Choose another way to sign in.",
 	"Label.EnterEmail": "Enter email",
 	"Action.SendCodeSentenceCase": "Send code",
+	"Header.ThisLinkExpired": "This link expired",
+	"Header.SwitchAccount": "Switch to correct account",
+	"Action.Switch": "Switch",
+	"Description.LinkExpiredSignInSettings":
+		"To continue, sign in to your Roblox account with parent privileges using an email one-time code and check pending requests in Settings > Parental controls.",
+	"Description.SwitchAccountSettings":
+		"To approve your child's request, switch to your Roblox account with parent privileges using an email one-time code and check pending requests in Settings > Parental controls.",
+	"Description.SwitchAccount":
+		"To approve your child's request, switch to your Roblox account with parent privileges.",
+	"Description.LinkNoLongerValidSignIn":
+		"This link is no longer valid. To continue, sign in to your Roblox account with parent privileges using an email one-time code.",
+	"Description.SignOutSignIn":
+		"Sign out of your current account, sign into your Roblox account with parent privileges using an email one-time code.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

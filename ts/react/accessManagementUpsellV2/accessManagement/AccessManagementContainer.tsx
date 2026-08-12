@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TranslateFunction } from "react-utilities";
 import { Modal } from "react-style-guide";
 import { useSelector } from "react-redux";
@@ -43,12 +43,15 @@ import ExpNewChildModal from "../enums/ExpNewChildModal";
 import UpdateSettingsContainer from "../recourses/settings/UpdateSettingsContainer";
 import UserSetting from "../../legallySensitiveContent/enums/UserSetting";
 import VPCForFAETransformContainer from "../recourses/parentalRequest/VPCForFAETransformContainer";
+import { TVpcV2Handoff } from "../types/AmpTypes";
 
 function AccessManagementContainer({
 	translate,
+	vpcV2Handoff,
 }: {
 	translate: TranslateFunction;
-}): React.ReactElement {
+	vpcV2Handoff: TVpcV2Handoff;
+}): React.ReactElement | null {
 	let displayContainer;
 	const dispatch = useAppDispatch();
 	const currentStage = useSelector(selectCurrentStage);
@@ -73,6 +76,15 @@ function AccessManagementContainer({
 	const [asyncExit, setAsyncExit] = useState<boolean>(false);
 	const [shouldSetStagePrologue, setshouldSetStagePrologue] =
 		useState<boolean>(false);
+	// Undefined while GUAC is loading, so the v1 VPC modal does not flash before a v2 handoff.
+	const [vpcV2PolicyEnabled, setVpcV2PolicyEnabled] = useState<
+		boolean | undefined
+	>(undefined);
+	const vpcHandoffRequest = useRef<{
+		isAsyncCall: boolean;
+		recourseData: Record<string, string> | null;
+		closeCallback: (access: Access) => string;
+	} | null>(null);
 
 	const expChildModalType =
 		(useExperiments(vpcUpsellExperimentLayer)
@@ -98,6 +110,12 @@ function AccessManagementContainer({
 				(access: Access): string =>
 					closeCallback(access),
 		);
+		setVpcV2PolicyEnabled(undefined);
+		vpcHandoffRequest.current = {
+			isAsyncCall,
+			recourseData: (ampRecourseData as Record<string, string> | null) ?? {},
+			closeCallback,
+		};
 		try {
 			await dispatch(
 				fetchFeatureAccess({ featureName, ampFeatureCheckData, namespace }),
@@ -219,6 +237,48 @@ function AccessManagementContainer({
 
 	const onHideFunction = asyncExit ? asyncOnHide : onHide;
 
+	const isVpcHandoffCandidate =
+		featureAccess?.data?.recourses?.length === 1 &&
+		(verificationStageRecourse?.action === Recourse.ParentConsentRequest ||
+			verificationStageRecourse?.action === Recourse.ParentLinkRequest);
+	const vpcServedByV2 = isVpcHandoffCandidate && vpcV2PolicyEnabled === true;
+	const holdForVpcV2Policy =
+		isVpcHandoffCandidate && vpcV2PolicyEnabled === undefined;
+
+	useEffect(() => {
+		if (!isVpcHandoffCandidate || vpcV2PolicyEnabled !== undefined) {
+			return;
+		}
+		vpcV2Handoff
+			.isEnabled()
+			.then(setVpcV2PolicyEnabled, () => setVpcV2PolicyEnabled(false));
+	}, [isVpcHandoffCandidate, vpcV2Handoff, vpcV2PolicyEnabled]);
+
+	useEffect(() => {
+		const request = vpcHandoffRequest.current;
+		if (!vpcServedByV2 || !verificationStageRecourse || !request) {
+			return;
+		}
+		const accessToReport = request.isAsyncCall
+			? Access.Denied
+			: featureAccess.data.access;
+		vpcV2Handoff.launch({
+			recourseAction: verificationStageRecourse.action,
+			parentConsentTypes: verificationStageRecourse.parentConsentTypes,
+			recourseData: request.recourseData,
+			onClose: () => {
+				dispatch(resetAccessManagementStore());
+				request.closeCallback(accessToReport);
+			},
+		});
+	}, [
+		dispatch,
+		featureAccess.data?.access,
+		verificationStageRecourse,
+		vpcServedByV2,
+		vpcV2Handoff,
+	]);
+
 	function getVerificationContainer() {
 		if (verificationStageRecourse) {
 			switch (verificationStageRecourse.action) {
@@ -307,6 +367,10 @@ function AccessManagementContainer({
 		displayContainer = getVerificationContainer();
 	}, [verificationStageRecourse]);
 
+	if (vpcServedByV2) {
+		return null;
+	}
+
 	if (loading) {
 		displayContainer = <LoadingPage />;
 	} else {
@@ -345,7 +409,7 @@ function AccessManagementContainer({
 			<Modal
 				backdrop="static"
 				keyboard={false}
-				show={showUpsellModal}
+				show={showUpsellModal && !holdForVpcV2Policy}
 				onHide={onHide}
 				size="sm"
 				aria-labelledby="access-management-modal-title"

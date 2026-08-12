@@ -17,11 +17,11 @@ interface DurableReplayerOptions {
 }
 
 interface ConfigNamespaceSettings {
-	MaxNotifsReplayed: number;
+	maxNotifsReplayed: number;
 }
 
 interface ReplayConfigResponse {
-	Namespaces?: Record<string, ConfigNamespaceSettings>;
+	namespaces?: Record<string, ConfigNamespaceSettings>;
 }
 
 interface ReplayNotificationEntry {
@@ -161,7 +161,7 @@ const createDurableReplayer = ({
 				url: REPLAY_CONFIG_URL,
 				withCredentials: true,
 			});
-			const namespaces = response.data.Namespaces;
+			const { namespaces } = response.data;
 			if (namespaces) {
 				durableNamespaceConfig = namespaces;
 				sendDurableReplayEvent("ConfigFetchSuccess");

@@ -113,8 +113,8 @@ const legallySensitiveContentConstants = {
 		pageDescriptionSourceContentId: "7181640",
 		titleTranslationKey: "Label.Party",
 		titleSourceContentId: "2137161",
-		consentTranslationKey: "Description.JoinGamesAndChatWithFriends",
-		consentSourceContentId: "9447241",
+		consentTranslationKey: "Description.PlayGamesTogetherWithYourFriends",
+		consentSourceContentId: "9550152",
 	},
 	[ConsentName.whoCanPartyWithMeV2]: {
 		pageTitleTranslationKey: "Heading.ChatAndPartyWithFriends",
@@ -235,8 +235,8 @@ const legallySensitiveContentConstants = {
 		pageDescriptionSourceContentId: "8316488",
 		titleTranslationKey: "Label.Party",
 		titleSourceContentId: "2137161",
-		consentTranslationKey: "Description.JoinGamesAndChatWithFriends",
-		consentSourceContentId: "9447241",
+		consentTranslationKey: "Description.PlayGamesTogetherWithYourFriends",
+		consentSourceContentId: "9550152",
 	},
 	[ConsentName.whoCanPartyWithMeTrustedFriendsV2]: {
 		pageTitleTranslationKey: "Heading.ChatAndPartyWithFriends",

@@ -2669,6 +2669,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.NumPasskeysAddedSingular": "1 passkey added",
 	"Label.NumPasskeysAddedPlural": "{numPasskeysAdded} passkeys added",
 	"Label.IARCRatingSetting": "Content Maturity",
+	"Label.LiftPlatformAccessRestriction":
+		"join Roblox, an age-based gaming platform",
+	"Heading.LiftPlatformAccessRestriction": "Roblox access",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
