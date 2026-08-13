@@ -9,9 +9,6 @@ export default {
 	getLogoutUrl: () => `${environmentUrls.authApi}/v2/logout`,
 	getRefreshSessionUrl: () => `${environmentUrls.authApi}/v2/session/refresh`,
 	getRootUrl: () => getAbsoluteUrl("/"),
-	getSponsoredPageUrl: () => `${environmentUrls.adsApi}/v1/sponsored-pages`,
-	getSponsoredEventUrl: (pageType, name) =>
-		getAbsoluteUrl(`/${pageType.toLowerCase()}/${name}`),
 	getUnreadPrivateMessagesCountUrl: () =>
 		`${environmentUrls.privateMessagesApi}/v1/messages/unread/count`,
 	getUserCurrencyUrl: (userId) =>

@@ -10,14 +10,8 @@ export const mapRobuxBadgeTypeToLocalStorageKey = (
 			return `prevLocalVirtualItemStartTimeSeconds${CurrentUser?.userId ?? ""}`;
 		case RobuxBadgeType.UPDATE:
 			return "hasSeenRobuxUpdate";
-		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
-			return "hasSeenRobuxPersonalizedBonusItems";
-		case RobuxBadgeType.BONUS_AVATAR_ITEM:
-			return "hasSeenRobuxBonusAvatarItem";
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
-			return "hasSeenRobuxMultiBonusAvatarItems";
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_FEDORA_WINGS:
-			return "hasSeenRobuxMultiBonusAvatarFedoraWings";
+		case RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS:
+			return "hasSeenRobuxBonusAvatarItemCrownOfOzymandias";
 		default:
 			return "";
 	}
@@ -26,10 +20,7 @@ export const mapRobuxBadgeTypeToLocalStorageKey = (
 export const mapRobuxBadgeTypeToStr = (robuxBadgeType: string): string => {
 	switch (robuxBadgeType) {
 		case RobuxBadgeType.VIRTUAL_ITEM:
-		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
-		case RobuxBadgeType.BONUS_AVATAR_ITEM:
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_FEDORA_WINGS:
+		case RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS:
 			return "Labels.NewItem";
 		case RobuxBadgeType.UPDATE:
 			return "Labels.NewUpdate";
@@ -49,10 +40,7 @@ export const setRobuxBadgeLocalStorage = (robuxBadgeType: string): void => {
 			);
 			break;
 		case RobuxBadgeType.UPDATE:
-		case RobuxBadgeType.PERSONALIZED_BONUS_ITEMS:
-		case RobuxBadgeType.BONUS_AVATAR_ITEM:
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS:
-		case RobuxBadgeType.MULTI_BONUS_AVATAR_FEDORA_WINGS:
+		case RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS:
 			localStorageService.setLocalStorage(localStorageKey, "true");
 			break;
 		default:
@@ -67,31 +55,15 @@ export const getRobuxBadgeLocalStorage = (robuxBadgeType: string): any => {
 };
 
 export const shouldShowRobuxUpdateBadge = (): string => {
-	// New launches take priority over older, already-dismissed badges.
+	// There should only be one local storage field checked here at a time per label,
+	// otherwise the red dot will not dismiss until the user clicks multiple times
+
 	if (
 		getRobuxBadgeLocalStorage(
-			RobuxBadgeType.MULTI_BONUS_AVATAR_FEDORA_WINGS,
+			RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS,
 		) !== "true"
 	) {
-		return RobuxBadgeType.MULTI_BONUS_AVATAR_FEDORA_WINGS;
-	}
-
-	if (
-		getRobuxBadgeLocalStorage(RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS) !==
-		"true"
-	) {
-		return RobuxBadgeType.MULTI_BONUS_AVATAR_ITEMS;
-	}
-
-	if (getRobuxBadgeLocalStorage(RobuxBadgeType.BONUS_AVATAR_ITEM) !== "true") {
-		return RobuxBadgeType.BONUS_AVATAR_ITEM;
-	}
-
-	if (
-		getRobuxBadgeLocalStorage(RobuxBadgeType.PERSONALIZED_BONUS_ITEMS) !==
-		"true"
-	) {
-		return RobuxBadgeType.PERSONALIZED_BONUS_ITEMS;
+		return RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS;
 	}
 
 	return "";

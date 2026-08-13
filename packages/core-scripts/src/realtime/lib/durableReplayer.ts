@@ -25,15 +25,15 @@ interface ReplayConfigResponse {
 }
 
 interface ReplayNotificationEntry {
-	Namespace: string;
-	Detail: string;
-	SequenceNumber: number;
+	namespace: string;
+	detail: string;
+	sequenceNumber: number;
 }
 
 interface ReplayResponse {
-	Notifications: ReplayNotificationEntry[];
-	NamespacesWithGap: string[];
-	UpdatedSequenceNumbers: Record<string, number>;
+	notifications: ReplayNotificationEntry[];
+	namespacesWithGap: string[];
+	updatedSequenceNumbers: Record<string, number>;
 }
 
 export interface DurableReplayer {
@@ -85,18 +85,18 @@ const createDurableReplayer = ({
 	};
 
 	const processReplayResponse = (responseData: ReplayResponse): void => {
-		const { Notifications, NamespacesWithGap, UpdatedSequenceNumbers } =
+		const { notifications, namespacesWithGap, updatedSequenceNumbers } =
 			responseData;
 
-		if (Notifications.length > 0) {
-			for (const entry of Notifications) {
-				if (!entry.Namespace || !entry.Detail) {
+		if (notifications.length > 0) {
+			for (const entry of notifications) {
+				if (!entry.namespace || !entry.detail) {
 					continue;
 				}
 
 				let detail: Record<string, unknown>;
 				try {
-					const parsed: unknown = JSON.parse(entry.Detail);
+					const parsed: unknown = JSON.parse(entry.detail);
 					if (!isRecord(parsed)) {
 						continue;
 					}
@@ -105,15 +105,15 @@ const createDurableReplayer = ({
 					continue;
 				}
 
-				processNotification(entry.Namespace, detail, entry.SequenceNumber);
+				processNotification(entry.namespace, detail, entry.sequenceNumber);
 			}
 		}
 
-		if (NamespacesWithGap.length > 0) {
+		if (namespacesWithGap.length > 0) {
 			sendDurableReplayEvent("GapDetected");
 		}
 
-		applyUpdatedSequenceNumbers(UpdatedSequenceNumbers, NamespacesWithGap);
+		applyUpdatedSequenceNumbers(updatedSequenceNumbers, namespacesWithGap);
 	};
 
 	const maybeRequestReplay = async (): Promise<void> => {

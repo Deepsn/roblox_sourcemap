@@ -1,0 +1,261 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef, forwardRef, useEffect, useMemo, useState } from 'react';
+import type { TTailwindIconClass } from '@rbx/foundation-tailwind/classes';
+import { Icon } from './Icon';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+
+export const avatarSizes = ['Small', 'Medium', 'Large', 'XLarge', 'Pictogram'] as const;
+export type TAvatarSize = (typeof avatarSizes)[number];
+
+export const avatarStatuses = ['Active', 'Away', 'InExperience'] as const;
+export type TAvatarStatus = (typeof avatarStatuses)[number];
+
+export type TAvatarProps = Omit<ComponentPropsWithRef<'span'>, 'children'> & {
+  /** The image source URL. When provided (and loads successfully), the image is displayed. */
+  src?: string;
+  /**
+   * Accessible label for the avatar. Used as `alt` text for the image and as the
+   * `aria-label` when no image is provided. If omitted, the avatar is treated as decorative.
+   */
+  alt?: string;
+  /** The avatar size. */
+  size?: TAvatarSize;
+  /** The status indicator displayed on the avatar. */
+  status?: TAvatarStatus;
+  /**
+   * Initials to display when no image is provided (or the image fails to load).
+   * Typically 1-2 uppercase letters.
+   */
+  initials?: string;
+  /** Fallback icon rendered when no image and no initials are provided. Defaults to a person icon. */
+  icon?: TTailwindIconClass;
+  /** Whether to render a decorative ring/border around the avatar. */
+  hasBorder?: boolean;
+};
+
+const containerSizeClassBySize: Record<TAvatarSize, string> = {
+  Small: 'size-800',
+  Medium: 'size-1000',
+  Large: 'size-1200',
+  XLarge: 'size-1400',
+  Pictogram: 'size-2400'
+};
+
+const initialsTextClassBySize: Record<TAvatarSize, string> = {
+  Small: 'text-label-small',
+  Medium: 'text-label-medium',
+  Large: 'text-title-small',
+  XLarge: 'text-title-medium',
+  Pictogram: 'text-display-small'
+};
+
+const iconSizeVarBySize: Record<TAvatarSize, string> = {
+  Small: 'var(--icon-size-medium)',
+  Medium: 'var(--icon-size-large)',
+  Large: 'var(--icon-size-xlarge)',
+  XLarge: 'var(--size-900)',
+  Pictogram: 'var(--size-1600)'
+};
+
+const statusDotSizeVarBySize: Record<TAvatarSize, string> = {
+  Small: 'var(--size-150)',
+  Medium: 'var(--size-200)',
+  Large: 'var(--size-200)',
+  XLarge: 'var(--size-250)',
+  Pictogram: 'var(--size-500)'
+};
+
+const awayRingWidthBySize: Record<TAvatarSize, string> = {
+  Small: '1.5px',
+  Medium: '2px',
+  Large: '2px',
+  XLarge: '2.5px',
+  Pictogram: '5px'
+};
+
+const statusDotPositionBySize: Record<TAvatarSize, { right: number; bottom: number }> = {
+  Small: { right: 0, bottom: 2 },
+  Medium: { right: 0, bottom: 2 },
+  Large: { right: 0, bottom: 3 },
+  XLarge: { right: 3, bottom: 3 },
+  Pictogram: { right: 0, bottom: 4 }
+};
+
+const statusCutoutSizeBySize: Record<TAvatarSize, number> = {
+  Small: 12,
+  Medium: 14,
+  Large: 14,
+  XLarge: 16,
+  Pictogram: 26
+};
+
+const containerSizePxBySize: Record<TAvatarSize, number> = {
+  Small: 32,
+  Medium: 40,
+  Large: 48,
+  XLarge: 56,
+  Pictogram: 96
+};
+
+const borderWidthVarBySize: Record<TAvatarSize, string> = {
+  Small: 'var(--size-50)',
+  Medium: 'var(--size-50)',
+  Large: 'var(--size-50)',
+  XLarge: 'var(--size-50)',
+  Pictogram: 'var(--size-100)'
+};
+
+const StatusIndicator: React.FC<{ status: TAvatarStatus; size: TAvatarSize }> = ({
+  status,
+  size
+}) => {
+  if (status === 'InExperience') {
+    return null;
+  }
+  const dotSize = statusDotSizeVarBySize[size];
+  const position = statusDotPositionBySize[size];
+  return (
+    <span
+      aria-hidden='true'
+      data-testid='avatar-status'
+      data-status={status}
+      className='absolute flex items-center justify-center radius-circle'
+      style={{
+        width: dotSize,
+        height: dotSize,
+        right: position.right,
+        bottom: position.bottom,
+        boxSizing: 'border-box',
+        boxShadow:
+          '0 0 0 var(--size-50) var(--avatar-surrounding-background, var(--color-surface-100))',
+        backgroundColor: status === 'Active' ? 'var(--color-system-success)' : 'transparent',
+        border:
+          status === 'Away'
+            ? `${awayRingWidthBySize[size]} solid var(--color-content-default)`
+            : undefined
+      }}
+    />
+  );
+};
+
+const AvatarComponent = (
+  {
+    className,
+    style,
+    src,
+    alt,
+    size = 'Medium',
+    status,
+    initials,
+    icon = 'icon-filled-person',
+    hasBorder = false,
+    ...rest
+  }: TAvatarProps,
+  ref: React.ForwardedRef<HTMLSpanElement>
+) => {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  useEffect(() => {
+    setHasImageError(false);
+  }, [src]);
+
+  const shouldRenderImage = Boolean(src) && !hasImageError;
+  const shouldRenderInitials = !shouldRenderImage && Boolean(initials);
+  const shouldRenderIcon = !shouldRenderImage && !shouldRenderInitials;
+  const showInExperienceRing = status === 'InExperience';
+  const showBorderRing = hasBorder;
+  const hasStatusDot = status === 'Active' || status === 'Away';
+
+  const maskStyle = useMemo(() => {
+    if (!hasStatusDot) return undefined;
+    const containerPx = containerSizePxBySize[size];
+    const cutoutPx = statusCutoutSizeBySize[size];
+    const cutoutRadius = cutoutPx / 2;
+    const position = statusDotPositionBySize[size];
+    const dotSizePx = { Small: 6, Medium: 8, Large: 8, XLarge: 10, Pictogram: 20 }[size];
+    const cx = containerPx - position.right - dotSizePx / 2;
+    const cy = containerPx - position.bottom - dotSizePx / 2;
+    return {
+      maskImage: `radial-gradient(circle ${cutoutRadius + 1}px at ${cx}px ${cy}px, transparent ${cutoutRadius}px, black ${cutoutRadius + 0.5}px)`,
+      WebkitMaskImage: `radial-gradient(circle ${cutoutRadius + 1}px at ${cx}px ${cy}px, transparent ${cutoutRadius}px, black ${cutoutRadius + 0.5}px)`
+    } as React.CSSProperties;
+  }, [hasStatusDot, size]);
+
+  let accessibilityProps: { role?: 'img'; 'aria-label'?: string; 'aria-hidden'?: true } = {};
+  if (alt && !shouldRenderImage) {
+    accessibilityProps = { role: 'img', 'aria-label': alt };
+  } else if (!alt) {
+    accessibilityProps = { 'aria-hidden': true };
+  }
+
+  return (
+    <span
+      ref={ref}
+      data-testid='avatar-root'
+      {...accessibilityProps}
+      {...rest}
+      className={clsx(
+        'foundation-web-avatar relative inline-flex items-center justify-center shrink-0 select-none radius-circle',
+        containerSizeClassBySize[size],
+        !shouldRenderImage && 'bg-shift-200',
+        !shouldRenderImage && 'content-emphasis',
+        className
+      )}
+      style={style}>
+      <span
+        data-testid='avatar-content'
+        className='relative radius-circle flex items-center justify-center'
+        style={{ width: '100%', height: '100%', overflow: 'hidden', ...maskStyle }}>
+        {shouldRenderImage && (
+          <img
+            src={src}
+            alt={alt ?? ''}
+            data-testid='avatar-image'
+            onError={() => setHasImageError(true)}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+          />
+        )}
+        {shouldRenderInitials && (
+          <span
+            aria-hidden='true'
+            className={clsx(
+              'foundation-web-avatar-initials text-no-wrap',
+              initialsTextClassBySize[size]
+            )}>
+            {initials}
+          </span>
+        )}
+        {shouldRenderIcon && (
+          <Icon
+            name={icon}
+            aria-hidden='true'
+            data-testid='avatar-fallback-icon'
+            className='grow-0 shrink-0 basis-auto content-emphasis'
+            style={{ width: iconSizeVarBySize[size], height: iconSizeVarBySize[size] }}
+          />
+        )}
+      </span>
+
+      {(showInExperienceRing || showBorderRing) && (
+        <span
+          aria-hidden='true'
+          data-testid={showInExperienceRing ? 'avatar-inexperience-ring' : 'avatar-border-ring'}
+          className='absolute pointer-events-none radius-circle'
+          style={{
+            inset: 0,
+            borderStyle: 'solid',
+            borderWidth: borderWidthVarBySize[size],
+            borderColor: showInExperienceRing
+              ? 'var(--color-system-emphasis)'
+              : 'var(--color-stroke-default)'
+          }}
+        />
+      )}
+
+      {status && <StatusIndicator status={status} size={size} />}
+    </span>
+  );
+};
+
+export const Avatar = forwardRef(AvatarComponent) as TForwardRefComponent<TAvatarProps>;
+Avatar.displayName = 'Avatar';

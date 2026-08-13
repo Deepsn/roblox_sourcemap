@@ -256,6 +256,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Description.NotAFriend": "Not a friend",
 	"Description.NoMutualFriends": "No mutual friends",
 	"Heading.Friends": "Friends",
+	"TrustedFriend.Toast.LinkCopied": "Link copied to clipboard",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

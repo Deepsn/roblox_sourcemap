@@ -126,14 +126,6 @@ export default {
 			labelTranslationKey: "Label.GiftCards",
 		},
 	},
-	sponsorEvents: {
-		label: {
-			labelTranslationKey: "Label.sEvents",
-		},
-		events: {
-			// TODO: dynamical generate from ads.roblox.com/v1/sponsored-page
-		},
-	},
 	gameSearchLink,
 	avatarSearchLink,
 	miscSearchLink,

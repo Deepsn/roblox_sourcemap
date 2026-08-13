@@ -56,7 +56,24 @@ export const NotificationStreamList = <T,>({
 	});
 
 	if (items.length === 0 && !isLoading && emptyState !== undefined) {
-		return <div className={className}>{emptyState}</div>;
+		return (
+			<div
+				className={[className, "is-empty"].filter(Boolean).join(" ")}
+				style={
+					maxHeight !== undefined
+						? {
+								minHeight: maxHeight,
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								boxSizing: "border-box",
+							}
+						: undefined
+				}
+			>
+				{emptyState}
+			</div>
+		);
 	}
 
 	return (

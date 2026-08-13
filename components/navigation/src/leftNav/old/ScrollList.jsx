@@ -1,18 +1,14 @@
 import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
-import { Intl } from "@rbx/core-scripts/legacy/Roblox";
 import environmentUrls from "@rbx/environment-urls";
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import { SimpleModal } from "@rbx/core-ui/legacy/react-style-guide";
 import links from "../../constants/linkConstants";
 import layoutConstants from "../../constants/layoutConstants";
 import LeftNavItem from "./LeftNavItem";
-import SponsoredEventsContainer from "./SponsoredEventsContainer";
 import navigationUtil from "../../util/navigationUtil";
-import platformEventConstants from "../../constants/platformEventConstants";
 
 const { shopEvents } = layoutConstants;
-const turnOnEventLabel = false; // kill the Event on the NavBar
 
 function ScrollList({ translate, ...props }) {
 	const [isShopModalOpen, setShopModalOpen] = useState(false);
@@ -75,43 +71,11 @@ function ScrollList({ translate, ...props }) {
 		/>
 	);
 
-	const now = new Date(); // user's system time
-	const showThumbnailTime = platformEventConstants.showPlatformEventStartTime();
-	const hideThumbnailTime = platformEventConstants.showPlatformEventEndTime();
-	const platformEventThumbnailUrl = platformEventConstants.platfromEventURL();
-	const intl = Intl && new Intl();
-	const platformEventThumbnailImage = platformEventConstants.localizedThumbnail(
-		intl.getRobloxLocale(),
-	);
-	const platformEventEntry = (
-		<a
-			href={platformEventThumbnailUrl}
-			className="rbx-platform-event-container"
-		>
-			<div className="rbx-platform-event-header dynamic-overflow-container">
-				<span className="rbx-event-icon" />
-				<span className="rbx-event-header-text dynamic-ellipsis-item">
-					{translate("Label.sEvents")}
-				</span>
-			</div>
-			<img
-				className="rbx-platform-event-thumbnail"
-				src={platformEventThumbnailImage}
-				alt={translate("Label.TheHunt")} // Despite the key, this is not actually specific to The Hunt
-			/>
-		</a>
-	);
-
 	return (
 		<ul className="left-col-list">
 			{listNavItems}
 			{upgradeBtn}
-			{turnOnEventLabel && <SponsoredEventsContainer translate={translate} />}
 			{shopModal}
-			{now > showThumbnailTime &&
-				now < hideThumbnailTime &&
-				platformEventThumbnailUrl &&
-				platformEventEntry}
 		</ul>
 	);
 }

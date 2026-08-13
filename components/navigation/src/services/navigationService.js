@@ -5,7 +5,6 @@ import urlConstants from "../constants/urlConstants";
 const {
 	getEmailStatusUrl,
 	getLogoutUrl,
-	getSponsoredPageUrl,
 	getUnreadPrivateMessagesCountUrl,
 	getUserCurrencyUrl,
 	getTradeStatusCountUrl,
@@ -54,16 +53,6 @@ export default {
 	getEmailStatus() {
 		const urlConfig = { url: getEmailStatusUrl(), withCredentials: true };
 		return httpService.get(urlConfig);
-	},
-
-	getSponsoredPages() {
-		const urlConfig = { url: getSponsoredPageUrl(), withCredentials: true };
-		return httpService
-			.get(urlConfig)
-			.then((result) => result?.data)
-			.catch((e) => {
-				console.error(e);
-			});
 	},
 
 	getAuthTokenMetadata() {

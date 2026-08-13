@@ -2672,6 +2672,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.LiftPlatformAccessRestriction":
 		"join Roblox, an age-based gaming platform",
 	"Heading.LiftPlatformAccessRestriction": "Roblox access",
+	"Label.RobuxTransferDailyLimit": "robux transfer daily limit",
+	"Label.RobuxTransferMonthlyLimit": "robux transfer monthly limit",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

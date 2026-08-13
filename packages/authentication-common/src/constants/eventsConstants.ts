@@ -60,6 +60,9 @@ const EVENT_CONSTANTS = {
 		passwordDeactivationSource: "passwordDeactivationSource",
 		kisaU14Signup: "kisaU14Signup",
 		platformRestrictedPage: "platformRestrictedPage",
+		// The OAuth consent dialog at www.roblox.com/authorize. Distinct from loginPage because the
+		// account switcher there resumes an in-progress OAuth request rather than starting a session.
+		authorizePage: "authorizePage",
 	},
 	verifiedParentalConsentContext: {
 		chargeback: {
@@ -132,6 +135,11 @@ const EVENT_CONSTANTS = {
 		continue: "continue",
 		changeEmail: "changeEmail",
 		select: "select",
+		// Opens an account switcher, as opposed to `switch`, which picks an account inside one. Both
+		// spellings are already in production: `switchAccount` from the roblox.com nav menu and
+		// `switch` from the legacy account-switcher modal.
+		switchAccount: "switchAccount",
+		back: "back",
 		parentalConsentCheckbox: "pc_checkbox",
 		termsOfServiceCheckbox: "tos_checkbox",
 		privacyPolicyCheckbox: "pp_checkbox",

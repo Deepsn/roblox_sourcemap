@@ -1,0 +1,125 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef, ReactNode } from 'react';
+import { Button } from './Button';
+import './internal/Common.css';
+
+export type TNotificationAction = {
+  /** The button label. */
+  label: string;
+  /** Click handler for the action. */
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  /** Whether the action is disabled. */
+  isDisabled?: boolean;
+};
+
+export type TNotificationProps = Omit<ComponentPropsWithRef<'div'>, 'title'> & {
+  /** The notification title. */
+  title: ReactNode;
+  /** A brief description shown below the title. */
+  description?: ReactNode;
+  /** Leading media slot, e.g. an `Avatar`, `Icon`, or `Media`. */
+  media?: ReactNode;
+  /** A short, relative timestamp shown to the right of the title (e.g. "32 min"). */
+  timestamp?: string;
+  /**
+   * Renders a small status dot beside the timestamp to mark the notification
+   * as unread. @default false
+   */
+  hasStatusIndicator?: boolean;
+  /** The primary (Emphasis) action button. */
+  primaryAction?: TNotificationAction;
+  /** The secondary (Standard) action button. */
+  secondaryAction?: TNotificationAction;
+};
+
+/**
+ * A Notification is a non-blocking contextual surface that appears temporarily
+ * on screen to prompt a timely response or provide brief disclosure.
+ *
+ * It is composed of an optional leading media slot (avatar, icon, or media), a
+ * title with an optional timestamp and unread status dot, a description, and up
+ * to two action buttons.
+ */
+export const Notification = React.forwardRef<HTMLDivElement, TNotificationProps>(
+  (
+    {
+      title,
+      description,
+      media,
+      timestamp,
+      hasStatusIndicator = false,
+      primaryAction,
+      secondaryAction,
+      className,
+      ...rest
+    },
+    ref
+  ) => {
+    const hasActions = Boolean(primaryAction || secondaryAction);
+
+    return (
+      <div
+        ref={ref}
+        {...rest}
+        className={clsx(
+          'foundation-web-notification flex items-start gap-large min-width-[393px] max-width-[480px] padding-large radius-medium bg-surface-100 fui-future-shadow-affixed-low',
+          className
+        )}>
+        {media && <div className='flex items-center shrink-0'>{media}</div>}
+        <div className='flex flex-col fill basis-0 min-width-0 gap-large'>
+          <div className='flex flex-col width-full'>
+            <div className='flex items-start gap-small width-full'>
+              {title && (
+                <p className='fill basis-0 min-width-0 text-title-medium content-emphasis'>
+                  {title}
+                </p>
+              )}
+              {(timestamp || hasStatusIndicator) && (
+                <div className='flex items-center gap-small shrink-0'>
+                  {timestamp && (
+                    <span className='text-caption-medium content-default text-no-wrap'>
+                      {timestamp}
+                    </span>
+                  )}
+                  {hasStatusIndicator && (
+                    <span
+                      aria-hidden='true'
+                      className='size-200 shrink-0 radius-circle bg-system-emphasis'
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+            {description && (
+              <p className='text-body-medium content-default width-full'>{description}</p>
+            )}
+          </div>
+          {hasActions && (
+            <div className='flex items-start gap-small width-full'>
+              {primaryAction && (
+                <Button
+                  className='fill basis-0'
+                  variant='Emphasis'
+                  isDisabled={primaryAction.isDisabled}
+                  onClick={primaryAction.onClick}>
+                  {primaryAction.label}
+                </Button>
+              )}
+              {secondaryAction && (
+                <Button
+                  className='fill basis-0'
+                  variant='Standard'
+                  isDisabled={secondaryAction.isDisabled}
+                  onClick={secondaryAction.onClick}>
+                  {secondaryAction.label}
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
+
+Notification.displayName = 'Notification';
