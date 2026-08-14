@@ -16,6 +16,7 @@ import { trackCounter, trackError, publishMetric } from "../observability";
 import {
 	getBrowserInfo,
 	getCredentialCreateBrowserDims,
+	type BrowserFamily,
 } from "../observability/browserInfo";
 
 const upgradeState = EVENT_CONSTANTS.passkeyUpgradeState;
@@ -24,6 +25,8 @@ const PASSKEY_UPGRADE_SESSION_KEY = "RBXPasskeyUpgradePending";
 const PASSKEY_UPGRADE_USER_ID_KEY = "RBXPasskeyUpgradeUserId";
 const PASSKEY_DELAY_UNTIL_KEY = "RBXPasskeyUpgradeDelayUntil";
 const DELAYED_UPGRADE_MS = 8_000;
+
+const UPGRADE_BROWSER_FAMILIES = new Set<BrowserFamily>(["Chrome", "Safari"]);
 
 /** Returns the authenticated userId, or null if the session isn't authenticated. */
 const getCurrentUserId = (): string | null => {
@@ -285,6 +288,14 @@ export const attemptPasskeyUpgrade = async (): Promise<boolean> => {
 	const { ctx, delayMs, expectedUserId } = intent;
 	const source = ctxToUpgradeSource(ctx);
 	trackCounter("UpgradeFlagObserved", { source });
+
+	const { browserFamily } = getBrowserInfo();
+	if (!UPGRADE_BROWSER_FAMILIES.has(browserFamily)) {
+		clearUpgradeFlags();
+		sendAuthPageLoadEvent(ctx, upgradeState.filteredByUnsupportedBrowser);
+		trackCounter("UpgradeFilteredByBrowser", { source, browserFamily });
+		return false;
+	}
 
 	// Abort if the active account differs from the one that set the flag.
 	if (!verifyUpgradeUserOrAbort(ctx, expectedUserId, source)) {

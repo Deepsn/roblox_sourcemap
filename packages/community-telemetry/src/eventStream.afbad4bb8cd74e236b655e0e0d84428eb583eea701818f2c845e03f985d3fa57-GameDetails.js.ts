@@ -185,7 +185,6 @@ export type GroupPageClickEventParams = Omit<
 	"$typeName" | "groupId" | "enterFrom"
 > & {
 	groupId: number;
-	enterFrom?: string;
 };
 
 export type CmntyEntrypointExposureEventParams = Omit<

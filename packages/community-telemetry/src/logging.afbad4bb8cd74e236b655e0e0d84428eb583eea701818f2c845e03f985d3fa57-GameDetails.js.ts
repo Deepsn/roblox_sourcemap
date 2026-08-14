@@ -44,14 +44,12 @@ export const logGroupPageClickEvent = ({
 	clickTargetType,
 	clickTargetId,
 	hasRichText,
-	enterFrom,
 }: {
 	groupId?: number;
 	clickTargetType: string;
 	clickTargetId?: string;
 	hasRichText?: boolean;
 	context: string;
-	enterFrom?: string;
 }): void => {
 	const {
 		pageRoute,
@@ -69,7 +67,6 @@ export const logGroupPageClickEvent = ({
 			sessionId: getImpressionId(),
 			...(clickTargetId && { clickTargetId }),
 			...(hasRichText && { hasRichText }),
-			...(enterFrom && { enterFrom }),
 		}),
 	);
 };

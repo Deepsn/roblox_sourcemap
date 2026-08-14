@@ -45,6 +45,7 @@ const EVENT_CONSTANTS = {
 		expectedUserIdMissing: "expectedUserIdMissing",
 		currentUserIdMissing: "currentUserIdMissing",
 		userIdMismatch: "userIdMismatch",
+		filteredByUnsupportedBrowser: "filteredByUnsupportedBrowser",
 	},
 } as const;
 

@@ -41,6 +41,10 @@ export const observabilityRegistry = {
 				{ name: "UpgradeIneligible", dimensions: ["source"] },
 				{ name: "UpgradeAborted", dimensions: ["source", "reason"] },
 				{
+					name: "UpgradeFilteredByBrowser",
+					dimensions: ["source", "browserFamily"],
+				},
+				{
 					name: "AlreadyHasPasskey",
 					dimensions: ["source", "browserFamily", "browserMajor"],
 				},

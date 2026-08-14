@@ -30,6 +30,15 @@ export const getBrowserInfo = (): BrowserInfo => {
 		return { browserFamily: "Chrome", browserMajor: parseMajor(chromeMatch) };
 	}
 
+	// Chrome on iOS sends `CriOS` and no `Chrome` token.
+	const chromeIosMatch = /CriOS\/(\d+(?:\.\d+)?)/.exec(userAgent);
+	if (chromeIosMatch) {
+		return {
+			browserFamily: "Chrome",
+			browserMajor: parseMajor(chromeIosMatch),
+		};
+	}
+
 	const safariMatch = /Version\/(\d+(?:[._]\d+)?).*Safari/.exec(userAgent);
 	if (safariMatch) {
 		return { browserFamily: "Safari", browserMajor: parseMajor(safariMatch) };

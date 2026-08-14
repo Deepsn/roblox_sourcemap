@@ -213,6 +213,9 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Action.PricePerSubscriptionDuration":
 		"{price} / {periodType, select, Month {{periodCount, plural, =1 {month} other {{periodCount} months}}} Week {{periodCount, plural, =1 {week} other {{periodCount} weeks}}} Year {{periodCount, plural, =1 {year} other {{periodCount} years}}} other {{periodCount, plural, one {{periodType}} other {{periodCount} {periodType}s}}} }",
 	"Label.RobloxPlusSubscriber": "Roblox Plus subscriber",
+	"Description.BannerBodyUnboxed":
+		"Head to your inventory to see what's inside.",
+	"Description.BannerTitleUnboxed": "Your Plus gift is now open!",
 	"Description.BannerTitleArrivedSubscriber": "Your Plus gift has arrived!",
 	"Description.BannerBodyArrivedSubscriber":
 		"It's in your inventory now. Get ready for it to open on August 14.",

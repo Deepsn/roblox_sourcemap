@@ -1,3 +1,4 @@
+import environmentUrls from "@rbx/environment-urls";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import InlineChallenge from "../../../common/inlineChallenge";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
@@ -42,16 +43,30 @@ const queryParametersToPropagate = {
 	[QUERY_KEY_FC_SUPPRESS]: queryParameterFcSuppress || undefined,
 };
 
+const ARKOSE_SITETEST_DOMAINS: readonly string[] = [
+	"sitetest1.robloxlabs.com",
+	"sitetest2.robloxlabs.com",
+	"sitetest3.robloxlabs.com",
+];
+
+const ARKOSE_SCRIPT_HOST = ARKOSE_SITETEST_DOMAINS.includes(
+	environmentUrls.domain,
+)
+	? `arkoselabs.${environmentUrls.domain}`
+	: "arkoselabs.roblox.com";
+
+const ARKOSE_ORIGIN = `https://${ARKOSE_SCRIPT_HOST}`;
+
 // Origins allowed to deliver `CaptchaElementEvent` messages to our `message`
 // listener. This is defense-in-depth for our own listener only: it does NOT
-// affect the Arkose-hosted challenge frame (arkoselabs.roblox.com), which is
-// responsible for validating the messages it receives from its parent.
+// affect the Arkose-hosted challenge frame, which is responsible for
+// validating the messages it receives from its parent.
 const TRUSTED_MESSAGE_ORIGINS: ReadonlySet<string> = new Set(
 	[
 		// Same-origin (legacy same-origin captcha iframe, if any).
 		typeof window !== "undefined" ? window.location.origin : "",
-		// The Arkose FunCaptcha challenge origin.
-		"https://arkoselabs.roblox.com",
+		// The Arkose FunCaptcha challenge origin (env-specific).
+		ARKOSE_ORIGIN,
 	].filter(Boolean),
 );
 

@@ -145,6 +145,8 @@ Roblox.LangDynamic["Feature.GameDetails"] = {
 		"Join the official community for exclusive sneak peeks and early updates!",
 	"CommunitySection.Members": "Members",
 	"CommunitySection.Member": "Member",
+	"Action.RemoveFromFavorites": "Remove from Favorites",
+	"Message.RemovedFromFavorites": "Removed from Favorites",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
