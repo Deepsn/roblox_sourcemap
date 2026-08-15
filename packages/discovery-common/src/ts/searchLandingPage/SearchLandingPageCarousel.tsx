@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useMemo } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import { TBuildEventProperties } from "../common/components/GameTileUtils";
 import {
@@ -18,13 +18,12 @@ import {
 } from "../common/utils/parsingUtils";
 import SearchLandingPageSessionContext from "./SearchLandingPageSessionContext";
 import { getSortTargetIdMetadata } from "../omniFeed/utils/gameSortUtils";
-import { TGameSort } from "../common/types/bedev2Types";
+import { TExploreApiGameSort } from "../common/types/bedev2Types";
 import { TGameData, TGetFriendsResponse } from "../common/types/bedev1Types";
-import { searchLandingPage } from "../common/constants/configConstants";
 
 type SearchLandingPageGamesCarouselProps = {
 	positionId: number;
-	sort: TGameSort;
+	sort: TExploreApiGameSort;
 	translate: WithTranslationsProps["translate"];
 	itemsPerRow?: number;
 	gameData: TGameData[];
@@ -43,11 +42,6 @@ const SearchLandingPageGamesCarousel = ({
 	// Type union will be cleaned up with isCarouselHorizontalScrollEnabled
 	const carouselRef = useRef<HTMLDivElement | HTMLUListElement>(null);
 
-	const sortId = useMemo(() => {
-		// TODO CLIGROW-2294 Update this to be int sort id provided by BE
-		return searchLandingPage.missingSortIdDefault;
-	}, []);
-
 	const buildEventProperties: TBuildEventProperties = useCallback(
 		(data, id) => ({
 			[EventStreamMetadata.PlaceId]: data.placeId,
@@ -57,13 +51,13 @@ const SearchLandingPageGamesCarousel = ({
 			[EventStreamMetadata.Position]: id,
 			[EventStreamMetadata.SortPos]: positionId,
 			[EventStreamMetadata.NumberOfLoadedTiles]: gameData.length,
-			[EventStreamMetadata.GameSetTypeId]: sortId,
 			...getSortTargetIdMetadata(sort),
+			[EventStreamMetadata.SortId]: sort.sortId,
 			[EventStreamMetadata.Page]: PageContext.SearchLandingPage,
 			[SessionInfoType.SearchLandingPageSessionInfo]: sessionInfo,
 			[EventStreamMetadata.PlayContext]: PageContext.SearchLandingPage,
 		}),
-		[positionId, gameData.length, sortId, sort, sessionInfo],
+		[positionId, gameData.length, sort, sessionInfo],
 	);
 
 	const buildGameImpressionsProperties: TBuildCarouselGameImpressionsEventProperties =
@@ -81,25 +75,25 @@ const SearchLandingPageGamesCarousel = ({
 					),
 					...getThumbnailAssetIdImpressionsData(
 						gameData,
-						sortId,
+						undefined,
 						filteredViewedIndexes,
 					),
 					...getTileBadgeContextsImpressionsData(
 						gameData,
-						sortId,
+						undefined,
 						filteredViewedIndexes,
 					),
 					...getSponsoredAdImpressionsData(gameData, filteredViewedIndexes),
 					...getSortTargetIdMetadata(sort),
+					[EventStreamMetadata.SortId]: sort.sortId,
 					[EventStreamMetadata.AbsPositions]: filteredViewedIndexes,
 					[EventStreamMetadata.SortPos]: positionId,
 					[EventStreamMetadata.NumberOfLoadedTiles]: gameData.length,
-					[EventStreamMetadata.GameSetTypeId]: sortId,
 					[EventStreamMetadata.Page]: PageContext.SearchLandingPage,
 					[SessionInfoType.SearchLandingPageSessionInfo]: sessionInfo,
 				};
 			},
-			[gameData, sort, positionId, sessionInfo, sortId],
+			[gameData, sort, positionId, sessionInfo],
 		);
 
 	useGameImpressionsIntersectionTracker(
@@ -128,7 +122,7 @@ const SearchLandingPageGamesCarousel = ({
 				sort={sort}
 				positionId={positionId}
 				hideScrollBackWhenDisabled
-				sortId={sortId}
+				sortIdStr={sort.sortId}
 				page={PageContext.SearchLandingPage}
 				gamesContainerRef={carouselRef}
 				buildEventProperties={buildEventProperties}

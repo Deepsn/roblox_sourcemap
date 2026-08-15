@@ -13,6 +13,7 @@ import { getNumCarouselTiles } from "../common/components/GameTileUtils";
 import {
 	buildOmniRecommendationAnalyticsData,
 	getHydratedGameData,
+	isExploreApiGameSort,
 	isOmniRecommendationGameSort,
 } from "./utils/gameSortUtils";
 import GamesPageGameCarousel from "../gamesPage/components/GamesPageGameCarousel";
@@ -132,7 +133,7 @@ export const GameCarouselFeedItem = ({
 		);
 	}
 
-	if (page === PageContext.SearchLandingPage) {
+	if (page === PageContext.SearchLandingPage && isExploreApiGameSort(sort)) {
 		return (
 			<SearchLandingPageGamesCarousel
 				key={sort.topic}

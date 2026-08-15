@@ -1,3 +1,4 @@
+import { mergeEventParamsWithAnalyticsData } from "../../common/utils/analyticsDataUtils";
 import {
 	EventStreamMetadata,
 	type TCarouselGameImpressions,
@@ -19,6 +20,7 @@ import {
 	parseMaybeStringNumberField,
 	parseStringField,
 } from "./analyticsParsingUtils";
+import { buildSduiGameImpressionsAnalyticsData } from "./sduiGameImpressionsAnalyticsDataUtils";
 
 // Accepts both the V1 (`TItemAnalyticsData[]`) and V2 (`(ItemAnalyticsData | null)[]`)
 // item shapes.
@@ -86,6 +88,9 @@ export type TBuildGameImpressionParamsArgs = {
 	componentTypeFallback: string;
 };
 
+export type TGameImpressionParams = TCarouselGameImpressions &
+	Record<string, string | string[]>;
+
 /**
  * Builds the event-stream `gameImpressions` payload shared by the V1
  * (`sendGameImpressionsFromSdui`) and V2 (`sduiGameImpressionsHandler`) paths.
@@ -98,7 +103,7 @@ export const buildGameImpressionParams = ({
 	pageContext,
 	useGridTiles,
 	componentTypeFallback,
-}: TBuildGameImpressionParamsArgs): TCarouselGameImpressions => {
+}: TBuildGameImpressionParamsArgs): TGameImpressionParams => {
 	const sessionInfoKey = getSessionInfoKey(pageContext) ?? "";
 	const pageSessionInfo = parseStringField(
 		collectionAnalyticsData[sessionInfoKey],
@@ -114,7 +119,7 @@ export const buildGameImpressionParams = ({
 				)
 			: componentTypeFallback;
 
-	return {
+	const knownParams: TCarouselGameImpressions = {
 		[EventStreamMetadata.RootPlaceIds]: impressionIndexes.map((index) =>
 			parseMaybeStringNumberField(itemAnalyticsDatas[index]?.placeId, -1),
 		),
@@ -147,4 +152,12 @@ export const buildGameImpressionParams = ({
 		[EventStreamMetadata.Page]: pageContext.pageName,
 		...buildSessionAnalyticsData(pageSessionInfo, pageContext),
 	};
+
+	const dynamicAnalyticsData = buildSduiGameImpressionsAnalyticsData(
+		impressionIndexes,
+		itemAnalyticsDatas,
+		collectionAnalyticsData,
+	);
+
+	return mergeEventParamsWithAnalyticsData(knownParams, dynamicAnalyticsData);
 };

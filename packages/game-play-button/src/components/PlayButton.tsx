@@ -429,11 +429,11 @@ export const DefaultPlayButton = ({
 	const isPurchaseStatus =
 		playabilityStatus === PlayabilityStatus.PurchaseRequired ||
 		playabilityStatus === PlayabilityStatus.FiatPurchaseRequired;
-	const { isLoading: isPurchaseProductLoading } = usePurchaseProductData(
-		universeId,
-		placeId,
-		isPurchaseStatus,
-	);
+	const {
+		isLoading: isPurchaseProductLoading,
+		productInfo,
+		productDetails,
+	} = usePurchaseProductData(universeId, placeId, isPurchaseStatus);
 
 	const demoButton = demoModeAvailable ? (
 		<DemoButton
@@ -513,7 +513,25 @@ export const DefaultPlayButton = ({
 				/>
 			);
 		case PlayabilityStatus.PurchaseRequired:
-		case PlayabilityStatus.FiatPurchaseRequired:
+		case PlayabilityStatus.FiatPurchaseRequired: {
+			// Fall back to an unplayable button (keeping Play Demo when available) when the purchase
+			// data is inadequate, e.g. FiatPurchaseRequired with no fiat pricing.
+			const hasAdequatePurchaseData =
+				playabilityStatus === PlayabilityStatus.FiatPurchaseRequired
+					? Boolean(productDetails?.fiatPurchaseData)
+					: Boolean(productInfo?.isForSale);
+
+			if (!isPurchaseProductLoading && !hasAdequatePurchaseData) {
+				fireEvent?.(counterEvents.Unplayable);
+
+				return withDemoButton(
+					<UnplayableButton
+						hideButtonText={hideButtonText}
+						buttonClassName={buttonClassName}
+					/>,
+				);
+			}
+
 			return withDemoButton(
 				<PurchaseButton
 					refetchPlayabilityStatus={refetchPlayabilityStatus}
@@ -528,6 +546,7 @@ export const DefaultPlayButton = ({
 				/>,
 				!isPurchaseProductLoading,
 			);
+		}
 		case PlayabilityStatus.FiatPurchaseDeviceRestricted:
 		case PlayabilityStatus.ContextualPlayabilityRegionalAvailability:
 			fireEvent?.(counterEvents.Unplayable);

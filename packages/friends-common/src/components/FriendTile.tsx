@@ -86,6 +86,7 @@ const FriendTile = ({
 	return (
 		<div className="friends-carousel-tile">
 			<FriendTilePopover
+				ariaLabel={displayName}
 				trigger={
 					<button
 						type="button"

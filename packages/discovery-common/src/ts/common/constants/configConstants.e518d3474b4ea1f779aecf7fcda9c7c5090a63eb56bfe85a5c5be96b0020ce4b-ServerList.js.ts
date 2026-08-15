@@ -82,6 +82,7 @@ export const searchLandingPage = {
 	searchLandingPageUnexpectedTreatmentTypeError:
 		"SearchLandingPageUnexpectedTreatmentTypeError",
 	searchLandingMissingSortIdError: "SearchLandingMissingSortIdError",
+	missingSortIdDefault: -1,
 	numberOfTilesPerCarousel: 5,
 	SearchPillCarouselImpressionsUndefinedError:
 		"SearchPillCarouselImpressionsUndefinedError",

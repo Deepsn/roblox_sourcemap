@@ -279,12 +279,12 @@ export type TGameImpressionsEventThumbnailIdData = {
 
 export const getThumbnailAssetIdImpressionsData = (
 	gameData: TGameData[],
-	topicId: number | string | undefined,
+	topicId: number | string,
 	impressedIndexes: number[],
 	componentType?: TComponentType,
 ): TGameImpressionsEventThumbnailIdData | {} => {
 	if (isWideTileComponentType(componentType)) {
-		const topicIdString = topicId?.toString();
+		const topicIdString = topicId.toString();
 
 		return {
 			[EventStreamMetadata.ThumbnailAssetIds]: impressedIndexes.map(

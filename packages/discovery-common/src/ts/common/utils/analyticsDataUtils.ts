@@ -35,6 +35,35 @@ export const buildOmniRecommendationTileAnalyticsData = (
 };
 
 /**
+ * Merges scalar collection-/sort-level analytics with item-level values
+ * aggregated into `{key}_arr` arrays aligned to `itemDataList` order.
+ * Missing item keys are filled with `missingValue` (default `"0"`).
+ *
+ * Shared by omni-recommendation and SDUI gameImpressions builders.
+ */
+export const buildAnalyticsDataWithItemArrAggregation = (
+	sortLevel: Record<string, string>,
+	itemDataList: ReadonlyArray<Record<string, string>>,
+	missingValue = "0",
+): Record<string, string | string[]> => {
+	const itemKeys = new Set(itemDataList.flatMap((data) => Object.keys(data)));
+
+	const itemResult: Record<string, string[]> = {};
+	itemKeys.forEach((key) => {
+		itemResult[`${key}${ANALYTICS_ARRAY_KEY_SUFFIX}`] = itemDataList.map(
+			(data) => data[key] ?? missingValue,
+		);
+	});
+
+	return {
+		// Sort-/collection-level comes first so item-level `_arr` keys can coexist
+		// with the same bare key when both levels define it.
+		...sortLevel,
+		...itemResult,
+	};
+};
+
+/**
  * Builds analytics data for game impression events. Sort-level data stays scalar.
  * Item-level data is aggregated into per-key arrays (suffixed with `_arr`).
  *
@@ -55,34 +84,13 @@ export const buildOmniRecommendationGameImpressionsAnalyticsData = (
 	viewedUniverseIds: number[],
 	analyticsData: TOmniRecommendationAnalyticsData,
 ): Record<string, string | string[]> => {
-	// Go through item-level analytics data for all viewed universes to find all
-	// unique keys so we can tell ahead of time which universe needs a default value
-	const itemKeys = new Set(
-		viewedUniverseIds.flatMap((id) =>
-			Object.keys(analyticsData.itemLevel[id] ?? {}),
-		),
+	const itemDataList = viewedUniverseIds.map(
+		(id) => analyticsData.itemLevel[id] ?? {},
 	);
-
-	const itemResult: Record<string, string[]> = {};
-	itemKeys.forEach((key) => {
-		itemResult[`${key}${ANALYTICS_ARRAY_KEY_SUFFIX}`] = [];
-	});
-
-	// Then go through all the universe IDs and add the item-level analytics data
-	viewedUniverseIds.forEach((universeId) => {
-		const data = analyticsData.itemLevel[universeId];
-		itemKeys.forEach((key) => {
-			itemResult[`${key}${ANALYTICS_ARRAY_KEY_SUFFIX}`]?.push(
-				data?.[key] ?? "0",
-			);
-		});
-	});
-
-	return {
-		// Sort-level comes first because item-level should override for the same key
-		...analyticsData.sortLevel,
-		...itemResult,
-	};
+	return buildAnalyticsDataWithItemArrAggregation(
+		analyticsData.sortLevel,
+		itemDataList,
+	);
 };
 
 /**

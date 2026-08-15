@@ -213,6 +213,7 @@ type TBaseGameImpressions = {
 	[EventStreamMetadata.UniverseIds]: number[];
 	[EventStreamMetadata.GameSetTypeId]?: number | string;
 	[EventStreamMetadata.GameSetTargetId]?: number | string;
+	[EventStreamMetadata.SortId]?: string;
 	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.AdsPositions]?: number[];
 	[EventStreamMetadata.AdFlags]?: number[];
@@ -257,8 +258,9 @@ export type TFeedScroll = {
 	[EventStreamMetadata.Distance]: number;
 	[EventStreamMetadata.Direction]: ScrollDirection;
 	[EventStreamMetadata.PageSession]: string;
-	[EventStreamMetadata.GameSetTypeId]?: number | string;
+	[EventStreamMetadata.GameSetTypeId]?: number;
 	[EventStreamMetadata.GameSetTargetId]?: number;
+	[EventStreamMetadata.SortId]?: string;
 	[EventStreamMetadata.SortPos]?: number;
 	[EventStreamMetadata.ScrollDepth]: number;
 	[EventStreamMetadata.StartDepth]: number;
@@ -321,6 +323,7 @@ export type TCommonReferralParams = {
 	[EventStreamMetadata.SortPos]?: number;
 	[EventStreamMetadata.NumberOfLoadedTiles]?: number;
 	[EventStreamMetadata.GameSetTypeId]?: number | string;
+	[EventStreamMetadata.SortId]?: string;
 	[EventStreamMetadata.SortSubId]?: string;
 	[EventStreamMetadata.AttributionId]?: string;
 	[SessionInfoType.DiscoverPageSessionInfo]?: string;

@@ -1,5 +1,6 @@
 import { JSX } from "react";
-import { DeviceMeta, GameLauncher } from "@rbx/core-scripts/legacy/Roblox";
+import { GameLauncher } from "@rbx/core-scripts/legacy/Roblox";
+import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import "@rbx/core-scripts/global";
 import { chatService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
 import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
@@ -41,7 +42,7 @@ const FriendTileDropdown = ({
 }): JSX.Element => {
 	const launchGame = async () => {
 		const joinAttemptId = friend.presence.gameId ?? "";
-		const meta = DeviceMeta();
+		const meta = getDeviceMeta();
 		if (meta?.isInApp) {
 			if (meta.isDesktop) {
 				GameLauncher?.followPlayerIntoGame(

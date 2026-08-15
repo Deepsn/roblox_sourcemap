@@ -7,8 +7,9 @@ import { usePageSession } from "../utils/PageSessionContext";
 type HorizontalScrollTrackerProps = {
 	scrollPosition: number;
 	page: string;
-	gameSetTypeId: number | string;
+	gameSetTypeId?: number;
 	gameSetTargetId?: number;
+	sortId?: string;
 	sortPosition: number;
 	wrapperRef: React.RefObject<HTMLDivElement>;
 };
@@ -18,6 +19,7 @@ export const useHorizontalScrollTracker = ({
 	page,
 	gameSetTypeId,
 	gameSetTargetId,
+	sortId,
 	sortPosition,
 	wrapperRef,
 }: HorizontalScrollTrackerProps): void => {
@@ -42,13 +44,22 @@ export const useHorizontalScrollTracker = ({
 				direction: ScrollDirection.Horizontal,
 				gameSetTypeId,
 				gameSetTargetId,
+				sortId,
 				sortPosition,
 				pageSession,
 			});
 			startPosition.current = stopPosition;
 		}, 250);
 		return debouncedScrollEnd;
-	}, [page, gameSetTypeId, gameSetTargetId, sortPosition, pageSession]);
+	}, [
+		page,
+		gameSetTypeId,
+		gameSetTargetId,
+		sortId,
+		sortPosition,
+		pageSession,
+		wrapperRef,
+	]);
 
 	useEffect(() => {
 		onScrollEnd(scrollPosition);

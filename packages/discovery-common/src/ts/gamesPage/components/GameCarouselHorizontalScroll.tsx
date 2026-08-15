@@ -53,7 +53,8 @@ type TGamesPageGameCarouselProps = {
 	isNewScrollArrowsEnabled?: boolean;
 	hideScrollBackWhenDisabled?: boolean;
 	translate: WithTranslationsProps["translate"];
-	sortId: string | number;
+	sortId?: number;
+	sortIdStr?: string;
 };
 
 const {
@@ -89,6 +90,7 @@ export const GameCarouselHorizontalScroll = ({
 	isNewScrollArrowsEnabled,
 	hideScrollBackWhenDisabled,
 	sortId,
+	sortIdStr,
 	translate,
 }: TGamesPageGameCarouselProps): JSX.Element => {
 	const tileRef = useRef<HTMLDivElement>(null);
@@ -300,6 +302,7 @@ export const GameCarouselHorizontalScroll = ({
 		page,
 		gameSetTypeId: sortId,
 		gameSetTargetId: getSortTargetId(sort),
+		sortId: sortIdStr,
 		wrapperRef: carouselContainerRef,
 		sortPosition: positionId,
 	});

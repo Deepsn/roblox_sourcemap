@@ -1,6 +1,7 @@
 import { JSX } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/legacy/react-utilities";
-import { Badge, Icon } from "@rbx/foundation-ui";
+import { Icon } from "@rbx/foundation-ui";
+import { Badge } from "@rbx/foundation-ui-old-badge";
 
 const ADD_FRIENDS_URL = "/users/friends#!/friend-requests";
 

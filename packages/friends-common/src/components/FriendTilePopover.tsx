@@ -1,106 +1,83 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
+import { Popover, PopoverAnchor, PopoverContent } from "@rbx/foundation-ui";
 
 const DROPDOWN_EDGE_PADDING = 24;
 
-interface PopoverProps {
+interface FriendTilePopoverProps {
 	trigger: React.ReactNode;
 	content: React.ReactNode;
 	dropdownWidth: number;
+	ariaLabel: string;
 }
 
-const FriendTilePopover: React.FC<PopoverProps> = ({
+const FriendTilePopover: React.FC<FriendTilePopoverProps> = ({
 	trigger,
 	content,
 	dropdownWidth,
+	ariaLabel,
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const triggerRef = useRef<HTMLDivElement>(null);
-	const popoverRef = useRef<HTMLDivElement>(null);
+	const contentRef = useRef<HTMLDivElement>(null);
 
-	const handleMouseOver = () => {
+	const handleMouseEnter = useCallback(() => {
 		setIsOpen(true);
-	};
-
-	const handleMouseOut = (
-		event:
-			| React.FocusEvent<HTMLDivElement>
-			| React.MouseEvent<HTMLDivElement>
-			| MouseEvent
-			| null,
-	) => {
-		if (
-			event != null &&
-			// TODO: old, migrated code
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-			!triggerRef.current?.contains(event.relatedTarget as Node) &&
-			// TODO: old, migrated code
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-			!popoverRef.current?.contains(event.relatedTarget as Node)
-		) {
-			setIsOpen(false);
-		}
-	};
-
-	useEffect(() => {
-		if (triggerRef.current) {
-			triggerRef.current.addEventListener("mouseover", handleMouseOver);
-			triggerRef.current.addEventListener("mouseout", handleMouseOut);
-
-			return () => {
-				// TODO: old, migrated code FIXME THIS IS A BUG
-				triggerRef.current?.removeEventListener("mouseover", handleMouseOver);
-				// TODO: old, migrated code FIXME THIS IS A BUG
-				// eslint-disable-next-line react-hooks/exhaustive-deps
-				triggerRef.current?.removeEventListener("mouseout", handleMouseOut);
-			};
-		}
-		return () => {
-			/* Do nothing if no trigger ref */
-		};
 	}, []);
 
-	const getPopoverLeftValue = () => {
-		const triggerLeft = triggerRef.current?.offsetLeft ?? 0;
-		const triggerWidth = triggerRef.current?.offsetWidth ?? 0;
-		const left = triggerLeft + triggerWidth / 2 - dropdownWidth / 2;
+	const handleMouseLeave = useCallback(
+		(event: React.MouseEvent<HTMLDivElement>) => {
+			const { relatedTarget } = event;
+			if (relatedTarget == null) {
+				setIsOpen(false);
+				return;
+			}
 
-		// If dropdown would overflow left edge, position on left edge
-		if (left < 0) {
-			return DROPDOWN_EDGE_PADDING;
-		}
+			// TODO: old, migrated code
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+			const relatedNode = relatedTarget as Node;
+			const isMovingWithinPopover =
+				(triggerRef.current?.contains(relatedNode) ?? false) ||
+				(contentRef.current?.contains(relatedNode) ?? false);
 
-		// If dropdown would overflow right edge, position on right edge
-		if (left + dropdownWidth > window.innerWidth) {
-			return window.innerWidth - (dropdownWidth + DROPDOWN_EDGE_PADDING);
-		}
-
-		return left;
-	};
+			if (!isMovingWithinPopover) {
+				setIsOpen(false);
+			}
+		},
+		[],
+	);
 
 	return (
-		<div>
-			<div ref={triggerRef}>{trigger}</div>
-			{isOpen && (
+		<Popover open={isOpen} onOpenChange={setIsOpen}>
+			<PopoverAnchor asChild>
+				{/* Hover-only (no onFocus/onBlur): this menu is additive and duplicated on the profile page, so keyboard/AT users use that path rather than being handed a dialog they can't tab into. */}
 				<div
-					ref={popoverRef}
-					style={{
-						position: "absolute",
-						top:
-							(triggerRef.current?.offsetHeight ?? 0) +
-							(triggerRef.current?.offsetTop ?? 0),
-						left: getPopoverLeftValue(),
-						zIndex: 1002,
-						width: dropdownWidth,
-					}}
-					onMouseOver={handleMouseOver}
-					onMouseOut={handleMouseOut}
-					onFocus={handleMouseOver}
-					onBlur={handleMouseOut}
+					ref={triggerRef}
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
+				>
+					{trigger}
+				</div>
+			</PopoverAnchor>
+			<PopoverContent
+				side="bottom"
+				align="center"
+				sideOffset={0}
+				collisionPadding={DROPDOWN_EDGE_PADDING}
+				ariaLabel={ariaLabel}
+				onOpenAutoFocus={(event) => {
+					event.preventDefault();
+				}}
+			>
+				<div
+					ref={contentRef}
+					style={{ width: dropdownWidth }}
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
 				>
 					{content}
 				</div>
-			)}
-		</div>
+			</PopoverContent>
+		</Popover>
 	);
 };
 

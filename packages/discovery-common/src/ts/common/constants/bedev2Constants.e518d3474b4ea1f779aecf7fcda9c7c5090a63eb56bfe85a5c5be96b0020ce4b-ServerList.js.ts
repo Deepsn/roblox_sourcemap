@@ -36,10 +36,6 @@ const url = {
 		url: `${apiGatewayUrl}/user-signal-http-gateway/v1/user-signal/ingest`,
 		withCredentials: true,
 	}),
-	getPreAuthLandingPage: (): UrlConfig => ({
-		url: `${apiGatewayUrl}/landing-page-api/mock-api`, //TODO (sshetty): change to production endpoint when backend is ready
-		withCredentials: true,
-	}),
 };
 
 export default {

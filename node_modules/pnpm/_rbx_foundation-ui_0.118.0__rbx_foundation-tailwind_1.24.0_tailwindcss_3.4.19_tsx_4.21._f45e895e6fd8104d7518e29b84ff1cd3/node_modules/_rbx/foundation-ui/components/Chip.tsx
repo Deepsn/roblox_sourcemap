@@ -1,0 +1,248 @@
+import clsx from 'clsx';
+import React, { ComponentProps, forwardRef } from 'react';
+import type {
+  TTailwindIconClass,
+  TTailwindBgClass,
+  TTailwindHeightClass,
+  TTailwindTextLabelClass,
+  TTailwindPaddingLeftClass,
+  TTailwindPaddingRightClass
+} from '@rbx/foundation-tailwind/classes';
+import { interactable, StateLayer } from './internal/StateLayer';
+import { Icon, TIconSize } from './Icon';
+import { disabledOpacity } from '../utils/styles';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+
+export const chipSizes = ['Small', 'Medium', 'Large'] as const;
+export type TChipSize = (typeof chipSizes)[number];
+
+export const chipVariants = ['Standard', 'Utility'] as const;
+export type TChipVariant = (typeof chipVariants)[number];
+
+/**
+ * The leading visual element to render, if any. Provide either a Foundation icon
+ * class name via `leadingIconName` (keeps editor autocomplete for icon names) or
+ * an arbitrary ReactNode via `leadingIconNode` (e.g., an Avatar). The two are
+ * mutually exclusive.
+ */
+type TLeadingProps =
+  | { leadingIconName: TTailwindIconClass; leadingIconNode?: never }
+  | { leadingIconName?: never; leadingIconNode: React.ReactNode }
+  | { leadingIconName?: never; leadingIconNode?: never };
+
+/**
+ * The trailing visual element to render, if any. Provide either a Foundation icon
+ * class name via `trailingIconName` or an arbitrary ReactNode via `trailingIconNode`.
+ * The two are mutually exclusive.
+ */
+type TTrailingProps =
+  | { trailingIconName: TTailwindIconClass; trailingIconNode?: never }
+  | { trailingIconName?: never; trailingIconNode: React.ReactNode }
+  | { trailingIconName?: never; trailingIconNode?: never };
+
+type TChipCoreProps = {
+  /** The chip text. */
+  text: string;
+  /** The chip variant. */
+  variant?: TChipVariant;
+  /** The chip size. */
+  size?: TChipSize;
+  /** Whether the chip is disabled or not. */
+  isDisabled?: boolean;
+} & TLeadingProps &
+  TTrailingProps;
+
+/**
+ * Since ElementType can have overlap with our custom props,
+ * we need to omit constraints on fields we define from the final props type.
+ */
+type TChipVariantProps<T extends 'button' | 'a'> = Omit<
+  React.ComponentPropsWithoutRef<T>,
+  keyof TChipCoreProps | 'disabled' | 'children'
+> &
+  TChipCoreProps;
+
+export type TChipProps =
+  | (Omit<TChipVariantProps<'button'>, 'onClick'> & {
+      /** Defines the component HTML tag to render. */
+      as?: 'button';
+      /** Whether the chip is checked or not. */
+      isChecked: boolean;
+      /** The callback for when the checked state changes. */
+      onCheckedChange?: (isChecked: boolean) => void;
+    })
+  | (TChipVariantProps<'a'> & {
+      /** Defines the component HTML tag to render. */
+      as: 'a';
+    });
+
+const iconSizeBySize: Record<TChipSize, TIconSize> = {
+  Small: 'XSmall',
+  Medium: 'Small',
+  Large: 'Medium'
+};
+
+const classesBySize: Record<TChipSize, [TTailwindHeightClass, TTailwindTextLabelClass]> = {
+  Small: ['height-600', 'text-label-small'],
+  Medium: ['height-800', 'text-label-medium'],
+  Large: ['height-1000', 'text-label-medium']
+};
+
+const leftPaddingBySize: Record<TChipSize, TTailwindPaddingLeftClass> = {
+  Small: 'padding-left-small',
+  Medium: 'padding-left-medium',
+  Large: 'padding-left-large'
+};
+
+const leftPaddingWithIconBySize: Record<TChipSize, TTailwindPaddingLeftClass> = {
+  Small: 'padding-left-small',
+  Medium: 'padding-left-medium',
+  Large: 'padding-left-medium'
+};
+
+const rightPaddingBySize: Record<TChipSize, TTailwindPaddingRightClass> = {
+  Small: 'padding-right-small',
+  Medium: 'padding-right-medium',
+  Large: 'padding-right-large'
+};
+
+const rightPaddingWithIconBySize: Record<TChipSize, TTailwindPaddingRightClass> = {
+  Small: 'padding-right-small',
+  Medium: 'padding-right-medium',
+  Large: 'padding-right-medium'
+};
+
+const textLeftPaddingWithIconBySize: Record<TChipSize, string> = {
+  Small: 'padding-left-xsmall',
+  Medium: 'padding-left-[var(--size-150)]',
+  Large: 'padding-left-small'
+};
+
+const textRightPaddingWithIconBySize: Record<TChipSize, string> = {
+  Small: 'padding-right-[var(--size-150)]',
+  Medium: 'padding-right-small',
+  Large: 'padding-right-[var(--size-250)]'
+};
+
+const bgByVariant: Record<TChipVariant, TTailwindBgClass> = {
+  Standard: 'bg-shift-300',
+  Utility: 'bg-none'
+};
+
+const iconContainerSizeBySize: Record<TChipSize, string> = {
+  Small: 'size-[var(--icon-size-xsmall)]',
+  Medium: 'size-[var(--icon-size-small)]',
+  Large: 'size-[var(--icon-size-medium)]'
+};
+
+type TChipAccessoryProps = {
+  iconName?: TTailwindIconClass;
+  node?: React.ReactNode;
+  size: TChipSize;
+};
+
+/**
+ * Renders a chip's leading or trailing slot: a Foundation `Icon` when an icon class
+ * name is provided, otherwise the custom node wrapped in an icon-sized container.
+ */
+const ChipAccessory = ({ iconName, node, size }: TChipAccessoryProps) => {
+  if (iconName != null) {
+    return <Icon name={iconName} size={iconSizeBySize[size]} />;
+  }
+  if (node != null) {
+    return (
+      <span
+        className={clsx(
+          'inline-flex items-center justify-center shrink-0',
+          iconContainerSizeBySize[size]
+        )}>
+        {node}
+      </span>
+    );
+  }
+  return null;
+};
+
+const ChipComponent = (
+  {
+    className,
+    style,
+    text,
+    isDisabled = false,
+    size = 'Medium',
+    variant = 'Standard',
+    leadingIconName,
+    leadingIconNode,
+    trailingIconName,
+    trailingIconNode,
+    ...props
+  }: TChipProps,
+  ref: ComponentProps<'button' | 'a'>['ref']
+) => {
+  const hasLeading = leadingIconName != null || leadingIconNode != null;
+  const hasTrailing = trailingIconName != null || trailingIconNode != null;
+
+  const classes = clsx(
+    isDisabled ? disabledOpacity : [interactable, 'cursor-pointer'],
+    'relative flex justify-center items-center radius-circle stroke-none',
+    hasLeading ? leftPaddingWithIconBySize[size] : leftPaddingBySize[size],
+    hasTrailing ? rightPaddingWithIconBySize[size] : rightPaddingBySize[size],
+    classesBySize[size],
+    className
+  );
+
+  const chipChildren = (
+    <React.Fragment>
+      <StateLayer />
+      <ChipAccessory iconName={leadingIconName} node={leadingIconNode} size={size} />
+      <span
+        className={clsx(
+          'padding-y-xsmall text-no-wrap text-truncate-end',
+          hasLeading && textLeftPaddingWithIconBySize[size],
+          hasTrailing && textRightPaddingWithIconBySize[size]
+        )}>
+        {text}
+      </span>
+      <ChipAccessory iconName={trailingIconName} node={trailingIconNode} size={size} />
+    </React.Fragment>
+  );
+
+  const buttonStyle = { textDecoration: 'none', ...style };
+
+  if (props.as === 'a') {
+    const { as: _, href, ...restProps } = props;
+    return (
+      <a
+        ref={ref as ComponentProps<'a'>['ref']}
+        {...restProps}
+        aria-disabled={isDisabled}
+        // This prevents the anchor tag from being focusable and triggerable.
+        href={isDisabled ? undefined : href}
+        className={clsx(classes, bgByVariant[variant], 'content-action-utility')}
+        style={buttonStyle}>
+        {chipChildren}
+      </a>
+    );
+  }
+
+  const { as: _, isChecked, onCheckedChange, ...restProps } = props;
+  return (
+    <button
+      ref={ref as ComponentProps<'button'>['ref']}
+      type='button'
+      {...restProps}
+      className={clsx(
+        isChecked ? 'bg-inverse-surface-0' : bgByVariant[variant],
+        isChecked ? 'content-inverse-emphasis' : 'content-action-utility',
+        classes
+      )}
+      style={buttonStyle}
+      aria-pressed={isChecked}
+      disabled={isDisabled}
+      onClick={onCheckedChange == null ? undefined : () => onCheckedChange(!isChecked)}>
+      {chipChildren}
+    </button>
+  );
+};
+
+export const Chip = forwardRef(ChipComponent) as TForwardRefComponent<TChipProps>;
