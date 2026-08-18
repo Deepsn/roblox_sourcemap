@@ -2674,6 +2674,12 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.LiftPlatformAccessRestriction": "Roblox access",
 	"Label.RobuxTransferDailyLimit": "robux transfer daily limit",
 	"Label.RobuxTransferMonthlyLimit": "robux transfer monthly limit",
+	"Response.PasskeyRenamedSuccessfully": "Passkey renamed successfully.",
+	"Heading.RenamePasskey": "Rename Passkey",
+	"Heading.RenameSecurityKey": "Rename Security Key",
+	"Action.Rename": "Rename",
+	"Description.SecurityKey.RenameKey":
+		"Name your key descriptively so that you will know which one it is.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

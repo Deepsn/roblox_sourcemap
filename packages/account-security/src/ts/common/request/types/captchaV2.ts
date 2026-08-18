@@ -28,3 +28,15 @@ export type SubmitCaptchaV2ReturnType = {
 	// eslint-disable-next-line camelcase
 	redemption_token: string;
 };
+
+// Block response parameters returned by v2/captcha on visible challenge.
+export type CaptchaV2BlockResponse = {
+	appId: string;
+	jsClientSrc: string;
+	firstPartyEnabled: boolean;
+	vid: string;
+	uuid: string;
+	hostUrl: string;
+	blockScript: string;
+	blockedUrl?: string;
+};

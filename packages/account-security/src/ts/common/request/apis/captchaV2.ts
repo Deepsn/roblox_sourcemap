@@ -22,3 +22,52 @@ export const submitCaptcha = (
 		} as CaptchaV2.SubmitCaptchaV2Request),
 		CaptchaV2.CaptchaV2Error,
 	);
+
+/**
+ * Extracts block parameters from v2/captcha response.
+ */
+export const parseBlockResponse = (
+	errorRaw: unknown,
+): CaptchaV2.CaptchaV2BlockResponse | null => {
+	if (typeof errorRaw !== "object" || errorRaw === null) {
+		return null;
+	}
+
+	const { data } = errorRaw as Record<string, unknown>;
+	if (typeof data !== "object" || data === null) {
+		return null;
+	}
+
+	const {
+		appId,
+		jsClientSrc,
+		firstPartyEnabled,
+		vid,
+		uuid,
+		hostUrl,
+		blockScript,
+		blockedUrl,
+	} = data as Record<string, unknown>;
+
+	if (
+		typeof appId !== "string" ||
+		typeof jsClientSrc !== "string" ||
+		typeof vid !== "string" ||
+		typeof uuid !== "string" ||
+		typeof hostUrl !== "string" ||
+		typeof blockScript !== "string"
+	) {
+		return null;
+	}
+
+	return {
+		appId,
+		jsClientSrc,
+		firstPartyEnabled: firstPartyEnabled === true,
+		vid,
+		uuid,
+		hostUrl,
+		blockScript,
+		blockedUrl: typeof blockedUrl === "string" ? blockedUrl : undefined,
+	};
+};

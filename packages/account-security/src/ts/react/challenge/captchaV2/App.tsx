@@ -1,5 +1,10 @@
 import React from "react";
+import {
+	withTranslations,
+	WithTranslationsProps,
+} from "@rbx/core-scripts/react";
 import { RequestService } from "../../../common/request";
+import { TRANSLATION_CONFIG } from "./app.config";
 import CaptchaV2 from "./containers/captchaV2";
 import {
 	OnChallengeCompletedCallback,
@@ -23,15 +28,16 @@ type Props = {
 	onChallengeCompleted: OnChallengeCompletedCallback;
 	onChallengeInvalidated: OnChallengeInvalidatedCallback;
 	onModalChallengeAbandoned: OnModalChallengeAbandonedCallback | null;
-};
+} & WithTranslationsProps;
 
-const App: React.FC<Props> = ({
+export const App: React.FC<Props> = ({
 	challengeId,
 	appType,
 	renderInline,
 	eventService,
 	metricsService,
 	requestService,
+	translate,
 	onChallengeDisplayed,
 	onChallengeCompleted,
 	onChallengeInvalidated,
@@ -45,6 +51,7 @@ const App: React.FC<Props> = ({
 			eventService={eventService}
 			metricsService={metricsService}
 			requestService={requestService}
+			translate={translate}
 			onChallengeDisplayed={onChallengeDisplayed}
 			onChallengeCompleted={onChallengeCompleted}
 			onChallengeInvalidated={onChallengeInvalidated}
@@ -55,4 +62,4 @@ const App: React.FC<Props> = ({
 	);
 };
 
-export default App;
+export default withTranslations(App, TRANSLATION_CONFIG);

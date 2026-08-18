@@ -365,7 +365,7 @@ Roblox.LangDynamic["Feature.Catalog"] = {
 	"Label.QuantityLeft": "Quantity Left: {remaining}/{total}",
 	"Label.QuantityLimitReached":
 		"The creator has limits on how many copies a single user can purchase from them.",
-	"Label.PremiumForResell": "Premium is required for reselling",
+	"Label.PremiumForResell": "Roblox Plus is required for reselling",
 	"Message.NoHoldingPolicy":
 		"This item does not require a holding period, you can resell it as soon as you purchase it. Only premium users can resell items.",
 	"Message.QuantityLimitReached":
