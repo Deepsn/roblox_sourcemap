@@ -81,6 +81,9 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 		"The creator hasn't published this game",
 	"CommunitySection.EmptyDescription":
 		"Join the official community for exclusive sneak peeks and early updates!",
+	"Label.MadeByCreator": "Made by {creatorName}",
+	"Label.MadeByCreatorWithBuild": "Made by {creatorName} with Build",
+	"Description.MadeWithBuild": "Build games are AI generated",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

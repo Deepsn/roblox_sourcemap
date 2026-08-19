@@ -156,6 +156,8 @@ var externals = {
 	"react-redux": "ReactRedux",
 	"react-router": "ReactRouter",
 	"react-router-dom": "ReactRouterDOM",
+	"@radix-ui/react-dismissable-layer": ["RadixUI", "react-dismissable-layer"],
+	"@radix-ui/react-focus-guards": ["RadixUI", "react-focus-guards"],
 	redux: "Redux",
 	"redux-thunk": "ReduxThunk",
 	"prop-types": "PropTypes",

@@ -3,7 +3,6 @@ import BatchRequestFactory, {
 	type BatchRequestProcessor,
 } from "@rbx/core-scripts/util/batch-request";
 import environmentUrls from "@rbx/environment-urls";
-import { EngineTelemetryBatchEventSchema } from "@rbx/event-stream-proto/eventstream/enginetelemetry/engine_telemetry_batch_event_pb";
 import { EngineTelemetryCounterMetricEventSchema } from "@rbx/event-stream-proto/eventstream/enginetelemetry/engine_telemetry_counter_metric_event_pb";
 import { EventStreamClient } from "@rbx/event-stream-v2";
 
@@ -106,11 +105,9 @@ export function createFireTelemetryCounter(
 
 	const processor = factory.createRequestProcessor(
 		async (items) => {
-			// One EngineTelemetryBatchEvent per flush carries every buffered counter
-			// under counters[], so the whole window ships as a single envelope for the
-			// engine-telemetry batch consumer.
-			const counters = items.map(({ data }) =>
-				create(EngineTelemetryCounterMetricEventSchema, {
+			const events = items.map(({ data }) => ({
+				schema: EngineTelemetryCounterMetricEventSchema,
+				msg: create(EngineTelemetryCounterMetricEventSchema, {
 					name: data.name,
 					value: data.value,
 					eventTimestampMillisecond: BigInt(data.timestampMs),
@@ -118,12 +115,9 @@ export function createFireTelemetryCounter(
 						? toEngineTelemetryAttributes(data.attributes)
 						: {},
 				}),
-			);
+			}));
 			const results: ProcessorResult = {};
-			await client.sendEvent(EngineTelemetryBatchEventSchema, {
-				counters,
-				batchTimestampMilliseconds: BigInt(Date.now()),
-			});
+			await client.sendBatch(events);
 			items.forEach(({ key }) => {
 				results[key] = true;
 			});
