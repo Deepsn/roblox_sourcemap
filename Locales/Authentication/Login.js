@@ -247,6 +247,12 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"Sign out of your current account, sign into your Roblox account with parent privileges using an email one-time code.",
 	"Label.EnterHere": "Enter here",
 	"Label.SelectAnAccount": "Select an account",
+	"Label.ForgotPassword": "Forgot password?",
+	"Heading.SignInWithRoblox": "Sign in with Roblox",
+	"Action.SignInWithQrCode": "Sign in with QR code",
+	"Heading.SignInAnotherWay": "Sign in another way",
+	"Label.EmailAddress": "Email address",
+	"Label.VerificationCode": "Verification code",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
