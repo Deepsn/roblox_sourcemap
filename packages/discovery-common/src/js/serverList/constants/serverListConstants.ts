@@ -21,10 +21,10 @@ const serverListConstants = {
 		descending: "Desc",
 		ascending: "Asc",
 	},
-	// Values for the expanded "order by" dropdown (gated behind the
-	// PublicServerListOrderBy IXP flag). These map 1:1 to the backend ServerListSortOption
-	// enum names. The occupancy options are equivalent to the legacy Desc/Asc
-	// sortOrder; "recommended"/"bestLatency" are the new options.
+	// Values for the public server list "order by" dropdown. These map 1:1 to the
+	// backend ServerListSortOption enum names. The occupancy options are equivalent
+	// to the legacy Desc/Asc sortOrder; "recommended"/"bestLatency" are the newer
+	// options.
 	orderByOptions: {
 		occupancyDesc: "OccupancyDesc",
 		occupancyAsc: "OccupancyAsc",
@@ -90,7 +90,7 @@ const serverListConstants = {
 		serverCancellationSuccess: "Message.ServerCancellationSuccess",
 		serverNameText: "Label.ServerName",
 		serverIdText: "Label.ServerId",
-		// Feature.ServerList — expanded "sort by" dropdown (behind PublicServerListOrderBy IXP flag)
+		// Feature.ServerList — public server list "sort by" dropdown
 		sortByLabel: "Label.SortBy",
 		recommendedForYou: "Label.RecommendedForYou",
 		bestLatency: "Label.BestLatency",
@@ -133,6 +133,12 @@ const serverListConstants = {
 		ownersServerText: "Label.OwnersServer",
 		privateServerCreatedText: "Label.PrivateServerCreated",
 		joinText: "Action.Join",
+		// Feature.ServerList — player hosted events
+		createPlayerHostedEventText: "Label.CreatePlayerHostedEvent",
+		playerHostedEventSubtitle: "Label.PlayerHostedEventSubtitle",
+		createPlayerHostedEventCardTitle: "Label.CreateAPlayerHostedEvent",
+		createPlayerHostedEventCardSubtitle:
+			"Label.HostAScheduledEventForYourFriends",
 		// Feature.ServerList — private server revamp
 		joinYourFriendsTitle: "Heading.JoinYourFriends",
 		joinFriendsSubtitle: "Description.JoinFriendsSubtitle",

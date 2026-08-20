@@ -33,9 +33,6 @@ export type TServerListOptionsProps = {
 	options: TServerListOptions;
 	setOptions: React.Dispatch<React.SetStateAction<TServerListOptions>>;
 	isLoading?: boolean;
-	// Gated by the IsPublicServerListV2Enabled IXP flag; when true this public
-	// server list flow uses the V2 endpoint and expanded order-by options.
-	isPublicServerListV2Enabled?: boolean;
 	isAuthenticated?: boolean;
 };
 
@@ -44,7 +41,6 @@ function ServerListOptions({
 	options,
 	setOptions,
 	isLoading = false,
-	isPublicServerListV2Enabled = false,
 	isAuthenticated = false,
 }: TServerListOptionsProps & WithTranslationsProps) {
 	const fireSortDropdownFocus = () => {
@@ -74,74 +70,46 @@ function ServerListOptions({
 		<div className="server-list-options">
 			<div className="select-group">
 				<label className="select-label text-label" htmlFor="sort-select">
-					{isPublicServerListV2Enabled
-						? translate(resources.sortByLabel) || "Sort by"
-						: translate(resources.numberOfPlayers) || "Number of Players"}
+					{translate(resources.sortByLabel) || "Sort by"}
 				</label>
 				<div className="rbx-select-group select-group">
-					{isPublicServerListV2Enabled ? (
-						<select
-							onChange={(e) => {
-								const orderBy = e.currentTarget.value;
-								fireSortSelect(orderBy);
-								setOptions((prevState) => ({
-									...prevState,
-									orderBy,
-									sortOrder:
-										ORDER_BY_TO_SORT_ORDER[orderBy] ?? prevState.sortOrder,
-								}));
-							}}
-							onFocus={fireSortDropdownFocus}
-							disabled={isLoading}
-							value={options.orderBy ?? orderByOptions.recommended}
-							id="sort-select"
-							data-testid="sort-select"
-							className="input-field rbx-select select-option"
-						>
-							{isAuthenticated && (
-								<option value={orderByOptions.recommended}>
-									{translate(resources.recommendedForYou) ||
-										"Recommended for you"}
-								</option>
-							)}
-							{isAuthenticated && (
-								<option value={orderByOptions.bestLatency}>
-									{translate(resources.bestLatency) || "Best latency"}
-								</option>
-							)}
-							<option value={orderByOptions.occupancyDesc}>
-								{translate(resources.occupancyDescending) ||
-									"Occupancy descending"}
+					<select
+						onChange={(e) => {
+							const orderBy = e.currentTarget.value;
+							fireSortSelect(orderBy);
+							setOptions((prevState) => ({
+								...prevState,
+								orderBy,
+								sortOrder:
+									ORDER_BY_TO_SORT_ORDER[orderBy] ?? prevState.sortOrder,
+							}));
+						}}
+						onFocus={fireSortDropdownFocus}
+						disabled={isLoading}
+						value={options.orderBy ?? orderByOptions.recommended}
+						id="sort-select"
+						data-testid="sort-select"
+						className="input-field rbx-select select-option"
+					>
+						{isAuthenticated && (
+							<option value={orderByOptions.recommended}>
+								{translate(resources.recommendedForYou) ||
+									"Recommended for you"}
 							</option>
-							<option value={orderByOptions.occupancyAsc}>
-								{translate(resources.occupancyAscending) ||
-									"Occupancy ascending"}
+						)}
+						{isAuthenticated && (
+							<option value={orderByOptions.bestLatency}>
+								{translate(resources.bestLatency) || "Best latency"}
 							</option>
-						</select>
-					) : (
-						<select
-							onChange={(e) => {
-								fireSortSelect(e.currentTarget.value);
-								setOptions((prevState) => ({
-									...prevState,
-									sortOrder: e.currentTarget.value,
-								}));
-							}}
-							onFocus={fireSortDropdownFocus}
-							disabled={isLoading}
-							value={options.sortOrder}
-							id="sort-select"
-							data-testid="sort-select"
-							className="input-field rbx-select select-option"
-						>
-							<option value={sortOrders.descending}>
-								{translate(resources.descending) || "Descending"}
-							</option>
-							<option value={sortOrders.ascending}>
-								{translate(resources.ascending) || "Ascending"}
-							</option>
-						</select>
-					)}
+						)}
+						<option value={orderByOptions.occupancyDesc}>
+							{translate(resources.occupancyDescending) ||
+								"Occupancy descending"}
+						</option>
+						<option value={orderByOptions.occupancyAsc}>
+							{translate(resources.occupancyAscending) || "Occupancy ascending"}
+						</option>
+					</select>
 					<span className="icon-arrow icon-down-16x16" />
 				</div>
 			</div>

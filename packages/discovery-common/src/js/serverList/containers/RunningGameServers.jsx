@@ -13,7 +13,6 @@ function RunningGameServers({
 	getGameServers,
 	serverListMetadata,
 	isAuthenticated = false,
-	isPublicServerListV2Enabled = false,
 }) {
 	const {
 		placeId,
@@ -55,7 +54,6 @@ function RunningGameServers({
 				creatorName: sellerName,
 				universeId,
 				isAuthenticated,
-				isPublicServerListV2Enabled,
 			}}
 		/>
 	);
@@ -68,7 +66,6 @@ RunningGameServers.propTypes = {
 	getGameServers: PropTypes.func.isRequired,
 	serverListMetadata: serverListMetadataPropType.isRequired,
 	isAuthenticated: PropTypes.bool,
-	isPublicServerListV2Enabled: PropTypes.bool,
 };
 
 export default withTranslations(

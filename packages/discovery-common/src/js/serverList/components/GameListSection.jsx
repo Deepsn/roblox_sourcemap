@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 
 import PropTypes from "prop-types";
 import { createSystemFeedback, Button, Loading } from "@rbx/core-ui";
@@ -19,15 +19,10 @@ const {
 	orderByOptions,
 } = serverListConstants;
 
-// The default sort for the public section depends on the V2 flag (resolved by
-// the parent before this section mounts) and whether the user is signed in.
-// Non-public sections and the flag-off case use the shared defaults.
-function getSectionDefaultOptions(
-	isPublic,
-	isPublicServerListV2Enabled,
-	isAuthenticated,
-) {
-	if (!isPublic || !isPublicServerListV2Enabled) {
+// The default sort for the public section depends on whether the user is signed
+// in. Non-public sections use the shared defaults.
+function getSectionDefaultOptions(isPublic, isAuthenticated) {
+	if (!isPublic) {
 		return defaultOptions;
 	}
 	return {
@@ -59,7 +54,6 @@ function GameListSection({
 	creatorName,
 	universeId,
 	isAuthenticated = false,
-	isPublicServerListV2Enabled = false,
 }) {
 	const cssKey = `${type}-`;
 	const emptyGameInstanceList = gameInstances.length === 0;
@@ -83,44 +77,17 @@ function GameListSection({
 
 	const isPublic = type === serverListTypes.public.key;
 
-	// The V2 flag is resolved by the parent before this section mounts, so the
-	// correct default sort is known up front and the list is fetched exactly once
-	// with it (firing a second refresh while the first is in flight makes
+	// The correct default sort is known up front, so the list is fetched exactly
+	// once with it (firing a second refresh while the first is in flight makes
 	// useServerList throw).
 	const [options, setOptions] = useState(() =>
-		getSectionDefaultOptions(
-			isPublic,
-			isPublicServerListV2Enabled,
-			isAuthenticated,
-		),
+		getSectionDefaultOptions(isPublic, isAuthenticated),
 	);
 
 	useEffect(() => {
 		refreshGameInstances?.(options);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [options]);
-
-	// React to runtime flag flips (e.g. an IXP override toggled mid-session) by
-	// re-applying the defaults, which re-fetches from the now-current endpoint.
-	const resolvedPublicServerListV2ValueRef = useRef(
-		isPublicServerListV2Enabled,
-	);
-	useEffect(() => {
-		if (
-			!isPublic ||
-			resolvedPublicServerListV2ValueRef.current === isPublicServerListV2Enabled
-		) {
-			return;
-		}
-		resolvedPublicServerListV2ValueRef.current = isPublicServerListV2Enabled;
-		setOptions(
-			getSectionDefaultOptions(
-				isPublic,
-				isPublicServerListV2Enabled,
-				isAuthenticated,
-			),
-		);
-	}, [isPublic, isPublicServerListV2Enabled, isAuthenticated]);
 
 	return (
 		<Fragment>
@@ -152,7 +119,6 @@ function GameListSection({
 									options,
 									setOptions,
 									translate,
-									isPublicServerListV2Enabled,
 									isAuthenticated,
 								}}
 							/>
@@ -258,7 +224,6 @@ GameListSection.defaultProps = {
 	gameInstances: [],
 	privateServerNewJoinsDisallowed: false,
 	isAuthenticated: false,
-	isPublicServerListV2Enabled: false,
 };
 
 GameListSection.propTypes = {
@@ -278,7 +243,6 @@ GameListSection.propTypes = {
 	loadingError: PropTypes.bool.isRequired,
 	privateServerNewJoinsDisallowed: PropTypes.bool,
 	isAuthenticated: PropTypes.bool,
-	isPublicServerListV2Enabled: PropTypes.bool,
 	placeName: PropTypes.string.isRequired,
 	price: PropTypes.number.isRequired,
 	creatorName: PropTypes.string.isRequired,

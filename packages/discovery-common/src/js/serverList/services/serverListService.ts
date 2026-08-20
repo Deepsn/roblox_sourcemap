@@ -108,23 +108,6 @@ const {
 } = urlConstant;
 
 export default {
-	getPublicGameInstances: (
-		placeId: number,
-		cursor: string,
-		paramsArg: GameInstanceQueryParams = {},
-	) => {
-		const urlConfig = {
-			url: getGameServersUrl(placeId, serverListTypes.public.value),
-			retryable: true,
-			withCredentials: true,
-		};
-
-		// This fixes the bug where setting params.cursor would make the cursor key
-		// permanent, even on server list refresh. structuredClone is probably a
-		// better option for copying an object, but it's very new and not well supported.
-		const params = { cursor, ...paramsArg };
-		return http.get<GameServerListResponse>(urlConfig, params);
-	},
 	getPublicGameInstancesV2: (
 		placeId: number,
 		cursor: string,
@@ -136,6 +119,9 @@ export default {
 			withCredentials: true,
 		};
 
+		// This fixes the bug where setting params.cursor would make the cursor key
+		// permanent, even on server list refresh. structuredClone is probably a
+		// better option for copying an object, but it's very new and not well supported.
 		const params = { cursor, ...paramsArg };
 		return http.get<GameServerListResponse>(urlConfig, params);
 	},

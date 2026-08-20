@@ -5,11 +5,13 @@ import { Button } from "@rbx/foundation-ui";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import useServerListMetadata from "../hooks/useServerListMetadata";
+import useIsPlayerHostedEventsEnabled from "../hooks/useIsPlayerHostedEventsEnabled";
 import serverListService from "../../../js/serverList/services/serverListService";
 import serverListConstants from "../../../js/serverList/constants/serverListConstants";
 // @ts-expect-error legacy JS module without type declarations
 import RunningGameServers from "../../../js/serverList/containers/RunningGameServers";
 import PrivateServersSection from "./v2/PrivateServersSection";
+import CreatePlayerHostedEventRow from "./v2/CreatePlayerHostedEventRow";
 import SubscriptionSheet from "./SubscriptionSheet";
 import useSubscriptionProduct from "../hooks/useSubscriptionProduct";
 import { PrivateServerUpsellEventsProvider } from "../hooks/usePrivateServerUpsellEvents";
@@ -20,14 +22,10 @@ const { ASSET_TYPE_ENUM } = window.RobloxItemPurchase;
 
 type MigrationServerListContainerProps = {
 	sheetComponent?: ElementType;
-	// Resolved by the parent (App) before this container mounts, so the public
-	// endpoint is selected correctly on first render.
-	isPublicServerListV2Enabled?: boolean;
 };
 
 const MigrationServerListContainer = ({
 	sheetComponent: SheetComponent,
-	isPublicServerListV2Enabled = false,
 }: MigrationServerListContainerProps) => {
 	const { translate } = useTranslation();
 	const currentTab = useCurrentTab();
@@ -42,9 +40,9 @@ const MigrationServerListContainer = ({
 		useServerListMetadata();
 	const isAuthenticated = authenticatedUser?.isAuthenticated ?? false;
 
-	const publicGetGameServers = isPublicServerListV2Enabled
-		? serverListService.getPublicGameInstancesV2
-		: serverListService.getPublicGameInstances;
+	const { isPlayerHostedEventsEnabled } = useIsPlayerHostedEventsEnabled(
+		serverListMetadata?.universeId,
+	);
 
 	if (isLoading) {
 		return (
@@ -88,6 +86,12 @@ const MigrationServerListContainer = ({
 					/>
 				</div>
 
+				{isPlayerHostedEventsEnabled && (
+					<CreatePlayerHostedEventRow
+						universeId={serverListMetadata.universeId}
+					/>
+				)}
+
 				<RunningGameServers
 					type={serverListTypes.friend.key}
 					getGameServers={serverListService.getFriendsGameInstances}
@@ -97,11 +101,10 @@ const MigrationServerListContainer = ({
 				/>
 				<RunningGameServers
 					type={serverListTypes.public.key}
-					getGameServers={publicGetGameServers}
+					getGameServers={serverListService.getPublicGameInstancesV2}
 					headerTitleResource={resources.publicServersTitle}
 					serverListMetadata={serverListMetadata}
 					isAuthenticated={isAuthenticated}
-					isPublicServerListV2Enabled={isPublicServerListV2Enabled}
 					translate={undefined}
 				/>
 			</div>

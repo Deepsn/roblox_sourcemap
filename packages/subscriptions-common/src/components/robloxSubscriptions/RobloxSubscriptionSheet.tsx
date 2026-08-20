@@ -14,11 +14,26 @@ import type { DeviceMeta } from "@rbx/core-scripts/meta/device";
 
 const SUBSCRIPTION_TERMS_URL = "https://www.roblox.com/info/terms";
 
+const { ENUM_TRIGGERING_CONTEXT } = paymentFlowAnalyticsService;
+
+type TriggeringContext =
+	(typeof ENUM_TRIGGERING_CONTEXT)[keyof typeof ENUM_TRIGGERING_CONTEXT];
+
 export type RobloxSubscriptionSheetProps = {
 	subscriptionProductInfo: SubscriptionProductInfo;
 	deviceMeta: DeviceMeta;
 	redirectUrl?: string;
-	assetType: string;
+	/**
+	 * Starts an asset-based upsell flow, which stamps `item_type` and derives the
+	 * triggering context from the asset. Omit for surfaces that aren't selling an
+	 * asset and pass {@link RobloxSubscriptionSheetProps.triggeringContext} instead.
+	 */
+	assetType?: string;
+	/**
+	 * UI surface the user came from, reported as `trigger_context` on the
+	 * UserPurchaseFlow events. Only applied when no flow is already in progress.
+	 */
+	triggeringContext?: TriggeringContext;
 	onSubscribeClick?: () => void;
 	/** Fired only on mobile in-app subscribe click; see SubscriptionButton. */
 	onMobilePurchaseInitiated?: () => void;
@@ -35,6 +50,7 @@ const RobloxSubscriptionSheet = ({
 	deviceMeta,
 	redirectUrl,
 	assetType,
+	triggeringContext = ENUM_TRIGGERING_CONTEXT.WEB_PRIVATE_SERVER_PLUS_UPSELL,
 	onSubscribeClick,
 	onMobilePurchaseInitiated,
 	isLoading,
@@ -73,26 +89,26 @@ const RobloxSubscriptionSheet = ({
 		}
 		hasFiredViewShown.current = true;
 		// startRobloxPlusUpsellFlow maps assetType -> the right WEB_*_PLUS_UPSELL
-		// context and stores it on the singleton. sendUserPurchaseFlowEvent emits
-		// that stored context on the wire (the trigger_context arg here is only a
-		// fallback initializer used when no flow has started), so the literal we
-		// pass below is essentially dead once the flow is started.
-		paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({ assetType });
+		// context and force-stores it on the singleton, overriding the context
+		// passed below. Asset-less surfaces skip it, so their triggeringContext is
+		// only adopted when no flow is in progress: a flow already resumed from the
+		// RBXPaymentsFlowContext cookie keeps the originating surface's context.
+		if (assetType) {
+			paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({ assetType });
+		}
 		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-				.WEB_PRIVATE_SERVER_PLUS_UPSELL,
+			triggeringContext,
 			false,
 			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
 			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
 			plusUpsellViewMessage,
 			paymentSessionId ? { paymentSessionId } : {},
 		);
-	}, [paymentSessionId, assetType, plusUpsellViewMessage]);
+	}, [paymentSessionId, assetType, triggeringContext, plusUpsellViewMessage]);
 
 	const sendEventAndTrackingOnClick = useCallback(() => {
 		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-				.WEB_PRIVATE_SERVER_PLUS_UPSELL,
+			triggeringContext,
 			false,
 			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
 			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
@@ -100,7 +116,12 @@ const RobloxSubscriptionSheet = ({
 			paymentSessionId ? { paymentSessionId } : {},
 		);
 		onSubscribeClick?.();
-	}, [plusUpsellViewMessage, onSubscribeClick, paymentSessionId]);
+	}, [
+		triggeringContext,
+		plusUpsellViewMessage,
+		onSubscribeClick,
+		paymentSessionId,
+	]);
 
 	const legalKey = isFreeTrial
 		? "Description.SubscriptionFreeTrialLegal"

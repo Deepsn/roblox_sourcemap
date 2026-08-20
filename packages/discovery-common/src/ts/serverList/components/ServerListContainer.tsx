@@ -16,22 +16,14 @@ const { serverListTypes, resources } = serverListConstants;
 
 type TServerListContainerProps = {
 	translate: TranslateFunction;
-	// Resolved by the parent (App) before this container mounts, so the public
-	// endpoint is selected correctly on first render.
-	isPublicServerListV2Enabled?: boolean;
 };
 
 const ServerListContainer = ({
 	translate,
-	isPublicServerListV2Enabled = false,
 }: TServerListContainerProps): JSX.Element => {
 	const { serverListMetadata, isLoading, hasError, refetchServerListMetadata } =
 		useServerListMetadata();
 	const isAuthenticated = authenticatedUser?.isAuthenticated ?? false;
-
-	const publicGetGameServers = isPublicServerListV2Enabled
-		? serverListService.getPublicGameInstancesV2
-		: serverListService.getPublicGameInstances;
 
 	if (isLoading) {
 		return <Loading />;
@@ -64,11 +56,10 @@ const ServerListContainer = ({
 			/>
 			<RunningGameServers
 				type={serverListTypes.public.key}
-				getGameServers={publicGetGameServers}
+				getGameServers={serverListService.getPublicGameInstancesV2}
 				headerTitleResource={resources.publicServersTitle}
 				serverListMetadata={serverListMetadata}
 				isAuthenticated={isAuthenticated}
-				isPublicServerListV2Enabled={isPublicServerListV2Enabled}
 				// Filled in by withTranslations hook in the RunningGameServers component
 				translate={undefined}
 			/>

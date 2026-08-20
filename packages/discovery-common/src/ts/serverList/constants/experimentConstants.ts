@@ -1,8 +1,8 @@
-// IXP layer that gates the expanded server-list "order by" dropdown options
-// ("Servers for you" / "Best latency"). Defaults to disabled until the layer is
-// configured in IXP, so the dropdown shows only the legacy occupancy ordering.
-export const serverListExperimentLayer =
-	"Discovery.EDP.PublicServerListOrderBy";
+// IXP layer that gates the "Create a player hosted event" entry point on the
+// server list. Defaults to disabled until the layer is configured in IXP, so the
+// row stays hidden even for universes whose hosting policy is enabled.
+export const playerHostedEventsExperimentLayer =
+	"Discovery.EDP.PlayerHostedEvents";
 
-// Parameter (within the layer above) that enables the public server list V2 flow.
-export const isPublicServerListV2EnabledParam = "IsPublicServerListV2Enabled";
+// Parameter (within the layer above) that enables the player-hosted-events entry point.
+export const isPlayerHostedEventsEnabledParam = "IsPlayerHostedEventsEnabled";
