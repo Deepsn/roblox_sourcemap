@@ -88,6 +88,7 @@ export const trustedFriendsTranslationKeys = {
 
 	acceptedTrustedFriend: "Label.NowTrusted",
 	trustedFriendRequestSent: "TrustedFriend.Toast.TrustedFriendRequestSent",
+	trustedFriendLinkCopied: "TrustedFriend.Toast.LinkCopied",
 } as const;
 
 export const trustedFriendsModalVariants = {
@@ -104,7 +105,6 @@ export type TrustedFriendsModalVariant =
 export type MappedTrustedFriendAction = Exclude<
 	TrustedFriendActionEnum,
 	| typeof TrustedFriendAction.UnlockTrustedFriendByFAE
-	| typeof TrustedFriendAction.AddTrustedConnectionViaLink
 	| typeof TrustedFriendAction.AcceptTrustedFriendInvalid
 >;
 
@@ -114,6 +114,8 @@ export const trustedFriendActionToModalVariant: Record<
 > = {
 	[TrustedFriendAction.RemoveTrustedConnection]:
 		trustedFriendsModalVariants.TrustedFriends,
+	[TrustedFriendAction.AddTrustedConnectionViaLink]:
+		trustedFriendsModalVariants.NotFriends,
 	[TrustedFriendAction.AddTrustedFriendDoubleOptin]:
 		trustedFriendsModalVariants.Friends,
 	[TrustedFriendAction.AddTrustedFriendWithVpc]:
@@ -170,6 +172,11 @@ export const trustedFriendActionButtonConfig: Record<
 	[TrustedFriendAction.RemoveTrustedConnection]: {
 		primary: { textKey: "Action.OK" },
 		handler: TrustedFriendPrimaryHandler.trustedFriendsOk,
+	},
+	[TrustedFriendAction.AddTrustedConnectionViaLink]: {
+		primary: { textKey: "Button.AddViaLink" },
+		secondary: { textKey: "Button.DontAdd" },
+		handler: TrustedFriendPrimaryHandler.addViaLinkEmpty,
 	},
 	[TrustedFriendAction.AddTrustedFriendDoubleOptin]: {
 		primary: { textKey: "Action.Add" },

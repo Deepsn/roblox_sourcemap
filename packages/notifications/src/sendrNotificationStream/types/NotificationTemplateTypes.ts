@@ -47,8 +47,6 @@ export type Action = {
 
 export type HandleActionCallback = (visualItem: InteractibleVisualItem) => void;
 
-export type HandleBundleDismissCallback = (dismissedIndex: number) => void;
-
 export type HandleEventStreamEventCallback = (
 	eventName: string,
 	visualItemType: VisualItemType,
@@ -139,7 +137,6 @@ export type NotificationData = {
 	bundleIndex?: number;
 	bundleId?: string;
 	isReadOnly?: boolean;
-	handleBundleDismiss?: HandleBundleDismissCallback;
 };
 
 export type NotificationsBundle = {
@@ -169,10 +166,16 @@ export type ButtonRowProps = {
 
 export type SendrNotificationProps = {
 	notificationData: NotificationData;
+	/** Called once the dismiss slide-out has finished, so the owner can drop the row. */
+	onRemoved?: () => void;
+	/** Called when a notificationAPI action fails, so the owner can resync a stale list. */
+	onActionFailed?: () => void;
 };
 
 export type SendrNotificationsBundleProps = {
 	notificationsBundle: NotificationsBundle;
+	onRemoveNotification?: (notificationId: string) => void;
+	onActionFailed?: () => void;
 };
 
 export type NotificationActionApiResponse = {

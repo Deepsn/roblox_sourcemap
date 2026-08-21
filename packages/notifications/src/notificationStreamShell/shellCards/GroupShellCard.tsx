@@ -1,5 +1,5 @@
 import React from "react";
-import { Intl } from "Roblox";
+import { getRelativeTimeMaxDays } from "../../utils/relativeTime";
 import { Notification } from "@rbx/foundation-ui";
 import {
 	Thumbnail2d,
@@ -13,7 +13,6 @@ import {
 	groupHref,
 } from "../../notificationStreamCards/groupMembership/groupMembershipDescription";
 import { GroupMembershipNotificationData } from "../../notificationStreamCards/groupMembership/types";
-import { spacerTitle } from "./spacerTitle";
 
 export type GroupShellCardProps = {
 	notificationData: GroupMembershipNotificationData;
@@ -26,9 +25,7 @@ export const GroupShellCard = ({
 	const firstGroup = notificationData.metadataCollection?.[0];
 
 	const timestamp = notificationData.eventDate
-		? new Intl()
-				.getDateTimeFormatter()
-				.getFullDate(new Date(notificationData.eventDate))
+		? getRelativeTimeMaxDays(new Date(notificationData.eventDate), new Date())
 		: undefined;
 
 	const media = firstGroup ? (
@@ -42,6 +39,8 @@ export const GroupShellCard = ({
 				width: 48,
 				height: 48,
 				flexShrink: 0,
+				borderRadius: 8,
+				overflow: "hidden",
 			}}
 		>
 			<Thumbnail2d
@@ -59,7 +58,9 @@ export const GroupShellCard = ({
 			// Override the navbar <li>'s inherited text-align:center (Navigation.css).
 			style={{ textAlign: "left" }}
 			media={media}
-			title={spacerTitle}
+			// No headline on this card type; foundation collapses the title row only when the prop is falsy,
+			// and it is not optional, so absence has to be stated.
+			title={undefined}
 			description={buildGroupMembershipDescription(translate, notificationData)}
 			timestamp={timestamp}
 			hasStatusIndicator={!notificationData.isInteracted}

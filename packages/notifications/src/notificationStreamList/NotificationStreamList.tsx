@@ -55,7 +55,7 @@ export const NotificationStreamList = <T,>({
 		rootRef: scrollRef,
 	});
 
-	if (items.length === 0 && !isLoading && emptyState !== undefined) {
+	if (items.length === 0 && (isLoading || emptyState !== undefined)) {
 		return (
 			<div
 				className={[className, "is-empty"].filter(Boolean).join(" ")}
@@ -71,7 +71,7 @@ export const NotificationStreamList = <T,>({
 						: undefined
 				}
 			>
-				{emptyState}
+				{isLoading ? loadingIndicator : emptyState}
 			</div>
 		);
 	}
@@ -81,7 +81,9 @@ export const NotificationStreamList = <T,>({
 			ref={scrollRef}
 			className={className}
 			style={
-				maxHeight !== undefined ? { maxHeight, overflowY: "auto" } : undefined
+				maxHeight !== undefined
+					? { height: maxHeight, overflowY: "auto", boxSizing: "border-box" }
+					: undefined
 			}
 		>
 			<List as="ul" aria-label={ariaLabel}>

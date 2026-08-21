@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
-import { EnvironmentUrls } from "Roblox";
+import React, { useCallback, useEffect, useState } from "react";
+import environmentUrls from "@rbx/environment-urls";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@rbx/core-scripts/react";
+import NotificationStreamBanner from "./NotificationStreamBanner";
 import {
 	NotificationLocalizationProvider,
 	useNotificationLocalization,
@@ -10,16 +11,23 @@ import { NotificationStreamList } from "../notificationStreamList";
 import {
 	useGetRecentNotifications,
 	useMarkInteracted,
+	useRemoveNotification,
 	useNotificationStreamRealtime,
+	useNotificationStreamConnection,
+	sendUnreadCta,
+	sendStreamEvent,
+	streamEvents,
+	streamContexts,
 } from "../notificationStreamData";
 import { NotificationStreamCardRouter } from "./NotificationStreamCardRouter";
+import { reportNotificationStreamError } from "../notificationStreamData/notificationStreamObservability";
 import NotificationStreamModalContainer from "../sendrNotificationStream/containers/NotificationStreamModalContainer";
 import { SendrTemplateContext } from "../sendrNotificationStream/context/SendrTemplateContext";
 import "./notificationStreamShell.scss";
 
-const { websiteUrl } = EnvironmentUrls;
+const { websiteUrl } = environmentUrls;
 const SETTINGS_LINK = `${websiteUrl}/my/account#!/notifications`;
-const MAX_HEIGHT = 420;
+const MAX_HEIGHT = 600;
 
 export type NotificationStreamShellProps = {
 	themeClass?: string;
@@ -37,20 +45,56 @@ const NotificationStreamShellInner = ({
 		fetchNextPage,
 		refetch,
 	} = useGetRecentNotifications();
+	const { isConnectionLost } = useNotificationStreamConnection();
 	const markInteracted = useMarkInteracted();
+	const removeNotification = useRemoveNotification();
 	const [bannerVisible, setBannerVisible] = useState(false);
+	const [newCount, setNewCount] = useState(0);
+	const [errorDismissed, setErrorDismissed] = useState(false);
+
+	const fireAndReport = useCallback(
+		(run: () => Promise<unknown>, scope: string) => {
+			try {
+				Promise.resolve(run()).catch((error: unknown) =>
+					reportNotificationStreamError(scope, error),
+				);
+			} catch (error) {
+				reportNotificationStreamError(scope, error);
+			}
+		},
+		[],
+	);
 
 	useNotificationStreamRealtime({
-		onNewNotification: () => setBannerVisible(true),
+		onNewNotification: () => {
+			setNewCount((count) => {
+				const next = count + 1;
+				sendUnreadCta(next, true);
+				return next;
+			});
+			setBannerVisible(true);
+		},
 		onNotificationRevoked: () => {
-			refetch();
+			fireAndReport(refetch, "streamRevokedRefetch");
 		},
 	});
 
-	const reload = useCallback(() => {
+	const dismissBanner = useCallback(() => {
 		setBannerVisible(false);
-		refetch();
-	}, [refetch]);
+		setNewCount(0);
+	}, []);
+
+	const reload = useCallback(() => {
+		dismissBanner();
+		fireAndReport(refetch, "streamBannerReload");
+	}, [dismissBanner, refetch, fireAndReport]);
+
+	// A dismissed error banner must reappear on the next disconnect, so reset once reconnected.
+	useEffect(() => {
+		if (!isConnectionLost) {
+			setErrorDismissed(false);
+		}
+	}, [isConnectionLost]);
 
 	const renderItem = useCallback(
 		(notification: (typeof notifications)[number]) => (
@@ -58,10 +102,14 @@ const NotificationStreamShellInner = ({
 				<NotificationStreamCardRouter
 					notification={notification}
 					onInteract={(id: string) => markInteracted.mutate(id)}
+					onRemove={removeNotification}
+					onActionFailed={() => {
+						fireAndReport(refetch, "streamActionFailedRefetch");
+					}}
 				/>
 			</div>
 		),
-		[markInteracted],
+		[markInteracted, removeNotification, refetch, fireAndReport],
 	);
 
 	return (
@@ -72,41 +120,40 @@ const NotificationStreamShellInner = ({
 						<span className="text-label font-caption-header">
 							{translate("Label.Notifications")}
 						</span>
-						<a className="text-link font-caption-header" href={SETTINGS_LINK}>
+						<a
+							className="text-link font-caption-header"
+							href={SETTINGS_LINK}
+							onClick={() =>
+								sendStreamEvent(
+									streamEvents.goToSettingPage,
+									streamContexts.click,
+									{
+										sendrVersion: 0,
+									},
+								)
+							}
+						>
 							{translate("Label.Settings")}
 						</a>
 					</div>
 
 					{bannerVisible && (
-						<div className="small notification-stream-banner banner-new on">
-							<span
-								className="banner-text"
-								role="button"
-								tabIndex={0}
-								onClick={reload}
-								onKeyDown={(event) => {
-									if (event.key === "Enter" || event.key === " ") {
-										event.preventDefault();
-										reload();
-									}
-								}}
-							>
-								{translate("Label.Notifications")}
-							</span>
-							<span
-								className="icon-close-white"
-								role="button"
-								aria-label="Close"
-								tabIndex={0}
-								onClick={() => setBannerVisible(false)}
-								onKeyDown={(event) => {
-									if (event.key === "Enter" || event.key === " ") {
-										event.preventDefault();
-										setBannerVisible(false);
-									}
-								}}
-							/>
-						</div>
+						<NotificationStreamBanner
+							variant="new"
+							message={translate("Message.NumberofNewNotifications", {
+								notificationCount: newCount,
+							})}
+							onClick={reload}
+							onDismiss={dismissBanner}
+						/>
+					)}
+
+					{isConnectionLost && !errorDismissed && (
+						<NotificationStreamBanner
+							variant="error"
+							message={translate("Label.NoNetworkConnectionText")}
+							onDismiss={() => setErrorDismissed(true)}
+						/>
 					)}
 
 					<div style={{ position: "relative" }}>
@@ -118,7 +165,7 @@ const NotificationStreamShellInner = ({
 							hasMore={Boolean(hasNextPage)}
 							isLoading={isLoading || isFetchingNextPage}
 							onLoadMore={() => {
-								fetchNextPage();
+								fireAndReport(fetchNextPage, "streamFetchNextPage");
 							}}
 							loadingIndicator={<span className="spinner spinner-sm" />}
 							emptyState={

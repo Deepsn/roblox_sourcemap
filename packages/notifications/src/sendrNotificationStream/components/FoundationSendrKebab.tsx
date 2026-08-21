@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
 	Icon,
 	IconButton,
@@ -33,24 +33,37 @@ export const FoundationSendrKebab = ({
 	ariaLabel,
 }: FoundationSendrKebabProps): JSX.Element => {
 	const [open, setOpen] = useState(false);
+	const lastChangeRef = useRef({ open: false, ts: 0 });
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<span
-			style={{ float: "right", marginLeft: 8 }}
+			className="sendr-notification-kebab"
 			onClick={(e) => e.stopPropagation()}
 		>
-			<Popover open={open} onOpenChange={setOpen}>
+			<Popover
+				open={open}
+				onOpenChange={(next) => {
+					const now = Date.now();
+					const prev = lastChangeRef.current;
+					if (next && !prev.open && now - prev.ts < 250) {
+						lastChangeRef.current = { open: false, ts: now };
+						return;
+					}
+					lastChangeRef.current = { open: next, ts: now };
+					setOpen(next);
+				}}
+			>
 				<PopoverTrigger asChild>
 					<IconButton
+						className="bg-none"
 						icon="icon-regular-three-dots-vertical"
 						ariaLabel={ariaLabel}
 						variant="Standard"
-						size="Small"
-						isCircular
+						size="Medium"
 					/>
 				</PopoverTrigger>
 				<PopoverContent side="bottom" align="end" ariaLabel={ariaLabel}>
-					<Menu size="Small">
+					<Menu size="Medium">
 						{actions.map((action) => {
 							const iconName = isMetaActionIcon(action.actionIcon)
 								? metaActionIconMap[action.actionIcon]

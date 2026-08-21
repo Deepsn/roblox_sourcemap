@@ -84,14 +84,21 @@ export async function addTrustedFriendFromLink(
 	return data;
 }
 
+export type CreateTrustedFriendLinkResponse = {
+	link: string;
+};
+
 export async function createTrustedFriendLink(
 	userId: number,
-): Promise<unknown> {
+): Promise<CreateTrustedFriendLinkResponse> {
 	const urlConfig: UrlConfig = {
 		url: `${friendsTrustedBase()}/users/${userId}/create-trusted-friend-link`,
 		...trustedUrlConfig(),
 	};
-	const { data } = await http.post<unknown>(urlConfig, {});
+	const { data } = await http.post<CreateTrustedFriendLinkResponse>(
+		urlConfig,
+		{},
+	);
 	return data;
 }
 

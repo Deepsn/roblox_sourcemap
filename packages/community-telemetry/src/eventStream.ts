@@ -101,9 +101,37 @@ import {
 	CmntySearchResultsReturnedEvent,
 } from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_search_results_returned_event_pb";
 import {
+	CmntyForumsSearchConductedEventSchema,
+	CmntyForumsSearchConductedEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_search_conducted_event_pb";
+import {
+	CmntyForumsSearchResultsReturnedEventSchema,
+	CmntyForumsSearchResultsReturnedEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_search_results_returned_event_pb";
+import {
+	CmntyForumsSearchResultClickedEventSchema,
+	CmntyForumsSearchResultClickedEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_search_result_clicked_event_pb";
+import {
 	CmntyHomepageScrollExposureEventSchema,
 	CmntyHomepageScrollExposureEvent,
 } from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_homepage_scroll_exposure_event_pb";
+import {
+	CmntyForumsConcealedContentShownEventSchema,
+	CmntyForumsConcealedContentShownEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_concealed_content_shown_event_pb";
+import {
+	CmntyForumsConcealedContentRevealedEventSchema,
+	CmntyForumsConcealedContentRevealedEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_concealed_content_revealed_event_pb";
+import {
+	CmntyForumsDeleteDialogShownEventSchema,
+	CmntyForumsDeleteDialogShownEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_delete_dialog_shown_event_pb";
+import {
+	CmntyForumsDeleteConfirmEventSchema,
+	CmntyForumsDeleteConfirmEvent,
+} from "@rbx/event-stream-proto/eventstream/usercommunities/cmnty_forums_delete_confirm_event_pb";
 
 import { EventStreamClient, webEventBase } from "./eventStreamClient";
 
@@ -207,6 +235,21 @@ export type CmntySearchResultsReturnedEventParams = Omit<
 	CmntySearchResultsReturnedEvent,
 	"$typeName" | "totalResults"
 > & { totalResults?: number };
+
+export type CmntyForumsSearchConductedEventParams = Omit<
+	CmntyForumsSearchConductedEvent,
+	"$typeName" | "groupId"
+> & { groupId: number };
+
+export type CmntyForumsSearchResultsReturnedEventParams = Omit<
+	CmntyForumsSearchResultsReturnedEvent,
+	"$typeName" | "groupId"
+> & { groupId: number };
+
+export type CmntyForumsSearchResultClickedEventParams = Omit<
+	CmntyForumsSearchResultClickedEvent,
+	"$typeName" | "groupId"
+> & { groupId: number };
 
 export const CommunityMetric = {
 	AgeCheckBannerShown: (msg: SafeEvent<CmntyAgeCheckBannerShownEvent>) =>
@@ -343,10 +386,55 @@ export const CommunityMetric = {
 			CmntySearchResultsReturnedEventSchema,
 			msg as unknown as CmntySearchResultsReturnedEvent,
 		),
+	CmntyForumsSearchConducted: (msg: CmntyForumsSearchConductedEventParams) =>
+		getMetricEvent(
+			CmntyForumsSearchConductedEventSchema,
+			msg as unknown as CmntyForumsSearchConductedEvent,
+		),
+	CmntyForumsSearchResultsReturned: (
+		msg: CmntyForumsSearchResultsReturnedEventParams,
+	) =>
+		getMetricEvent(
+			CmntyForumsSearchResultsReturnedEventSchema,
+			msg as unknown as CmntyForumsSearchResultsReturnedEvent,
+		),
+	CmntyForumsSearchResultClicked: (
+		msg: CmntyForumsSearchResultClickedEventParams,
+	) =>
+		getMetricEvent(
+			CmntyForumsSearchResultClickedEventSchema,
+			msg as unknown as CmntyForumsSearchResultClickedEvent,
+		),
 	HomepageScrollExposure: (msg: SafeEvent<CmntyHomepageScrollExposureEvent>) =>
 		getMetricEvent(
 			CmntyHomepageScrollExposureEventSchema,
 			msg as unknown as CmntyHomepageScrollExposureEvent,
+		),
+	CmntyForumsConcealedContentShown: (
+		msg: SafeEvent<CmntyForumsConcealedContentShownEvent>,
+	) =>
+		getMetricEvent(
+			CmntyForumsConcealedContentShownEventSchema,
+			msg as unknown as CmntyForumsConcealedContentShownEvent,
+		),
+	CmntyForumsConcealedContentRevealed: (
+		msg: SafeEvent<CmntyForumsConcealedContentRevealedEvent>,
+	) =>
+		getMetricEvent(
+			CmntyForumsConcealedContentRevealedEventSchema,
+			msg as unknown as CmntyForumsConcealedContentRevealedEvent,
+		),
+	CmntyForumsDeleteDialogShown: (
+		msg: SafeEvent<CmntyForumsDeleteDialogShownEvent>,
+	) =>
+		getMetricEvent(
+			CmntyForumsDeleteDialogShownEventSchema,
+			msg as unknown as CmntyForumsDeleteDialogShownEvent,
+		),
+	CmntyForumsDeleteConfirm: (msg: SafeEvent<CmntyForumsDeleteConfirmEvent>) =>
+		getMetricEvent(
+			CmntyForumsDeleteConfirmEventSchema,
+			msg as unknown as CmntyForumsDeleteConfirmEvent,
 		),
 };
 

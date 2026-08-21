@@ -10,7 +10,6 @@ import navigationUtil from "../../util/navigationUtil";
 import CreditIcon from "../CreditIcon";
 import links from "../../constants/linkConstants";
 import layoutConstants from "../../constants/layoutConstants";
-import PopupDisclaimer from "./PopupDisclaimer";
 import LeaveRobloxPopupDisclaimer from "./LeaveRobloxPopupDisclaimer";
 import navigationService from "../../services/navigationService";
 import RobuxBadgeType from "../../constants/robuxBadgeConstants";
@@ -28,7 +27,7 @@ function BuyRobuxPopover({
 	robuxError,
 	translate,
 }) {
-	const { buyGiftCardUrl, buyRobuxUrl } = links;
+	const { buyRobuxUrl } = links;
 	const { buyRobuxOnVng } = buyRobuxUrl;
 	const {
 		ENUM_TRIGGERING_CONTEXT,
@@ -38,8 +37,6 @@ function BuyRobuxPopover({
 	} = analytics;
 	const containerRef = useRef();
 
-	// buy gift card experiment pop up a disclaimer before redirecting
-	const [isShopModalOpen, setIsShopModalOpen] = useState(false);
 	// vng buy robux pop up a disclaimer before redirecting
 	const [
 		isLeaveRobloxDisclaimerModalOpen,
@@ -54,23 +51,6 @@ function BuyRobuxPopover({
 			ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
 			viewMessage,
 		);
-	};
-
-	const onBuyGiftCardClick = () => {
-		sendAnalyticsEvent(ENUM_VIEW_MESSAGE.BUY_GIFT_CARD);
-
-		setIsShopModalOpen(true);
-	};
-
-	const closeShopModal = () => {
-		setIsShopModalOpen(false);
-	};
-
-	const onModalContinue = () => {
-		sendAnalyticsEvent(ENUM_VIEW_MESSAGE.CONTINUE_TO_CASHSTAR);
-
-		const decodedUrl = decodeURIComponent(buyGiftCardUrl.url);
-		window.open(decodedUrl, "_blank");
 	};
 
 	const onBuyRobuxExternalClick = () => {
@@ -109,11 +89,6 @@ function BuyRobuxPopover({
 					layoutConstants.creditDisplayConfigVariants.hideCreditAndRobux,
 			})}
 		>
-			<PopupDisclaimer
-				isShopModalOpen={isShopModalOpen}
-				closeShopModal={closeShopModal}
-				onModalContinue={onModalContinue}
-			/>
 			{isEligibleForVng && (
 				<LeaveRobloxPopupDisclaimer
 					isOpen={isLeaveRobloxDisclaimerModalOpen}
@@ -174,7 +149,6 @@ function BuyRobuxPopover({
 								currencyCode={currencyCode}
 								creditError={creditError}
 								creditDisplayConfig={creditDisplayConfig}
-								onBuyGiftCardClick={onBuyGiftCardClick}
 								onBuyRobuxExternalClick={onBuyRobuxExternalClick}
 								robuxBadgeType={robuxBadgeType}
 							/>

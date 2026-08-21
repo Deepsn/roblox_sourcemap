@@ -6,6 +6,10 @@ import {
 	PAGE_SIZE,
 } from "./notificationStreamApi";
 import { reportNotificationStreamError } from "./notificationStreamObservability";
+import {
+	sendBundleCreated,
+	sendNotificationRetrieved,
+} from "./notificationStreamEvents";
 
 export const GET_RECENT_QUERY_KEY = ["notification-stream-get-recent"];
 
@@ -14,10 +18,68 @@ const byEventDateDesc = (
 	b: StreamNotification,
 ): number => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime();
 
+// Group Sendr rows that share content.bundleKey into a single "SendrBundle" row
+// (the React port of the Angular controller's buildNotificationsList/createSendrBundle).
+// The bundle takes the position/id of its newest member; the card router renders a
+// collapsible SendrNotificationsBundle when it holds more than one notification.
+const loggedBundleSignatures = new Set<string>();
+
+export const groupSendrBundles = (
+	items: StreamNotification[],
+): StreamNotification[] => {
+	const bundleByKey = new Map<string, StreamNotification>();
+	const rows: StreamNotification[] = [];
+	items.forEach((notification) => {
+		const bundleKey =
+			notification.notificationSourceType === "Sendr"
+				? notification.content?.bundleKey
+				: undefined;
+		if (!bundleKey) {
+			rows.push(notification);
+			return;
+		}
+		let bundle = bundleByKey.get(bundleKey);
+		if (!bundle) {
+			bundle = {
+				id: notification.id,
+				notificationSourceType: "SendrBundle",
+				eventDate: notification.eventDate,
+				bundleKey,
+				bundleId: notification.id,
+				notifications: [],
+			};
+			bundleByKey.set(bundleKey, bundle);
+			rows.push(bundle);
+		}
+		bundle.notifications?.push(notification);
+	});
+	bundleByKey.forEach((bundle, bundleKey) => {
+		const members = bundle.notifications ?? [];
+		// groupSendrBundles re-runs on every render; log once per bundle membership.
+		const signature = `${bundleKey}:${members.map((member) => member.id).join(",")}`;
+		if (members.length > 1 && !loggedBundleSignatures.has(signature)) {
+			loggedBundleSignatures.add(signature);
+			sendBundleCreated(
+				bundleKey,
+				bundle.bundleId ?? bundle.id,
+				members.map((member) => member.id),
+				members[0]?.content?.clientEventsPayload as
+					| Record<string, string>
+					| undefined,
+			);
+		}
+	});
+	return rows;
+};
+
 const fetchPage = (startIndex: number): Promise<StreamNotification[]> =>
 	httpService
 		.get<StreamNotification[]>(getRecentUrlConfig(startIndex))
-		.then(({ data }) => data ?? []);
+		.then(({ data }) => {
+			const notifications = data ?? [];
+			notifications.forEach(sendNotificationRetrieved);
+			return notifications;
+		});
 
 export const useGetRecentNotifications = (): ReturnType<
 	typeof useInfiniteQuery<StreamNotification[]>
@@ -42,9 +104,11 @@ export const useGetRecentNotifications = (): ReturnType<
 	const gameUpdates = all
 		.filter((n) => n.notificationSourceType === "GameUpdate")
 		.sort(byEventDateDesc);
-	const notifications = all
-		.filter((n) => n.notificationSourceType !== "GameUpdate")
-		.sort(byEventDateDesc);
+	const notifications = groupSendrBundles(
+		all
+			.filter((n) => n.notificationSourceType !== "GameUpdate")
+			.sort(byEventDateDesc),
+	);
 
 	return { ...query, notifications, gameUpdates };
 };

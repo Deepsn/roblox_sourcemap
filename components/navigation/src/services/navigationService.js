@@ -11,7 +11,6 @@ const {
 	getFriendsRequestCountUrl,
 	getAuthTokenMetaUrl,
 	getCreditBalanceForNavigationUrl,
-	getGiftCardVisibilityUrl,
 	getSignedVngShopUrl,
 	getRobuxBadgeUrl,
 } = urlConstants;
@@ -71,13 +70,6 @@ export default {
 	getCreditBalanceForNavigation() {
 		const urlConfig = {
 			url: getCreditBalanceForNavigationUrl(),
-			withCredentials: true,
-		};
-		return httpService.get(urlConfig);
-	},
-	getGiftCardVisibility() {
-		const urlConfig = {
-			url: getGiftCardVisibilityUrl(),
 			withCredentials: true,
 		};
 		return httpService.get(urlConfig);

@@ -538,6 +538,18 @@ Roblox.LangDynamic["Feature.NotApproved"] = {
 	"Label.ExploitDetected": "Exploit detected",
 	"Label.Sublabel.Emissive": "Emissive",
 	"Heading.SuspendedThirtyDays": "Suspended for 30 days",
+	"Label.Sublabel.ContentMaturityOffByOneBucket":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
+	"Label.Sublabel.ContentMaturityOffByMoreThanOneBucket":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
+	"Label.Sublabel.ContentMaturityMissingDescriptor":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
+	"Label.Sublabel.ContentMaturityMissingModeratePlusDescriptor":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
+	"Label.Sublabel.ContentMaturityMissingSensitiveDescriptor":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
+	"Label.Sublabel.ContentMaturityMissingUnplayableDescriptor":
+		"Inaccurate Maturity & Compliance Questionnaire submission",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

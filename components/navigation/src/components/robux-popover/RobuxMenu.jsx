@@ -5,16 +5,13 @@ import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblo
 import { Link } from "@rbx/core-ui/legacy/react-style-guide";
 import links from "../../constants/linkConstants";
 import layoutConstant from "../../constants/layoutConstants";
-import navigationService from "../../services/navigationService";
 import RobuxBadgeType from "../../constants/robuxBadgeConstants";
 import {
 	mapRobuxBadgeTypeToStr,
 	setRobuxBadgeLocalStorage,
 } from "../../util/robuxBadgeUtil";
 
-const { buyRobuxUrl, redeemUrl, buyGiftCardUrl } = links;
-
-const expValueCache = new Map();
+const { buyRobuxUrl, redeemUrl } = links;
 
 function RobuxMenu({
 	creditAmount,
@@ -24,13 +21,11 @@ function RobuxMenu({
 	isEligibleForVng,
 	robuxAmount,
 	robuxError,
-	onBuyGiftCardClick,
 	onBuyRobuxExternalClick,
 	robuxBadgeType,
 	translate,
 }) {
 	const [isWalletDisplayed, setIsWalletDisplayed] = useState(true);
-	const [isBuyGiftCardDisplayed, setIsBuyGiftCardDisplayed] = useState(false);
 
 	const robuxAmountValue = robuxError
 		? layoutConstant.robuxOnEconomySystemOutage
@@ -78,20 +73,6 @@ function RobuxMenu({
 			}),
 		);
 	}, [creditDisplayConfig]);
-
-	useEffect(() => {
-		if (expValueCache.has(buyGiftCardUrl.cacheKey)) {
-			setIsBuyGiftCardDisplayed(expValueCache.get(buyGiftCardUrl.cacheKey));
-		} else {
-			navigationService.getGiftCardVisibility().then(({ data: expData }) => {
-				setIsBuyGiftCardDisplayed(expData.displayBuyGiftCardOption);
-				expValueCache.set(
-					buyGiftCardUrl.cacheKey,
-					expData.displayBuyGiftCardOption,
-				);
-			});
-		}
-	}, []);
 
 	return (
 		<Fragment>
@@ -153,18 +134,6 @@ function RobuxMenu({
 				</li>
 			)}
 
-			{isBuyGiftCardDisplayed && (
-				<li>
-					<button
-						type="button"
-						className="rbx-menu-item"
-						onClick={onBuyGiftCardClick}
-					>
-						{translate(buyGiftCardUrl.label) || "Buy Gift Card"}
-					</button>
-				</li>
-			)}
-
 			<li>
 				<Link cssClasses="rbx-menu-item" url={buyRobuxUrl.myTransactions.url}>
 					{translate(buyRobuxUrl.myTransactions.label)}
@@ -200,7 +169,6 @@ RobuxMenu.propTypes = {
 	creditError: PropTypes.string,
 	robuxBadgeType: PropTypes.oneOf(Object.values(RobuxBadgeType)),
 	creditDisplayConfig: PropTypes.string.isRequired,
-	onBuyGiftCardClick: PropTypes.func.isRequired,
 	onBuyRobuxExternalClick: PropTypes.func.isRequired,
 };
 

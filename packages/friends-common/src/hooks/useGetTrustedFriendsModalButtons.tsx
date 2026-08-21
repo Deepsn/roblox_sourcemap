@@ -25,6 +25,7 @@ import {
 import {
 	acceptTrustedFriendRequest,
 	addTrustedFriendFromLink,
+	createTrustedFriendLink,
 	sendTrustedFriendRequest,
 	validateTrustedFriendLink,
 } from "../services/trustedFriends";
@@ -135,6 +136,17 @@ export function useGetTrustedFriendsModalButtons({
 			await addTrustedFriendFromLink(userId, linkTokens);
 		};
 
+		const shareTrustedFriendLink = async (): Promise<void> => {
+			const { link } = await createTrustedFriendLink(userId);
+			await navigator.clipboard.writeText(link);
+			setToastMessage(
+				translate(trustedFriendsTranslationKeys.trustedFriendLinkCopied),
+			);
+			await invalidateTrustedQueries();
+			await onComplete?.();
+			onClose(true);
+		};
+
 		const onSendSuccess = async (): Promise<void> => {
 			setToastMessage(
 				translate(trustedFriendsTranslationKeys.trustedFriendRequestSent),
@@ -186,8 +198,10 @@ export function useGetTrustedFriendsModalButtons({
 					await startTrustedFriendVpcUpsell(userId);
 					await onComplete?.();
 					break;
-				case TrustedFriendPrimaryHandler.noop:
 				case TrustedFriendPrimaryHandler.addViaLinkEmpty:
+					await shareTrustedFriendLink();
+					break;
+				case TrustedFriendPrimaryHandler.noop:
 					break;
 			}
 		};

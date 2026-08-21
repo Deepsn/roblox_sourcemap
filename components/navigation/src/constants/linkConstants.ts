@@ -201,9 +201,4 @@ export default {
 		url: getAbsoluteUrl("/redeem"),
 		label: "Heading.RedeemRobloxCodes",
 	},
-	buyGiftCardUrl: {
-		url: "https://roblox.cashstar.com/gift-card/buy/?ref=1023buygc",
-		label: "Label.sBuyGiftCard",
-		cacheKey: "giftCardExp",
-	},
 };

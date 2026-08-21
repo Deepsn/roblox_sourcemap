@@ -24,8 +24,6 @@ export default {
 	getAccountSwitchingSignUpUrl: () => getAbsoluteUrl("/CreateAccount"),
 	getCreditBalanceForNavigationUrl: () =>
 		`${environmentUrls.apiGatewayUrl}/credit-balance/v1/get-credit-balance-for-navigation`,
-	getGiftCardVisibilityUrl: () =>
-		`${environmentUrls.apiGatewayUrl}/credit-balance/v1/get-gift-card-visibility`,
 	getSignedVngShopUrl: () =>
 		`${environmentUrls.apiGatewayUrl}/vng-payments/v1/getVngShopUrl`,
 	getRobuxBadgeUrl: () =>

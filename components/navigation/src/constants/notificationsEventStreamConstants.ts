@@ -9,4 +9,8 @@ export default {
 		name: "nsOpenCTAShown",
 		context: "seen",
 	},
+	openContent: {
+		name: "nsOpenContent",
+		context: "click",
+	},
 };

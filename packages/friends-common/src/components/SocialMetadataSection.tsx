@@ -104,7 +104,9 @@ function parseProfileInsights(
 	let friendRequestOriginDisplay: FriendRequestOriginDisplay | undefined;
 
 	for (const insight of insights) {
-		userAgeVerifiedBracketCatalogKey = insight.userAgeVerifiedBracket;
+		if (insight.userAgeVerifiedBracket) {
+			userAgeVerifiedBracketCatalogKey = insight.userAgeVerifiedBracket;
+		}
 
 		const mutualFriends = insight.mutualFriendInsight?.mutualFriends;
 		if (mutualFriends) {
@@ -115,7 +117,9 @@ function parseProfileInsights(
 		const friendsSinceUnix = profileInsightDateTimeToUnixSeconds(
 			friendshipAge?.friendsSinceDateTime,
 		);
-		friendshipStartUnixSeconds = friendsSinceUnix;
+		if (friendsSinceUnix) {
+			friendshipStartUnixSeconds = friendsSinceUnix;
+		}
 
 		const accountCreated = insight.accountCreationDateInsight;
 		const accountCreatedUnix = profileInsightDateTimeToUnixSeconds(

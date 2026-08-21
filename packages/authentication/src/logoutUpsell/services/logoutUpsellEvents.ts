@@ -109,6 +109,85 @@ export const sendSignOutClick = (): void => {
 	});
 };
 
+// --- Passkey registration ceremony -------------------------------------------
+
+const PASSKEY_REGISTRATION_FIELD = "passkeyRegistration";
+
+/**
+ * Progress markers for one `registerPasskey` attempt, emitted in order. The
+ * trail is what separates refusal from breakage: browsers report dismissal,
+ * timeout, and several genuine failures as the same `NotAllowedError`, so a
+ * click with no `DialogInvoked` is the only proof the fault was ours.
+ */
+export const PasskeyRegistrationStage = {
+	StartRequested: "startRequested",
+	DialogInvoked: "dialogInvoked",
+	DialogResolved: "dialogResolved",
+	DialogRejected: "dialogRejected",
+	FinishRequested: "finishRequested",
+	Registered: "registered",
+} as const;
+
+export type PasskeyRegistrationStageName =
+	(typeof PasskeyRegistrationStage)[keyof typeof PasskeyRegistrationStage];
+
+/** Only the stages that terminate the OS prompt have a duration to report. */
+export type PasskeyPromptTimingState =
+	| typeof PasskeyRegistrationStage.DialogResolved
+	| typeof PasskeyRegistrationStage.DialogRejected;
+
+/**
+ * Failing step, carried in `origin`. Values match the settings passkey flow so
+ * both surfaces can be compared in one query.
+ */
+export const PasskeyRegistrationErrorOrigin = {
+	CompatibilityCheck: "compatibilityCheck",
+	StartRegistration: "startRegistration",
+	RegisterCredentialsErrorCode: "registerCredentialsErrorCode",
+	RegisterCredentialsEmptyResponse: "registerCredentialsEmptyResponse",
+	FinishRegistration: "finishRegistration",
+	Unexpected: "unexpected",
+} as const;
+
+export type PasskeyRegistrationErrorOriginName =
+	(typeof PasskeyRegistrationErrorOrigin)[keyof typeof PasskeyRegistrationErrorOrigin];
+
+export const sendPasskeyRegistrationStage = (
+	stage: PasskeyRegistrationStageName,
+): void => {
+	send(schematizedEventTypes.authFormInteraction, {
+		field: PASSKEY_REGISTRATION_FIELD,
+		state: stage,
+	});
+};
+
+/**
+ * `state` must stay low-cardinality: pass a DOMException `name` or error code,
+ * never a raw `message`.
+ */
+export const sendPasskeyRegistrationError = (
+	origin: PasskeyRegistrationErrorOriginName,
+	state: string,
+): void => {
+	send(schematizedEventTypes.authClientError, { origin, state });
+};
+
+/**
+ * Time the user spent in the OS prompt, which separates an instant programmatic
+ * failure from a human dismissal.
+ *
+ * This rides on `authOperationTiming` because that is the only auth event with a
+ * numeric field (`elapsedTime`); `authFormInteraction` and `authClientError` are
+ * all-string, so a duration passed to either would be dropped at ingest. `ctx`
+ * stays `logoutUpsell`, so `state` alone distinguishes the outcome.
+ */
+export const sendPasskeyPromptTiming = (
+	state: PasskeyPromptTimingState,
+	elapsedTime: number,
+): void => {
+	send(schematizedEventTypes.authOperationTiming, { elapsedTime, state });
+};
+
 // --- Add email screen --------------------------------------------------------
 
 export const sendAddEmailShown = (origin: AddEmailOriginName): void => {

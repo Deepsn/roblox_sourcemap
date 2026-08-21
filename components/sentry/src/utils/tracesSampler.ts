@@ -3,6 +3,7 @@ import type { BrowserOptions } from "@sentry/browser";
 type TracesCtx = Parameters<NonNullable<BrowserOptions["tracesSampler"]>>[0];
 
 const LOCALE_PREFIX_RE = /^\/[a-z]{2}(?:-[a-z]{2})\//i;
+const PRE_AUTH_LANDING_RE = /^\/$/i;
 const HOME_RE = /^\/home\/?$/i;
 const PROFILE_RE = /^\/users\/[^/]+\/profile/i;
 const FRIENDS_RE = /^\/users\/[^/]+\/friends/i;
@@ -31,6 +32,7 @@ export function buildTracesSampler(perfBase: number) {
 		).toLowerCase();
 		const path = raw.replace(LOCALE_PREFIX_RE, "/");
 		let traceSampleRate;
+		if (PRE_AUTH_LANDING_RE.test(path)) traceSampleRate = 0.1; // 10%
 		if (HOME_RE.test(path)) traceSampleRate = clamp01(base * 0.1); // 90% cut
 		if (PROFILE_RE.test(path)) traceSampleRate = clamp01(base * 0.2); // 80% cut
 		if (FRIENDS_RE.test(path)) traceSampleRate = clamp01(base * 0.2); // 80% cut

@@ -9,6 +9,7 @@ const EVENT_CONSTANTS = {
 		authPageLoad: "authPageload",
 		authModalShown: "authModalShown",
 		authClientError: "authClientError",
+		authOperationTiming: "authOperationTiming",
 		usernameSuggestionShown: "usernameSuggestionShown",
 	},
 	eventName: {

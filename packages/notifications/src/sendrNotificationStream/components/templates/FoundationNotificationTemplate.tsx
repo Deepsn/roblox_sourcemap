@@ -1,6 +1,6 @@
 import React from "react";
-import { Intl } from "Roblox";
 import { Button, Notification } from "@rbx/foundation-ui";
+import { getRelativeTimeMaxDays } from "../../../utils/relativeTime";
 import {
 	ButtonStyle,
 	NotificationTemplateProps,
@@ -17,13 +17,12 @@ import { formatText } from "../../utils/labelUtils";
 import { openNotificationStreamAbuseReport } from "../../utils/notificationStreamWindowHost";
 import eventConstants from "../../constants/eventConstants";
 
-const spacerTitle = (
-	<span aria-hidden style={{ display: "block", width: "100%" }} />
-);
-
-const isEmphasis = (button: VisualItemButton): boolean =>
-	button.buttonStyle === ButtonStyle.Growth ||
-	button.buttonStyle === ButtonStyle.Primary;
+const buttonStyleClass: Record<ButtonStyle, string> = {
+	[ButtonStyle.Primary]: "sendr-notification-button--primary",
+	[ButtonStyle.Secondary]: "sendr-notification-button--secondary",
+	[ButtonStyle.Growth]: "sendr-notification-button--growth",
+	[ButtonStyle.Alert]: "sendr-notification-button--alert",
+};
 
 export const FoundationNotificationTemplate = ({
 	currentState,
@@ -44,7 +43,7 @@ export const FoundationNotificationTemplate = ({
 		visualItems[VisualItemType.MetaAction] ?? [];
 
 	const eventTimeString = eventTime
-		? new Intl().getDateTimeFormatter().getFullDate(new Date(eventTime))
+		? getRelativeTimeMaxDays(new Date(eventTime), new Date())
 		: undefined;
 
 	const showKebab = metaActions.length > 0 && !isReadOnly;
@@ -68,39 +67,38 @@ export const FoundationNotificationTemplate = ({
 		}
 	};
 
-	const description = (
-		<React.Fragment>
-			{showKebab && (
-				<FoundationSendrKebab
-					actions={metaActions}
-					onSelect={onMetaSelect}
-					ariaLabel="Notification options"
-				/>
-			)}
-			{textBody?.label && formatText(textBody.label)}
-			{showButtons && (
-				<span style={{ display: "flex", gap: 8, marginTop: 12, width: "100%" }}>
-					{buttons.map((button) => (
-						<Button
-							key={button.label.text}
-							className="fill basis-0"
-							variant={isEmphasis(button) ? "Emphasis" : "Standard"}
-							onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-								event.stopPropagation();
-								handleActions?.(button);
-							}}
-						>
-							{button.label.text}
-						</Button>
-					))}
-				</span>
-			)}
-		</React.Fragment>
+	const kebab = showKebab ? (
+		<FoundationSendrKebab
+			actions={metaActions}
+			onSelect={onMetaSelect}
+			ariaLabel="Notification options"
+		/>
+	) : null;
+
+	const actionButton = (button: VisualItemButton): JSX.Element => (
+		<Button
+			className={`fill basis-0 sendr-notification-button ${buttonStyleClass[button.buttonStyle]}`}
+			variant="Standard"
+			size="Small"
+			onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+				event.stopPropagation();
+				handleActions?.(button);
+			}}
+		>
+			{button.label.text}
+		</Button>
 	);
+
+	// The card carries two action slots, so a payload with a third button would drop it.
+	const [firstButton, secondButton] = showButtons ? buttons : [];
 
 	return (
 		<Notification
-			style={{ textAlign: "left" }}
+			className="notification-card-tight"
+			style={{
+				textAlign: "left",
+				cursor: cardClickable ? "pointer" : undefined,
+			}}
 			media={
 				thumbnailItem ? (
 					<FoundationSendrMedia thumbnailItem={thumbnailItem} />
@@ -109,11 +107,12 @@ export const FoundationNotificationTemplate = ({
 			title={
 				textBody?.title ? (
 					<React.Fragment>{formatText(textBody.title)}</React.Fragment>
-				) : (
-					spacerTitle
-				)
+				) : undefined
 			}
-			description={description}
+			description={textBody?.label ? formatText(textBody.label) : undefined}
+			trailingAction={kebab}
+			primaryAction={firstButton ? actionButton(firstButton) : undefined}
+			secondaryAction={secondButton ? actionButton(secondButton) : undefined}
 			timestamp={eventTimeString}
 			onClick={
 				cardClickable && textBody ? () => handleActions?.(textBody) : undefined

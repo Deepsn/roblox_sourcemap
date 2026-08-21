@@ -64,6 +64,9 @@ Roblox.LangDynamic["Feature.BuyRobux"] = {
 	"Label.PeopleWithCount": "People ({count})",
 	"Label.Search": "Search",
 	"Label.Loading": "Loading",
+	"Label.PendingRequestsSummary.Plural": "{count} pending requests",
+	"Label.PendingRequestsSummary.Singular": "{count} pending request",
+	"Heading.ReviewPendingRequests": "Review pending requests",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

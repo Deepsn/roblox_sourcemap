@@ -22,6 +22,7 @@ import {
 } from "../constants/deepLinkConstants";
 
 import NotificationView from "./NotificationView";
+import { reportNotificationStreamError } from "../../notificationStreamData/notificationStreamObservability";
 
 export const handleUpdateNotificationAction = async (
 	streamId: string,
@@ -67,6 +68,8 @@ const shouldDeeplinkFailShowModal = (action: Action): boolean => {
 
 export const SendrNotification = ({
 	notificationData,
+	onRemoved,
+	onActionFailed,
 }: SendrNotificationProps): JSX.Element => {
 	const eventTime: string = notificationData.eventDate;
 
@@ -103,15 +106,7 @@ export const SendrNotification = ({
 		});
 	};
 
-	const handleActions = async (visualItem: InteractibleVisualItem) => {
-		// Handle actions sequentially
-		// If an action fails, stop processing and go to fallback state if provided
-		// Blocks handling actions if an API call is in progress
-		if (handlingActionsRef.current || !visualItem.actions) {
-			return;
-		}
-		handlingActionsRef.current = true;
-
+	const runActions = async (visualItem: InteractibleVisualItem) => {
 		if (visualItem.eventName) {
 			handleEventStreamClickEvent(
 				visualItem.eventName,
@@ -123,7 +118,7 @@ export const SendrNotification = ({
 			);
 		}
 
-		const { actions } = visualItem;
+		const actions = visualItem.actions ?? [];
 		for (const action of actions) {
 			let canContinue = true;
 			let isSuccess = true;
@@ -133,12 +128,6 @@ export const SendrNotification = ({
 			switch (action.actionType) {
 				case ActionType.Dismiss:
 					setDismissed(true);
-					if (
-						notificationData.bundleIndex !== undefined &&
-						notificationData.handleBundleDismiss !== undefined
-					) {
-						notificationData.handleBundleDismiss(notificationData.bundleIndex);
-					}
 					break;
 				case ActionType.Deeplink:
 					if (action!.path) {
@@ -183,6 +172,7 @@ export const SendrNotification = ({
 								setCurrentState(action!.fallbackState);
 							}
 							canContinue = false;
+							onActionFailed?.();
 						}
 					}
 					break;
@@ -205,7 +195,23 @@ export const SendrNotification = ({
 				setCurrentState(action!.nextState);
 			}
 		}
-		handlingActionsRef.current = false;
+	};
+
+	const handleActions = async (visualItem: InteractibleVisualItem) => {
+		// Handle actions sequentially
+		// If an action fails, stop processing and go to fallback state if provided
+		// Blocks handling actions if an API call is in progress
+		if (handlingActionsRef.current || !visualItem.actions) {
+			return;
+		}
+		handlingActionsRef.current = true;
+		try {
+			await runActions(visualItem);
+		} catch (error) {
+			reportNotificationStreamError("sendrNotificationActions", error);
+		} finally {
+			handlingActionsRef.current = false;
+		}
 	};
 
 	const state = content.states[currentState]!;
@@ -237,12 +243,14 @@ export const SendrNotification = ({
 	return (
 		<div
 			onTransitionEnd={(e) => {
-				// Removes the notification when the css transition has moved it out
-				// We listen for right because that's the property adjusted to
-				// slide the notification
-				if (e.propertyName === "right") {
-					setRemoved(true);
+				// Removes the notification once the slide-out has moved it out. Keyed off any
+				// transition on this element rather than a property name, which the scss is free
+				// to change; while dismissed the slide-out is the only transition it runs.
+				if (!dismissed || removed || e.target !== e.currentTarget) {
+					return;
 				}
+				setRemoved(true);
+				onRemoved?.();
 			}}
 			className={`sendr-notification-background ${
 				dismissed

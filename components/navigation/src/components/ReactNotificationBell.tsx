@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import events from "../constants/notificationsEventStreamConstants";
 
-// Above this the badge shows "99+" instead of the raw number (ports the legacy
-// AngularJS `abbreivateCount` filter's default behavior).
 const UNREAD_ABBREVIATION_THRESHOLD = 100;
 const abbreviateUnreadCount = (count: number): string =>
 	count >= UNREAD_ABBREVIATION_THRESHOLD ? "99+" : String(count);
@@ -12,18 +10,12 @@ type ReactNotificationBellProps = {
 	unreadCount?: number;
 };
 
-// Renders the notification bell glyph + unread-count badge in React, replacing the
-// AngularJS notificationStreamIndicator directive that used to be bootstrapped here.
-// The count is supplied by the parent (from useUnreadNotificationCount). Gated by
-// IsReactNotificationBellEnabled; the Angular path (NotificationStreamIcon) stays as
-// the flag-off fallback.
 function ReactNotificationBell({
 	unreadCount = 0,
 }: ReactNotificationBellProps) {
 	const previousCountRef = useRef(0);
 
 	useEffect(() => {
-		// Fire the "seen" analytic once, on the 0 -> nonzero transition.
 		if (unreadCount > 0 && previousCountRef.current === 0) {
 			sendEventWithTarget(events.openCTA.name, events.openCTA.context, {
 				count: unreadCount,
@@ -34,8 +26,7 @@ function ReactNotificationBell({
 	}, [unreadCount]);
 
 	useEffect(() => {
-		// Carry over the legacy indicator directive's one-time cleanup: unregister the
-		// old desktop push service worker. TODO: remove (its 2024 cleanup window passed).
+		// TODO: remove; one-time unregister of the retired desktop push SW, 2024 cleanup window passed.
 		if (!("serviceWorker" in navigator)) {
 			return;
 		}

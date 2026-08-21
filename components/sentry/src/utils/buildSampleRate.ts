@@ -4,6 +4,7 @@ const RegexBasedSamplerSettings: Record<
 	string,
 	{ pattern: RegExp; sampleRate: number }
 > = {
+	PreAuthLandingPageRegex: { pattern: /^\/$/i, sampleRate: 1 },
 	PaymentTeamPagesRegex: {
 		pattern: /^\/(?:upgrades|redeem)(?:\/|$)/i,
 		sampleRate: 1,

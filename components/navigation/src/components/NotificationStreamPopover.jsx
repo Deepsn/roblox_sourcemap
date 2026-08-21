@@ -27,10 +27,14 @@ function NotificationStreamPopover({ translate }) {
 
 	const handleStreamOpen = useCallback(() => {
 		logNotificationStreamExposureIfEnabled();
+		sendEventWithTarget(events.openContent.name, events.openContent.context, {
+			countOfUnreadNotification: unreadCount,
+			sendrVersion: 0,
+		});
 		if (isReactBell) {
 			handleReactBellStreamOpen();
 		}
-	}, [isReactBell, handleReactBellStreamOpen]);
+	}, [isReactBell, handleReactBellStreamOpen, unreadCount]);
 
 	const formattedCount = formatNumber(unreadCount);
 	const ariaLabel =

@@ -42,6 +42,11 @@ export type DownloadButtonProps = {
 	renderInstallInstructions?: (download: ResolvedAppDownload) => ReactNode;
 	isDisabled?: boolean;
 	isVisible?: boolean;
+	/**
+	 * When true, skip the Large-size min-width override. Defaults to false to
+	 * keep the download CTA Large styling.
+	 */
+	useFoundationSize?: boolean;
 	className?: ComponentProps<typeof Button>["className"];
 	href?: string;
 	download?: ResolvedAppDownload;
@@ -61,6 +66,7 @@ function DownloadButton({
 	renderInstallInstructions,
 	isDisabled = false,
 	isVisible = true,
+	useFoundationSize = false,
 	className,
 	href,
 	download: downloadOverride,
@@ -83,14 +89,15 @@ function DownloadButton({
 	const resolvedHref = href ?? download.href.toString();
 	const label = text ?? translate(download.link.title);
 	const iconSize = iconSizeByButtonSize[size] ?? size;
-	const buttonClassName = [buttonClassNameBySize[size], className]
-		.filter(Boolean)
-		.join(" ");
+	const sizeClassName = useFoundationSize
+		? undefined
+		: buttonClassNameBySize[size];
+	const buttonClassName = [sizeClassName, className].filter(Boolean).join(" ");
 	const hasInstallInstructions = renderInstallInstructions != null;
-	const isButtonDisabled = isDisabled || isClickPending;
+	const isInteractionBlocked = isDisabled || isClickPending;
 
 	const handleClick = async (event: React.MouseEvent<HTMLElement>) => {
-		if (isButtonDisabled) {
+		if (isInteractionBlocked) {
 			return;
 		}
 
@@ -119,10 +126,10 @@ function DownloadButton({
 				variant={variant}
 				size={size}
 				className={buttonClassName}
-				href={isButtonDisabled ? undefined : resolvedHref}
+				href={isInteractionBlocked ? undefined : resolvedHref}
 				target={download.isDirectDownload ? "_self" : "_blank"}
 				rel={download.isDirectDownload ? undefined : "noopener noreferrer"}
-				isDisabled={isButtonDisabled}
+				isDisabled={isDisabled}
 				isLoading={isClickPending}
 				onClick={(event) => {
 					// eslint-disable-next-line no-void

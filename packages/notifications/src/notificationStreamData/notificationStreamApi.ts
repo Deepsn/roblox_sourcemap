@@ -1,6 +1,6 @@
-import { EnvironmentUrls } from "Roblox";
+import environmentUrls from "@rbx/environment-urls";
 
-const { notificationApi } = EnvironmentUrls;
+const { notificationApi } = environmentUrls;
 
 export const PAGE_SIZE = 20;
 
@@ -14,6 +14,11 @@ export type StreamNotification = {
 	eventCount?: number;
 	metadataCollection?: unknown[];
 	content?: Record<string, unknown> & { bundleKey?: string };
+	// Present only on synthetic "SendrBundle" rows produced by grouping Sendr rows
+	// that share content.bundleKey (see groupSendrBundles).
+	bundleKey?: string;
+	bundleId?: string;
+	notifications?: StreamNotification[];
 };
 
 export const getRecentUrlConfig = (
