@@ -225,7 +225,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Become a Plus subscriber before {date} to get the exclusive gift in your inventory before it opens.",
 	"Action.BannerEquip": "Equip",
 	"Description.Benefit.DiscountV2":
-		"10% first 60 days, then 20% off items and avatars",
+		"10% off first 60 days, then 20% off items and avatars",
 	"Description.Benefit.Discounts":
 		"Discounts off in-game items, avatars, and more",
 	"Description.Benefit.Customize":
@@ -245,8 +245,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"We could not create your link. Please try again later.",
 	"Label.ReferralLinkCopied": "Link copied",
 	"Action.CopyReferralLink": "Copy link",
-	"Description.ReferralEntry":
-		"Invite someone to Plus and you both get {amount} Robux.",
+	"Description.ReferralEntry": "Invite someone to Plus",
 	"Heading.ReferralEntry": "Share Plus to get {amount} Robux",
 	"Heading.ReferralCard": "Share Plus, get {amount} Robux",
 	"Action.ReferralInvite": "Invite",

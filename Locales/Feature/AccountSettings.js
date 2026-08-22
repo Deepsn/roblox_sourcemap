@@ -2681,6 +2681,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.SecurityKey.RenameKey":
 		"Name your key descriptively so that you will know which one it is.",
 	"Heading.IARCRatingSetting": "Content maturity setting",
+	"Label.RobuxTransferLimits": "robux transfer limits",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
