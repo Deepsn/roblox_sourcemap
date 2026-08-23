@@ -748,6 +748,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Content is generally suitable for ages 17 and up. May contain intense violence, blood and gore, sexual content and/or strong language.",
 	"Description.VPCRequestIarcEsrbAo":
 		"Content suitable only for adults ages 18 and up. May include prolonged scenes of intense violence, graphic sexual content and/or gambling with real currency.",
+	"Description.VPCRequestRobuxTransferLimits":
+		"This will update the daily and monthly limits on the amount of Robux your child can transfer.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
