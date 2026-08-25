@@ -1,4 +1,5 @@
 import { type FC, useMemo } from "react";
+import classNames from "classnames";
 import { useTranslation } from "@rbx/core-scripts/react";
 import { Button } from "@rbx/foundation-ui";
 import {
@@ -89,6 +90,7 @@ export type SubscriptionTileProps = {
 	product: SectionSubscriptionV2Product;
 	deviceMeta: DeviceMeta;
 	isEmphasized: boolean;
+	isPrimary: boolean;
 	onSubscribeClick?: (args: TrackSubscriptionV2SubscribeClickArgs) => void;
 	paymentSessionId?: string;
 	redirect?: UseRedirectResult;
@@ -98,6 +100,7 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 	product,
 	deviceMeta,
 	isEmphasized,
+	isPrimary,
 	onSubscribeClick,
 	paymentSessionId,
 	redirect,
@@ -158,7 +161,14 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 
 	return (
 		<div
-			className="bg-surface-100 stroke-default stroke-standard radius-large padding-medium flex flex-col items-stretch justify-between gap-small height-full"
+			className={classNames(
+				"radius-large padding-medium flex flex-col items-stretch justify-between gap-small height-full",
+				{
+					"bg-surface-100": isPrimary,
+					"stroke-standard": !isPrimary,
+					"stroke-default": !isPrimary,
+				},
+			)}
 			data-testid={`subscription-tile-${product.subscriptionProductId}`}
 			{...getSubscriptionProductTrackingProps(
 				product.subscriptionProductId,

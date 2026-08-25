@@ -1,0 +1,284 @@
+import clsx from 'clsx';
+import React, { forwardRef, useMemo } from 'react';
+import type { CSSProperties } from 'react';
+import type {
+  TTailwindGapXClass,
+  TTailwindHeightClass,
+  TTailwindIconClass,
+  TTailwindPaddingXClass,
+  TTailwindRadiusClass,
+  TTailwindTextBodyClass
+} from '@rbx/foundation-tailwind/classes';
+import useId from '../utils/useId';
+import { Icon } from './Icon';
+import { disabledOpacity } from '../utils/styles';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+import { StateLayer, interactable } from './internal/StateLayer';
+import './internal/Common.css';
+import {
+  type TInputVariant,
+  INPUT_BACKGROUND_BY_VARIANT,
+  INPUT_STROKE_BY_VARIANT
+} from './internal/input-variants';
+
+export { INPUT_VARIANTS as searchInputVariants } from './internal/input-variants';
+export type TSearchInputVariant = TInputVariant;
+
+export const searchInputSizes = ['XSmall', 'Small', 'Medium', 'Large'] as const;
+export type TSearchInputSize = (typeof searchInputSizes)[number];
+
+export const searchInputShapes = ['Rounded', 'Pill', 'Square'] as const;
+export type TSearchInputShape = (typeof searchInputShapes)[number];
+
+type TLeadingIconProps =
+  | { leadingIconName: TTailwindIconClass; leadingIconNode?: never }
+  | { leadingIconName?: never; leadingIconNode: React.ReactNode }
+  | { leadingIconName?: never; leadingIconNode?: never };
+
+type TTrailingIconProps =
+  | { trailingIconName: TTailwindIconClass; trailingIconNode?: never }
+  | { trailingIconName?: never; trailingIconNode: React.ReactNode }
+  | { trailingIconName?: never; trailingIconNode?: never };
+
+type TSearchInputFoundationProps = {
+  size?: TSearchInputSize;
+  variant?: TSearchInputVariant;
+  shape?: TSearchInputShape;
+  /** Accessible label for the search input. Can be visually hidden by providing `aria-label` instead. */
+  label?: React.ReactNode;
+  value?: string;
+  defaultValue?: string;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+  hasError?: boolean;
+  /** Error message to display. If provided, the input will be in an error state. Accepts rich content (e.g. links). */
+  error?: React.ReactNode;
+  /** Helper text to be displayed below the input field. Accepts rich content (e.g. links). */
+  helperText?: React.ReactNode;
+  inputContainerClassName?: string;
+  inputContainerStyle?: CSSProperties;
+} & TLeadingIconProps &
+  TTrailingIconProps;
+
+/**
+ * Since React.InputHTMLAttributes<HTMLInputElement> can have overlap with our custom props,
+ * we need to omit constraints on fields we define from the final props type.
+ * We also omit `type` since SearchInput is always rendered as a `search` input.
+ */
+export type TSearchInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  keyof TSearchInputFoundationProps | 'disabled' | 'required' | 'type'
+> &
+  TSearchInputFoundationProps;
+
+const SEARCH_INPUT_X_PADDING: Record<TSearchInputSize, TTailwindPaddingXClass> = {
+  XSmall: 'padding-x-small',
+  Small: 'padding-x-medium',
+  Medium: 'padding-x-medium',
+  Large: 'padding-x-medium'
+};
+
+const INPUT_ICON_GAP: Record<TSearchInputSize, TTailwindGapXClass> = {
+  XSmall: 'gap-x-xsmall',
+  Small: 'gap-x-small',
+  Medium: 'gap-x-small',
+  Large: 'gap-x-small'
+};
+
+const SEARCH_INPUT_WRAPPER_HEIGHT: Record<TSearchInputSize, TTailwindHeightClass> = {
+  XSmall: 'height-600',
+  Small: 'height-800',
+  Medium: 'height-1000',
+  Large: 'height-1200'
+};
+
+const SEARCH_INPUT_ROUNDED_RADIUS: Record<TSearchInputSize, TTailwindRadiusClass> = {
+  XSmall: 'radius-small',
+  Small: 'radius-medium',
+  Medium: 'radius-medium',
+  Large: 'radius-medium'
+};
+
+const SEARCH_INPUT_WRAPPER_RADIUS_BY_SHAPE: Record<
+  TSearchInputShape,
+  Record<TSearchInputSize, TTailwindRadiusClass>
+> = {
+  Rounded: SEARCH_INPUT_ROUNDED_RADIUS,
+  Pill: {
+    XSmall: 'radius-circle',
+    Small: 'radius-circle',
+    Medium: 'radius-circle',
+    Large: 'radius-circle'
+  },
+  Square: {
+    XSmall: 'radius-none',
+    Small: 'radius-none',
+    Medium: 'radius-none',
+    Large: 'radius-none'
+  }
+};
+
+const TEXT_CLASSES_BY_SIZE: Record<
+  TSearchInputSize,
+  [TTailwindTextBodyClass, `placeholder:${TTailwindTextBodyClass}`]
+> = {
+  XSmall: ['text-body-small', 'placeholder:text-body-small'],
+  Small: ['text-body-small', 'placeholder:text-body-small'],
+  Medium: ['text-body-medium', 'placeholder:text-body-medium'],
+  Large: ['text-body-large', 'placeholder:text-body-large']
+};
+
+const DEFAULT_SIZE: TSearchInputSize = 'Large';
+const DEFAULT_SHAPE: TSearchInputShape = 'Rounded';
+const DEFAULT_VARIANT: TSearchInputVariant = 'Standard';
+const DEFAULT_LEADING_ICON: TTailwindIconClass = 'icon-regular-magnifying-glass';
+const DEFAULT_PLACEHOLDER = 'Search';
+
+export const SearchInput = forwardRef<HTMLInputElement, TSearchInputProps>(
+  (
+    {
+      label,
+      leadingIconName,
+      trailingIconName,
+      leadingIconNode,
+      trailingIconNode,
+      hasError,
+      error,
+      helperText,
+      size = DEFAULT_SIZE,
+      variant = DEFAULT_VARIANT,
+      shape = DEFAULT_SHAPE,
+      isRequired,
+      isDisabled,
+      className,
+      style,
+      inputContainerClassName,
+      inputContainerStyle,
+      id,
+      placeholder = DEFAULT_PLACEHOLDER,
+      ...props
+    },
+    ref
+  ) => {
+    const autoId = useId();
+    const inputId = id || autoId;
+    const descriptionId = `${inputId}-description`;
+    const searchInputSize = size ?? DEFAULT_SIZE;
+    const isError = hasError || Boolean(error);
+    const hintText = error || helperText;
+
+    // When no explicit leading icon is provided, default to the search icon.
+    const resolvedLeadingIconName =
+      leadingIconName ?? (leadingIconNode === undefined ? DEFAULT_LEADING_ICON : undefined);
+
+    const leadingIcon = useMemo(() => {
+      if (resolvedLeadingIconName) {
+        return (
+          <Icon
+            name={resolvedLeadingIconName}
+            size={searchInputSize}
+            className='content-emphasis'
+            data-testid='search-input-leading-icon'
+          />
+        );
+      }
+
+      return leadingIconNode;
+    }, [resolvedLeadingIconName, leadingIconNode, searchInputSize]);
+
+    const trailingAccessory = useMemo(() => {
+      if (trailingIconName) {
+        return (
+          <Icon
+            name={trailingIconName}
+            size={searchInputSize}
+            className='content-emphasis'
+            data-testid='search-input-trailing-icon'
+          />
+        );
+      }
+
+      return trailingIconNode;
+    }, [searchInputSize, trailingIconName, trailingIconNode]);
+
+    return (
+      <div
+        data-testid='search-input-wrapper'
+        className={clsx('flex width-full flex-col gap-small', className, {
+          [disabledOpacity]: isDisabled
+        })}
+        style={style}>
+        {label && (
+          <label htmlFor={inputId} className={clsx('text-title-small content-emphasis')}>
+            {label}
+            {isRequired && (
+              <React.Fragment>
+                {' '}
+                <span className='content-default'>*</span>
+              </React.Fragment>
+            )}
+          </label>
+        )}
+
+        {/* TODO: Figma uses an alpha token for stroke, which doesn't exist in our tailwind lib today */}
+        <div
+          data-testid='search-input-container'
+          className={clsx(
+            'foundation-web-input flex items-center width-full',
+            !isDisabled && interactable,
+            INPUT_STROKE_BY_VARIANT[variant],
+            INPUT_BACKGROUND_BY_VARIANT[variant],
+            inputContainerClassName,
+            SEARCH_INPUT_WRAPPER_HEIGHT[searchInputSize],
+            SEARCH_INPUT_WRAPPER_RADIUS_BY_SHAPE[shape][searchInputSize],
+            SEARCH_INPUT_X_PADDING[searchInputSize],
+            INPUT_ICON_GAP[searchInputSize],
+            isError
+              ? 'stroke-system-alert focus-within:stroke-system-alert'
+              : 'stroke-contrast-alpha focus-within:stroke-system-emphasis'
+          )}
+          style={inputContainerStyle}>
+          <StateLayer className='pointer-events-none' />
+          {leadingIcon && <div className='flex shrink-0 items-center'>{leadingIcon}</div>}
+          <input
+            type='search'
+            id={inputId}
+            ref={ref}
+            placeholder={placeholder}
+            className={clsx(
+              'width-full min-width-0 padding-none bg-none stroke-none outline-none content-emphasis placeholder:content-muted [appearance:none]',
+              TEXT_CLASSES_BY_SIZE[searchInputSize],
+              '[&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden'
+            )}
+            aria-invalid={isError}
+            aria-describedby={hintText ? descriptionId : undefined}
+            required={isRequired}
+            disabled={isDisabled}
+            {...props}
+          />
+          {trailingAccessory && (
+            <div
+              className='flex shrink-0 items-center'
+              data-testid='search-input-trailing-accessory'>
+              {trailingAccessory}
+            </div>
+          )}
+        </div>
+        {hintText && (
+          <span
+            id={descriptionId}
+            className={clsx('text-caption-small', {
+              'content-system-alert': isError,
+              'content-default': !isError
+            })}>
+            {hintText}
+          </span>
+        )}
+      </div>
+    );
+  }
+) as TForwardRefComponent<TSearchInputProps>;
+
+SearchInput.displayName = 'SearchInput';
+
+export default SearchInput;

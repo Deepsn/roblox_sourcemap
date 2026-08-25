@@ -42,6 +42,8 @@ export type BuyRobuxPageContextProps = {
 	collectibleBonusItemMetadata: CollectibleItemMetadata | undefined;
 	shouldShowFirstTimePurchaseConsent: boolean | undefined;
 	markConsentAcknowledged: () => void;
+	productBadgeSlotCount: number;
+	atLeastOneProductHasBonusAmount: boolean;
 };
 
 export const BuyRobuxPageContext = createContext<BuyRobuxPageContextProps>({
@@ -78,4 +80,6 @@ export const BuyRobuxPageContext = createContext<BuyRobuxPageContextProps>({
 	collectibleBonusItemMetadata: undefined,
 	shouldShowFirstTimePurchaseConsent: undefined,
 	markConsentAcknowledged: () => undefined,
+	productBadgeSlotCount: 0,
+	atLeastOneProductHasBonusAmount: false,
 });

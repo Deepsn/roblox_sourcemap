@@ -15,7 +15,11 @@ import {
 	Popover,
 } from "@rbx/core-ui/legacy/react-style-guide";
 import { useTranslation } from "@rbx/core-scripts/react";
+import { formatNumber } from "@rbx/core-scripts/format/number";
+import { Badge } from "@rbx/foundation-ui";
 import { FullScreenLoading } from "@rbx/payments/components";
+import { isIconVariant } from "../../utils/iconVariants";
+import { resolveBonusRobuxTagLabelKey } from "../../utils/bonusRobuxTag";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 import { ModalContext } from "../../contexts/ModalContext";
 import {
@@ -201,7 +205,9 @@ function QuickPayModal({
 						<div className="icon-robux-redesign" />
 						<div className="product-detail">
 							<div className="product-name">
-								{selectedProduct.defaultDisplayName}
+								{translate("Label.RobuxQuantity", {
+									quantity: formatNumber(Number(selectedProduct.robuxAmount)),
+								})}
 							</div>
 							<span
 								className="product-price quick-pay-price-tag"
@@ -209,6 +215,28 @@ function QuickPayModal({
 								data-currency-code={selectedProduct.price.amount.currencyCode}
 							/>
 						</div>
+						{selectedProduct.bonusRobuxAmount &&
+							selectedProduct.bonusRobuxTagIcon &&
+							isIconVariant(selectedProduct.bonusRobuxTagIcon) && (
+								<div className="margin-top-[14px] margin-left-[6px] self-start">
+									<Badge
+										variant="Contrast"
+										icon={selectedProduct.bonusRobuxTagIcon}
+										label={translate(
+											resolveBonusRobuxTagLabelKey(
+												selectedProduct.bonusRobuxTagTranslationKey,
+											),
+											{
+												amount: formatNumber(
+													Number(selectedProduct.bonusRobuxAmount),
+												),
+											},
+										)}
+										className="text-overflow"
+										size="XSmall"
+									/>
+								</div>
+							)}
 					</div>
 					{shouldShowPersonalizedBonusItems && (
 						<Fragment>

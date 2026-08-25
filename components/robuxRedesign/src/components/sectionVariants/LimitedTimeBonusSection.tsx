@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo } from "react";
 import classNames from "classnames";
 import { useResponsiveValue } from "@rbx/payments/hooks";
 import { useTranslation } from "@rbx/core-scripts/react";
-import { Badge, Button, Media } from "@rbx/foundation-ui";
+import { Button, Media } from "@rbx/foundation-ui";
 import { PriceTag } from "@rbx/payments/priceTag";
 import {
 	LimitedTimeBonusItem,
@@ -29,6 +29,8 @@ import {
 	getRobuxProductTrackingProps,
 } from "../../hooks/useScrollTracking";
 import { BlueCheckIcon } from "../BlueCheckIcon";
+import { ExpirationBadge } from "../ExpirationBadge";
+import { resolveLimitedTimeBonusDaysLeft } from "../../utils/resolveLimitedTimeBonusDaysLeft";
 
 type LimitedTimeBonusSectionProps = BaseSectionProps & {
 	sectionBase: SectionBase;
@@ -79,6 +81,8 @@ function RobuxTile({
 					amount={product.robuxAmount}
 					nonPromotionalAmount={product.nonPromotionalPlatformRobuxAmount}
 					bonusRobuxAmount={product.bonusRobuxAmount}
+					bonusRobuxTagIcon={product.bonusRobuxTagIcon}
+					bonusRobuxTagTranslationKey={product.bonusRobuxTagTranslationKey}
 					inlineBadgeIcon={product.inlineBadgeIcon}
 					inlineBadgeTranslationKey={product.inlineBadgeTranslationKey}
 				/>
@@ -232,23 +236,6 @@ export function LimitedTimeBonusSection({
 		}, []);
 	}, [limitedTimeBonus.limitedTimeBonuses, sectionBase.products]);
 
-	const { showExpirationPill, expirationText } = useMemo(() => {
-		const expirationMs = Number(limitedTimeBonus.expirationTimestampMs);
-		if (Number.isNaN(expirationMs)) {
-			return { showExpirationPill: false, expirationText: "" };
-		}
-		const diffMs = expirationMs - Date.now();
-		if (diffMs < 0) {
-			return { showExpirationPill: false, expirationText: "" };
-		}
-		const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-		const label =
-			days === 1
-				? translate("Label.LastDay", { daysLeft: 1 })
-				: translate("Label.DaysLeft", { daysLeft: days });
-		return { showExpirationPill: true, expirationText: label };
-	}, [limitedTimeBonus.expirationTimestampMs, translate]);
-
 	const handlePurchaseClick = useCallback(
 		(
 			product: Product,
@@ -270,31 +257,29 @@ export function LimitedTimeBonusSection({
 		return null;
 	}
 
+	const daysLeftResult = resolveLimitedTimeBonusDaysLeft(
+		limitedTimeBonus.expirationTimestampMs,
+	);
+
 	return (
 		<Section {...getSectionTrackingProps(sectionBase)}>
-			<div>
-				<div
-					className="self-stretch flex flex-row items-center justify-between gap-medium medium:justify-start medium:gap-xxlarge"
-					data-testid="ltb-section-header-row"
-				>
-					<SectionHeader className="self-auto min-width-0 flex-1 medium:self-stretch medium:flex-none">
-						{translate(sectionBase.sectionHeaderTranslationKey) ||
-							"Limited-time avatar items"}
-					</SectionHeader>
-					{showExpirationPill && (
-						<Badge
-							variant="Contrast"
-							label={expirationText}
-							className="shrink-0"
-						/>
-					)}
-				</div>
-				{limitedTimeBonus.bodyTranslationKey && (
-					<SectionSubHeader>
-						{translate(limitedTimeBonus.bodyTranslationKey)}
-					</SectionSubHeader>
+			<div
+				className="self-stretch flex flex-row items-center justify-between gap-medium"
+				data-testid="ltb-section-header-row"
+			>
+				<SectionHeader className="self-auto min-width-0 flex-1 medium:self-stretch medium:flex-none">
+					{translate(sectionBase.sectionHeaderTranslationKey) ||
+						"Limited-time avatar items"}
+				</SectionHeader>
+				{daysLeftResult.success && (
+					<ExpirationBadge daysLeft={daysLeftResult.value} />
 				)}
 			</div>
+			{limitedTimeBonus.bodyTranslationKey && (
+				<SectionSubHeader>
+					{translate(limitedTimeBonus.bodyTranslationKey)}
+				</SectionSubHeader>
+			)}
 			<div className="self-stretch flex flex-col gap-xlarge medium:gap-xxlarge">
 				{cards.map(({ item, products }) => (
 					<BonusItemCard

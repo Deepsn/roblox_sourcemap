@@ -21,6 +21,8 @@ export type BuyRobuxPage = {
 	subscriptionProductIds: string[];
 	upsellProduct: Product | undefined;
 	collectibleBonusItemMetadata: CollectibleItemMetadata | undefined;
+	productBadgeSlotCount: number;
+	atLeastOneProductHasBonusAmount: boolean;
 } & BuyRobuxPageData;
 
 export function useBuyRobuxPage(
@@ -141,6 +143,27 @@ export function useBuyRobuxPage(
 		[buyRobuxPageData.sections],
 	);
 
+	// Every product row reserves the same number of badge slots so the rows stay aligned, and the
+	// row can only go horizontal once there is width for that many badges. Two independent badge
+	// kinds can appear: the inline badge and the bonus-Robux tag.
+	const { productBadgeSlotCount, atLeastOneProductHasBonusAmount } =
+		useMemo(() => {
+			const products = buyRobuxPageData.sections.flatMap(
+				(section) => section.products ?? [],
+			);
+			const hasInlineBadge = products.some(
+				({ inlineBadgeTranslationKey }) => inlineBadgeTranslationKey,
+			);
+			const hasBonusAmount = products.some(
+				({ bonusRobuxAmount }) => bonusRobuxAmount,
+			);
+
+			return {
+				productBadgeSlotCount: Number(hasInlineBadge) + Number(hasBonusAmount),
+				atLeastOneProductHasBonusAmount: hasBonusAmount,
+			};
+		}, [buyRobuxPageData.sections]);
+
 	return {
 		limitedTimeBonusItem,
 		bonusItemDisplayName,
@@ -153,6 +176,8 @@ export function useBuyRobuxPage(
 		subscriptionProductIds,
 		upsellProduct,
 		collectibleBonusItemMetadata,
+		productBadgeSlotCount,
+		atLeastOneProductHasBonusAmount,
 		...buyRobuxPageData,
 	};
 }

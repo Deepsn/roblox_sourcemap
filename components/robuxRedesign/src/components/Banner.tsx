@@ -2,6 +2,7 @@ import { useContext, Fragment } from "react";
 import { useTranslation } from "@rbx/core-scripts/react";
 import { Icon } from "@rbx/foundation-ui";
 import { formatNumber } from "@rbx/core-scripts/format/number";
+import { translateHtml } from "@rbx/translation-utils";
 import { BuyRobuxPageContext } from "../contexts/BuyRobuxPageContext";
 import { isInApp } from "../utils/platform";
 import type { SectionTransfers } from "../types/buyRobuxPageData";
@@ -57,19 +58,51 @@ export function Banner({ transfers }: { transfers?: SectionTransfers }) {
 		return stickyRobuxBalance;
 	}
 
+	const {
+		promotionalRobuxPercentage: percentage,
+		strikethroughPromotionalRobuxPercentage: strikethroughPercentage,
+		translationKey,
+	} = pageHeaderMetadata;
+
+	// Both percentages present means the header compares the old rate against the promotional one,
+	// with the old rate struck through inside {divTagStart}/{divTagEnd}.
+	const comparisonHeading =
+		percentage && strikethroughPercentage
+			? translateHtml(
+					translate,
+					translationKey,
+					[
+						{
+							opening: "divTagStart",
+							closing: "divTagEnd",
+							render: (children) => (
+								<span className="line-through [font-weight:normal] [color:var(--color-extended-gray-600)]">
+									{children}
+								</span>
+							),
+						},
+					],
+					{ strikethroughPercentage, percentage },
+				)
+			: undefined;
+
+	// translateHtml yields an empty array if the resolved string is missing those placeholders, so
+	// fall back to the plain heading rather than leaving the page header blank.
+	const hasComparisonHeading =
+		comparisonHeading !== undefined && comparisonHeading.length > 0;
+
 	const heading = (
 		<h1
 			className="self-stretch text-align-x-left text-section-title content-emphasis large:text-align-x-center padding-y-none"
 			style={
-				isAboveLarge ? { marginLeft: "120px", marginRight: "120px" } : undefined
+				isAboveLarge && !hasComparisonHeading
+					? { marginLeft: "120px", marginRight: "120px" }
+					: undefined
 			}
 		>
-			{translate(
-				pageHeaderMetadata.translationKey,
-				pageHeaderMetadata.promotionalRobuxPercentage
-					? { percentage: pageHeaderMetadata.promotionalRobuxPercentage }
-					: {},
-			)}
+			{hasComparisonHeading
+				? comparisonHeading
+				: translate(translationKey, percentage ? { percentage } : {})}
 		</h1>
 	);
 

@@ -185,12 +185,19 @@ export const observabilityRegistry = {
 					dimensions: ["variant", "appType"],
 				},
 				"LoginRedirectExperimentExposed",
+				{
+					name: "LoginRedirectUnsupportedIos",
+					dimensions: ["iosMajorVersion", "appType"],
+				},
 			],
 			errors: [
 				"MobileRedirectUrlGenerationFailed",
 				"LoginRedirectExperimentFetchFailed",
 				"LoginRedirectLayerExposureError",
 			],
+		},
+		limitedTimeBonus: {
+			errors: ["ResolveLimitedTimeBonusExpirationInvalidTimestamp"],
 		},
 	},
 } as const satisfies RegistryInput;

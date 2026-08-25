@@ -70,6 +70,7 @@ export function BundleCarousel({
 						<SubscriptionTile
 							deviceMeta={deviceMeta}
 							isEmphasized={isPrimary && index === 0}
+							isPrimary={isPrimary}
 							onSubscribeClick={onSubscriptionSubscribeClick}
 							paymentSessionId={paymentSessionId}
 							product={product}

@@ -17,6 +17,8 @@ import {
 } from "../../contexts/PurchaseContext";
 import { withRedirectProductItem } from "../ProductItem/WithRedirectProductItem";
 import { getSectionTrackingProps } from "../../hooks/useScrollTracking";
+import { ExpirationBadge } from "../ExpirationBadge";
+import { resolveLimitedTimeBonusDaysLeft } from "../../utils/resolveLimitedTimeBonusDaysLeft";
 
 type ProductListProps = BaseSectionProps & {
 	sectionBase: SectionBase;
@@ -32,7 +34,11 @@ export function RedirectProductList({
 }: ProductListProps) {
 	const { translate } = useTranslation();
 	const { purchaseProduct } = useContext(PurchaseContext);
-	const { redirect } = useContext(BuyRobuxPageContext);
+	const { atLeastOneProductHasBonusAmount, redirect } =
+		useContext(BuyRobuxPageContext);
+	const daysLeft = resolveLimitedTimeBonusDaysLeft(
+		redirectOptions.promotionExpirationTimestampMs,
+	);
 
 	const handleProductClick: ProductItemDefaultProps["onProductClick"] = (
 		product,
@@ -55,16 +61,23 @@ export function RedirectProductList({
 
 	return (
 		<Section {...getSectionTrackingProps(sectionBase)}>
-			<div>
+			<div className="flex flex-row justify-between items-center self-stretch">
+				{/* A running bonus promotion supplies its own section header, which supersedes the
+            redirect section's own title. */}
 				<SectionHeader>
-					{translate(redirectOptions.titleTranslationKey)}
+					{translate(
+						atLeastOneProductHasBonusAmount
+							? sectionBase.sectionHeaderTranslationKey
+							: redirectOptions.titleTranslationKey,
+					)}
 				</SectionHeader>
-				{redirectOptions.bodyTranslationKey && (
-					<SectionSubHeader>
-						{translate(redirectOptions.bodyTranslationKey)}
-					</SectionSubHeader>
-				)}
+				{daysLeft.success && <ExpirationBadge daysLeft={daysLeft.value} />}
 			</div>
+			{redirectOptions.bodyTranslationKey && (
+				<SectionSubHeader>
+					{translate(redirectOptions.bodyTranslationKey)}
+				</SectionSubHeader>
+			)}
 			<SectionBody isPrimary={isPrimary}>
 				<SectionBodyProductList
 					onProductClick={handleProductClick}

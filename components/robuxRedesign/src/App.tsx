@@ -56,6 +56,8 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 		subscriptionProductIds,
 		upsellProduct,
 		collectibleBonusItemMetadata,
+		productBadgeSlotCount,
+		atLeastOneProductHasBonusAmount,
 	} = buyRobuxPage;
 
 	useEffect(() => {
@@ -114,6 +116,8 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 			collectibleBonusItemMetadata,
 			shouldShowFirstTimePurchaseConsent,
 			markConsentAcknowledged,
+			productBadgeSlotCount,
+			atLeastOneProductHasBonusAmount,
 		}),
 		[
 			limitedTimeBonusItem,
@@ -139,6 +143,8 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 			collectibleBonusItemMetadata,
 			shouldShowFirstTimePurchaseConsent,
 			markConsentAcknowledged,
+			productBadgeSlotCount,
+			atLeastOneProductHasBonusAmount,
 		],
 	);
 

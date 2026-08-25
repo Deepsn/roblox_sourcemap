@@ -1,25 +1,16 @@
 import classNames from "classnames";
+import { useContext } from "react";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { Badge, Icon } from "@rbx/foundation-ui";
 import { useTranslation } from "@rbx/core-scripts/react";
-import { arrayIncludes } from "@rbx/core-types";
 import { useResponsiveValue } from "@rbx/payments/hooks";
 import { isInApp } from "../../utils/platform";
-
-// We need these explicitly defined here because the presense of the explicit strings
-// tells the bundler which icon css classes to include in the bundle.
-const iconVariants = [
-	"icon-regular-star",
-	"icon-regular-circle-star",
-	"icon-regular-shopping-basket-check",
-	"icon-regular-flame",
-	"icon-filled-robux",
-	"icon-regular-wallet",
-] as const;
-type IconVariant = (typeof iconVariants)[number];
-
-const isIconVariant = (value: string): value is IconVariant =>
-	arrayIncludes(iconVariants, value);
+import { isIconVariant } from "../../utils/iconVariants";
+import {
+	BONUS_ROBUX_TAG_FALLBACK_KEY,
+	resolveBonusRobuxTagLabelKey,
+} from "../../utils/bonusRobuxTag";
+import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 
 const BadgeWrapper = ({ icon, label }: { icon?: string; label: string }) => {
 	const hasIcon = icon && isIconVariant(icon);
@@ -40,6 +31,8 @@ export type RobuxAmountProps = {
 	inlineBadgeTranslationKey?: string;
 	isCompact?: boolean;
 	bonusRobuxAmount?: string;
+	bonusRobuxTagIcon?: string;
+	bonusRobuxTagTranslationKey?: string;
 };
 
 export function RobuxAmount({
@@ -48,7 +41,10 @@ export function RobuxAmount({
 	inlineBadgeIcon,
 	inlineBadgeTranslationKey,
 	bonusRobuxAmount,
+	bonusRobuxTagIcon,
+	bonusRobuxTagTranslationKey,
 }: RobuxAmountProps) {
+	const { productBadgeSlotCount } = useContext(BuyRobuxPageContext);
 	const { translate } = useTranslation();
 
 	const responsiveStyle = useResponsiveValue(
@@ -80,13 +76,24 @@ export function RobuxAmount({
 		},
 	);
 
+	const formattedBonusRobuxAmount = bonusRobuxAmount
+		? formatNumber(Number(bonusRobuxAmount))
+		: undefined;
+
+	const bonusRobuxTagLabelKey = resolveBonusRobuxTagLabelKey(
+		bonusRobuxTagTranslationKey,
+	);
+
 	return (
 		<div
-			className={`flex ${nonPromotionalAmount ? "flex-col" : "flex-row"} medium:flex-row justify-start medium:items-center gap-small medium:gap-large wrap`}
+			className={`flex ${nonPromotionalAmount ? "flex-col" : "flex-row"} num-badges-${productBadgeSlotCount} justify-start gap-small wrap`}
 		>
 			{/* Robux Amount */}
 			<div className="flex gap-small items-center">
-				<div className="flex flex-row justify-start items-center gap-small margin-right-xsmall large:width-[230px] wrap">
+				<div
+					className={`flex flex-row justify-start items-center gap-small margin-right-xsmall ${bonusRobuxTagIcon ? "medium:width-[230px]" : "large:width-[230px]"} wrap`}
+					data-testid="robux-amount-column"
+				>
 					<div className="flex flex-row justify-start items-center gap-xsmall content-emphasis">
 						<Icon name="icon-filled-robux" size={responsiveStyle.robuxIcon} />
 						<span
@@ -114,22 +121,30 @@ export function RobuxAmount({
 
 			{(bonusRobuxAmount ?? inlineBadgeTranslationKey) && (
 				<div className="flex flex-row gap-small">
-					{bonusRobuxAmount && (
-						// On non-large screens, only show for when in-app.
-						<div
-							className={classNames(
-								isInApp ? "block" : "hidden",
-								"large:block",
-							)}
-							data-testid="bonus-pill"
-						>
+					{bonusRobuxAmount &&
+						(bonusRobuxTagIcon ? (
 							<BadgeWrapper
-								label={translate("Label.PlusAmountMoreLower", {
-									amount: bonusRobuxAmount,
+								icon={bonusRobuxTagIcon}
+								label={translate(bonusRobuxTagLabelKey, {
+									amount: formattedBonusRobuxAmount,
 								})}
 							/>
-						</div>
-					)}
+						) : (
+							// On non-large screens, only show for when in-app.
+							<div
+								className={classNames(
+									isInApp ? "block" : "hidden",
+									"large:block",
+								)}
+								data-testid="bonus-pill"
+							>
+								<BadgeWrapper
+									label={translate(BONUS_ROBUX_TAG_FALLBACK_KEY, {
+										amount: formattedBonusRobuxAmount,
+									})}
+								/>
+							</div>
+						))}
 					{inlineBadgeTranslationKey && (
 						<BadgeWrapper
 							icon={inlineBadgeIcon}

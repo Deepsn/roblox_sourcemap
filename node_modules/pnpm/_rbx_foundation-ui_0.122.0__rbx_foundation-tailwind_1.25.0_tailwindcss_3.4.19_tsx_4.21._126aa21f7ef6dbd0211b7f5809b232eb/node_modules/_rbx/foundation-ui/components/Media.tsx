@@ -1,0 +1,48 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef, forwardRef } from 'react';
+import type { TTailwindAspectClass } from '@rbx/foundation-tailwind/classes';
+import './Media.css';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+
+export const mediaAspectRatios = ['1:1', '5:4', '4:5', '4:3', '16:9', '2:1'] as const;
+export type TMediaAspectRatio = (typeof mediaAspectRatios)[number];
+
+export type TMediaProps = Omit<ComponentPropsWithRef<'img'>, 'children'> & {
+  /** The media aspect ratio. */
+  aspectRatio: TMediaAspectRatio;
+  /** The media alt text. */
+  alt: string;
+
+  containerClassName?: string;
+};
+
+const ASPECT_RATIO_CLASSES_BY_ASPECT_RATIO: Record<TMediaAspectRatio, TTailwindAspectClass> = {
+  '1:1': 'aspect-1-1',
+  '5:4': 'aspect-5-4',
+  '4:5': 'aspect-4-5',
+  '4:3': 'aspect-4-3',
+  '16:9': 'aspect-16-9',
+  '2:1': 'aspect-2-1'
+};
+
+export const Media = forwardRef<HTMLImageElement, TMediaProps>(
+  ({ className, aspectRatio = '1:1', alt, containerClassName, ...rest }, ref) => {
+    return (
+      <div
+        className={clsx(
+          'foundation-web-media clip',
+          ASPECT_RATIO_CLASSES_BY_ASPECT_RATIO[aspectRatio],
+          containerClassName
+        )}>
+        <img
+          ref={ref}
+          className={clsx('foundation-web-media-image', className)}
+          alt={alt}
+          {...rest}
+        />
+      </div>
+    );
+  }
+) as TForwardRefComponent<TMediaProps>;
+
+Media.displayName = 'Media';

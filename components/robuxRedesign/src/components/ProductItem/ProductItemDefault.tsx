@@ -50,6 +50,8 @@ export const ProductItemDefault = ({
 				amount={product.robuxAmount}
 				nonPromotionalAmount={product.nonPromotionalPlatformRobuxAmount}
 				bonusRobuxAmount={product.bonusRobuxAmount}
+				bonusRobuxTagIcon={product.bonusRobuxTagIcon}
+				bonusRobuxTagTranslationKey={product.bonusRobuxTagTranslationKey}
 				inlineBadgeIcon={product.inlineBadgeIcon}
 				inlineBadgeTranslationKey={product.inlineBadgeTranslationKey}
 			/>

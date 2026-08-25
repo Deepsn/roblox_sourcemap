@@ -54,9 +54,11 @@ function SectionBody({
 		return (
 			<div
 				className={classNames(
-					"radius-large stroke-standard stroke-default flex flex-col items-start self-stretch gap-xlarge padding-medium medium:padding-xlarge",
+					"radius-large flex flex-col items-start self-stretch gap-xlarge padding-xlarge",
 					{
 						"bg-surface-100": isPrimary,
+						"stroke-standard": !isPrimary,
+						"stroke-default": !isPrimary,
 					},
 				)}
 				{...props}
@@ -68,15 +70,17 @@ function SectionBody({
 	return (
 		<div
 			className={classNames(
-				"radius-large stroke-standard stroke-default flex flex-col items-start self-stretch",
+				"radius-large flex flex-col items-start self-stretch",
 				{
 					"bg-surface-100": isPrimary,
+					"stroke-standard": !isPrimary,
+					"stroke-default": !isPrimary,
 				},
 			)}
 		>
 			{banner}
 			<div
-				className="flex flex-col items-start self-stretch gap-xlarge padding-medium medium:padding-xlarge"
+				className="flex flex-col items-start self-stretch gap-xlarge padding-xlarge"
 				{...props}
 			>
 				{children}
