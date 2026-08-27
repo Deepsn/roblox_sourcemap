@@ -1,5 +1,5 @@
-import { httpService } from "core-utilities";
-import { TSecureAuthIntent } from "core-roblox-utilities";
+import * as http from "@rbx/core-scripts/http";
+import type { TSecureAuthIntent } from "@rbx/core-scripts/auth/crypto";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as AuthApi from "../types/auth";
@@ -19,7 +19,7 @@ export const listAllCredentials = (
 	Result<AuthApi.ListCredentialsReturnType, AuthApi.AuthApiError | null>
 > =>
 	toResult(
-		httpService.post(AuthApi.LIST_CREDENTIALS_CONFIG, options),
+		http.post(AuthApi.LIST_CREDENTIALS_CONFIG, options),
 		AuthApi.AuthApiError,
 	);
 
@@ -40,7 +40,7 @@ export const resetPassword = (
 	Result<AuthApi.ResetPasswordReturnType, AuthApi.PasswordResetError | null>
 > =>
 	toResult(
-		httpService.post(AuthApi.RESET_PASSWORD_CONFIG, {
+		http.post(AuthApi.RESET_PASSWORD_CONFIG, {
 			targetType,
 			ticket,
 			userId,
@@ -65,6 +65,6 @@ export const invalidateTicketsForEppEnrollment = (): Promise<
 	Result<AuthApi.InvalidateTicketsReturnType, AuthApi.AuthApiError | null>
 > =>
 	toResult(
-		httpService.post(AuthApi.INVALIDATE_TICKETS_CONFIG, {}),
+		http.post(AuthApi.INVALIDATE_TICKETS_CONFIG, {}),
 		AuthApi.AuthApiError,
 	);

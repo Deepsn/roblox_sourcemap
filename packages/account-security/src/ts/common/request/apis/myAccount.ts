@@ -1,4 +1,4 @@
-import { httpService } from "core-utilities";
+import * as http from "@rbx/core-scripts/http";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as MyAccount from "../types/myAccount";
@@ -10,6 +10,6 @@ export const getMySettingsInfo = (): Promise<
 	>
 > =>
 	toResult(
-		httpService.get(MyAccount.GET_MY_SETTINGS_INFO_CONFIG, {}),
+		http.get(MyAccount.GET_MY_SETTINGS_INFO_CONFIG, {}),
 		MyAccount.GetMySettingsInfoError,
 	);

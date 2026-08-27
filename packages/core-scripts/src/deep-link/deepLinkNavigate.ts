@@ -164,6 +164,35 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			const code = params.code || "";
 			return resolveShareLinksV2(params.code)
 				.then((response) => {
+					if (response.data.linkType === "Referral") {
+						const referralStatus = response.data.status;
+						const referralEvent = buildResolveLinkEvent(
+							referralStatus,
+							code,
+							ShareLinksTypeV2.REFERRAL,
+						);
+						sendEventWithTarget(
+							referralEvent.type,
+							referralEvent.context,
+							referralEvent.params,
+						);
+
+						if (referralStatus !== "Valid") {
+							fireEvent?.(CounterEvents.RobloxPlusReferralResolutionFailed);
+						}
+
+						const referrerParam = response.data.targetId
+							? `&referrerId=${response.data.targetId}`
+							: "";
+						const referralQuery =
+							referralStatus === "Valid"
+								? `referralCode=${code}${referrerParam}`
+								: `referralStatus=${referralStatus}`;
+						// Recipients subscribe on web, so never hand off to the desktop client — that
+						// would leave `/share-links` spinning.
+						window.location.href = `${UrlPart.Plus}?ctx=plus_referral&${referralQuery}`;
+						return true;
+					}
 					if (response.data.status === "Invalid") {
 						return false;
 					}

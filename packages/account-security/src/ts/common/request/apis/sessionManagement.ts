@@ -1,5 +1,5 @@
-import { httpService } from "core-utilities";
-import { TSecureAuthIntent } from "core-roblox-utilities";
+import * as http from "@rbx/core-scripts/http";
+import type { TSecureAuthIntent } from "@rbx/core-scripts/auth/crypto";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as SessionManagement from "../types/sessionManagement";
@@ -14,7 +14,7 @@ export const getSessions = async (
 	>
 > =>
 	toResult(
-		httpService.get(SessionManagement.GET_SESSIONS_CONFIG, {
+		http.get(SessionManagement.GET_SESSIONS_CONFIG, {
 			nextCursor,
 			desiredLimit,
 		}),
@@ -30,7 +30,7 @@ export const logoutSession = async (
 	>
 > =>
 	toResult(
-		httpService.post(SessionManagement.LOGOUT_SESSION_CONFIG, { token }),
+		http.post(SessionManagement.LOGOUT_SESSION_CONFIG, { token }),
 		SessionManagement.SessionManagementError,
 	);
 
@@ -43,7 +43,7 @@ export const logoutFromAllSessionsAndReauthenticate = async (
 	>
 > =>
 	toResult(
-		httpService.post(SessionManagement.LOGOUT_FROM_ALL_SESSIONS_CONFIG, {
+		http.post(SessionManagement.LOGOUT_FROM_ALL_SESSIONS_CONFIG, {
 			secureAuthenticationIntent,
 		}),
 		SessionManagement.AuthError,

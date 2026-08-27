@@ -25,14 +25,11 @@ export const possiblyMaliciousParameters: readonly string[] = [
 
 const sanitizeSearchParams = (searchParams: URLSearchParams) =>
 	newURLSearchParams(
-		searchParams
-			.entries()
-			.filter(
-				([key, value]) =>
-					!possiblyMaliciousParameters.includes(key) &&
-					!possiblyMaliciousParameters.includes(value),
-			)
-			.toArray(),
+		[...searchParams.entries()].filter(
+			([key, value]) =>
+				!possiblyMaliciousParameters.includes(key) &&
+				!possiblyMaliciousParameters.includes(value),
+		),
 	);
 
 /**

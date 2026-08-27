@@ -122,6 +122,7 @@ export const UrlPart = {
 	Avatar: "/my/avatar",
 	SecurityAlert: "/security-feedback",
 	SupportCenter: "/support-center",
+	Plus: "/plus",
 };
 
 export const buildResolveLinkEvent = (
@@ -168,6 +169,8 @@ export const CounterEvents = {
 		"DeeplinkParserStudioTrustedConnectionResolutionFailed",
 	MomentsResolutionFailed: "DeeplinkParserMomentsResolutionFailed",
 	SchoolInviteResolutionFailed: "DeeplinkParserSchoolInviteResolutionFailed",
+	RobloxPlusReferralResolutionFailed:
+		"DeeplinkParserRobloxPlusReferralResolutionFailed",
 };
 
 export const buildDeepLinkLaunchGameEvent = (

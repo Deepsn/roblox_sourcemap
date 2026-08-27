@@ -1,7 +1,8 @@
-import { fido2Util, hybridResponseService } from "core-roblox-utilities";
+import * as fido2Util from "@rbx/core-scripts/auth/fido2";
+import * as hybridResponseService from "@rbx/core-scripts/auth/hybrid-response";
 import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-style-guide";
-import { DeviceMeta } from "Roblox";
+import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import * as TwoStepVerification from "../../../../common/request/types/twoStepVerification";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import RememberDeviceCheckBox from "../components/rememberDeviceCheckBox";
@@ -106,10 +107,9 @@ const SecurityKeyInput: React.FC<Props> = ({
 			return;
 		}
 
+		const deviceMeta = getDeviceMeta();
 		const shouldConvertToStandardBase64 = !(
-			DeviceMeta &&
-			DeviceMeta().isInApp &&
-			DeviceMeta().isAndroidApp
+			deviceMeta?.isInApp && deviceMeta?.isAndroidApp
 		);
 		/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 		const makeAssertionOptions = shouldConvertToStandardBase64
@@ -124,7 +124,7 @@ const SecurityKeyInput: React.FC<Props> = ({
 		/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 		let code = "";
-		if (DeviceMeta && DeviceMeta().isInApp) {
+		if (deviceMeta?.isInApp) {
 			// If we're in a web-view and Security Keys are enabled, we should call the native implementation of FIDO2.
 			const credentialString = (await hybridResponseService
 				.getNativeResponse(

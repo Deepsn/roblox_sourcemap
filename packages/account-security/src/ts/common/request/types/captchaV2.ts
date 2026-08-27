@@ -10,6 +10,14 @@ export enum CaptchaV2Error {
 	INTERNAL_ERROR = 3,
 }
 
+/**
+ * The optional captcha "mode" surfaced by GCS on the CaptchaV2 challenge
+ * parameters. May be absent.
+ */
+export enum CaptchaMode {
+	MONITOR = "CAPTCHA_MODE_MONITOR",
+}
+
 export const SUBMIT_CAPTCHA_V2_CONFIG: UrlConfig = {
 	withCredentials: true,
 	url: `${apiGatewayUrl}/v2/captcha`,
@@ -18,6 +26,25 @@ export const SUBMIT_CAPTCHA_V2_CONFIG: UrlConfig = {
 		Accept: "application/json",
 	},
 };
+
+/**
+ * Alternate verification endpoint. Same request/response shape as
+ * `SUBMIT_CAPTCHA_V2_CONFIG`.
+ */
+export const SUBMIT_ALT_CAPTCHA_V2_CONFIG: UrlConfig = {
+	...SUBMIT_CAPTCHA_V2_CONFIG,
+	url: `${apiGatewayUrl}/v2/alt-captcha`,
+};
+
+/**
+ * Selects the verification endpoint for a CaptchaV2 challenge. The optional
+ * `mode` selects the alternate config when set to `MONITOR`; otherwise
+ * (including when absent) the default config is used.
+ */
+export const getSubmitCaptchaV2Config = (mode?: CaptchaMode): UrlConfig =>
+	mode === CaptchaMode.MONITOR
+		? SUBMIT_ALT_CAPTCHA_V2_CONFIG
+		: SUBMIT_CAPTCHA_V2_CONFIG;
 
 export type SubmitCaptchaV2Request = {
 	// eslint-disable-next-line camelcase

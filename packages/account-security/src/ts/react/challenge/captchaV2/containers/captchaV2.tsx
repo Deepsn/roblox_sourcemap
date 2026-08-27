@@ -23,6 +23,7 @@ import {
 	startCustomChallenge,
 } from "./sensor";
 import "../../../../../css/tailwind.css";
+import "../../../../../css/challenge/captchaV2/captchaV2.scss";
 
 // Technical reason forwarded to the invalidation callback; never displayed.
 const INVALIDATION_ERROR_MESSAGE = "CaptchaV2 verification failed";
@@ -42,6 +43,7 @@ const CaptchaV2: FC = () => {
 	const {
 		state: {
 			challengeId,
+			mode,
 			renderInline,
 			resources,
 			requestService,
@@ -129,7 +131,10 @@ const CaptchaV2: FC = () => {
 	);
 	const verify = useCallback(
 		async (isRetry: boolean): Promise<void> => {
-			const result = await requestService.captchaV2.submitCaptcha(challengeId);
+			const result = await requestService.captchaV2.submitCaptcha(
+				challengeId,
+				mode,
+			);
 
 			if (!result.isError) {
 				complete(result.value.redemption_token);
@@ -165,6 +170,7 @@ const CaptchaV2: FC = () => {
 		},
 		[
 			challengeId,
+			mode,
 			complete,
 			invalidate,
 			requestService.captchaV2,

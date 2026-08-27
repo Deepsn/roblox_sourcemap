@@ -31,6 +31,7 @@ enum ShareLinksTypeV2 {
 	STUDIO_TRUSTED_CONNECTION = "StudioTrustedConnection",
 	MOMENTS = "Moments",
 	SCHOOL_INVITE = "SchoolInvite",
+	REFERRAL = "Referral",
 }
 
 type ExperienceInviteData = {

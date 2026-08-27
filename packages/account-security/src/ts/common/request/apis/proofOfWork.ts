@@ -1,4 +1,4 @@
-import { httpService } from "core-utilities";
+import * as http from "@rbx/core-scripts/http";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as ProofOfWork from "../types/proofOfWork";
@@ -9,7 +9,7 @@ export const getPuzzle = (
 	Result<ProofOfWork.GetPuzzleReturnType, ProofOfWork.ProofOfWorkError | null>
 > =>
 	toResult(
-		httpService.get(ProofOfWork.GET_PUZZLE_CONFIG, { sessionID }),
+		http.get(ProofOfWork.GET_PUZZLE_CONFIG, { sessionID }),
 		ProofOfWork.ProofOfWorkError,
 	);
 
@@ -23,7 +23,7 @@ export const verifyPuzzle = async (
 	>
 > =>
 	toResult(
-		httpService.post(ProofOfWork.VERIFY_PUZZLE_CONFIG, {
+		http.post(ProofOfWork.VERIFY_PUZZLE_CONFIG, {
 			sessionID,
 			solution,
 		}),

@@ -27,8 +27,8 @@ type PxWindow = Window & {
 	_pxBlockedUrl?: string;
 };
 
-const BUILDER_SANS_CSS_URL =
-	"https://cdn.foundation.roblox.com/current/human-captcha/builder-sans.css";
+const CHALLENGE_CSS_URL =
+	"https://cdn.foundation.roblox.com/current/human-captcha/challenge.css";
 
 // Renders button to best align with design of foundation button.
 const CHALLENGE_VIEW = {
@@ -41,7 +41,7 @@ const CHALLENGE_VIEW = {
 	innerMargin: 0, // No gap between border and fill; the fill covers the whole button
 	textColor: "#FFFFFF",
 	borderRadius: 8, // Foundation radius-medium
-	css: [BUILDER_SANS_CSS_URL], // Load Builder Sans into the challenge iframe
+	css: [CHALLENGE_CSS_URL], // Load fonts + iframe style overrides into the challenge iframe
 	textFont:
 		"Builder Sans, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif", // Matches core UI stylesheet.
 	texSize: 14, // Foundation label-medium (default button font size); note: vendor's field is `texSize`

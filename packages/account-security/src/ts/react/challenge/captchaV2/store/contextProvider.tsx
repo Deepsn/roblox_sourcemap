@@ -10,6 +10,7 @@ import { WithTranslationsProps } from "@rbx/core-scripts/react";
 import { RequestService } from "../../../../common/request";
 import { getResources } from "../constants/resources";
 import {
+	CaptchaMode,
 	OnChallengeCompletedCallback,
 	OnChallengeDisplayedCallback,
 	OnChallengeInvalidatedCallback,
@@ -32,6 +33,8 @@ type Props = {
 	challengeId: string;
 	// eslint-disable-next-line react/require-default-props
 	appType?: string;
+	// eslint-disable-next-line react/require-default-props
+	mode?: CaptchaMode;
 	renderInline: boolean;
 	eventService: EventService;
 	metricsService: MetricsService;
@@ -51,6 +54,7 @@ type Props = {
 export const CaptchaV2ContextProvider = ({
 	challengeId,
 	appType,
+	mode,
 	renderInline,
 	eventService,
 	metricsService,
@@ -68,6 +72,7 @@ export const CaptchaV2ContextProvider = ({
 		// Immutable parameters:
 		challengeId,
 		appType,
+		mode,
 		renderInline,
 		// Immutable state:
 		resources: getResources(translate),

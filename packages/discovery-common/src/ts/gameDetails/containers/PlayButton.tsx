@@ -1,9 +1,17 @@
-import React from "react";
+import React, { type ReactNode } from "react";
+import {
+	InstallInstructionsWithTranslation,
+	resolveAppDownload,
+	TokenizedDownloadButton,
+	type ResolvedAppDownload,
+} from "@rbx/app-download";
+import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
 import { Loading } from "@rbx/core-ui";
 import {
 	usePlayabilityStatus,
 	DefaultPlayButton,
 	ContextualMessage,
+	PlayabilityStatus,
 } from "@rbx/game-play-button";
 import { EventContext } from "@rbx/unified-logging";
 import metadataConstants from "../constants/metadataConstants";
@@ -17,6 +25,7 @@ import {
 	mergeEventParamsWithAnalyticsData,
 	filterAnalyticsDataQueryParams,
 } from "../../common/utils/analyticsDataUtils";
+import { parseQueryString } from "../../common/utils/parsingUtils";
 import useGetAppPolicyData from "../../common/hooks/useGetAppPolicyData";
 import usePlaceIdOverride from "../../common/hooks/usePlaceIdOverride";
 import { PageContext } from "../../common/types/pageContext";
@@ -27,9 +36,14 @@ type TPlayButtonProps = {
 	attributionId: string;
 };
 
-export default function PlayButton({
-	attributionId,
-}: TPlayButtonProps): JSX.Element {
+const renderInstallInstructions = (
+	download: ResolvedAppDownload,
+): ReactNode => (
+	<InstallInstructionsWithTranslation downloadLink={download.link} />
+);
+
+function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
+	const { translate } = useTranslation();
 	const {
 		universeId = "",
 		rootPlaceId = "",
@@ -49,6 +63,10 @@ export default function PlayButton({
 	} = useGetAppPolicyData();
 	const { linkCode, linkType } = getExperienceAffiliateReferralUrlParams(
 		window.location.toString(),
+	);
+	const [shouldDefaultToDownloadButton] = React.useState(
+		() =>
+			parseQueryString(window.location.search).downloadButtonDefault === "true",
 	);
 	const { referralParams, appsFlyerReferralParams, serverProvidedQueryParams } =
 		usePageReferralTracker(
@@ -78,6 +96,7 @@ export default function PlayButton({
 				SessionInfoType.GameSearchSessionInfo,
 				SessionInfoType.SearchLandingPageSessionInfo,
 				SessionInfoType.SpotlightPageSessionInfo,
+				SessionInfoType.PreAuthLandingPageSessionInfo,
 			],
 			[
 				"privateServerLinkCode",
@@ -96,6 +115,13 @@ export default function PlayButton({
 			undefined,
 			{ queryParamSuffixForServerProvidedKeys: ANALYTICS_DATA_KEY_SUFFIX },
 		);
+	const resolvedDownload = React.useMemo(
+		() =>
+			resolveAppDownload({
+				translate,
+			}),
+		[translate],
+	);
 
 	// Use placeIdOverride from URL only if it belongs to this EDP's universe
 	const { validatedPlaceIdOverride, isResolvingPlaceId } = usePlaceIdOverride(
@@ -126,6 +152,8 @@ export default function PlayButton({
 			referralParams.spotlightPageSessionInfo,
 		[SessionInfoType.SearchLandingPageSessionInfo]:
 			referralParams.searchLandingPageSessionInfo,
+		[SessionInfoType.PreAuthLandingPageSessionInfo]:
+			referralParams.preAuthLandingPageSessionInfo,
 		[EventStreamMetadata.AttributionId]: attributionId,
 		[EventStreamMetadata.Page]: referralParams.page,
 		[EventStreamMetadata.SortPos]: referralParams.sortPos,
@@ -145,6 +173,19 @@ export default function PlayButton({
 		playButtonBaseEventProperties,
 		filterAnalyticsDataQueryParams(serverProvidedQueryParams),
 	);
+	const playabilityStatusCtaOverrides = {
+		[PlayabilityStatus.GuestProhibited]:
+			shouldDefaultToDownloadButton && resolvedDownload?.isDirectDownload ? (
+				<TokenizedDownloadButton
+					variant="Emphasis"
+					size="Large"
+					className="game-details-download-button width-full"
+					download={resolvedDownload}
+					renderInstallInstructions={renderInstallInstructions}
+					text={translate("Action.Download")}
+				/>
+			) : undefined,
+	};
 
 	return (
 		<React.Fragment>
@@ -162,6 +203,7 @@ export default function PlayButton({
 				eventProperties={playButtonEventProperties}
 				appsFlyerReferralProperties={appsFlyerReferralParams}
 				shouldShowVpcPlayButtonUpsells={shouldShowVpcPlayButtonUpsells}
+				playabilityStatusCtaOverrides={playabilityStatusCtaOverrides}
 				pageContext={EventContext.GameDetail}
 			/>
 			<ContextualMessage
@@ -180,5 +222,13 @@ export default function PlayButton({
 				}}
 			/>
 		</React.Fragment>
+	);
+}
+
+export default function PlayButton(props: TPlayButtonProps): JSX.Element {
+	return (
+		<TranslationProvider config={["Feature.DownloadLanding"]}>
+			<PlayButtonContents {...props} />
+		</TranslationProvider>
 	);
 }

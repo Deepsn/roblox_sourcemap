@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { Modal } from "react-style-guide";
-import { CrossDeviceLoginDisplayCodeService, DeviceMeta, Hybrid } from "Roblox";
+import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import { InlineChallengeFooter } from "../../../common/inlineChallengeFooter";
 import {
@@ -31,7 +31,7 @@ const QuickSignInInput: React.FC<Props> = ({
 		setModalTitleText(resources.Title.UseAnotherDevice);
 	}, [setModalTitleText, resources.Title.UseAnotherDevice]);
 
-	const inRobloxApp = DeviceMeta && DeviceMeta().isInApp;
+	const inRobloxApp = getDeviceMeta()?.isInApp;
 
 	const getBodyText = function () {
 		if (inRobloxApp) {
@@ -46,14 +46,18 @@ const QuickSignInInput: React.FC<Props> = ({
 	const bodyText = getBodyText();
 
 	const handleButtonClick = () => {
+		// Legacy window.Roblox globals with no canonical module; read defensively so the
+		// web path degrades gracefully off the .NET page.
+		const roblox = window.Roblox as {
+			Hybrid?: { Overlay?: { close: (callback: () => void) => void } };
+			CrossDeviceLoginDisplayCodeService?: { openModal: () => void };
+		};
 		if (inRobloxApp) {
 			// In RobloxApp webview, close the hybrid overlay
-			if (Hybrid && Hybrid.Overlay) {
-				Hybrid.Overlay.close(() => undefined);
-			}
+			roblox.Hybrid?.Overlay?.close(() => undefined);
 		} else {
 			// On web, open the cross-device login modal
-			CrossDeviceLoginDisplayCodeService.openModal();
+			roblox.CrossDeviceLoginDisplayCodeService?.openModal();
 		}
 	};
 

@@ -1,7 +1,5 @@
 import "../global";
 
-const { Hybrid } = window.Roblox;
-
 const LOG_PREFIX = "Hybrid Response Service: ";
 
 export enum FeatureTarget {
@@ -34,6 +32,7 @@ export const getNativeResponse = (
 	parameters: Record<string, unknown>,
 	timeoutMilliseconds: number,
 ): Promise<string | null> => {
+	const { Hybrid } = window.Roblox;
 	nextCallId += 1;
 	const currentCallId = nextCallId;
 	nativePromises[currentCallId] = new Promise((resolve) => {

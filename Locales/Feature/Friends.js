@@ -27,7 +27,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Action.Ignore": "Ignore",
 	"Action.Accept": "Accept",
 	"Action.Unfriend": "Unfriend",
-	"Action.IgnoreAll": "Ignore All",
+	"Action.IgnoreAll": "Ignore all",
 	"Message.FriendsTabTooltip":
 		"Friends are established when two Roblox users mutually agree to friendship.",
 	"Message.FollowingTabTooltip":
@@ -257,6 +257,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Description.NoMutualFriends": "No mutual friends",
 	"Heading.Friends": "Friends",
 	"TrustedFriend.Toast.LinkCopied": "Link copied to clipboard",
+	"Label.NoFriendsYet": "{name} doesn’t have any friends yet.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
