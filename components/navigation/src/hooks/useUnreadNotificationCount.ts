@@ -9,7 +9,7 @@ export const NOTIFICATION_STREAM_UNREAD_COUNT_QUERY_KEY = [
 ];
 const QUERY_KEY = NOTIFICATION_STREAM_UNREAD_COUNT_QUERY_KEY;
 
-export function useUnreadNotificationCount(): number {
+export const useUnreadNotificationCount = (): number => {
 	const queryClient = useQueryClient();
 
 	const { data: unreadCount = 0 } = useQuery({
@@ -31,15 +31,18 @@ export function useUnreadNotificationCount(): number {
 	});
 
 	useEffect(() => {
-		const handler = () =>
-			queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+		const handler = () => {
+			// eslint-disable-next-line no-void
+			void queryClient.invalidateQueries({ queryKey: QUERY_KEY });
+		};
 		window.addEventListener("Roblox.NotificationStream.StreamClosed", handler);
-		return () =>
+		return () => {
 			window.removeEventListener(
 				"Roblox.NotificationStream.StreamClosed",
 				handler,
 			);
+		};
 	}, [queryClient]);
 
 	return unreadCount;
-}
+};

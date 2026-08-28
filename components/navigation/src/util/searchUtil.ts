@@ -1,48 +1,54 @@
-/* eslint-disable @typescript-eslint/switch-exhaustiveness-check */
-import { TranslationResourceProvider } from "@rbx/core-scripts/legacy/Roblox";
-import links from "../constants/linkConstants";
+import { KeyboardEvent } from "react";
+import Intl from "@rbx/core-scripts/intl";
+import links, { UniversalSearchLink } from "../constants/linkConstants";
 import searchConstants from "../constants/searchConstants";
-import { GamesAutocompleteSuggestionEntryType } from "../services/searchService";
+import {
+	GamesAutocompleteSuggestionEntryType,
+	TAvatarAutocompleteSuggestionEntry,
+	TGamesAutocompleteSuggestionEntry,
+} from "../services/searchService";
 
-interface Suggestion {
-	label?: string;
-	type?: GamesAutocompleteSuggestionEntryType;
-	Query?: string;
-	url?: string;
-	searchQuery?: string;
-}
+export type Suggestion =
+	| TGamesAutocompleteSuggestionEntry
+	| TAvatarAutocompleteSuggestionEntry
+	| UniversalSearchLink;
 
-const isAutocompleteSuggestion = (suggestion: Suggestion) =>
-	suggestion.label === undefined;
-const isAvatarAutocompleteSuggestion = (suggestion: Suggestion) =>
-	suggestion.Query !== undefined;
-const isKeywordSuggestion = (suggestion: Suggestion) =>
-	isAutocompleteSuggestion(suggestion) &&
-	suggestion.type === GamesAutocompleteSuggestionEntryType.QuerySuggestion;
-const isGameSuggestion = (suggestion: Suggestion) =>
-	isAutocompleteSuggestion(suggestion) &&
-	suggestion.type === GamesAutocompleteSuggestionEntryType.GameSuggestion;
+export type SearchType = "avatar" | "keyword" | "game";
 
-const getAutocompleteSearchType = (suggestion: Suggestion) => {
-	if (isAvatarAutocompleteSuggestion(suggestion)) {
+export type DefaultSearchType =
+	| "defaultPlayers"
+	| "defaultShops"
+	| "defaultGroups"
+	| "defaultLibrary"
+	| "defaultGames";
+
+export const getAutocompleteSearchType = (
+	suggestion:
+		| TGamesAutocompleteSuggestionEntry
+		| TAvatarAutocompleteSuggestionEntry,
+): SearchType => {
+	if ("Query" in suggestion) {
 		return "avatar";
-	}
-	switch (suggestion.type) {
-		case GamesAutocompleteSuggestionEntryType.QuerySuggestion: {
-			return "keyword";
-		}
-		case GamesAutocompleteSuggestionEntryType.GameSuggestion: {
-			return "game";
-		}
-		default: {
-			throw Error(
-				`Unrecognized autocomplete suggestion, ${JSON.stringify(suggestion)}`,
-			);
+	} else {
+		switch (suggestion.type) {
+			case GamesAutocompleteSuggestionEntryType.QuerySuggestion: {
+				return "keyword";
+			}
+			case GamesAutocompleteSuggestionEntryType.GameSuggestion: {
+				return "game";
+			}
+			case GamesAutocompleteSuggestionEntryType.TrendingQuerySuggestion: {
+				throw Error(
+					`Unrecognized autocomplete suggestion, ${JSON.stringify(suggestion)}`,
+				);
+			}
 		}
 	}
 };
 
-const getDefaultSearchType = (suggestion: Suggestion) => {
+export const getDefaultSearchType = (
+	suggestion: UniversalSearchLink,
+): DefaultSearchType => {
 	switch (suggestion.label) {
 		case "Label.Players": {
 			return "defaultPlayers";
@@ -69,34 +75,27 @@ const getDefaultSearchType = (suggestion: Suggestion) => {
 	}
 };
 
-const getSuggestionUrl = (
+export const getSuggestionUrl = (
 	suggestion: Suggestion,
-	event: React.ChangeEvent<HTMLInputElement> | undefined,
+	event: KeyboardEvent<HTMLInputElement>,
 ) => {
-	if (
-		isAutocompleteSuggestion(suggestion) &&
-		isAvatarAutocompleteSuggestion(suggestion)
-	) {
+	if ("Query" in suggestion) {
+		return links.avatarSearchLink.url + encodeURIComponent(suggestion.Query);
+	}
+	if ("searchQuery" in suggestion) {
 		return (
-			links.avatarSearchLink.url + encodeURIComponent(suggestion.Query ?? "")
+			links.gameSearchLink.url + encodeURIComponent(suggestion.searchQuery)
 		);
 	}
-	if (isAutocompleteSuggestion(suggestion)) {
-		return (
-			links.gameSearchLink.url +
-			encodeURIComponent(suggestion.searchQuery ?? "")
-		);
-	}
-	if (event?.target.value) {
-		return (suggestion.url ?? "") + encodeURIComponent(event.target.value);
+	if (event.currentTarget.value) {
+		return suggestion.url + encodeURIComponent(event.currentTarget.value);
 	}
 
 	return "";
 };
 
-const getAvatarAutocompleteLanguageCode = () => {
-	const translationProvider = new TranslationResourceProvider();
-	let locale = translationProvider.intl.getLocale();
+export const getAvatarAutocompleteLanguageCode = () => {
+	let locale = new Intl().getLocale();
 	const regionChar = locale.indexOf("-");
 	locale = locale.substring(0, regionChar !== -1 ? regionChar : locale.length);
 	if (locale !== searchConstants.englishLanguageCode) {
@@ -105,24 +104,18 @@ const getAvatarAutocompleteLanguageCode = () => {
 	return locale;
 };
 
-const serializeSuggestions = (suggestions: Suggestion[], searchInput: string) =>
+export const serializeSuggestions = (
+	suggestions: readonly Suggestion[],
+	searchInput: string,
+) =>
 	suggestions
 		.map((suggestion) => {
-			if (isAutocompleteSuggestion(suggestion)) {
+			if ("Query" in suggestion) {
+				return `${getAutocompleteSearchType(suggestion)}|${suggestion.Query}`;
+			}
+			if ("searchQuery" in suggestion) {
 				return `${getAutocompleteSearchType(suggestion)}|${suggestion.searchQuery}`;
 			}
 			return `${getDefaultSearchType(suggestion)}|${searchInput}`;
 		})
 		.join(",");
-
-export default {
-	isAutocompleteSuggestion,
-	isAvatarAutocompleteSuggestion,
-	isGameSuggestion,
-	isKeywordSuggestion,
-	getAutocompleteSearchType,
-	getDefaultSearchType,
-	getSuggestionUrl,
-	getAvatarAutocompleteLanguageCode,
-	serializeSuggestions,
-};

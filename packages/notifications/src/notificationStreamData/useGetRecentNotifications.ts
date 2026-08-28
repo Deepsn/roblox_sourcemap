@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { httpService } from "core-utilities";
 import {
@@ -99,6 +100,47 @@ export const useGetRecentNotifications = (): ReturnType<
 		refetchOnMount: "always",
 		onError: (error) => reportNotificationStreamError("getRecent", error),
 	});
+
+	// Parity: Angular pages eagerly on open rather than on scroll, so its
+	// nsNotificationRetrieved covers every row; demand-loading page 0 alone under-reports it.
+	// pageCount is the dep that actually changes per page: isFetchingNextPage can resolve
+	// between commits and fetchNextPage is a stable ref, so keying on those alone drains once.
+	const {
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+		refetch,
+		isFetching,
+	} = query;
+	const pageCount = query.data?.pages.length ?? 0;
+	useEffect(() => {
+		if (hasNextPage && !isFetchingNextPage) {
+			// Rejections already reach reportNotificationStreamError via the query's onError.
+			fetchNextPage().catch(() => undefined);
+		}
+	}, [pageCount, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+	// DELIBERATE DUPLICATE FETCH. Do not "optimise" this away.
+	//
+	// The Angular stream runs its entire get-recent sequence TWICE for a single bell open, so
+	// every notification is fetched twice and logged to nsNotificationRetrieved twice. Measured
+	// on production control 2026-08-27 with a 25-notification payload: startIndex 0,20,0,20 and
+	// 50 nsNotificationRetrieved events for 25 rows. This is a bug in the Angular stream, and
+	// the owning team's call is that the React port matches its behaviour rather than fixes it,
+	// because the notification guardrail metrics are defined against these doubled counts; the
+	// numbers are being addressed separately. Removing this replay makes React report roughly
+	// half of Angular's "stream notifications received" and reads as a regression.
+	//
+	// refetch() re-requests every page already loaded, and fetchPage logs on each response, so
+	// one call reproduces the second pass. Ref-guarded so it happens once, and the shell
+	// unmounts when the popover closes, which resets it to once per open.
+	const replayedRef = useRef(false);
+	useEffect(() => {
+		if (pageCount > 0 && !hasNextPage && !isFetching && !replayedRef.current) {
+			replayedRef.current = true;
+			refetch().catch(() => undefined);
+		}
+	}, [pageCount, hasNextPage, isFetching, refetch]);
 
 	const all = (query.data?.pages ?? []).flat();
 	const gameUpdates = all

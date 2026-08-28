@@ -1,5 +1,5 @@
 import { httpClient, HttpResponseCodes } from "@rbx/core-scripts/http";
-import renderSimpleAuth from "../components/SimpleAuthModal";
+import { renderSimpleAuth } from "../components/SimpleAuthModal";
 import {
 	MODAL_CONTAINER_ID,
 	MODAL_SIGN_IN_KEY,

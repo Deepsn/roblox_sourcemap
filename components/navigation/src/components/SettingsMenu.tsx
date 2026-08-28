@@ -1,9 +1,9 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import ClassNames from "classnames";
-import { QueryClientProvider, useMutation } from "@tanstack/react-query";
-import { queryClient } from "@rbx/core-scripts/react";
-import { Link } from "@rbx/core-ui/legacy/react-style-guide";
+import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "@rbx/core-scripts/react";
 import { AccountSwitcherService } from "@rbx/core-scripts/legacy/Roblox";
+import { Link } from "@rbx/core-ui";
 import links from "../constants/linkConstants";
 import { logoutUser, switchAccount } from "../util/authUtil";
 import layoutConstants from "../constants/layoutConstants";
@@ -13,16 +13,15 @@ const { quickLogin, settings, logout, switchAccountKey } =
 	layoutConstants.menuKeys;
 
 interface Props {
-	translate: (key: string) => string;
 	accountNotificationCount: number;
 	isCrossDeviceLoginCodeValidationDisplayed: boolean;
 }
 
-function SettingsMenuItems({
-	translate,
+export default function SettingsMenu({
 	accountNotificationCount = 0,
 	isCrossDeviceLoginCodeValidationDisplayed = false,
 }: Props) {
+	const { translate } = useTranslation();
 	const notificationClasses = ClassNames(
 		"notification-blue notification nav-setting-highlight",
 		{
@@ -36,7 +35,7 @@ function SettingsMenuItems({
 			await logoutUser();
 		},
 	});
-	const handleLogoutClick = (e: React.MouseEvent) => {
+	const handleLogoutClick: MouseEventHandler = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
 		if (logoutMutation.isPending) return;
@@ -90,13 +89,3 @@ function SettingsMenuItems({
 		</React.Fragment>
 	);
 }
-
-function SettingsMenu(props: Props) {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<SettingsMenuItems {...props} />
-		</QueryClientProvider>
-	);
-}
-
-export default SettingsMenu;

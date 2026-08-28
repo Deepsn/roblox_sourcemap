@@ -1,9 +1,12 @@
 import type { RegistryInput } from "@rbx/observability-framework/schema";
 import type { MakeObservabilityTypes } from "@rbx/observability-framework/types";
 import { createTrackers } from "@rbx/observability-framework/trackers";
+import { createPageLifecycle } from "@rbx/observability-framework/page-lifecycle";
+import { createObsErrorBoundary } from "@rbx/observability-framework/react";
 import { captureException } from "@rbx/payments/error";
 import { createWithApiMetricsV2 } from "@rbx/payments/withApiMetrics";
 import { createFireTelemetryCounter } from "@rbx/web-telemetry/fire";
+import { createFireTelemetryHistogram } from "@rbx/web-telemetry/histogram";
 
 export const observabilityRegistry = {
 	featureName: "BuyRobuxRedesign",
@@ -11,7 +14,8 @@ export const observabilityRegistry = {
 
 	features: {
 		health: {
-			counters: ["PageView"],
+			pagePerformance: true,
+			counters: ["PageLoad", "PageView"],
 			criticalErrors: [
 				"BuyRobuxPageReactCrash",
 				"NoPageData",
@@ -230,3 +234,19 @@ export const withApiEventsV2 = createWithApiMetricsV2<ApiCall>(
 	publishMetric,
 	captureException,
 );
+
+const publishPerformance = createFireTelemetryHistogram(
+	observabilityRegistry.featureName,
+	{},
+);
+
+export const { reportPageLoad, reportPageView } = createPageLifecycle({
+	publishCounter: publishMetric,
+	publishPerformance,
+});
+
+export const ObsErrorBoundary = createObsErrorBoundary({
+	publish: publishMetric,
+	captureException,
+	featureName: observabilityRegistry.featureName,
+});

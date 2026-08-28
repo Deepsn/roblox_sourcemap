@@ -11,7 +11,3 @@ export const getIntAuthCompliancePolicy =
 		);
 		return data;
 	};
-
-export default {
-	getIntAuthCompliancePolicy,
-};

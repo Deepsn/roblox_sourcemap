@@ -1,8 +1,9 @@
 import { QueryClientProvider } from "@tanstack/react-query";
+import { render } from "react-dom";
 import { PaymentsTranslationProvider } from "@rbx/payments";
 import { SystemFeedbackProvider } from "@rbx/core-ui";
 import ready from "@rbx/core-scripts/util/ready";
-import { queryClient, renderWithErrorBoundary } from "@rbx/core-scripts/react";
+import { queryClient } from "@rbx/core-scripts/react";
 import pfas from "@rbx/core-scripts/payments-flow";
 import { translations } from "./component.json";
 import { ROOT_ELEMENT_ID } from "./src/constants";
@@ -11,15 +12,15 @@ import { useBuyRobuxPageData } from "./src/hooks/useBuyRobuxPageData";
 import "./src/main.css";
 import "./src/stylesheets/robuxRedesign.scss";
 import "./src/stylesheets/styleGuidePatch.scss";
-import { trackCounter, trackCriticalError } from "./src/observability";
+import {
+	reportPageLoad,
+	reportPageView,
+	ObsErrorBoundary,
+} from "./src/observability";
 import { reportInteractive } from "./src/utils/publishMetric";
 
-function trackCrash(error: unknown) {
-	trackCriticalError("BuyRobuxPageReactCrash", null, error);
-}
-
 ready(() => {
-	trackCounter("PageView");
+	reportPageLoad();
 
 	const buyRobuxPageData = useBuyRobuxPageData();
 	if (!buyRobuxPageData) {
@@ -27,6 +28,7 @@ ready(() => {
 	}
 
 	reportInteractive();
+	reportPageView();
 
 	// Set the payment flow UUID before React mounts so no child effect fires
 	// a tracking event with a stale/random UUID (race condition fix).
@@ -35,20 +37,19 @@ ready(() => {
 		pfas.setPaymentFlowUuid(buyRobuxPageData.purchaseFlowId);
 	}
 
-	renderWithErrorBoundary(
-		<QueryClientProvider client={queryClient}>
-			<PaymentsTranslationProvider
-				config={translations}
-				context="RobuxRedesign"
-			>
-				<SystemFeedbackProvider>
-					<App {...buyRobuxPageData} />
-				</SystemFeedbackProvider>
-			</PaymentsTranslationProvider>
-		</QueryClientProvider>,
+	render(
+		<ObsErrorBoundary name="BuyRobuxPageReactCrash">
+			<QueryClientProvider client={queryClient}>
+				<PaymentsTranslationProvider
+					config={translations}
+					context="RobuxRedesign"
+				>
+					<SystemFeedbackProvider>
+						<App {...buyRobuxPageData} />
+					</SystemFeedbackProvider>
+				</PaymentsTranslationProvider>
+			</QueryClientProvider>
+		</ObsErrorBoundary>,
 		document.getElementById(ROOT_ELEMENT_ID),
-		undefined,
-		undefined,
-		trackCrash,
 	);
 });

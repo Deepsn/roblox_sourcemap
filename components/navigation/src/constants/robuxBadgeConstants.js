@@ -1,8 +1,0 @@
-const RobuxBadgeType = {
-	VIRTUAL_ITEM: "VIRTUAL_ITEM",
-	UPDATE: "UPDATE",
-	BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS:
-		"BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS",
-};
-
-export default RobuxBadgeType;

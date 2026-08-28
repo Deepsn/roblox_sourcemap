@@ -11,15 +11,10 @@ interface Props {
 // and `Color/Kids/Surface/Surface_0` in Figma) without any variant branching
 // here.
 const CLASSES =
-	"rbx-age-badge items-center justify-center select-none" +
-	" height-400 padding-x-xsmall radius-small text-label-small" +
-	" margin-left-[6px]" +
-	" bg-[var(--color-content-emphasis)] content-[var(--color-surface-0)]";
+	"rbx-age-badge items-center justify-center select-none height-400 padding-x-xsmall radius-small text-label-small margin-left-[6px] bg-[var(--color-content-emphasis)] content-[var(--color-surface-0)]";
 
-function AgeBadge({ variant }: Props) {
+export default function AgeBadge({ variant }: Props) {
 	return (
 		<span className={CLASSES}>{variant === "Kids" ? "KIDS" : "SELECT"}</span>
 	);
 }
-
-export default AgeBadge;

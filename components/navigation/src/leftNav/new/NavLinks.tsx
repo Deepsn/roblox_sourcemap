@@ -24,11 +24,8 @@ import {
 	Button,
 	Badge,
 } from "@rbx/foundation-ui";
-import {
-	BadgeSizes,
-	currentUserHasVerifiedBadge,
-	VerifiedBadgeIconContainer,
-} from "@rbx/roblox-badges";
+import VerifiedBadgeIcon from "@rbx/www-common/components/verified-badge";
+import { UncheckedBadge, showUncheckedBadge } from "@rbx/identity-badges";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
 import {
 	EntrypointExposure,
@@ -37,8 +34,7 @@ import {
 	useEntrypointImpressionId,
 } from "@rbx/community-telemetry";
 import { useRealTime } from "./useRealTime";
-import useLiveUserNameForDisplay from "../../hooks/useLiveUserNameForDisplay";
-import { UncheckedBadge, showUncheckedBadge } from "@rbx/identity-badges";
+import { useLiveUserNameForDisplay } from "../../hooks/useLiveUserNameForDisplay";
 
 // Temporarily copied from `@rbx/foundation-ui` since the NavigationRail component is not available yet.
 const interactable =
@@ -60,9 +56,13 @@ const iconContainer =
 const ProfileNavItem = ({
 	id,
 	displayName,
+	hasVerifiedBadge,
+	verifiedBadgeLabel,
 }: {
 	id: number;
 	displayName: string;
+	hasVerifiedBadge: boolean;
+	verifiedBadgeLabel: string;
 }) => (
 	<li>
 		<a
@@ -76,14 +76,15 @@ const ProfileNavItem = ({
 						targetId={id}
 						type={ThumbnailTypes.avatarHeadshot}
 						altName={displayName}
+						includeProfileFrame
 					/>
 				</span>
 			</span>
 			<span className="flex flex-col gap-xsmall min-width-0 large:flex-row large:align-items-center">
 				<span className="flex gap-xsmall min-width-0 align-items-center">
 					<span className="text-truncate-end text-no-wrap">{displayName}</span>
-					{currentUserHasVerifiedBadge() ? (
-						<VerifiedBadgeIconContainer size={BadgeSizes.CAPTIONHEADER} />
+					{hasVerifiedBadge ? (
+						<VerifiedBadgeIcon size="Small" titleText={verifiedBadgeLabel} />
 					) : null}
 					{isBlackbirdUser() ? (
 						<Icon name="icon-regular-roblox-plus" size="Small" />
@@ -307,7 +308,7 @@ const BlackbirdUpsellNavItem = ({ currentPath }: { currentPath: string }) => {
 const plusAbbreviate = (num: number, limit: number) =>
 	num > limit ? `${limit}+` : num.toString();
 
-const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
+export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const id = user.id!;
 	const liveNameForDisplay = useLiveUserNameForDisplay(user);
@@ -391,7 +392,14 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 	return (
 		<nav>
 			<ul className="flex flex-col gap-small">
-				<ProfileNavItem id={id} displayName={liveNameForDisplay} />
+				<ProfileNavItem
+					id={id}
+					displayName={liveNameForDisplay}
+					hasVerifiedBadge={user.hasVerifiedBadge}
+					verifiedBadgeLabel={translate(
+						"Creator.VerifiedBadgeIconAccessibilityText",
+					)}
+				/>
 				<NavItem
 					path="/home"
 					isCurrentPath={/^\/([a-z]{2}\/)?home(\/|$)/.test(currentPath)}
@@ -480,6 +488,4 @@ const LeftNavigation = ({ user }: { user: AuthenticatedUser }) => {
 			</ul>
 		</nav>
 	);
-};
-
-export default LeftNavigation;
+}

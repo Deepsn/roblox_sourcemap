@@ -27,5 +27,3 @@ export const useDownloadModalIxp = (): UseDownloadModalIxpResult => {
 		isLoading,
 	};
 };
-
-export default useDownloadModalIxp;

@@ -1,16 +1,11 @@
-import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import {
-	authenticatedUser as authenticatedUserMeta,
+	authenticatedUser,
 	isBlackbirdUser,
 } from "@rbx/core-scripts/meta/user";
-import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
-import { Link } from "@rbx/core-ui/legacy/react-style-guide";
+import { useTranslation } from "@rbx/core-scripts/react";
+import { Link } from "@rbx/core-ui";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
-import {
-	BadgeSizes,
-	VerifiedBadgeIconContainer,
-	currentUserHasVerifiedBadge,
-} from "@rbx/roblox-badges";
+import VerifiedBadgeIcon from "@rbx/www-common/components/verified-badge";
 import {
 	DisplayNameBadges,
 	useIsPlusBadgeEnabled,
@@ -18,19 +13,19 @@ import {
 	PLUS_BADGE_ARIA_LABEL_KEY,
 } from "@rbx/identity-badges";
 import links from "../constants/linkConstants";
-import useLiveUserNameForDisplay from "../hooks/useLiveUserNameForDisplay";
-import { translations } from "../../component.json";
+import { useLiveUserNameForDisplay } from "../hooks/useLiveUserNameForDisplay";
 
-function AgeBracketDisplayContent() {
+export default function AgeBracketDisplayContent() {
 	const { translate } = useTranslation();
-	const metaUser = authenticatedUserMeta();
-	const nameForDisplay = useLiveUserNameForDisplay(metaUser);
+	const user = authenticatedUser();
+	const nameForDisplay = useLiveUserNameForDisplay(user);
 
-	const badgeToRender = currentUserHasVerifiedBadge() ? (
+	const badgeToRender = user?.hasVerifiedBadge ? (
 		<section>
-			<VerifiedBadgeIconContainer
-				overrideImgClass="verified-badge-icon-header"
-				size={BadgeSizes.CAPTIONHEADER}
+			<VerifiedBadgeIcon
+				className="verified-badge-icon-header"
+				size="Small"
+				titleText={translate("Creator.VerifiedBadgeIconAccessibilityText")}
 			/>
 		</section>
 	) : null;
@@ -46,9 +41,10 @@ function AgeBracketDisplayContent() {
 				<span className="avatar avatar-headshot-xs">
 					<Thumbnail2d
 						containerClass="avatar-card-image"
-						targetId={authenticatedUser.id ?? 0}
+						targetId={user?.id ?? 0}
 						type={ThumbnailTypes.avatarHeadshot}
-						altName={authenticatedUser.name ?? undefined}
+						altName={user?.name ?? undefined}
+						includeProfileFrame
 					/>
 				</span>
 				<span className="text-overflow age-bracket-label-username font-caption-header">
@@ -72,15 +68,3 @@ function AgeBracketDisplayContent() {
 		</div>
 	);
 }
-
-// `useTranslation` needs a `TranslationProvider` ancestor; this component is
-// mounted standalone, so wrap it the same way navigation's leftNav does.
-function AgeBracketDisplay() {
-	return (
-		<TranslationProvider config={translations}>
-			<AgeBracketDisplayContent />
-		</TranslationProvider>
-	);
-}
-
-export default AgeBracketDisplay;

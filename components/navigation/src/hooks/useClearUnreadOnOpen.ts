@@ -14,7 +14,7 @@ import { NOTIFICATION_STREAM_UNREAD_COUNT_QUERY_KEY } from "./useUnreadNotificat
  * No-op when the count is already 0 (mirrors the Angular guard). Only wire this on the
  * flag-on path; the Angular flag-off path keeps its own clear-on-open.
  */
-export function useClearUnreadOnOpen(unreadCount: number): () => void {
+export const useClearUnreadOnOpen = (unreadCount: number) => {
 	const queryClient = useQueryClient();
 
 	return useCallback(() => {
@@ -37,6 +37,4 @@ export function useClearUnreadOnOpen(unreadCount: number): () => void {
 			)
 			.catch(() => undefined);
 	}, [queryClient, unreadCount]);
-}
-
-export default useClearUnreadOnOpen;
+};

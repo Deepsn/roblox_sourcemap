@@ -7,7 +7,7 @@ import {
 	DialogFooter,
 	DialogTitle,
 } from "@rbx/foundation-ui";
-import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
+import { useTranslation } from "@rbx/core-scripts/react";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { translateHtml } from "@rbx/translation-utils";
 import macAppIcon from "@rbx/branding-assets/images/app_icons/app_icon_mac_1024.svg";
@@ -22,7 +22,6 @@ import {
 	sendPrimaryAppDownloadClickEvent,
 	useAppDownload,
 } from "@rbx/app-download";
-import { translations } from "../../component.json";
 import { useDownloadModalIxp } from "../util/postSignupDownloadModalIxp";
 import { sendSignupDownloadModalEvent } from "../util/postSignupDownloadModalEvent";
 
@@ -43,7 +42,7 @@ const consumeNewUserFlag = (): boolean => {
 	return isNewUser;
 };
 
-export function PostSignupDownloadModal() {
+export default function PostSignupDownloadModal() {
 	const { translate } = useTranslation();
 	const [open, setOpen] = useState(false);
 	const [showInstructions, setShowInstructions] = useState(false);
@@ -177,13 +176,5 @@ export function PostSignupDownloadModal() {
 				)}
 			</DialogContent>
 		</Dialog>
-	);
-}
-
-export default function PostSignupDownloadModalRoot() {
-	return (
-		<TranslationProvider config={translations}>
-			<PostSignupDownloadModal />
-		</TranslationProvider>
 	);
 }

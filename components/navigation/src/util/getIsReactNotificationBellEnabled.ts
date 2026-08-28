@@ -5,11 +5,9 @@
  * "True"/"False", so compare against "True".
  * @returns {boolean}
  */
-const getIsReactNotificationBellEnabled = (): boolean => {
+export const getIsReactNotificationBellEnabled = (): boolean => {
 	const dataset = document.querySelector<HTMLMetaElement>(
 		'meta[name="notification-stream-migration-data"]',
 	)?.dataset;
 	return dataset?.reactBellEnabled === "True";
 };
-
-export default getIsReactNotificationBellEnabled;

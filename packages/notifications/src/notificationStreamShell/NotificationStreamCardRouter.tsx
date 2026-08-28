@@ -3,6 +3,9 @@ import environmentUrls from "@rbx/environment-urls";
 import GroupShellCard from "./shellCards/GroupShellCard";
 import PrivateMessageShellCard from "./shellCards/PrivateMessageShellCard";
 import TestShellCard from "./shellCards/TestShellCard";
+import GameUpdateShellCard from "./shellCards/GameUpdateShellCard";
+import { GameUpdateModel } from "../notificationStreamData/useGameUpdates";
+import { GameUpdateMetadata } from "../notificationStreamData/gameUpdatesApi";
 import SendrNotification from "../sendrNotificationStream/components/SendrNotification";
 import SendrNotificationsBundle from "../sendrNotificationStream/components/SendrNotificationsBundle";
 import { GroupMembershipNotificationData } from "../notificationStreamCards/groupMembership/types";
@@ -28,9 +31,7 @@ const isStacked = (n: StreamNotification): boolean => {
 const getCardClickEvent = (n: StreamNotification): string | null => {
 	switch (n.notificationSourceType) {
 		case "GroupJoinRequestAccepted":
-			return isStacked(n)
-				? streamEvents.viewAllFriendRequests
-				: streamEvents.goToGroupPage;
+			return streamEvents.goToGroupPage;
 		case "PrivateMessageReceived":
 			return streamEvents.goToMessages;
 		default:
@@ -58,6 +59,12 @@ export type NotificationStreamCardRouterProps = {
 	/** Drops a dismissed notification from the stream so its row leaves the list. */
 	onRemove?: (id: string) => void;
 	onActionFailed?: () => void;
+	/** Resolved game-update content, keyed by universe id. */
+	gameUpdateModels?: Map<number, GameUpdateModel>;
+	/** Opens the game-updates drill-down from the aggregated card. */
+	onViewGameUpdates?: () => void;
+	/** From stream metadata; Angular gates Play and the not-playable message on this. */
+	canLaunchGameFromGameUpdate?: boolean;
 };
 
 export const NotificationStreamCardRouter = ({
@@ -65,6 +72,9 @@ export const NotificationStreamCardRouter = ({
 	onInteract,
 	onRemove,
 	onActionFailed,
+	gameUpdateModels,
+	onViewGameUpdates,
+	canLaunchGameFromGameUpdate,
 }: NotificationStreamCardRouterProps): JSX.Element | null => {
 	const href = getNotificationHref(notification);
 
@@ -108,6 +118,32 @@ export const NotificationStreamCardRouter = ({
 				/>
 			);
 			break;
+		case "GameUpdate":
+			return (
+				<GameUpdateShellCard
+					universes={
+						(notification.metadataCollection as
+							| GameUpdateMetadata[]
+							| undefined) ?? []
+					}
+					models={gameUpdateModels ?? new Map()}
+					eventDate={notification.eventDate}
+					eventCount={notification.eventCount ?? 1}
+					isInteracted={Boolean(notification.isInteracted)}
+					canLaunch={Boolean(canLaunchGameFromGameUpdate)}
+					onInteract={() => {
+						// The aggregated row stands for every GameUpdate row, and its own isInteracted is
+						// the AND over them, so marking only one leaves the dot on.
+						const members = notification.notifications ?? [notification];
+						members.forEach((member) => {
+							if (!member.isInteracted) {
+								onInteract(member.id);
+							}
+						});
+					}}
+					onViewUpdates={() => onViewGameUpdates?.()}
+				/>
+			);
 		case "Sendr":
 			return (
 				<SendrNotification

@@ -1,7 +1,4 @@
-/**
- * Constants for event stream events in navigation webapp.
- */
-const EVENT_CONSTANTS = {
+export default {
 	schematizedEventTypes: {
 		authButtonClick: "authButtonClick",
 		authClientError: "authClientError",
@@ -48,5 +45,3 @@ const EVENT_CONSTANTS = {
 		filteredByUnsupportedBrowser: "filteredByUnsupportedBrowser",
 	},
 } as const;
-
-export default EVENT_CONSTANTS;

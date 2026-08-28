@@ -11,15 +11,12 @@ import {
 	type ResolvedAppDownload,
 } from "@rbx/app-download";
 import { DialogTitle } from "@rbx/foundation-ui";
-import type { TranslateFunction } from "@rbx/core-scripts/react";
+import { useTranslation } from "@rbx/core-scripts/react";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { useTopNavDownloadButton } from "../util/topNavDownloadButtonIxp";
 
-type Props = {
-	translate: TranslateFunction;
-};
-
-function DownloadAppNavItem({ translate }: Props) {
+export default function DownloadAppNavItem() {
+	const { translate } = useTranslation();
 	const isEnabled = useTopNavDownloadButton();
 	const { resolveTokenizedHref, logExposure } = useAppDownload({
 		linkId: window.location.href,
@@ -107,5 +104,3 @@ function DownloadAppNavItem({ translate }: Props) {
 		</li>
 	);
 }
-
-export default DownloadAppNavItem;

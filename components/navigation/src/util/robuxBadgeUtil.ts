@@ -1,5 +1,6 @@
-import { localStorageService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
-import { CurrentUser } from "@rbx/core-scripts/legacy/Roblox";
+import { ValueOf } from "@rbx/core-types";
+import localStorageService from "@rbx/core-scripts/local-storage";
+import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import RobuxBadgeType from "../constants/robuxBadgeConstants";
 
 export const mapRobuxBadgeTypeToLocalStorageKey = (
@@ -7,7 +8,7 @@ export const mapRobuxBadgeTypeToLocalStorageKey = (
 ): string => {
 	switch (robuxBadgeType) {
 		case RobuxBadgeType.VIRTUAL_ITEM:
-			return `prevLocalVirtualItemStartTimeSeconds${CurrentUser?.userId ?? ""}`;
+			return `prevLocalVirtualItemStartTimeSeconds${authenticatedUser()?.id ?? ""}`;
 		case RobuxBadgeType.UPDATE:
 			return "hasSeenRobuxUpdate";
 		case RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS:
@@ -54,7 +55,9 @@ export const getRobuxBadgeLocalStorage = (robuxBadgeType: string): any => {
 	return localStorageService.getLocalStorage(localStorageKey);
 };
 
-export const shouldShowRobuxUpdateBadge = (): string => {
+export const shouldShowRobuxUpdateBadge = (): ValueOf<
+	typeof RobuxBadgeType
+> | null => {
 	// There should only be one local storage field checked here at a time per label,
 	// otherwise the red dot will not dismiss until the user clicks multiple times
 
@@ -66,5 +69,5 @@ export const shouldShowRobuxUpdateBadge = (): string => {
 		return RobuxBadgeType.BONUS_AVATAR_ITEM_CROWN_OF_OZYMANDIAS;
 	}
 
-	return "";
+	return null;
 };

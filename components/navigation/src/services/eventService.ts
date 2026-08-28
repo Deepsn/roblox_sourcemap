@@ -1,4 +1,4 @@
-import { eventStreamService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import AUTH_EVENT_CONSTANTS from "@rbx/authentication-common/constants/eventsConstants";
 import EVENT_CONSTANTS from "../constants/eventsConstants";
 
@@ -6,7 +6,7 @@ import EVENT_CONSTANTS from "../constants/eventsConstants";
  * Log event for logout button click
  */
 export const sendLogoutButtonClickEvent = (): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
 		EVENT_CONSTANTS.context.homepage,
 		{
@@ -19,7 +19,7 @@ export const sendLogoutButtonClickEvent = (): void => {
  * Log event for switchAccount entrypoint button click
  */
 export const sendSwitchAccountButtonClickEvent = (url: string): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
 		EVENT_CONSTANTS.context.homepage,
 		{
@@ -33,7 +33,7 @@ export const sendSwitchAccountButtonClickEvent = (url: string): void => {
  * Log event for 401 modal shown
  */
 export const sendAuth401ModalShownEvent = (): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authPageLoad,
 		EVENT_CONSTANTS.context.auth401Modal,
 		{},
@@ -44,7 +44,7 @@ export const sendAuth401ModalShownEvent = (): void => {
  * Log event for 401 modal sign in button click
  */
 export const sendAuth401ModalButtonClickEvent = (): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authButtonClick,
 		EVENT_CONSTANTS.context.auth401Modal,
 		{
@@ -57,7 +57,7 @@ export const sendAuth401ModalButtonClickEvent = (): void => {
  * Log a generic authPageLoad event with the given context and state.
  */
 export const sendAuthPageLoadEvent = (context: string, state: string): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authPageLoad,
 		context,
 		{
@@ -73,7 +73,7 @@ export const sendAuthPageLoadEvent = (context: string, state: string): void => {
 export const sendAccountSwitcherBlobPresentOnPageLoadEvent = (
 	isBlobPresent: boolean,
 ): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authPageLoad,
 		EVENT_CONSTANTS.context.accountSwitcherStatus,
 		{
@@ -88,7 +88,7 @@ export const sendAccountSwitcherBlobPresentOnPageLoadEvent = (
  * in account-security and account-settings).
  */
 export const sendPasskeyCreationSourceEvent = (source: string): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		AUTH_EVENT_CONSTANTS.schematizedEventTypes.authMsgShown,
 		AUTH_EVENT_CONSTANTS.context.passkeyCreationSource,
 		{
@@ -108,7 +108,7 @@ export const sendPasskeyRegistrationEvent = (
 	state: string,
 	passkeyFailureReason?: string,
 ): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.passkeyRegistrationEvent,
 		EVENT_CONSTANTS.context.passkeyRegistration,
 		{
@@ -126,7 +126,7 @@ export const sendCacheUserChangedAuthClientErrorEvent = (
 	previousUserId: string,
 	currentUrl: string,
 ): void => {
-	eventStreamService.sendEventWithTarget(
+	sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authClientError,
 		EVENT_CONSTANTS.context.cachedUserChanged,
 		{
@@ -134,4 +134,14 @@ export const sendCacheUserChangedAuthClientErrorEvent = (
 			url: currentUrl,
 		},
 	);
+};
+
+export const sendLeftSidebarEvent = (
+	open: boolean,
+	variant: "OLD" | "NEW",
+): void => {
+	sendEventWithTarget("navigationSidebarToggle", "navigation", {
+		open,
+		variant,
+	});
 };

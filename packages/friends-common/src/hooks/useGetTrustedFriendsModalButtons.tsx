@@ -29,6 +29,7 @@ import {
 	sendTrustedFriendRequest,
 	validateTrustedFriendLink,
 } from "../services/trustedFriends";
+import { copyTextFromPromise } from "../utils/copyTextFromPromise";
 
 function getTrustedFriendActionButtons(
 	action: TrustedFriendActionEnum | undefined,
@@ -137,8 +138,9 @@ export function useGetTrustedFriendsModalButtons({
 		};
 
 		const shareTrustedFriendLink = async (): Promise<void> => {
-			const { link } = await createTrustedFriendLink(userId);
-			await navigator.clipboard.writeText(link);
+			await copyTextFromPromise(
+				createTrustedFriendLink(userId).then(({ link }) => link),
+			);
 			setToastMessage(
 				translate(trustedFriendsTranslationKeys.trustedFriendLinkCopied),
 			);

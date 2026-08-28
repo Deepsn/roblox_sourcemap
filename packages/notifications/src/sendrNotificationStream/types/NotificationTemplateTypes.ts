@@ -121,8 +121,8 @@ export type PageState = {
 export type NotificationContent = {
 	currentState: string;
 	states: { [stateName: string]: PageState };
-	minVersion: number;
-	timeBeforeRefresh: number;
+	minVersion: string;
+	timeBeforeRefresh: string;
 	notificationType: string;
 	clientEventsPayload?: Record<string, string>;
 };

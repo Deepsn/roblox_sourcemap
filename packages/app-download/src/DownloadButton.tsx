@@ -39,7 +39,10 @@ export type DownloadButtonProps = {
 	variant?: ButtonVariant;
 	size?: ButtonSize;
 	showIcon?: boolean;
-	renderInstallInstructions?: (download: ResolvedAppDownload) => ReactNode;
+	renderInstallInstructions?: (
+		download: ResolvedAppDownload,
+		translate: WithTranslationsProps["translate"],
+	) => ReactNode;
 	isDisabled?: boolean;
 	isVisible?: boolean;
 	/**
@@ -154,7 +157,7 @@ function DownloadButton({
 				>
 					<DialogContent className="install-dialog">
 						<DialogBody className="content-default">
-							{renderInstallInstructions(download)}
+							{renderInstallInstructions(download, translate)}
 						</DialogBody>
 					</DialogContent>
 				</Dialog>

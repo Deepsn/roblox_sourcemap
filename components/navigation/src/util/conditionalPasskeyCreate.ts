@@ -5,7 +5,11 @@ import {
 	formatCredentialRegistrationResponseWeb,
 } from "@rbx/core-scripts/auth/fido2";
 import { authenticatedUser } from "@rbx/core-scripts/meta/user";
-import urlConstants from "../constants/urlConstants";
+import {
+	getSilentUpgradeAvailableUrl,
+	getPasskeyStartRegistrationUrl,
+	getPasskeyFinishRegistrationUrl,
+} from "../constants/urlConstants";
 import {
 	sendAuthPageLoadEvent,
 	sendPasskeyCreationSourceEvent,
@@ -31,7 +35,7 @@ const UPGRADE_BROWSER_FAMILIES = new Set<BrowserFamily>(["Chrome", "Safari"]);
 /** Returns the authenticated userId, or null if the session isn't authenticated. */
 const getCurrentUserId = (): string | null => {
 	const user = authenticatedUser();
-	if (user == null || user.id == null) return null;
+	if (user?.id == null) return null;
 	return String(user.id);
 };
 
@@ -212,7 +216,7 @@ const checkSilentUpgradeAvailable = async (
 ): Promise<boolean> => {
 	try {
 		const { data } = await http.get<SilentUpgradeEligibilityResponse>({
-			url: urlConstants.getSilentUpgradeAvailableUrl(),
+			url: getSilentUpgradeAvailableUrl(),
 			withCredentials: true,
 		});
 		trackApiCall("SilentUpgradeEligibility", "200");
@@ -246,7 +250,7 @@ const checkSilentUpgradeAvailable = async (
 const startRegistration = async (): Promise<StartRegistrationResponse> => {
 	const { data } = await http.post<StartRegistrationResponse>(
 		{
-			url: urlConstants.getPasskeyStartRegistrationUrl(),
+			url: getPasskeyStartRegistrationUrl(),
 			withCredentials: true,
 		},
 		{ isSilentUpgrade: true },
@@ -262,7 +266,7 @@ const finishRegistration = async (
 ): Promise<void> => {
 	await http.post(
 		{
-			url: urlConstants.getPasskeyFinishRegistrationUrl(),
+			url: getPasskeyFinishRegistrationUrl(),
 			withCredentials: true,
 		},
 		{ sessionId, credentialNickname, attestationResponse, source },

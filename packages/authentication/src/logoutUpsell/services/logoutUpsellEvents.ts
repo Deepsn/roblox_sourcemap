@@ -213,6 +213,33 @@ export const sendAddEmailContinueClick = (origin: AddEmailOriginName): void => {
 	});
 };
 
+/** Add-email failures other than a server rejection. */
+export const AddEmailError = {
+	/** Never reached the server. */
+	InvalidFormat: "invalidFormat",
+	/** `submitEmailAddress` threw, which it is documented not to do. */
+	Threw: "threw",
+} as const;
+
+export type AddEmailErrorState =
+	| (typeof AddEmailError)[keyof typeof AddEmailError]
+	| `code${number}`
+	| "codeUnknown";
+
+/** Raw `EmailErrors` code, so no local name mapping can drift out of date. */
+export const addEmailServerError = (
+	errorCode: number | null,
+): AddEmailErrorState =>
+	errorCode == null ? "codeUnknown" : `code${errorCode}`;
+
+/** `origin` stays keyed to arrival like the screen's other events, so the reason goes in `state`. */
+export const sendAddEmailError = (
+	origin: AddEmailOriginName,
+	state: AddEmailErrorState,
+): void => {
+	send(schematizedEventTypes.authClientError, { origin, state });
+};
+
 // --- Verify email screen -----------------------------------------------------
 
 export const sendVerifyEmailShown = (): void => {

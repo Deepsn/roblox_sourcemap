@@ -23,6 +23,8 @@ export const streamEvents = {
 	follow: "nsFollow",
 	unfollow: "nsUnfollow",
 	report: "nsReport",
+	openMetaActions: "nsOpenMetaActions",
+	closeMetaActions: "nsCloseMetaActions",
 	viewDeveloperMetrics: "nsViewDevMetrics",
 } as const;
 
@@ -113,11 +115,14 @@ export const sendNotificationRetrieved = (
 	const { content } = notification;
 	const notificationType = asString(content?.notificationType);
 	const minVersion = content?.minVersion;
+	// content.minVersion is a string ("1.0"); INotificationContentDefinition declares it string.
+	const sendrVersion =
+		typeof minVersion === "string" || typeof minVersion === "number"
+			? String(minVersion)
+			: "0";
 	sendStreamEvent(streamEvents.notificationRetrieved, streamContexts.fetched, {
 		...asProperties(content?.clientEventsPayload),
-		sendrVersion: notificationType
-			? String(typeof minVersion === "number" ? minVersion : 0)
-			: "0",
+		sendrVersion: notificationType ? sendrVersion : "0",
 		notificationType: notificationType ?? notification.notificationSourceType,
 		notificationId: notification.id,
 	});
@@ -153,7 +158,7 @@ export const sendCardClick = (
 		...extra,
 	});
 
-type GameUpdateEventParams = {
+export type GameUpdateEventParams = {
 	notificationId: string;
 	notificationType: string;
 	rootPlaceId?: number | string;
@@ -164,24 +169,32 @@ type GameUpdateEventParams = {
 
 export const sendGameUpdateEvent = (
 	eventName: string,
-	{
-		notificationId,
-		notificationType,
-		rootPlaceId,
-		universeId,
-		isAggregate,
-		nsPage,
-	}: GameUpdateEventParams,
+	params: GameUpdateEventParams,
 ): void =>
 	sendStreamEvent(eventName, streamContexts.click, {
-		notifId: notificationId,
-		notifType: notificationType,
-		pid: rootPlaceId,
-		sourceId: universeId,
-		isAggregate: Boolean(isAggregate),
-		nsPage,
+		notifId: params.notificationId,
+		notifType: params.notificationType,
+		pid: params.rootPlaceId,
+		sourceId: params.universeId,
+		isAggregate: Boolean(params.isAggregate),
+		nsPage: params.nsPage,
 		sendrVersion: 0,
 	});
+
+export const sendRecentGameUpdateRetrieved = (
+	notificationId: string,
+	recentGroupedNotificationCount: number,
+): void =>
+	sendStreamEvent(
+		streamEvents.recentGameUpdateRetrieved,
+		streamContexts.fetched,
+		{
+			sendrVersion: "0",
+			notificationType: "GameUpdate",
+			notificationId,
+			recentGroupedNotificationCount,
+		},
+	);
 
 export const sendDeveloperMetricsEvent = (
 	eventName: string,

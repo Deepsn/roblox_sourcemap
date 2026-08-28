@@ -1,4 +1,8 @@
-import * as React from "react";
+import React from "react";
+// TODO: figure out a better way to do this
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { render } from "react-dom";
+import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
 import {
 	Button,
 	Dialog,
@@ -7,7 +11,6 @@ import {
 	DialogFooter,
 	DialogTitle,
 } from "@rbx/foundation-ui";
-import { withTranslations } from "@rbx/core-scripts/react";
 import { translations } from "../../component.json";
 import {
 	MODAL_CONTAINER_ID,
@@ -22,22 +25,19 @@ import {
 } from "../services/eventService";
 
 interface SimpleAuthModalComponentProps {
-	translate: (key: string) => string;
 	titleKey?: string;
 	bodyContextKey?: string;
 	bodyCtaKey?: string;
 	buttonKey?: string;
 }
 
-export const SimpleAuthModalComponent: React.FC<
-	SimpleAuthModalComponentProps
-> = ({
-	translate,
+export const SimpleAuthModal = ({
 	titleKey,
 	bodyContextKey,
 	bodyCtaKey,
 	buttonKey,
 }: SimpleAuthModalComponentProps) => {
+	const { translate } = useTranslation();
 	const [open, setOpen] = React.useState<boolean>(true);
 
 	// fires once per mount, not again if props change
@@ -89,11 +89,6 @@ export const SimpleAuthModalComponent: React.FC<
 	);
 };
 
-const SimpleAuthModalWithTranslations = withTranslations(
-	SimpleAuthModalComponent,
-	translations,
-);
-
 interface RenderSimpleAuthTranslationKeys {
 	titleKey?: string;
 	bodyContextKey?: string;
@@ -101,20 +96,16 @@ interface RenderSimpleAuthTranslationKeys {
 	buttonKey?: string;
 }
 
-const renderSimpleAuth = (
+export const renderSimpleAuth = (
 	translationKeys: RenderSimpleAuthTranslationKeys = {},
-): void => {
+) => {
 	const container = document.getElementById(MODAL_CONTAINER_ID);
 	if (!container) return;
 
-	const { React, ReactDOM } = window;
-	ReactDOM.render(
-		React.createElement(
-			SimpleAuthModalWithTranslations as unknown as React.ComponentType<RenderSimpleAuthTranslationKeys>,
-			translationKeys,
-		),
+	render(
+		<TranslationProvider config={translations}>
+			<SimpleAuthModal {...translationKeys} />
+		</TranslationProvider>,
 		container,
 	);
 };
-
-export default renderSimpleAuth;

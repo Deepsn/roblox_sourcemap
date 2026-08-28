@@ -1,7 +1,7 @@
-import { httpService } from "@rbx/core-scripts/legacy/core-utilities";
+import * as http from "@rbx/core-scripts/http";
 import searchConstants from "../constants/searchConstants";
 
-let cancelToken = httpService.createCancelToken();
+let cancelToken = http.createCancelToken();
 
 export enum GamesAutocompleteSuggestionEntryType {
 	GameSuggestion = 0,
@@ -30,9 +30,9 @@ export const getSearchSuggestion = async (
 ): Promise<TGamesAutocompleteSuggestion> => {
 	// Cancels any previous requests that are stil dangling
 	cancelToken.cancel();
-	cancelToken = httpService.createCancelToken();
+	cancelToken = http.createCancelToken();
 
-	const { data } = await httpService.get<TGamesAutocompleteSuggestion>({
+	const { data } = await http.get<TGamesAutocompleteSuggestion>({
 		...searchConstants.getSuggestionUrl,
 		url:
 			searchConstants.getSuggestionUrl.url +
@@ -54,9 +54,9 @@ export const postRequestSuggestion = async (
 
 	// Cancels any previous requests that are stil dangling
 	cancelToken.cancel();
-	cancelToken = httpService.createCancelToken();
+	cancelToken = http.createCancelToken();
 
-	const { data } = await httpService.post<TGamesAutocompleteSuggestion>(
+	const { data } = await http.post<TGamesAutocompleteSuggestion>(
 		{
 			...searchConstants.requestSuggestionUrl,
 			timeout: searchConstants.expiryTimeout,
@@ -70,7 +70,7 @@ export const postRequestSuggestion = async (
 };
 
 export type TAvatarAutocompleteSuggestion = {
-	Args: object;
+	Args: { Prefix: string; Limit: number; Algo: string | null };
 	Data: TAvatarAutocompleteSuggestionEntry[];
 };
 
@@ -101,10 +101,10 @@ export const getAvatarRequestSuggestion = async (
 
 	// Cancels any previous requests that are stil dangling
 	cancelToken.cancel();
-	cancelToken = httpService.createCancelToken();
+	cancelToken = http.createCancelToken();
 
 	if (useFallback) {
-		const { data } = await httpService.get<TAvatarAutocompleteSuggestion>(
+		const { data } = await http.get<TAvatarAutocompleteSuggestion>(
 			{
 				...searchConstants.avatarRequestSuggestionUrl,
 				timeout: searchConstants.expiryTimeout,
@@ -117,7 +117,7 @@ export const getAvatarRequestSuggestion = async (
 		return data;
 	}
 
-	const { data } = await httpService.get<TAvatarAutocompleteSuggestion>(
+	const { data } = await http.get<TAvatarAutocompleteSuggestion>(
 		{
 			...searchConstants.avatarRequestSuggestionCdnUrl,
 			timeout: searchConstants.expiryTimeout,
@@ -128,10 +128,4 @@ export const getAvatarRequestSuggestion = async (
 	);
 
 	return data;
-};
-
-export default {
-	getSearchSuggestion,
-	postRequestSuggestion,
-	getAvatarRequestSuggestion,
 };

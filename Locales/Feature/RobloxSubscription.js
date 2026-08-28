@@ -265,6 +265,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Heading.ReferralRecipientEntry": "Join Plus to get {amount} Robux",
 	"Description.ReferralPendingRequest": "{displayName} referred you to Plus",
 	"Label.ReferralPendingRequestSummary": "{displayName} referred you",
+	"Description.ReferralTerms":
+		'By clicking "Copy link", I agree to the {linkStart}Roblox Plus Referral Program Terms{linkEnd}.',
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

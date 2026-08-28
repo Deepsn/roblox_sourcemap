@@ -13,8 +13,11 @@ import {
 	submitEmailAddress,
 } from "../services/emailService";
 import {
+	AddEmailError,
+	addEmailServerError,
 	AddEmailOriginName,
 	sendAddEmailContinueClick,
+	sendAddEmailError,
 	sendAddEmailShown,
 	sendEmailFieldInteraction,
 } from "../services/logoutUpsellEvents";
@@ -65,6 +68,7 @@ const AddEmailContent: React.FC<AddEmailContentProps> = ({
 			setErrorMessage(
 				translate(INVALID_EMAIL_KEY, undefined, INVALID_EMAIL_FALLBACK),
 			);
+			sendAddEmailError(origin, AddEmailError.InvalidFormat);
 			return;
 		}
 		setErrorMessage(undefined);
@@ -80,6 +84,7 @@ const AddEmailContent: React.FC<AddEmailContentProps> = ({
 				}
 				const key = getEmailSubmissionErrorKey(result.errorCode);
 				setErrorMessage(translate(key, undefined, GENERIC_ERROR_FALLBACK));
+				sendAddEmailError(origin, addEmailServerError(result.errorCode));
 				setIsSubmitting(false);
 			})
 			.catch(() => {
@@ -87,6 +92,7 @@ const AddEmailContent: React.FC<AddEmailContentProps> = ({
 				setErrorMessage(
 					translate(INVALID_EMAIL_KEY, undefined, GENERIC_ERROR_FALLBACK),
 				);
+				sendAddEmailError(origin, AddEmailError.Threw);
 				setIsSubmitting(false);
 			});
 	};

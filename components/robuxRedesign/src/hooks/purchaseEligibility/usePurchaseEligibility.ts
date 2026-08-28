@@ -12,6 +12,7 @@ import { getConsentRequest as getConsentRequiredRequest } from "../../services/p
 import { getEnablePurchasesSetting } from "../../services/userSettingsService";
 import { getTexasU18VPCOptimizationFlowPolicy } from "../../services/guacService";
 import { isInApp, isOnDesktop } from "../../utils/platform";
+import { SETTING_CHANGE_AMP_NAMESPACE } from "../../constants";
 import { ModalContext } from "../../contexts/ModalContext";
 import { TrackingContext } from "../../contexts/TrackingContext";
 import { trackCounter, trackError } from "../../observability";
@@ -117,6 +118,7 @@ export function usePurchaseEligibility(): {
 							enablePurchases: "Enabled",
 						},
 						featureName: "CanChangeSetting",
+						namespace: SETTING_CHANGE_AMP_NAMESPACE,
 						isAsyncCall: false,
 						usePrologue: true,
 					},

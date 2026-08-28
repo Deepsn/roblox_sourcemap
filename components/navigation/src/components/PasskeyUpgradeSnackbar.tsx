@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useTranslation, TranslationProvider } from "@rbx/core-scripts/react";
+import { useTranslation } from "@rbx/core-scripts/react";
 import { Snackbar } from "@rbx/foundation-ui";
 import layoutConstants from "../constants/layoutConstants";
-import { translations } from "../../component.json";
 
-function PasskeyUpgradeSnackbarInner() {
+export default function PasskeyUpgradeSnackbarInner() {
 	const { translate } = useTranslation();
 	const [open, setOpen] = useState(true);
 
@@ -21,13 +20,5 @@ function PasskeyUpgradeSnackbarInner() {
 			}}
 			shouldAutoDismiss
 		/>
-	);
-}
-
-export default function PasskeyUpgradeSnackbar() {
-	return (
-		<TranslationProvider config={translations}>
-			<PasskeyUpgradeSnackbarInner />
-		</TranslationProvider>
 	);
 }

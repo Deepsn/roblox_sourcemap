@@ -13,4 +13,4 @@ export default {
 		name: "nsOpenContent",
 		context: "click",
 	},
-};
+} as const;

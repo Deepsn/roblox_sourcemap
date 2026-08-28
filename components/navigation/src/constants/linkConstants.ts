@@ -1,15 +1,22 @@
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import environmentUrls from "@rbx/environment-urls";
-import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
+import { authenticatedUser } from "@rbx/core-scripts/meta/user";
+
+export type UniversalSearchLink = {
+	url: string;
+	label: string;
+	pageSort: string[];
+	icon: string;
+};
 
 const gameSearchLink = {
-	url: getAbsoluteUrl("/discover/?Keyword="),
+	url: getAbsoluteUrl("/discover/?keyword="),
 	label: "Label.Games",
 	pageSort: ["home", "games", "discover"],
 	icon: "icon-menu-games-off",
 };
 const avatarSearchLink = {
-	url: getAbsoluteUrl("/catalog?CatalogContext=1&Keyword="),
+	url: getAbsoluteUrl("/catalog?CatalogContext=1&keyword="),
 	label: "Heading.Marketplace",
 	pageSort: ["catalog", "inventory", "bundles", "my/avatar", "trades"],
 	icon: "icon-menu-shop",
@@ -23,7 +30,7 @@ const playersSearchLink = {
 };
 
 const miscSearchLink = [
-	...(authenticatedUser?.isAuthenticated ? [playersSearchLink] : []),
+	...(authenticatedUser() != null ? [playersSearchLink] : []),
 	avatarSearchLink,
 	{
 		url: getAbsoluteUrl("/search/communities?keyword="),
@@ -32,9 +39,7 @@ const miscSearchLink = [
 		icon: "icon-menu-groups",
 	},
 	{
-		url: getAbsoluteUrl(
-			"/develop/library?CatalogContext=2&Category=6&Keyword=",
-		),
+		url: `https://create.${environmentUrls.domain}/store/models?keyword=`,
 		label: "Label.CreatorStore",
 		pageSort: ["develop"],
 		icon: "icon-menu-library",
@@ -42,7 +47,6 @@ const miscSearchLink = [
 ];
 
 export default {
-	creatorStoreUrl: `https://create.${environmentUrls.domain}/store/models?keyword=`,
 	scrollListItems: {
 		home: {
 			url: getAbsoluteUrl("/home"),
@@ -52,7 +56,7 @@ export default {
 			labelTranslationKey: "Label.sHome",
 		},
 		profile: {
-			url: getAbsoluteUrl(`/users/${authenticatedUser.id}/profile`),
+			url: getAbsoluteUrl(`/users/${authenticatedUser()?.id}/profile`),
 			idSelector: "nav-profile",
 			iconClass: "icon-nav-profile",
 			name: "profile",
@@ -82,7 +86,7 @@ export default {
 			labelTranslationKey: "Label.sAvatar",
 		},
 		inventory: {
-			url: getAbsoluteUrl(`/users/${authenticatedUser.id}/inventory`),
+			url: getAbsoluteUrl(`/users/${authenticatedUser()?.id}/inventory`),
 			idSelector: "nav-inventory",
 			iconClass: "icon-nav-inventory",
 			name: "inventory",
@@ -129,40 +133,10 @@ export default {
 	gameSearchLink,
 	avatarSearchLink,
 	miscSearchLink,
-	universalSearchUrls: [
-		...(authenticatedUser?.isAuthenticated
-			? [
-					{
-						url: getAbsoluteUrl("/search/users?keyword="),
-						label: "Label.Players",
-						pageSort: [],
-					},
-				]
-			: []),
-		{
-			url: getAbsoluteUrl("/discover/?Keyword="),
-			label: "Label.Games",
-			pageSort: ["home", "games", "discover"],
-		},
-		{
-			url: getAbsoluteUrl("/catalog?CatalogContext=1&Keyword="),
-			label: "Label.sCatalog",
-			pageSort: ["catalog", "inventory", "bundles"],
-		},
-		{
-			url: getAbsoluteUrl("/search/communities?keyword="),
-			label: "Label.sGroups",
-			pageSort: ["groups"],
-		},
-		{
-			url: getAbsoluteUrl(
-				"/develop/library?CatalogContext=2&Category=6&Keyword=",
-			),
-			label: "Label.CreatorStore",
-			pageSort: ["develop"],
-		},
-	],
-	newUniversalSearchUrls: [gameSearchLink, ...miscSearchLink],
+	newUniversalSearchUrls: [
+		gameSearchLink,
+		...miscSearchLink,
+	] satisfies UniversalSearchLink[],
 	settingsUrl: {
 		settings: { url: getAbsoluteUrl("/my/account"), label: "Label.sSettings" },
 		quickLogin: { url: getAbsoluteUrl("/home"), label: "Label.sQuickLogin" },
@@ -201,4 +175,4 @@ export default {
 		url: getAbsoluteUrl("/redeem"),
 		label: "Heading.RedeemRobloxCodes",
 	},
-};
+} as const;

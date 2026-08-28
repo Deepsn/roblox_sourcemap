@@ -1,6 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import ready from "@rbx/core-scripts/util/ready";
-import { queryClient, renderWithErrorBoundary } from "@rbx/core-scripts/react";
+import {
+	queryClient,
+	renderWithErrorBoundary,
+	TranslationProvider,
+} from "@rbx/core-scripts/react";
 import {
 	Browser,
 	currentBrowser,
@@ -17,8 +21,8 @@ import PostSignupDownloadModalRoot, {
 	newUserSessionStorageKey,
 	newUserSessionStorageValue,
 } from "./src/components/PostSignupDownloadModal";
-import developUtil from "./src/util/developUtil";
-import navClickUtil from "./src/util/navClickUtil";
+import { initializeDevelopLink } from "./src/util/developUtil";
+import { initNavClickEvents } from "./src/util/navClickUtil";
 import MenuIcon from "./src/containers/MenuIcon";
 import AgeBadge from "./src/components/AgeBadge";
 import setupAuthInterceptor from "./src/services/authInterceptor";
@@ -36,10 +40,10 @@ const navigationRobuxContainerId = "navigation-robux-container";
 const navigationRobuxMobileContainerId = "navigation-robux-mobile-container";
 const ageBadgeContainerId = "age-badge-container";
 
-addExternal(["Roblox", "NavigationService"], { ...navigation });
+addExternal(["Roblox", "NavigationService"], navigation);
 cacheUserId();
-developUtil.initializeDevelopLink();
-navClickUtil.initNavClickEvents();
+initializeDevelopLink();
+initNavClickEvents();
 
 // Setup HTTP interceptor to listen for 401 auth codes
 setupAuthInterceptor();
@@ -52,7 +56,9 @@ ready(() => {
 
 	if (document.getElementById(menuIconContainerId)) {
 		renderWithErrorBoundary(
-			<MenuIcon />,
+			<TranslationProvider config={translations}>
+				<MenuIcon />
+			</TranslationProvider>,
 			document.getElementById(menuIconContainerId),
 		);
 	}
@@ -60,7 +66,9 @@ ready(() => {
 	const ageBadgeVariant = ageBadgeControl();
 	if (ageBadgeVariant && document.getElementById(ageBadgeContainerId)) {
 		renderWithErrorBoundary(
-			<AgeBadge variant={ageBadgeVariant} />,
+			<TranslationProvider config={translations}>
+				<AgeBadge variant={ageBadgeVariant} />
+			</TranslationProvider>,
 			document.getElementById(ageBadgeContainerId),
 		);
 
@@ -74,14 +82,18 @@ ready(() => {
 
 	if (document.getElementById(navigationRobuxContainerId)) {
 		renderWithErrorBoundary(
-			<NavigationRobux translate={translations} />,
+			<TranslationProvider config={translations}>
+				<NavigationRobux />
+			</TranslationProvider>,
 			document.getElementById(navigationRobuxContainerId),
 		);
 	}
 
 	if (document.getElementById(navigationRobuxMobileContainerId)) {
 		renderWithErrorBoundary(
-			<NavigationRobux translate={translations} />,
+			<TranslationProvider config={translations}>
+				<NavigationRobux />
+			</TranslationProvider>,
 			document.getElementById(navigationRobuxMobileContainerId),
 		);
 	}
@@ -89,7 +101,9 @@ ready(() => {
 	if (document.getElementById(rightNavigationHeaderContainerId)) {
 		renderWithErrorBoundary(
 			<QueryClientProvider client={queryClient}>
-				<NavigationRightHeader />
+				<TranslationProvider config={translations}>
+					<NavigationRightHeader />
+				</TranslationProvider>
 			</QueryClientProvider>,
 			document.getElementById(rightNavigationHeaderContainerId),
 		);
@@ -101,7 +115,12 @@ ready(() => {
 			if (success) {
 				const snackbarContainer = document.createElement("div");
 				document.body.appendChild(snackbarContainer);
-				renderWithErrorBoundary(<PasskeyUpgradeSnackbar />, snackbarContainer);
+				renderWithErrorBoundary(
+					<TranslationProvider config={translations}>
+						<PasskeyUpgradeSnackbar />
+					</TranslationProvider>,
+					snackbarContainer,
+				);
 			}
 		});
 	}
@@ -109,7 +128,9 @@ ready(() => {
 	if (document.getElementById(leftNavigationContainerId)) {
 		renderWithErrorBoundary(
 			<QueryClientProvider client={queryClient}>
-				<LeftNavigation />
+				<TranslationProvider config={translations}>
+					<LeftNavigation />
+				</TranslationProvider>
 			</QueryClientProvider>,
 			document.getElementById(leftNavigationContainerId),
 		);
@@ -123,7 +144,9 @@ ready(() => {
 		document.body.appendChild(downloadModalContainer);
 		renderWithErrorBoundary(
 			<QueryClientProvider client={queryClient}>
-				<PostSignupDownloadModalRoot />
+				<TranslationProvider config={translations}>
+					<PostSignupDownloadModalRoot />
+				</TranslationProvider>
 			</QueryClientProvider>,
 			downloadModalContainer,
 		);

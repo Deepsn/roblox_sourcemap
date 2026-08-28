@@ -1,4 +1,7 @@
-import { EventStream } from "@rbx/core-scripts/legacy/Roblox";
+import {
+	sendEventWithTarget,
+	targetTypes,
+} from "@rbx/core-scripts/event-stream";
 
 const NAV_ITEMS: { ids: string[]; navItem: string }[] = [
 	{ ids: ["nav-logo-link"], navItem: "logo" },
@@ -13,24 +16,20 @@ const NAV_ITEMS: { ids: string[]; navItem: string }[] = [
 	},
 ];
 
-const initNavClickEvents = () => {
+export const initNavClickEvents = () => {
 	NAV_ITEMS.forEach(({ ids, navItem }) => {
 		ids.forEach((id) => {
 			const element = document.getElementById(id);
 			if (element) {
 				element.addEventListener("click", () => {
-					if (EventStream) {
-						EventStream.SendEventWithTarget(
-							"navBarClick",
-							"click",
-							{ nav_item: navItem },
-							EventStream.TargetTypes.WWW,
-						);
-					}
+					sendEventWithTarget(
+						"navBarClick",
+						"click",
+						{ nav_item: navItem },
+						targetTypes.WWW,
+					);
 				});
 			}
 		});
 	});
 };
-
-export default { initNavClickEvents };

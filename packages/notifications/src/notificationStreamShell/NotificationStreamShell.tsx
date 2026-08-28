@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import environmentUrls from "@rbx/environment-urls";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@rbx/core-scripts/react";
@@ -16,9 +22,23 @@ import {
 	useNotificationStreamConnection,
 	sendUnreadCta,
 	sendStreamEvent,
+	sendRecentGameUpdateRetrieved,
+	sendPageChanged,
 	streamEvents,
 	streamContexts,
 } from "../notificationStreamData";
+import {
+	GAME_UPDATE_NS_PAGES,
+	GameUpdateMetadata,
+	GameUpdateNsPage,
+} from "../notificationStreamData/gameUpdatesApi";
+import {
+	useGameUpdates,
+	markGameUpdateSeenOnce,
+} from "../notificationStreamData/useGameUpdates";
+import { aggregateGameUpdates } from "../notificationStreamData/aggregateGameUpdates";
+import { useStreamMetadata } from "../notificationStreamData/useStreamMetadata";
+import GameUpdatesPanel from "./GameUpdatesPanel";
 import { NotificationStreamCardRouter } from "./NotificationStreamCardRouter";
 import { reportNotificationStreamError } from "../notificationStreamData/notificationStreamObservability";
 import NotificationStreamModalContainer from "../sendrNotificationStream/containers/NotificationStreamModalContainer";
@@ -28,23 +48,95 @@ import "./notificationStreamShell.scss";
 const { websiteUrl } = environmentUrls;
 const SETTINGS_LINK = `${websiteUrl}/my/account#!/notifications`;
 const MAX_HEIGHT = 600;
+const RECENT_GAME_UPDATE_WINDOW_MS = 86400 * 14 * 1000;
 
-export type NotificationStreamShellProps = {
-	themeClass?: string;
-};
-
-const NotificationStreamShellInner = ({
-	themeClass,
-}: NotificationStreamShellProps): JSX.Element => {
+const NotificationStreamShellInner = (): JSX.Element => {
 	const translate = useNotificationLocalization();
 	const {
 		notifications,
+		gameUpdates,
 		isLoading,
 		isFetchingNextPage,
 		hasNextPage,
 		fetchNextPage,
 		refetch,
 	} = useGetRecentNotifications();
+	const { models: gameUpdateModels, isLoading: isResolvingGameUpdates } =
+		useGameUpdates(gameUpdates);
+	const { canLaunchGameFromGameUpdate } = useStreamMetadata();
+	const [showGameUpdates, setShowGameUpdates] = useState(false);
+
+	const selectContentView = useCallback(
+		(view: GameUpdateNsPage): void => {
+			const current = showGameUpdates
+				? GAME_UPDATE_NS_PAGES.gameUpdates
+				: GAME_UPDATE_NS_PAGES.main;
+			if (current === view) {
+				return;
+			}
+			sendPageChanged(view);
+			setShowGameUpdates(view === GAME_UPDATE_NS_PAGES.gameUpdates);
+		},
+		[showGameUpdates],
+	);
+
+	const aggregatedGameUpdate = useMemo(
+		() =>
+			aggregateGameUpdates(
+				gameUpdates,
+				gameUpdateModels,
+				isResolvingGameUpdates,
+			),
+		[gameUpdates, gameUpdateModels, isResolvingGameUpdates],
+	);
+
+	const rows = useMemo(() => {
+		if (!aggregatedGameUpdate) {
+			return notifications;
+		}
+		const stamp = new Date(aggregatedGameUpdate.eventDate).getTime();
+		const merged = [...notifications];
+		const at = merged.findIndex((n) => new Date(n.eventDate).getTime() < stamp);
+		merged.splice(at === -1 ? merged.length : at, 0, aggregatedGameUpdate);
+		return merged;
+	}, [notifications, aggregatedGameUpdate]);
+
+	const loggedRetrievalRef = useRef("");
+	useEffect(() => {
+		if (
+			!aggregatedGameUpdate ||
+			isResolvingGameUpdates ||
+			gameUpdateModels.size === 0
+		) {
+			return;
+		}
+		const universeIds = (
+			aggregatedGameUpdate.metadataCollection as GameUpdateMetadata[]
+		).map((meta) => meta.UniverseId);
+		const signature = `${aggregatedGameUpdate.id}:${universeIds.join(",")}`;
+		if (loggedRetrievalRef.current === signature) {
+			return;
+		}
+		loggedRetrievalRef.current = signature;
+
+		const cutoff = Date.now() - RECENT_GAME_UPDATE_WINDOW_MS;
+		const recentGroupedNotificationCount = [
+			...gameUpdateModels.values(),
+		].filter((model) => (model.createdOn ?? 0) >= cutoff).length;
+		sendRecentGameUpdateRetrieved(
+			aggregatedGameUpdate.id,
+			recentGroupedNotificationCount,
+		);
+
+		const onlyUniverseId =
+			universeIds.length === 1 ? universeIds[0] : undefined;
+		if (onlyUniverseId != null) {
+			const model = gameUpdateModels.get(onlyUniverseId);
+			if (model) {
+				markGameUpdateSeenOnce(model);
+			}
+		}
+	}, [aggregatedGameUpdate, gameUpdateModels, isResolvingGameUpdates]);
 	const { isConnectionLost } = useNotificationStreamConnection();
 	const markInteracted = useMarkInteracted();
 	const removeNotification = useRemoveNotification();
@@ -97,7 +189,7 @@ const NotificationStreamShellInner = ({
 	}, [isConnectionLost]);
 
 	const renderItem = useCallback(
-		(notification: (typeof notifications)[number]) => (
+		(notification: (typeof rows)[number]) => (
 			<div style={{ marginBottom: 8 }}>
 				<NotificationStreamCardRouter
 					notification={notification}
@@ -106,88 +198,112 @@ const NotificationStreamShellInner = ({
 					onActionFailed={() => {
 						fireAndReport(refetch, "streamActionFailedRefetch");
 					}}
+					gameUpdateModels={gameUpdateModels}
+					onViewGameUpdates={() =>
+						selectContentView(GAME_UPDATE_NS_PAGES.gameUpdates)
+					}
+					canLaunchGameFromGameUpdate={canLaunchGameFromGameUpdate}
 				/>
 			</div>
 		),
-		[markInteracted, removeNotification, refetch, fireAndReport],
+		[
+			markInteracted,
+			removeNotification,
+			refetch,
+			fireAndReport,
+			gameUpdateModels,
+			canLaunchGameFromGameUpdate,
+			selectContentView,
+		],
 	);
 
 	return (
 		<SendrTemplateContext.Provider value>
-			<div className={themeClass}>
+			<div>
 				<div className="notification-stream-base builder-font">
-					<div className="notification-stream-header">
-						<span className="text-label font-caption-header">
-							{translate("Label.Notifications")}
-						</span>
-						<a
-							className="text-link font-caption-header"
-							href={SETTINGS_LINK}
-							onClick={() =>
-								sendStreamEvent(
-									streamEvents.goToSettingPage,
-									streamContexts.click,
-									{
-										sendrVersion: 0,
-									},
-								)
-							}
-						>
-							{translate("Label.Settings")}
-						</a>
-					</div>
-
-					{bannerVisible && (
-						<NotificationStreamBanner
-							variant="new"
-							message={translate("Message.NumberofNewNotifications", {
-								notificationCount: newCount,
-							})}
-							onClick={reload}
-							onDismiss={dismissBanner}
+					{showGameUpdates ? (
+						<GameUpdatesPanel
+							models={gameUpdateModels}
+							onBack={() => selectContentView(GAME_UPDATE_NS_PAGES.main)}
+							onInteract={() => undefined}
+							canLaunch={canLaunchGameFromGameUpdate}
 						/>
+					) : (
+						<React.Fragment>
+							<div className="notification-stream-header">
+								<span className="text-label font-caption-header">
+									{translate("Label.Notifications")}
+								</span>
+								<a
+									className="text-link font-caption-header"
+									href={SETTINGS_LINK}
+									onClick={() =>
+										sendStreamEvent(
+											streamEvents.goToSettingPage,
+											streamContexts.click,
+											{
+												sendrVersion: 0,
+											},
+										)
+									}
+								>
+									{translate("Label.Settings")}
+								</a>
+							</div>
+
+							{bannerVisible && (
+								<NotificationStreamBanner
+									variant="new"
+									message={translate("Message.NumberofNewNotifications", {
+										notificationCount: newCount,
+									})}
+									onClick={reload}
+									onDismiss={dismissBanner}
+								/>
+							)}
+
+							{isConnectionLost && !errorDismissed && (
+								<NotificationStreamBanner
+									variant="error"
+									message={translate("Label.NoNetworkConnectionText")}
+									onDismiss={() => setErrorDismissed(true)}
+								/>
+							)}
+
+							<div style={{ position: "relative" }}>
+								<NotificationStreamList
+									className="notification-stream-scroll"
+									items={rows}
+									getKey={(notification) => notification.id}
+									renderItem={renderItem}
+									hasMore={Boolean(hasNextPage)}
+									isLoading={isLoading || isFetchingNextPage}
+									onLoadMore={() => {
+										fireAndReport(fetchNextPage, "streamFetchNextPage");
+									}}
+									loadingIndicator={<span className="spinner spinner-sm" />}
+									emptyState={
+										<span className="text">
+											{translate("Label.AllCaughtUp")}
+										</span>
+									}
+									maxHeight={MAX_HEIGHT}
+									ariaLabel={translate("Label.Notifications")}
+								/>
+								<NotificationStreamModalContainer />
+							</div>
+						</React.Fragment>
 					)}
-
-					{isConnectionLost && !errorDismissed && (
-						<NotificationStreamBanner
-							variant="error"
-							message={translate("Label.NoNetworkConnectionText")}
-							onDismiss={() => setErrorDismissed(true)}
-						/>
-					)}
-
-					<div style={{ position: "relative" }}>
-						<NotificationStreamList
-							className="notification-stream-scroll"
-							items={notifications}
-							getKey={(notification) => notification.id}
-							renderItem={renderItem}
-							hasMore={Boolean(hasNextPage)}
-							isLoading={isLoading || isFetchingNextPage}
-							onLoadMore={() => {
-								fireAndReport(fetchNextPage, "streamFetchNextPage");
-							}}
-							loadingIndicator={<span className="spinner spinner-sm" />}
-							emptyState={
-								<span className="text">{translate("Label.AllCaughtUp")}</span>
-							}
-							maxHeight={MAX_HEIGHT}
-							ariaLabel={translate("Label.Notifications")}
-						/>
-						<NotificationStreamModalContainer />
-					</div>
 				</div>
 			</div>
 		</SendrTemplateContext.Provider>
 	);
 };
 
-export const NotificationStreamShell = ({
-	themeClass,
-}: NotificationStreamShellProps): JSX.Element => (
+export const NotificationStreamShell = (): JSX.Element => (
 	<QueryClientProvider client={queryClient}>
 		<NotificationLocalizationProvider>
-			<NotificationStreamShellInner themeClass={themeClass} />
+			<NotificationStreamShellInner />
 		</NotificationLocalizationProvider>
 	</QueryClientProvider>
 );

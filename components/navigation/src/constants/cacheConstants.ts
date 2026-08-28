@@ -1,5 +1,1 @@
-const cacheConstants = {
-	userCacheKey: "CachedUserId",
-};
-
-export default cacheConstants;
+export const userCacheKey = "CachedUserId";

@@ -10,7 +10,7 @@ type ReactNotificationBellProps = {
 	unreadCount?: number;
 };
 
-function ReactNotificationBell({
+export default function ReactNotificationBell({
 	unreadCount = 0,
 }: ReactNotificationBellProps) {
 	const previousCountRef = useRef(0);
@@ -73,5 +73,3 @@ function ReactNotificationBell({
 		</span>
 	);
 }
-
-export default ReactNotificationBell;

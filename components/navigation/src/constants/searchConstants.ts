@@ -36,33 +36,7 @@ export default {
 	],
 	avatarAutocompleteSuggestionLimit: 5,
 	isSpecialTreatmentAutocompleteRestricted: (): boolean =>
-		parseInt(
-			getNavigationContainer()?.dataset.numberOfAutocompleteSuggestions ?? "",
-			10,
-		) === 7 &&
 		linkConstants.miscSearchLink
-			.reduce<string[]>((acc, link) => {
-				acc.push(...link.pageSort);
-				return acc;
-			}, [])
-			.reduce(
-				(r, keyword) => r || window.location.pathname.includes(keyword),
-				false,
-			),
-	isSpecialTreatment: (): boolean =>
-		parseInt(
-			getNavigationContainer()?.dataset.numberOfAutocompleteSuggestions ?? "",
-			10,
-		) === 7,
-	numberOfSpecialTreatmentAutocompleteSuggestions: 3,
-	isAutocompleteSuggestionsIXPTestEnabled: (): boolean =>
-		parseInt(
-			getNavigationContainer()?.dataset.numberOfAutocompleteSuggestions ?? "",
-			10,
-		) > 0,
-	numberOfAutocompleteSuggestions: (): number =>
-		parseInt(
-			getNavigationContainer()?.dataset.numberOfAutocompleteSuggestions ?? "",
-			10,
-		) || 0,
-};
+			.flatMap((link) => link.pageSort)
+			.some((keyword) => window.location.pathname.includes(keyword)),
+} as const;
