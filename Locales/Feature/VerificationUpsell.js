@@ -232,6 +232,7 @@ Roblox.LangDynamic["Feature.VerificationUpsell"] = {
 	BannerBodyPostCutT2: "Get a secure age check now.",
 	"Label.SlimBanner":
 		"Access to popular games has changed. Let’s check your age to see what you can still play.",
+	"Action.Close": "Close",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

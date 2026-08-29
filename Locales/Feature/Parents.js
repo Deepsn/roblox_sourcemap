@@ -750,6 +750,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Content suitable only for adults ages 18 and up. May include prolonged scenes of intense violence, graphic sexual content and/or gambling with real currency.",
 	"Description.VPCRequestRobuxTransferLimits":
 		"This will update the daily and monthly limits on the amount of Robux your child can transfer.",
+	"Heading.ConversationalRequest.RobuxTransferLimits":
+		"Set your child's Robux transfer limits",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -258,6 +258,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Heading.Friends": "Friends",
 	"TrustedFriend.Toast.LinkCopied": "Link copied to clipboard",
 	"Label.NoFriendsYet": "{name} doesn’t have any friends yet.",
+	"Label.Followed": "Followed",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
