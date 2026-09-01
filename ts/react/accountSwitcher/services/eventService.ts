@@ -6,6 +6,8 @@ import type { AccountSwitcherListVariant } from "../components/FoundationAccount
 type Context =
 	(typeof EVENT_CONSTANTS.context)[keyof typeof EVENT_CONSTANTS.context];
 type Btn = (typeof EVENT_CONSTANTS.btn)[keyof typeof EVENT_CONSTANTS.btn];
+type AccountSwitcherSwitchOutcome =
+	(typeof EVENT_CONSTANTS.state.accountSwitcher)[keyof typeof EVENT_CONSTANTS.state.accountSwitcher];
 export type ConfirmationModalOrigins =
 	(typeof confirmationModalOrigins)[keyof typeof confirmationModalOrigins];
 
@@ -75,6 +77,26 @@ export const sendAccountSwitchEvent = (
 };
 
 /**
+ * Log the result and duration of an account switch request.
+ */
+export const sendAccountSwitcherSwitchResultEvent = (
+	context: Context,
+	outcome: AccountSwitcherSwitchOutcome,
+	elapsedTime: number,
+	eventParams: AccountSwitcherVariantEventParams = {},
+): void => {
+	eventStreamService.sendEventWithTarget(
+		EVENT_CONSTANTS.schematizedEventTypes.authOperationTiming,
+		context,
+		{
+			state: outcome,
+			elapsedTime: Math.round(elapsedTime).toString(),
+			...eventParams,
+		},
+	);
+};
+
+/**
  * Log errors that occur on the client. This can be any browser operation or unexpected network call failure
  * @param context where the error is coming from
  * @param state what the error was
@@ -83,7 +105,7 @@ export const sendAuthClientErrorEvent = (
 	context: Context,
 	state: string,
 	eventParams: AccountSwitcherVariantEventParams = {},
-) => {
+): void => {
 	eventStreamService.sendEventWithTarget(
 		EVENT_CONSTANTS.schematizedEventTypes.authClientError,
 		context,

@@ -14,6 +14,8 @@ export type AccountSwitcherListExperimentResolution = {
 	variant: AccountSwitcherListVariant;
 };
 
+export const accountSwitcherListExperimentTimeoutMs = 2000;
+
 export const getAccountSwitcherListVariantFromExperimentValues = (
 	values: AccountSwitcherListExperimentValues,
 ): AccountSwitcherListVariant =>
@@ -30,16 +32,26 @@ export const resolveAccountSwitcherListExperiment = (
 
 export const getAccountSwitcherListExperiment =
 	async (): Promise<AccountSwitcherListExperimentResolution> => {
+		let timeoutId: ReturnType<typeof setTimeout> | undefined;
 		try {
-			const experimentParameterValues =
-				await ExperimentationService?.getAllValuesForLayer(
-					accountSwitcherLayerName,
-				);
+			const experimentParameterValues = await Promise.race([
+				ExperimentationService?.getAllValuesForLayer(accountSwitcherLayerName),
+				new Promise<undefined>((resolve) => {
+					timeoutId = setTimeout(
+						() => resolve(undefined),
+						accountSwitcherListExperimentTimeoutMs,
+					);
+				}),
+			]);
 			return resolveAccountSwitcherListExperiment(
 				experimentParameterValues ?? {},
 			);
 		} catch {
 			return resolveAccountSwitcherListExperiment({});
+		} finally {
+			if (timeoutId !== undefined) {
+				clearTimeout(timeoutId);
+			}
 		}
 	};
 

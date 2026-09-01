@@ -699,10 +699,15 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Title.VerificationInconclusive": "Verification inconclusive",
 	"Description.FaeInconclusiveSecondVerification":
 		"Using your camera to verify your age wasn't sufficient, so we need a second verification to confirm you're an adult before you can link to your child's account.",
+	"Heading.ActivityUpdates": "Activity updates",
+	"Description.ParentSide.ActivityUpdates":
+		"Get a weekly email with your child's screen time, top games, and more.",
 	"Heading.ConversationalRequest.PartySettingV2":
 		"Can your child join games or chat with friends?",
 	"Heading.ConversationalRequest.PartyChatV2":
 		"Can your child chat with {requestedSettingValue}?",
+	"Description.ChildSide.ParentReceivingDigestEmails":
+		"Receives weekly digest emails",
 	"Title.KoreaTermsConsent":
 		"Please review and provide consent to let your child use Roblox",
 	"Description.KoreaTermsConsent":

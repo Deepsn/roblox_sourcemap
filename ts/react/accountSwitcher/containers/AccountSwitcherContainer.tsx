@@ -41,6 +41,7 @@ import type { AccountSwitcherListVariant } from "../components/FoundationAccount
 import {
 	sendAuthClientErrorEvent,
 	sendAccountSwitchEvent,
+	sendAccountSwitcherSwitchResultEvent,
 	sendDismissAccountSwitcherEvent,
 	sendAuthButtonClickEvent,
 } from "../services/eventService";
@@ -132,6 +133,7 @@ export const AccountSwitcherContainer = ({
 				switched_to_user_id: accountSelectorUserId.toString(),
 				encrypted_users_data_blob: blob,
 			};
+			const accountSwitchStartedAt = Date.now();
 			try {
 				// if the target account is invalid, the call to `switchAccount()` will replace the blob with a new one that does not contain invalid target account
 				sendAccountSwitchEvent(
@@ -143,12 +145,30 @@ export const AccountSwitcherContainer = ({
 				storeAccountSwitcherBlob(switchResponse.encrypted_users_data_blob);
 				if (switchResponse) {
 					if (hasAccountSwitcherInvalidSessionError(switchResponse)) {
+						sendAccountSwitcherSwitchResultEvent(
+							getContextForLogging(),
+							EVENT_CONSTANTS.state.accountSwitcher.invalidSession,
+							Date.now() - accountSwitchStartedAt,
+							getAccountListVariantEventParams(),
+						);
 						renderSwitchAccountErrorConfirmationModal();
 						return;
 					}
+					sendAccountSwitcherSwitchResultEvent(
+						getContextForLogging(),
+						EVENT_CONSTANTS.state.accountSwitcher.switchSuccess,
+						Date.now() - accountSwitchStartedAt,
+						getAccountListVariantEventParams(),
+					);
 					onAccountSwitched(accountSelectorUserId);
 				}
 			} catch {
+				sendAccountSwitcherSwitchResultEvent(
+					getContextForLogging(),
+					EVENT_CONSTANTS.state.accountSwitcher.requestFailed,
+					Date.now() - accountSwitchStartedAt,
+					getAccountListVariantEventParams(),
+				);
 				renderSwitchAccountErrorConfirmationModal();
 			}
 		}
@@ -285,6 +305,14 @@ export const AccountSwitcherContainer = ({
 			getAccountListVariantEventParams(),
 		);
 		handleAddAccount();
+	}
+
+	if (
+		shouldShowAsModal &&
+		currentModal === ModalType.AccountSwitcherModalType &&
+		!isAccountListVariantResolved
+	) {
+		return <React.Fragment />;
 	}
 
 	if (shouldShowAsModal) {

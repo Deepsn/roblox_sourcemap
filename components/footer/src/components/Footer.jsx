@@ -2,13 +2,19 @@ import PropTypes from "prop-types";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import { DeviceMeta } from "@rbx/core-scripts/legacy/Roblox";
 import { pageName, urlService } from "@rbx/core-scripts/legacy/core-utilities";
+import { removeUrlLocale } from "@rbx/core-scripts/endpoints";
 import CopyrightMessage from "./CopyrightMessage";
 import FooterLinks from "./FooterLinks";
 import LanguageSelector from "../containers/LanguageSelector";
 
 function Footer(props) {
 	const page = pageName.PageNameProvider.getInternalPageName();
-	const isSignUpOrLandingPage = page === "CreateAccount" || page === "Landing";
+	const remainingPath = removeUrlLocale(window.location.pathname);
+	const isSignUpOrLandingPage =
+		remainingPath.toLowerCase() === "/" ||
+		page === "Login" ||
+		page === "CreateAccount" ||
+		page === "Landing";
 	const isAuthenticatedUser = authenticatedUser?.isAuthenticated;
 	const deviceMeta = DeviceMeta && new DeviceMeta();
 	const isPortableDevice =
@@ -22,7 +28,7 @@ function Footer(props) {
 				new URLSearchParams(window.location.search),
 			);
 			const urlFormatObject = {
-				pathname: language.languageCode,
+				pathname: `/${language.languageCode}${remainingPath === "/" ? "" : remainingPath}`,
 				query: queryParameters,
 			};
 			window.location.href = urlService.formatUrl(urlFormatObject);

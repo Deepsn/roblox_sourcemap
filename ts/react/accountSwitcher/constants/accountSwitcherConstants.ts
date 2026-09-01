@@ -36,6 +36,7 @@ export const errorCasePlaceholderStrings = {
 };
 
 export const commonUiTranslationKeys = {
+	ActionClose: "Action.Close",
 	ActionOK: "Action.OK",
 };
 

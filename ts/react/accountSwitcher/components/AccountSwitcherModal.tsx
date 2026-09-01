@@ -6,6 +6,7 @@ import { TUserData } from "../../common/types/userTypes";
 import AccountSelection from "./AccountSelection";
 import {
 	accountSwitcherStrings,
+	commonUiTranslationKeys,
 	isLogoutAllButtonInSwitcherEnabled,
 } from "../constants/accountSwitcherConstants";
 import AddAccountRow from "./AddAccountRow";
@@ -133,7 +134,7 @@ export const AccountSwitcherModal = ({
 			<Fragment>
 				<div className="account-switcher-foundation-header">
 					<IconButton
-						ariaLabel="Close"
+						ariaLabel={translate(commonUiTranslationKeys.ActionClose)}
 						className="account-switcher-foundation-close"
 						icon="icon-regular-x"
 						onClick={handleModalDismiss}

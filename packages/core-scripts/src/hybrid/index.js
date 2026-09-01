@@ -1,4 +1,4 @@
-const { Chat, Navigation, Overlay, Game, Localization } =
+const { Chat, Navigation, Overlay, Game, Localization, AdConsent } =
 	window.Roblox?.Hybrid ?? {};
 
 const getCallback = (callback) => {
@@ -52,6 +52,12 @@ export default {
 	localization: (localeCode, callback) => {
 		if (Localization && Localization.languageChangeTrigger) {
 			Localization.languageChangeTrigger(localeCode, getCallback(callback));
+		}
+	},
+
+	adConsentChanged: (params, callback) => {
+		if (AdConsent && AdConsent.adConsentChanged) {
+			AdConsent.adConsentChanged(params, getCallback(callback));
 		}
 	},
 };

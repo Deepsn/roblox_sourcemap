@@ -43,8 +43,6 @@ import ExperienceEventStatus from "./enums/ExperienceEventStatus";
 import ExperienceAffiliateDeepLinkFallbackType from "./enums/ExperienceAffiliateDeepLinkFallbackType";
 import { getDeviceMeta } from "../meta/device";
 
-const MOMENTS_PLACE_ID = "119524072047648";
-
 const fireEvent = window.EventTracker?.fireEvent;
 
 const isItemDeeplink = (navigateSubPath: string, params: DeepLinkParams) =>
@@ -330,8 +328,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						);
 
 						window.location.href = target.url;
-						// TODO: Update fallback once Moments is migrated off the experience
-						window.location.href = `${UrlPart.Games}/${MOMENTS_PLACE_ID}`;
+						// Fall back to the platform Moments tab if the specific post cannot be opened.
+						window.location.href = "roblox://navigation/moments";
 					} else if (response.data.linkType === "SchoolInvite") {
 						const resolveSchoolInviteEvent = buildResolveLinkEvent(
 							response.data.status,
