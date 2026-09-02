@@ -2707,6 +2707,11 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.WaitingForParentToChangeTransferLimits":
 		"You asked your parent to change your transfer limits.",
 	"Heading.RobuxTransferLimits": "Robux transfer limits",
+	"Heading.EligibleGamesForPlaytest": "Eligible games for playtest",
+	"Description.PrivatePlaytest":
+		"Test in-development games from trusted friends and friends in similar age groups, before the games receive full evaluation. When you join the game, Roblox will conduct a preliminary review against our safety standard.",
+	"Description.ParentSide.PrivatePlaytest":
+		"Allow your child to test in-development games from trusted friends and friends in similar age groups, before the games receive full evaluation. When you child joins the game, Roblox will conduct a preliminary review against our safety standard.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

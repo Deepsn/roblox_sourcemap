@@ -410,6 +410,7 @@ Roblox.LangDynamic["Feature.Premium"] = {
 		"Trade, resell and publish avatar items",
 	"Message.LimitedAvatarItem":
 		"Limited avatar item included with your purchase",
+	"Label.BonusRobuxTag": "{amount} bonus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -283,6 +283,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.Benefit.AppThemes": "App themes",
 	"Description.Benefit.AppThemesSubtitle":
 		"Change the color of your platform background",
+	"Description.Benefit.Referral": "Refer people to Plus",
+	"Description.Benefit.ReferralSubtitle": "Earn {amount} Robux per referral",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
