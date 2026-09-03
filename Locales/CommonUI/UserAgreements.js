@@ -12,6 +12,12 @@ Roblox.LangDynamic["CommonUI.UserAgreements"] = {
 	"Modal.Title": "Updated Agreements",
 	"Modal.PromotionalEmailsCheckbox":
 		"Optional: I'd also like to sign up to receive emails from Roblox about newest releases, limited-time promotions, and more.",
+	"Modal.Body.LocationChange":
+		'We noticed that your Roblox account location has changed. By continuing to use Roblox, you agree to the Terms of Use and Privacy Policy for your country. By clicking "Agree", you agree to these changes. If you are under 18, you also confirm your parent/guardian has reviewed and agreed to them.',
+	"Modal.Body.PendingUpdate":
+		'We\'re updating our Terms of Service and Privacy Policy effective {effectiveDate}. By clicking "Agree", you agree to these changes. If you are under 18, you also confirm your parent/guardian has reviewed and agreed to them.',
+	"Modal.Body.MissedUpdate":
+		'We have updated our Terms of Service and Privacy Policy effective {effectiveDate}. By clicking "Agree", you agree to these changes. If you are under 18, you also confirm your parent/guardian has reviewed and agreed to them.',
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

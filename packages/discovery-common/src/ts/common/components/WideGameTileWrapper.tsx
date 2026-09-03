@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import WideGameTile, { TWideGameTileProps } from "./WideGameTile";
-import HiddenGameTile from "./HiddenGameTile";
+import WideGameTileHidden from "./WideGameTileHidden";
+import { GameTileHiddenReason } from "./GameTileUtils";
 
 export type TWideGameTileWrapperProps = TWideGameTileProps & {
 	isHidden?: boolean;
@@ -12,8 +13,9 @@ export const WideGameTileWrapper = forwardRef<
 >(({ isHidden, ...tileProps }: TWideGameTileWrapperProps, forwardedRef) => {
 	if (isHidden) {
 		return (
-			<HiddenGameTile
+			<WideGameTileHidden
 				ref={forwardedRef}
+				reason={GameTileHiddenReason.NotInterested}
 				setIsHidden={tileProps.setIsHidden}
 				toggleIsHidden={tileProps.toggleIsHidden}
 				universeId={tileProps.gameData.universeId}

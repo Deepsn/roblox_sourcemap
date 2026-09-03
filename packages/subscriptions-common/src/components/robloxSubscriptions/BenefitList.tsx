@@ -33,7 +33,6 @@ export type BenefitListProps = {
 
 const BenefitList: FC<BenefitListProps> = ({
 	featureConfig,
-	periodType,
 	currencySubscriptionBenefit,
 }) => {
 	const { translate, intl } = useTranslation();
@@ -62,29 +61,29 @@ const BenefitList: FC<BenefitListProps> = ({
 
 	return (
 		<div className="gap-y-xlarge flex flex-col">
-			{baseDiscount && (
-				<BenefitItem
-					iconName="icon-regular-tag"
-					label={translate("Description.Benefit.DiscountBase", {
-						discountPercent: intl.n(baseDiscount.discountPercent * 0.01, {
-							style: "percent",
-						}),
-					})}
-				/>
-			)}
-			{nextDiscount && (
-				<BenefitItem
-					iconName="icon-regular-tag-arrow-up"
-					label={translate("Description.Benefit.DiscountNext", {
-						productName: translate("Label.Blackbird"),
-						discountPercent: intl.n(nextDiscount.discountPercent * 0.01, {
-							style: "percent",
-						}),
-						discountPeriodCount: intl.n(nextDiscount.periodIndex),
-						discountPeriodUnit: periodType,
-					})}
-				/>
-			)}
+			{baseDiscount &&
+				(nextDiscount ? (
+					<BenefitItem
+						iconName="icon-regular-tag"
+						label={translate("Description.Benefit.DiscountV2")}
+					/>
+				) : (
+					<BenefitItem
+						iconName="icon-regular-tag"
+						label={translate("Description.Benefit.DiscountBase", {
+							discountPercent: intl.n(baseDiscount.discountPercent * 0.01, {
+								style: "percent",
+							}),
+						})}
+					/>
+				))}
+			{/* Static Plus benefit: no per-product featureConfig flag exists yet for
+          profile frames / app theme, so this line always renders alongside the
+          other Plus benefits. */}
+			<BenefitItem
+				iconName="icon-regular-paint-brush"
+				label={translate("Description.Benefit.Customize")}
+			/>
 			<BenefitItem
 				iconName="icon-regular-controller"
 				label={translate("Label.BlackbirdPSDiscount")}

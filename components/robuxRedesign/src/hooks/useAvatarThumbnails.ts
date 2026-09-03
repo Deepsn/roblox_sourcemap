@@ -18,6 +18,7 @@ export function useAvatarThumbnails(users: AvatarThumbnailUser[]) {
 
 		const args = idsToFetch.map((id) => ({
 			format: "png",
+			includeProfileFrame: true,
 			requestId: id,
 			size: "48x48",
 			targetId: id,

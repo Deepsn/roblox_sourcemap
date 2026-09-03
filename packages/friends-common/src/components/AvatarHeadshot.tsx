@@ -5,6 +5,7 @@ import {
 	Thumbnail2d,
 	ThumbnailTypes,
 	DefaultThumbnailSize,
+	useProfileFrameExperiment,
 } from "@rbx/thumbnails";
 import Presence from "@rbx/presence";
 
@@ -19,12 +20,15 @@ const AvatarHeadshot = ({
 	handleImageClick?: () => void;
 	translate: TranslateFunction;
 }): JSX.Element => {
+	// Carousel is the only frame surface behind the IXP gate; others render ungated.
+	const isProfileFrameEnabled = useProfileFrameExperiment();
 	const thumbnail = (
 		<Thumbnail2d
 			type={ThumbnailTypes.avatarHeadshot}
 			size={DefaultThumbnailSize}
 			targetId={id}
 			containerClass="avatar-card-image"
+			includeProfileFrame={isProfileFrameEnabled}
 		/>
 	);
 	return (

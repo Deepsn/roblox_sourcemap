@@ -37,7 +37,7 @@ const url = {
 		withCredentials: true,
 	}),
 	getPreAuthLandingPage: (): UrlConfig => ({
-		url: `${apiGatewayUrl}/landing-page-api/mock-api`, //TODO (sshetty): change to production endpoint when backend is ready
+		url: `${apiGatewayUrl}/landing-page-api/pre-auth-landing`,
 		withCredentials: true,
 	}),
 };

@@ -37,8 +37,50 @@ type TGameTileOverflowMenuItem = {
 	onSelect: () => void;
 };
 
+export type TGameTileOverflowMenuEligibility = {
+	enableExplicitFeedback?: boolean;
+	setIsHidden?: (isHidden: boolean) => void;
+	enableSponsoredFeedback?: boolean;
+	isSponsored?: boolean;
+	enableReportAd?: boolean;
+	encryptedAdTrackingData?: string;
+	enableRemoveFromFavorites?: boolean;
+	onRemoveFromFavorites?: () => void;
+};
+
+export const getGameTileOverflowMenuItemsToShow = ({
+	enableExplicitFeedback,
+	setIsHidden,
+	enableSponsoredFeedback,
+	isSponsored,
+	enableReportAd,
+	encryptedAdTrackingData,
+	enableRemoveFromFavorites,
+	onRemoveFromFavorites,
+}: TGameTileOverflowMenuEligibility): GameTileOverflowMenuItems[] => {
+	const items: GameTileOverflowMenuItems[] = [];
+	if (
+		enableExplicitFeedback &&
+		(!isSponsored || enableSponsoredFeedback) &&
+		setIsHidden
+	) {
+		items.push(GameTileOverflowMenuItems.NotInterested);
+	}
+	if (enableSponsoredFeedback && isSponsored) {
+		items.push(GameTileOverflowMenuItems.WhyThisAd);
+	}
+	if (enableReportAd && isSponsored && encryptedAdTrackingData) {
+		items.push(GameTileOverflowMenuItems.ReportAd);
+	}
+	if (enableRemoveFromFavorites && onRemoveFromFavorites) {
+		items.push(GameTileOverflowMenuItems.RemoveFromFavorites);
+	}
+	return items;
+};
+
 type TGameTileOverflowMenuProps = {
 	open: boolean;
+	menuItemsToShow: GameTileOverflowMenuItems[];
 	closeMenu: (
 		availableMenuItems: GameTileOverflowMenuItems[],
 		menuItem?: GameTileOverflowMenuItems,
@@ -65,11 +107,13 @@ type TGameTileOverflowMenuProps = {
 	enableReportAd?: boolean;
 	encryptedAdTrackingData?: string;
 	adCreativeAssetId?: string;
+	onRemoveFromFavorites?: () => void;
 	translate: TranslateFunction;
 };
 
 const GameTileOverflowMenu = ({
 	open,
+	menuItemsToShow,
 	closeMenu,
 	toggleMenu,
 	sendActionEvent,
@@ -86,6 +130,7 @@ const GameTileOverflowMenu = ({
 	enableReportAd,
 	encryptedAdTrackingData,
 	adCreativeAssetId,
+	onRemoveFromFavorites,
 	translate,
 }: TGameTileOverflowMenuProps): JSX.Element | null => {
 	const [isWhyThisAdModalOpen, setIsWhyThisAdModalOpen] = useState(false);
@@ -148,31 +193,6 @@ const GameTileOverflowMenu = ({
 		}
 	}, [encryptedAdTrackingData, universeId, adCreativeAssetId]);
 
-	const menuItemsToShow = useMemo(() => {
-		const items: GameTileOverflowMenuItems[] = [];
-		if (
-			enableExplicitFeedback &&
-			(!isSponsored || enableSponsoredFeedback) &&
-			setIsHidden
-		) {
-			items.push(GameTileOverflowMenuItems.NotInterested);
-		}
-		if (enableSponsoredFeedback && isSponsored) {
-			items.push(GameTileOverflowMenuItems.WhyThisAd);
-		}
-		if (enableReportAd && isSponsored && encryptedAdTrackingData) {
-			items.push(GameTileOverflowMenuItems.ReportAd);
-		}
-		return items;
-	}, [
-		enableExplicitFeedback,
-		setIsHidden,
-		enableSponsoredFeedback,
-		enableReportAd,
-		isSponsored,
-		encryptedAdTrackingData,
-	]);
-
 	const menuItems = useMemo(() => {
 		const items: TGameTileOverflowMenuItem[] = [];
 		menuItemsToShow.forEach((itemToShow) => {
@@ -226,6 +246,25 @@ const GameTileOverflowMenu = ({
 						},
 					});
 					break;
+				case GameTileOverflowMenuItems.RemoveFromFavorites:
+					items.push({
+						value: GameTileOverflowMenuItems.RemoveFromFavorites,
+						title: translate(
+							FeatureGameDetails.ActionRemoveFromFavorites,
+							undefined,
+							"Remove from Favorites",
+						),
+						onSelect: () => {
+							onRemoveFromFavorites?.();
+							sendActionEvent(
+								GameTileOverflowMenuActionType.GameTileOverflowMenuItemActivated,
+								menuItemsToShow,
+								GameTileOverflowMenuItems.RemoveFromFavorites,
+							);
+							closeMenu(menuItemsToShow);
+						},
+					});
+					break;
 				default:
 					window.EventTracker?.fireEvent(
 						gameTile.UnsupportedMenuItemCounterEvent,
@@ -242,6 +281,7 @@ const GameTileOverflowMenu = ({
 		sendNotInterestedUserSignal,
 		closeMenu,
 		redirectToReportAd,
+		onRemoveFromFavorites,
 	]);
 
 	if (menuItems.length === 0) {
@@ -265,6 +305,8 @@ const GameTileOverflowMenu = ({
 							// need to prevent default because when the overflow menu is on a tile, clicking it will activate the link and navigate to the game page
 							// preventing default also prevents the icon button from triggering the menu as normal so we need to control open state ourselves
 							e.preventDefault();
+							// Menu button click shouldn't fire click events for the whole tile
+							e.stopPropagation();
 							toggleMenu(menuItemsToShow);
 						}}
 					/>
@@ -274,27 +316,33 @@ const GameTileOverflowMenu = ({
 					align="end"
 					ariaLabel={translate(FeaturePlacesList.LabelTileMenu)}
 				>
-					<Menu
-						size="Medium"
-						// limiting the width of the menu to the available space on the screen to prevent it from overflowing
-						className="max-width-[calc(var(--radix-popover-content-available-width)-2rem)]"
+					{/*  Div is needed to stop click events from propagating to the whole tile */}
+					<div
+						role="presentation"
+						onClick={(e: React.MouseEvent) => e.stopPropagation()}
 					>
-						<MenuSection>
-							{menuItems.map((menuItemData) => (
-								<MenuItem
-									leading={
-										menuItemData.iconName ? (
-											<Icon name={menuItemData.iconName} />
-										) : undefined
-									}
-									key={menuItemData.value}
-									value={menuItemData.value}
-									title={menuItemData.title}
-									onSelect={menuItemData.onSelect}
-								/>
-							))}
-						</MenuSection>
-					</Menu>
+						<Menu
+							size="Medium"
+							// limiting the width of the menu to the available space on the screen to prevent it from overflowing
+							className="max-width-[calc(var(--radix-popover-content-available-width)-2rem)]"
+						>
+							<MenuSection>
+								{menuItems.map((menuItemData) => (
+									<MenuItem
+										leading={
+											menuItemData.iconName ? (
+												<Icon name={menuItemData.iconName} />
+											) : undefined
+										}
+										key={menuItemData.value}
+										value={menuItemData.value}
+										title={menuItemData.title}
+										onSelect={menuItemData.onSelect}
+									/>
+								))}
+							</MenuSection>
+						</Menu>
+					</div>
 				</PopoverContent>
 			</Popover>
 			{isWhyThisAdModalOpen && (

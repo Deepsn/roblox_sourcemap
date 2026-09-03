@@ -285,6 +285,9 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Change the color of your platform background",
 	"Description.Benefit.Referral": "Refer people to Plus",
 	"Description.Benefit.ReferralSubtitle": "Earn {amount} Robux per referral",
+	"Description.ProfileFramePlusUpsell":
+		"Subscribe to Roblox Plus to explore benefits such as profile frames and more.",
+	"Title.SubscribeToPlus": "Subscribe to Plus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

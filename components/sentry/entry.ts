@@ -11,13 +11,19 @@ import {
 	captureException,
 } from "@sentry/browser";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
-import { buildTracesSampler } from "./src/utils/tracesSampler";
-import { filterSentryTransaction } from "./src/utils/filterSentryTransaction";
-import { sendToOtel } from "./src/utils/sentryToOtel";
-import { getOtelCollectorTracesEndpoint } from "./src/utils/otelEndpoint";
-import { buildSampleRate } from "./src/utils/buildSampleRate";
+import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
+import { sendToOtel } from "@rbx/www-common/sentry/sentryToOtel";
+import { browserFromUserAgent, type DeviceInfo } from "@rbx/www-common/device";
+import { getOtelCollectorTracesEndpoint } from "@rbx/www-common/sentry/otelEndpoint";
 import environmentUrls from "@rbx/environment-urls";
 import { reportWebVitals } from "@rbx/www-common/webVitals";
+import { buildSampleRate } from "./src/utils/buildSampleRate";
+import {
+	normalizeLocalePath,
+	shouldSendTraceToSentry,
+	buildTracesSampler,
+} from "./src/utils/tracesSampler";
+import { filterSentryTransaction } from "./src/utils/filterSentryTransaction";
 
 declare global {
 	interface Window {
@@ -56,12 +62,21 @@ const parsedSampleRate = sampleRate == null ? 0.001 : parseFloat(sampleRate);
 const parsedTracesSampleRate =
 	tracesSampleRate == null ? 0 : parseFloat(tracesSampleRate);
 const isTransactionOff = parsedTracesSampleRate === 0;
-const perfBase = Math.min(parsedTracesSampleRate, 0.0005);
+// 0.8% is the targeted trace sample rate for WWW telemetry
+// Ramping up can be done by changing SentryTracesSampleRate on the admin site
+const perfBase = Math.min(parsedTracesSampleRate, 0.008);
+const SENTRY_BASE = 0.0005;
 
 // Derived once and reused by beforeSendTransaction and the DOMContentLoaded handler.
 const user = authenticatedUser as typeof authenticatedUser | undefined;
 const getPageMetaTag = () =>
 	document.querySelector<HTMLMetaElement>('meta[name="page-meta"]');
+
+const deviceMeta = getDeviceMeta();
+const deviceInfo: DeviceInfo = {
+	deviceType: deviceMeta?.deviceType,
+	browser: browserFromUserAgent(navigator.userAgent),
+};
 
 initSentry({
 	dsn:
@@ -81,7 +96,27 @@ initSentry({
 	replaysOnErrorSampleRate: parsedSampleRate,
 	beforeSendTransaction: (event) => {
 		// Full transaction to OTEL; filtered copy to Sentry for quota reduction.
-		sendToOtel(otelEndpoint, event);
+		sendToOtel(otelEndpoint, event, deviceInfo);
+		// The trace was oversampled to the OTEL rate; deterministically downsample
+		// to the Sentry target rate. Mirror the tracesSampler input (transaction
+		// name first) so the decision uses the same rule that sampled this trace.
+		const pathname =
+			typeof window !== "undefined" ? window.location.pathname : "";
+		const path = normalizeLocalePath(event.transaction ?? pathname);
+		const traceId = event.contexts?.trace?.trace_id ?? "";
+		const parentSampled =
+			event.sdkProcessingMetadata?.capturedSpanScope?.getPropagationContext()
+				.sampled;
+		if (
+			!shouldSendTraceToSentry(
+				traceId,
+				path,
+				perfBase,
+				SENTRY_BASE,
+				parentSampled,
+			)
+		)
+			return null;
 		return filterSentryTransaction(event);
 	},
 	// Enable offline transport for Sentry to work when the user is offline or when page changes before sentry can send the events

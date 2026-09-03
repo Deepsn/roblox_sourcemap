@@ -757,6 +757,12 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"This will update the daily and monthly limits on the amount of Robux your child can transfer.",
 	"Heading.ConversationalRequest.RobuxTransferLimits":
 		"Set your child's Robux transfer limits",
+	"Email.PrivatePlaytest.Subject": "Private Playtest is coming to Roblox",
+	"Email.PrivatePlaytest.Intro":
+		"Your child will soon get access to Private Playtest. This feature allows your child to test games created by friends in similar age groups and trusted friends, before these games may be rated or published to our games catalog for kids and young teens.",
+	"Email.PrivatePlaytest.Control":
+		"You will be able to control who can join your child's private playtests within {aTagWithHref}{parentalControlsLink}{hrefEnd}Parental Controls{htmlCloseAHref}.",
+	"Email.PrivatePlaytest.Closing": "Thanks,{lineBreak}Roblox",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

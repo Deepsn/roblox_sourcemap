@@ -82,9 +82,13 @@ const hybridSource = function (_settings, logger) {
 					namespaceSequenceNumbers: result.namespaceSequenceNumbers,
 				});
 				connectionReady = result.isConnected;
-				if (connectionReady && topicReadyHandler) {
-					log("Connection confirmed ready, notifying TopicManager");
-					topicReadyHandler();
+				if (connectionReady) {
+					durableReplayerRef?.maybeRequestReplay();
+					durableReplayerRef?.startPolling();
+					if (topicReadyHandler) {
+						log("Connection confirmed ready, notifying TopicManager");
+						topicReadyHandler();
+					}
 				}
 			} else {
 				log(
@@ -154,6 +158,7 @@ const hybridSource = function (_settings, logger) {
 				topicReadyHandler();
 			}
 			durableReplayerRef?.maybeRequestReplay();
+			durableReplayerRef?.startPolling();
 		}
 	};
 

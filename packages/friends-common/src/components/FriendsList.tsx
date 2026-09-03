@@ -41,16 +41,37 @@ const FriendsList = ({
 	const [visibleFriendsList, setVisibleFriendsList] = useState(friendsList);
 
 	const [listIsFull, setListIsFull] = useState(false);
+	const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
+	const shouldShowAddFriendsTile =
+		carouselName === FriendCarouselNames.WebHomeFriendsCarousel &&
+		isAddFriendsTileEnabled;
+
 	useEffect(() => {
-		const totalWidth = parentRef.current?.offsetWidth;
+		const el = parentRef.current;
+		if (el == null) {
+			return undefined;
+		}
+
+		const observer = new ResizeObserver(() => {
+			setContainerWidth(el.offsetWidth);
+		});
+		observer.observe(el);
+
+		return () => {
+			observer.disconnect();
+		};
+	}, []);
+
+	useEffect(() => {
+		const totalWidth = containerWidth ?? parentRef.current?.offsetWidth;
 		const friendListLength = friendsList?.length ?? 0;
 
 		if (totalWidth != null && friendsList != null) {
 			const visibleTileCount = Math.floor(totalWidth / FRIEND_TILE_WIDTH);
-			const totalTilesNeeded = isAddFriendsTileEnabled
+			const totalTilesNeeded = shouldShowAddFriendsTile
 				? friendListLength + 1
 				: friendListLength;
 
@@ -58,11 +79,11 @@ const FriendsList = ({
 			setVisibleFriendsList(
 				friendsList.slice(
 					0,
-					visibleTileCount - (isAddFriendsTileEnabled ? 1 : 0),
+					visibleTileCount - (shouldShowAddFriendsTile ? 1 : 0),
 				),
 			);
 		}
-	}, [parentRef.current?.offsetWidth, friendsList, isAddFriendsTileEnabled]);
+	}, [containerWidth, friendsList, shouldShowAddFriendsTile]);
 
 	useFriendsCarouselImpressionTracker(
 		containerRef,
@@ -97,8 +118,7 @@ const FriendsList = ({
 								: "friends-carousel-list-container-not-full"
 						}
 					>
-						{carouselName === FriendCarouselNames.WebHomeFriendsCarousel &&
-						isAddFriendsTileEnabled ? (
+						{shouldShowAddFriendsTile ? (
 							<AddFriendsTile
 								key="add-friends-tile"
 								translate={translate}

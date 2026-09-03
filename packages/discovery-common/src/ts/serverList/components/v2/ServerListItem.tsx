@@ -40,6 +40,7 @@ const AvatarThumbnail = ({ targetId, token, type }: PlayerThumbnail) => {
 				targetId={targetId}
 				containerClass="radius-circle clip"
 				imgClassName="size-full"
+				includeProfileFrame={type === ThumbnailTypes.avatarHeadshot}
 			/>
 		);
 	}
@@ -51,6 +52,7 @@ const AvatarThumbnail = ({ targetId, token, type }: PlayerThumbnail) => {
 				token={token}
 				containerClass="radius-circle clip"
 				imgClassName="size-full"
+				includeProfileFrame
 			/>
 		);
 	}

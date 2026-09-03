@@ -42,6 +42,7 @@ const FoundationAccountSwitcherAccountContent = ({
 				type={ThumbnailTypes.avatarHeadshot}
 				targetId={user.id}
 				size={ThumbnailAvatarHeadshotSize.size60}
+				includeProfileFrame
 			/>
 		</div>
 		<div className="account-selection-name-container">

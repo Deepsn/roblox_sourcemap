@@ -51,6 +51,7 @@ export const AccountSelection = ({
 					type={ThumbnailTypes.avatarHeadshot}
 					targetId={userId}
 					size={ThumbnailAvatarHeadshotSize.size60}
+					includeProfileFrame
 				/>
 			</div>
 			<div className="account-selection-name-container">

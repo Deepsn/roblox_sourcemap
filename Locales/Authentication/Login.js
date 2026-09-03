@@ -253,6 +253,12 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Heading.SignInAnotherWay": "Sign in another way",
 	"Label.EmailAddress": "Email address",
 	"Label.VerificationCode": "Verification code",
+	"Description.SwitchAccountEmailPreferences":
+		"To manage your email preferences, switch to your Roblox account with parent privileges.",
+	"Description.SwitchAccountViewActivity":
+		"To view more of your child’s activity, switch to your Roblox account with parent privileges.",
+	"Description.SwitchAccountContinue":
+		"To continue, switch to your Roblox account with parent privileges.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

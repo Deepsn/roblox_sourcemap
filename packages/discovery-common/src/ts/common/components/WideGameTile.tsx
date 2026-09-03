@@ -1,16 +1,11 @@
 import classNames from "classnames";
-import React, { Ref, useCallback, useMemo, useState } from "react";
+import React, { Ref, useCallback, useMemo } from "react";
 import { Button, Link } from "@rbx/core-ui";
 import { TranslateFunction } from "@rbx/core-scripts/react";
-import { sendEvent } from "@rbx/core-scripts/event-stream";
 import configConstants from "../constants/configConstants";
 import { FeaturePlacesList } from "../constants/translationConstants";
-import eventStreamConstants, {
-	EventStreamMetadata,
-	TGameTileOverflowMenuAction,
-	GameTileOverflowMenuActionType,
-} from "../constants/eventStreamConstants";
 import useFocused from "../hooks/useFocused";
+import useGameTileOverflowMenu from "../hooks/useGameTileOverflowMenu";
 import useReferralPlaceId from "../hooks/useReferralPlaceId";
 import { TGameData, TGetFriendsResponse } from "../types/bedev1Types";
 import {
@@ -20,18 +15,18 @@ import {
 	TPlayerCountStyle,
 	TWideTileComponentType,
 } from "../types/bedev2Types";
-import { GameTileOverflowMenuItems } from "../types/gameTileOverflowMenuItems";
 import browserUtils from "../utils/browserUtils";
 import {
 	getFriendVisits,
 	getInGameFriends,
-	getSessionInfoTypeFromPageContext,
 	getThumbnailOverrideAssetId,
 	getVideoOverrideAssetId,
 } from "../utils/parsingUtils";
 import GameTileOverlayPill from "./GameTileOverlayPill";
 import GameTilePlayButton from "./GameTilePlayButton";
-import GameTileOverflowMenu from "./GameTileOverflowMenu";
+import GameTileOverflowMenu, {
+	getGameTileOverflowMenuItemsToShow,
+} from "./GameTileOverflowMenu";
 import {
 	GameTileIconWithTextFooter,
 	GameTileRatingContent,
@@ -51,7 +46,6 @@ import {
 	getGameTileRatingWithGenreFooterData,
 	getGameTileTextFooterData,
 } from "../utils/gameTileLayoutUtils";
-import { usePageSession } from "../utils/PageSessionContext";
 import { PageContext } from "../types/pageContext";
 
 const WideGameTileLinkWrapper = ({
@@ -157,7 +151,6 @@ const WideGameTile = React.forwardRef(
 		const isLastTile =
 			id === configConstants.homePage.maxWideGameTilesPerCarouselPage - 1;
 		const [isFocused, onFocus, onFocusLost] = useFocused();
-		const pageSession = usePageSession();
 
 		const referralPlaceId = useReferralPlaceId(gameData, navigationRootPlaceId);
 
@@ -387,57 +380,31 @@ const WideGameTile = React.forwardRef(
 			}
 		}, [toggleInterest]);
 
-		const sendGameTileOverflowMenuAction = useCallback(
-			(
-				actionType: GameTileOverflowMenuActionType,
-				availableMenuItems: GameTileOverflowMenuItems[],
-				menuItem?: GameTileOverflowMenuItems,
-			) => {
-				const sessionInfoType = getSessionInfoTypeFromPageContext(page);
+		const {
+			overflowMenuOpen,
+			sendGameTileOverflowMenuAction,
+			closeOverflowMenu,
+			toggleOverflowMenu,
+		} = useGameTileOverflowMenu(gameData.universeId, topicId, page);
 
-				const params: TGameTileOverflowMenuAction = {
-					[EventStreamMetadata.UniverseId]: gameData.universeId.toString(),
-					[EventStreamMetadata.SortId]: topicId,
-					[EventStreamMetadata.ActionType]: actionType,
-					[EventStreamMetadata.MenuItem]: menuItem,
-					[EventStreamMetadata.AvailableMenuItems]: availableMenuItems,
-					...(sessionInfoType && { [sessionInfoType]: pageSession }),
-				};
-
-				const eventParams = eventStreamConstants.gameTileOverflowMenuAction(
-					params,
-					page,
-				);
-				sendEvent(...eventParams);
-			},
-			[gameData.universeId, topicId, page, pageSession],
-		);
-
-		const [overflowMenuOpen, setOverflowMenuOpen] = useState(false);
-		const closeOverflowMenu = useCallback(
-			(availableMenuItems: GameTileOverflowMenuItems[]) => {
-				setOverflowMenuOpen(false);
-				sendGameTileOverflowMenuAction(
-					GameTileOverflowMenuActionType.GameTileOverflowMenuItemClosed,
-					availableMenuItems,
-				);
-			},
-			[sendGameTileOverflowMenuAction],
-		);
-
-		const toggleOverflowMenu = useCallback(
-			(availableMenuItems: GameTileOverflowMenuItems[]) => {
-				setOverflowMenuOpen((prevOpen) => {
-					sendGameTileOverflowMenuAction(
-						prevOpen
-							? GameTileOverflowMenuActionType.GameTileOverflowMenuItemClosed
-							: GameTileOverflowMenuActionType.GameTileOverflowMenuItemOpened,
-						availableMenuItems,
-					);
-					return !prevOpen;
-				});
-			},
-			[sendGameTileOverflowMenuAction],
+		const menuItemsToShow = useMemo(
+			() =>
+				getGameTileOverflowMenuItemsToShow({
+					enableExplicitFeedback,
+					setIsHidden,
+					enableSponsoredFeedback,
+					isSponsored: gameData.isSponsored,
+					enableReportAd,
+					encryptedAdTrackingData: gameData.nativeAdData,
+				}),
+			[
+				enableExplicitFeedback,
+				setIsHidden,
+				enableSponsoredFeedback,
+				gameData.isSponsored,
+				enableReportAd,
+				gameData.nativeAdData,
+			],
 		);
 
 		return (
@@ -491,31 +458,33 @@ const WideGameTile = React.forwardRef(
 									playerCount={gameData.playerCount}
 									isFocused={isFocused}
 								/>
-								{(isFocused || overflowMenuOpen) && (
-									<GameTileOverflowMenu
-										open={overflowMenuOpen}
-										closeMenu={closeOverflowMenu}
-										toggleMenu={toggleOverflowMenu}
-										sendActionEvent={sendGameTileOverflowMenuAction}
-										universeId={gameData.universeId}
-										topicId={topicId}
-										page={page}
-										enableExplicitFeedback={enableExplicitFeedback}
-										setIsHidden={setIsHidden}
-										toggleIsHidden={toggleIsHidden}
-										enableSponsoredFeedback={enableSponsoredFeedback}
-										isSponsored={gameData.isSponsored}
-										payerName={gameData.payerName}
-										sponsoredUserCohort={sponsoredUserCohort}
-										enableReportAd={enableReportAd}
-										encryptedAdTrackingData={gameData.nativeAdData}
-										adCreativeAssetId={getThumbnailOverrideAssetId(
-											gameData,
-											topicId,
-										)?.toString()}
-										translate={translate}
-									/>
-								)}
+								{menuItemsToShow.length > 0 &&
+									(isFocused || overflowMenuOpen) && (
+										<GameTileOverflowMenu
+											open={overflowMenuOpen}
+											menuItemsToShow={menuItemsToShow}
+											closeMenu={closeOverflowMenu}
+											toggleMenu={toggleOverflowMenu}
+											sendActionEvent={sendGameTileOverflowMenuAction}
+											universeId={gameData.universeId}
+											topicId={topicId}
+											page={page}
+											enableExplicitFeedback={enableExplicitFeedback}
+											setIsHidden={setIsHidden}
+											toggleIsHidden={toggleIsHidden}
+											enableSponsoredFeedback={enableSponsoredFeedback}
+											isSponsored={gameData.isSponsored}
+											payerName={gameData.payerName}
+											sponsoredUserCohort={sponsoredUserCohort}
+											enableReportAd={enableReportAd}
+											encryptedAdTrackingData={gameData.nativeAdData}
+											adCreativeAssetId={getThumbnailOverrideAssetId(
+												gameData,
+												topicId,
+											)?.toString()}
+											translate={translate}
+										/>
+									)}
 							</div>
 							<div className="info-container">
 								<div className="info-metadata-container">

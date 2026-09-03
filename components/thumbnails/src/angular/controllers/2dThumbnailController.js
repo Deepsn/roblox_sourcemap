@@ -78,6 +78,7 @@ function twoDThumbnailController($scope, thumbnailService) {
 		const thumbnailSize = ctrl.thumbnailOptions?.size || DefaultThumbnailSize;
 		const thumbnailFormat =
 			ctrl.thumbnailOptions?.format || DefaultThumbnailFormat;
+		const includeProfileFrame = ctrl.thumbnailOptions?.includeProfileFrame;
 		ctrl.isThumbnailRequestSending = true;
 		thumbnailService
 			.getThumbnailImage(
@@ -85,6 +86,7 @@ function twoDThumbnailController($scope, thumbnailService) {
 				ctrl.thumbnailTargetId,
 				thumbnailSize,
 				thumbnailFormat,
+				includeProfileFrame,
 			)
 			.then(({ thumbnail: { state, imageUrl, version }, performance }) => {
 				ctrl.thumbnailState = state;

@@ -399,6 +399,13 @@ export type TDefaultPlayButtonProps = {
 	redirectPurchaseUrl?: ValidHttpUrl;
 	showDefaultPurchaseText?: boolean;
 	shouldShowVpcPlayButtonUpsells?: boolean;
+	playabilityStatusCtaOverrides?: Partial<
+		Record<
+			| TPlayabilityStatuses["Playable"]
+			| TPlayabilityStatuses["GuestProhibited"],
+			React.ReactElement
+		>
+	>;
 	pageContext: TPlayButtonPageContext;
 };
 
@@ -419,6 +426,7 @@ export const DefaultPlayButton = ({
 	redirectPurchaseUrl,
 	showDefaultPurchaseText,
 	shouldShowVpcPlayButtonUpsells,
+	playabilityStatusCtaOverrides,
 	pageContext,
 }: TDefaultPlayButtonProps): React.JSX.Element => {
 	const { fireEvent } = window.EventTracker ?? {};
@@ -484,8 +492,15 @@ export const DefaultPlayButton = ({
 					pageContext={pageContext}
 				/>
 			);
-		case PlayabilityStatus.Playable:
+		// CTA overrides are currently only honored for GuestProhibited and Playable.
+		// Other statuses keep their dedicated buttons; expand this if new use cases appear.
 		case PlayabilityStatus.GuestProhibited:
+		case PlayabilityStatus.Playable: {
+			const ctaOverride = playabilityStatusCtaOverrides?.[playabilityStatus];
+			if (ctaOverride !== undefined) {
+				return ctaOverride;
+			}
+
 			return (
 				<PlayButton
 					universeId={universeId}
@@ -501,6 +516,7 @@ export const DefaultPlayButton = ({
 					pageContext={pageContext}
 				/>
 			);
+		}
 		case PlayabilityStatus.ContextualPlayabilityUnverifiedSeventeenPlusUser:
 		case PlayabilityStatus.ContextualPlayabilityAgeCheckRequired:
 			fireEvent?.(counterEvents.ActionNeeded);

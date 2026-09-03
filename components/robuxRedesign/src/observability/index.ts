@@ -10,7 +10,7 @@ import { createFireTelemetryHistogram } from "@rbx/web-telemetry/histogram";
 
 export const observabilityRegistry = {
 	featureName: "BuyRobuxRedesign",
-	team: "Payments & Fraud",
+	team: "Economy > Payments & Fraud",
 
 	features: {
 		health: {

@@ -16,8 +16,12 @@ import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
 import useGuacPlayButtonUI from "./useGuacPlayButtonUI";
 
-const { counterEvents, unlockPlayIntentConstants, playButtonUpsellContexts } =
-	playButtonConstants;
+const {
+	counterEvents,
+	unlockPlayIntentConstants,
+	playButtonUpsellContexts,
+	ampNamespaces,
+} = playButtonConstants;
 
 type TContextualParentalControlUpsell = {
 	launchPlayButtonUpsell: (
@@ -177,6 +181,7 @@ const useContextualParentalControlsUpsell = (
 								guacData?.useExperienceApprovalForParentalConsent
 									? {
 											featureName: "CanApproveExperience",
+											namespace: ampNamespaces.accountManagement,
 											isAsyncCall: false,
 											usePrologue: true,
 											ampRecourseData: {
@@ -186,6 +191,7 @@ const useContextualParentalControlsUpsell = (
 										}
 									: {
 											featureName: "CanChangeSetting",
+											namespace: ampNamespaces.settingChange,
 											isAsyncCall: false,
 											usePrologue: true,
 											ampRecourseData: {

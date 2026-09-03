@@ -302,6 +302,7 @@ const signalRSource = function (settings, logger) {
 		if (isConnected) {
 			notifyTopicReady();
 			durableReplayerRef?.maybeRequestReplay();
+			durableReplayerRef?.startPolling();
 		}
 	};
 

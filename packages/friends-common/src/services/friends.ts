@@ -5,6 +5,7 @@ import {
 	TGetAllOnlineFriendsResponse,
 	TUserPresenceType,
 	TFindFriendsResponse,
+	TFindFriendsFriend,
 	TGetProfilesResponse,
 	TFriend,
 	TPresence,
@@ -74,19 +75,49 @@ const getProfiles = async (
 	return data;
 };
 
+const getOnlineFriendsOrEmpty = async (
+	userId: number,
+	isOwnUser: boolean,
+): Promise<TOnlineFriendType[]> => {
+	if (!isOwnUser) {
+		return [];
+	}
+
+	try {
+		const { data } = await getAllOnlineFriends(userId);
+		return data;
+	} catch (error) {
+		console.error("Error fetching online friends:", error);
+		return [];
+	}
+};
+
+const getPaginatedFriendsOrEmpty = async (
+	userId: number,
+	isOwnUser: boolean,
+): Promise<TFindFriendsFriend[]> => {
+	try {
+		const { PageItems } = await getPaginatedFriends(userId, isOwnUser);
+		return PageItems;
+	} catch (error) {
+		console.error("Error fetching friends:", error);
+		return [];
+	}
+};
+
 const getFriends = async (
 	userId: number,
 	isOwnUser: boolean,
 ): Promise<TFriend[]> => {
-	const onlineFriendsResponse = isOwnUser
-		? (await getAllOnlineFriends(userId)).data
-		: [];
+	const [onlineFriendsResponse, offlineFriends] = await Promise.all([
+		getOnlineFriendsOrEmpty(userId, isOwnUser),
+		getPaginatedFriendsOrEmpty(userId, isOwnUser),
+	]);
+
 	onlineFriendsResponse.sort(
 		(friend1: TOnlineFriendType, friend2: TOnlineFriendType): number =>
 			friend2.sortScore - friend1.sortScore,
 	);
-	const offlineFriends = (await getPaginatedFriends(userId, isOwnUser))
-		.PageItems;
 
 	const presenceMapping = new Map<number, TUserPresenceType>();
 
@@ -101,6 +132,10 @@ const getFriends = async (
 		.filter((friend) => !onlineFriendsIds.includes(friend.id))
 		.map((friend) => friend.id);
 	const friendIds: number[] = [...onlineFriendsIds, ...offlineFriendsIds];
+
+	if (friendIds.length === 0) {
+		return [];
+	}
 
 	const friendProfiles = (await getProfiles(friendIds)).profileDetails;
 	const friendProfilesMap = new Map<number, TProfile>(

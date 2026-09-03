@@ -64,9 +64,9 @@ const coreSignalRConnectionWrapper = function (
 
 	const exponentialBackoff = getExponentialBackoff();
 
-	const log = (msg) => {
+	const log = (...parts) => {
 		if (logger) {
-			logger(msg);
+			logger(parts.join(" "));
 		}
 	};
 
@@ -85,29 +85,41 @@ const coreSignalRConnectionWrapper = function (
 		}
 	};
 
+	const scheduleReconnect = () => {
+		const delay = exponentialBackoff.StartNewAttempt();
+		log(`In Disconnection handler. Will attempt Reconnect after ${delay}ms`);
+
+		setTimeout(() => {
+			if (userNotificationConnection == null) {
+				return;
+			}
+			userNotificationConnection
+				.start()
+				.then(() => {
+					log("Reconnect succeeded.");
+					exponentialBackoff.Reset();
+					handleSignalRStateChange(userNotificationConnection.state);
+				})
+				.catch((err) => {
+					log("Connection after Disconnection unsuccessful. err:", err);
+					// Only now is the connection known to be lost rather than rotating: Restart() closes
+					// the socket deliberately, so reporting on close alone flags every benign rotation.
+					onConnectionStatusChangedCallback(false);
+					// A rejected start() never opened a connection, so onclose does not fire and
+					// nothing else re-arms the backoff.
+					scheduleReconnect();
+				});
+		}, delay);
+	};
+
 	const handleSignalRDisconnected = (connectionState) => {
 		if (settings.isRealtimeWebAnalyticsConnectionEventsEnabled) {
 			connectionEventCallback(connectionState);
 		}
 
 		if (connectionState === signalR.HubConnectionState.Disconnected) {
-			// after connection failure attempt automatic reconnect after a suitable delay
-			const delay = exponentialBackoff.StartNewAttempt();
-			log(`In Disconnection handler. Will attempt Reconnect after ${delay}ms`);
-
-			setTimeout(() => {
-				if (userNotificationConnection == null) {
-					return;
-				}
-				userNotificationConnection
-					.start()
-					.then(() => {
-						handleSignalRStateChange(userNotificationConnection.state);
-					})
-					.catch((err) => {
-						log("Connection after Disconnection unsuccessful. err:", err);
-					});
-			}, delay);
+			isConnected = false;
+			scheduleReconnect();
 		}
 	};
 

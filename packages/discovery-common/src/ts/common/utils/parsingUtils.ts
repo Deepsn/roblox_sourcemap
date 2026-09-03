@@ -599,6 +599,13 @@ export const getSessionInfoTypeFromPageContext = (
 			return SessionInfoType.SearchLandingPageSessionInfo;
 		case PageContext.SpotlightPage:
 			return SessionInfoType.SpotlightPageSessionInfo;
+		// TODO: Profile has its own per-session UUID (ProfilePlatformContext) that isn't
+		// wired into this Discovery session-info system yet. Revisit once profile pages
+		// get session tracking here, instead of returning null.
+		case PageContext.UserProfilePage:
+			return null;
+		case PageContext.PreAuthLandingPage:
+			return SessionInfoType.PreAuthLandingPageSessionInfo;
 		default:
 			window.EventTracker?.fireEvent(
 				common.NoMatchingSessionInfoTypeFoundCounterEvent,

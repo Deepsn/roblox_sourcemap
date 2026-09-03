@@ -6,7 +6,10 @@ import {
 	getAbsoluteUrl,
 	getRelativeUrlWithQueries,
 } from "@rbx/core-scripts/util/url";
-import { formatSeoName } from "@rbx/core-scripts/format/string";
+import {
+	formatSeoName,
+	formatStableSeoName,
+} from "@rbx/core-scripts/format/string";
 import { url } from "../constants/browserConstants";
 import {
 	TSortDetailReferral,
@@ -23,7 +26,7 @@ export const buildGameDetailUrl = (
 ): string => {
 	const basePath =
 		canonicalUrlPath ||
-		`${game.getRelativePath(placeId)}/${formatSeoName(placeName)}`;
+		`${game.getRelativePath(placeId)}/${formatStableSeoName(placeName)}`;
 	return getUrlWithQueries(basePath, eventProperties);
 };
 

@@ -162,6 +162,7 @@ type TPageSessionAnalyticsData = {
 	[SessionInfo.HomePageSessionInfo]?: string;
 	[SessionInfo.DiscoverPageSessionInfo]?: string;
 	[SessionInfo.SpotlightPageSessionInfo]?: string;
+	[SessionInfo.PreAuthLandingPageSessionInfo]?: string;
 };
 
 export const getSessionInfoKey = (
@@ -170,6 +171,7 @@ export const getSessionInfoKey = (
 	| SessionInfo.HomePageSessionInfo
 	| SessionInfo.DiscoverPageSessionInfo
 	| SessionInfo.SpotlightPageSessionInfo
+	| SessionInfo.PreAuthLandingPageSessionInfo
 	| null => {
 	const currentPage = pageContext.pageName;
 	switch (currentPage) {
@@ -181,6 +183,8 @@ export const getSessionInfoKey = (
 			return SessionInfo.DiscoverPageSessionInfo;
 		case PageContext.SpotlightPage:
 			return SessionInfo.SpotlightPageSessionInfo;
+		case PageContext.PreAuthLandingPage:
+			return SessionInfo.PreAuthLandingPageSessionInfo;
 		default:
 			logSduiError(
 				SduiErrorNames.SessionInfoKeyNotFound,
@@ -232,6 +236,8 @@ export const getEventContext = (
 			return EventContext.SongList;
 		case PageContext.GameDetailPage:
 			return EventContext.GameDetail;
+		case PageContext.PreAuthLandingPage:
+			return EventContext.PreAuthLanding;
 		default:
 			// direct logging to event stream to avoid recursive calls on
 			// getEventContext <-> logSduiError <-> getEventContext

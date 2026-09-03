@@ -1,6 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference -- .d.ts reference, not a runtime import, so the Next bundler doesn't try to resolve it as a module
+/// <reference path="./eventStream.d.ts" />
 import { arrayIncludes } from "@rbx/core-types";
 import "../global";
-import "./eventStream";
 
 export const eventTypes = {
 	formInteraction: "formInteraction",
@@ -17,13 +18,19 @@ export const targetTypes = {
 	WWW: 1,
 	STUDIO: 2,
 	DIAGNOSTIC: 3,
-	...(window.Roblox.EventStream?.TargetTypes ?? {}),
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- window is typed as always defined but is undefined during Next SSR at module load
+	...(typeof window === "undefined"
+		? {}
+		: window.Roblox?.EventStream?.TargetTypes),
 } as const;
 
 export const sendEventWithTarget = (
 	eventName: string,
 	context: string,
-	additionalProperties: Record<string, string | number | boolean | undefined>,
+	additionalProperties: Record<
+		string,
+		string | number | boolean | null | undefined
+	>,
 	targetType?: number,
 ): void => {
 	const { EventStream } = window.Roblox;
@@ -52,7 +59,10 @@ export type Event = {
 
 export const sendEvent = (
 	event: Event,
-	additionalParams: Record<string, string | number>,
+	additionalParams: Record<
+		string,
+		string | number | boolean | null | undefined
+	>,
 ): void => {
 	const { name, type, context, requiredParams } = event;
 	const eventParams = {
@@ -62,9 +72,8 @@ export const sendEvent = (
 
 	if (Array.isArray(requiredParams)) {
 		requiredParams.forEach((requiredParam) => {
-			if (!Object.prototype.hasOwnProperty.call(eventParams, requiredParam)) {
-				// eslint-disable-next-line no-console
-				console.info(
+			if (!Object.hasOwn(eventParams, requiredParam)) {
+				console.error(
 					`A required event parameter '${requiredParam}' is not provided`,
 				);
 			}

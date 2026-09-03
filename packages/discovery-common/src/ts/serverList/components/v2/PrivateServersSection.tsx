@@ -5,7 +5,6 @@ import { useTranslation } from "@rbx/core-scripts/react";
 import Intl from "@rbx/core-scripts/intl";
 import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import { isBlackbirdUser as getIsPlusUser } from "@rbx/core-scripts/meta/user";
-import { isEnabled as isPlusSubscriptionRolloutEnabled } from "@rbx/core-scripts/meta/subscription";
 import { ThumbnailTypes } from "@rbx/thumbnails";
 import type { TServerListMetadata } from "../../hooks/useServerListMetadata";
 import useServerList from "../../../../js/serverList/containers/useServerList";
@@ -78,10 +77,8 @@ const PrivateServersSection = ({
 		};
 	}, []);
 
-	/** Page rollout (`meta subscription-data`) and GUAC `DisableRobloxPlusEntrypoints` (see NavLinks pattern). */
-	const hideRobloxPlusEntrypoints =
-		!isPlusSubscriptionRolloutEnabled() ||
-		appPolicyDisablePlusEntrypoints !== false;
+	/** Gated by the GUAC `DisableRobloxPlusEntrypoints` policy (see NavLinks pattern). */
+	const hideRobloxPlusEntrypoints = appPolicyDisablePlusEntrypoints !== false;
 
 	const {
 		hasNext,

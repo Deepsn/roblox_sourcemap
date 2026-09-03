@@ -1,7 +1,10 @@
 import { pubSub } from "@rbx/core-scripts/util/cross-tab-communication";
 import realtimeFactory from "./factory";
 import realtimeStateTracker from "./stateTracker";
-import { maybeSendEventToDataLake } from "../utils/events";
+import {
+	maybeSendEventToDataLake,
+	sendDurableReplayEvent,
+} from "../utils/events";
 import createTopicManager from "./topicManager";
 import createDurableReplayer from "./durableReplayer";
 import createMessageDeduper from "./messageDeduper";
@@ -21,6 +24,7 @@ const RealtimeClient = function (sourceConstructors) {
 	const onConnectedHandlers = {};
 	const onDisconnectedHandlers = {};
 	const onReconnectedHandlers = {};
+	const onGapDetectedHandlers = {};
 
 	const onSignalRConnectionCallbacks = [];
 
@@ -106,9 +110,11 @@ const RealtimeClient = function (sourceConstructors) {
 		}
 	};
 
-	const onNotification = (notificationSource, notification) => {
+	// Dedup, deliver to handlers, and update sequence number. Shared by both
+	// live and replayed paths. Does NOT perform gap detection.
+	const deliverNotification = (notificationSource, notification) => {
 		if (notificationSource !== currentSource) {
-			return;
+			return false;
 		}
 
 		const namespaceId = notification.namespace;
@@ -117,7 +123,7 @@ const RealtimeClient = function (sourceConstructors) {
 		if (messageDeduper) {
 			const messageId = details && details.RealtimeMessageIdentifier;
 			if (!messageDeduper.tryAdd(messageId)) {
-				return;
+				return false;
 			}
 		}
 
@@ -151,6 +157,23 @@ const RealtimeClient = function (sourceConstructors) {
 				notification.namespaceSequenceNumber,
 			);
 		}
+		return true;
+	};
+
+	// Live notification entry point: gap detection (before seqNum update) + delivery.
+	const onNotification = (notificationSource, notification) => {
+		if (notificationSource !== currentSource) {
+			return;
+		}
+		// Gap detection must run before deliverNotification updates the sequence number,
+		// otherwise lastSeen already equals seqNum and gaps are invisible.
+		if (durableReplayer && notification.namespaceSequenceNumber != null) {
+			durableReplayer.onLiveNotificationReceived(
+				notification.namespace,
+				notification.namespaceSequenceNumber,
+			);
+		}
+		deliverNotification(notificationSource, notification);
 	};
 
 	const getLastSeenSequenceNumbers = () => {
@@ -161,7 +184,7 @@ const RealtimeClient = function (sourceConstructors) {
 
 	const processReplayedNotification = (namespace, detail, seqNum) => {
 		const notification = { namespace, detail, namespaceSequenceNumber: seqNum };
-		onNotification(currentSource, notification);
+		deliverNotification(currentSource, notification);
 		pubSub.publish(realtimeEvents.Notification, JSON.stringify(notification));
 	};
 
@@ -272,28 +295,20 @@ const RealtimeClient = function (sourceConstructors) {
 	};
 
 	const fireConnectionEventPerNamespace = (namespace, sequenceNumber) => {
-		// For durable namespaces, the durable replayer handles catch-up — skip the
-		// data-reload signal entirely (gap-reset pattern, matching game engine behavior).
 		const isDurable = durableReplayer?.isDurableNamespace(namespace);
 
-		const isDataReloadRequired =
-			stateTracker && !isDurable
-				? stateTracker.IsDataRefreshRequired(namespace, sequenceNumber)
-				: null;
+		const isDataReloadRequired = stateTracker
+			? stateTracker.IsDataRefreshRequired(namespace, sequenceNumber)
+			: null;
 
-		// For non-durable namespaces (or when durableReplayer isn't active), update
-		// stateTracker from the subscription status so IsDataRefreshRequired works.
-		// For durable namespaces, do NOT update here — the replayer needs the
-		// pre-reconnect seq nums to know what gap to fill. stateTracker will be
-		// advanced later by processNamespaceSeqNum when replay responses arrive.
+		// Skip stateTracker update for durable namespaces — the replayer needs the
+		// pre-reconnect seq nums to calculate the replay gap.
 		if (stateTracker && !isDurable) {
 			stateTracker.UpdateSequenceNumber(namespace, sequenceNumber);
 		}
 
 		const connectionStatus = getConnectionStatus(namespace);
 
-		// If currently connected, but the event indicates missed messages, trigger disconnect logic so data can be refreshed
-		// But only if we are sure we need to refresh (never for durable namespaces)
 		if (
 			connectionStatus.isConnected &&
 			isDataReloadRequired === stateTracker.RefreshRequiredEnum.IS_REQUIRED
@@ -310,8 +325,8 @@ const RealtimeClient = function (sourceConstructors) {
 			connectionStatus.isConnected = true;
 
 			if (connectionStatus.hasEverBeenConnected) {
-				// For durable namespaces, never signal data reload — the replayer handles catch-up
-				const needsReload = isDurable
+				const hasGapHandlers = onGapDetectedHandlers[namespace]?.length > 0;
+				const needsReload = hasGapHandlers
 					? false
 					: isDataReloadRequired === null ||
 						isDataReloadRequired ===
@@ -319,7 +334,8 @@ const RealtimeClient = function (sourceConstructors) {
 						isDataReloadRequired === stateTracker.RefreshRequiredEnum.UNCLEAR;
 				onReconnected(needsReload, namespace);
 			} else {
-				const isHardReloadRequired = isDurable
+				const hasGapHandlers = onGapDetectedHandlers[namespace]?.length > 0;
+				const isHardReloadRequired = hasGapHandlers
 					? false
 					: isDataReloadRequired !==
 						stateTracker.RefreshRequiredEnum.NOT_REQUIRED;
@@ -366,7 +382,8 @@ const RealtimeClient = function (sourceConstructors) {
 				}
 			}
 
-			// Replay is triggered by the source itself via SetDurableReplayer
+			// Replay and polling are triggered by the source itself via SetDurableReplayer
+			// (leader sources call startPolling on connect; follower sources no-op)
 		} else if (connectionEvent.namespace) {
 			const { namespace } = connectionEvent;
 			fireDisconnectedEventPerNamespace(namespace);
@@ -384,6 +401,11 @@ const RealtimeClient = function (sourceConstructors) {
 				fireDisconnectedEventPerNamespace(namespace);
 			}
 		}
+
+		// Stop polling when fully disconnected
+		if (!connectionEvent.isConnected && durableReplayer) {
+			durableReplayer.stopPolling();
+		}
 	};
 
 	const refreshSource = () => {
@@ -391,6 +413,9 @@ const RealtimeClient = function (sourceConstructors) {
 			log(`Stopping current source: ${currentSource.Name}`);
 			currentSource.Stop();
 			currentSource = null;
+			if (durableReplayer) {
+				durableReplayer.stopPolling();
+			}
 			refreshConnectionStatus();
 		}
 
@@ -452,7 +477,29 @@ const RealtimeClient = function (sourceConstructors) {
 				getLastSeenSequenceNumbers,
 				processNotification: processReplayedNotification,
 				updateSequenceNumber,
+				isPollingEnabled: settings.isRealtimeTailLossPollingEnabled,
+				onGapDetected: (namespaces) => {
+					for (const namespace of namespaces) {
+						const handlers = onGapDetectedHandlers[namespace];
+						if (handlers) {
+							for (const handler of handlers) {
+								try {
+									handler();
+								} catch (_e) {
+									sendDurableReplayEvent("GapHandlerError");
+								}
+							}
+						}
+					}
+				},
 				log,
+				pollingBaseIntervalMs: settings.realtimeTailLossPollingBaseIntervalMs,
+				pollingMaxIntervalMs: settings.realtimeTailLossPollingMaxIntervalMs,
+				pollingBackoffMultiplier:
+					settings.realtimeTailLossPollingBackoffMultiplier,
+				pollingRetryMaxAttempts:
+					settings.realtimeTailLossPollingRetryMaxAttempts,
+				isGapDetectionEnabled: settings.isRealtimeTailLossGapDetectionEnabled,
 			});
 		}
 
@@ -527,6 +574,16 @@ const RealtimeClient = function (sourceConstructors) {
 		}
 	};
 
+	const subscribeToGapEvent = (namespace, handler) => {
+		if (!namespace || !handler) {
+			return;
+		}
+		if (!onGapDetectedHandlers[namespace]) {
+			onGapDetectedHandlers[namespace] = [];
+		}
+		onGapDetectedHandlers[namespace].push(handler);
+	};
+
 	// ============================================================================
 	// TOPIC-BASED NOTIFICATIONS
 	// ============================================================================
@@ -558,6 +615,9 @@ const RealtimeClient = function (sourceConstructors) {
 	this.IsConnected = isConnectedMethod;
 	this.SetLogger = setCustomLogger;
 	this.SetVerboseLogging = setVerboseLogging;
+
+	// Durable replay gap detection
+	this.SubscribeToGapEvent = subscribeToGapEvent;
 
 	// Topic-based notifications (Phase 1)
 	this.SubscribeToTopicNotification = subscribeToTopicNotification;

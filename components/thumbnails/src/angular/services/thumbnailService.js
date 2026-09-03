@@ -4,10 +4,26 @@ import thumbnailsModule from "../thumbnailsModule";
 function thumbnailService($q) {
 	"ngInject";
 
-	const getThumbnailImage = (thumbnailType, targetId, size, format) =>
+	const getThumbnailImage = (
+		thumbnailType,
+		targetId,
+		size,
+		format,
+		includeProfileFrame,
+	) =>
 		$q((resolve, reject) => {
 			thumbnail2dService
-				.getThumbnailImage(thumbnailType, size, format, targetId)
+				.getThumbnailImage(
+					thumbnailType,
+					size,
+					format,
+					targetId,
+					undefined,
+					undefined,
+					undefined,
+					undefined,
+					includeProfileFrame,
+				)
 				.then((image) => {
 					resolve(image);
 				})

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import classNames from "classnames";
 import { Modal, Link } from "@rbx/core-ui";
+import { Button } from "@rbx/foundation-ui";
 import {
 	TranslateFunction,
 	WithTranslationsProps,
@@ -20,9 +21,15 @@ import browserUtils from "../utils/browserUtils";
 import { common, homePage } from "../constants/configConstants";
 import {
 	CommonGameSorts,
+	FeatureGameDetails,
 	FeatureGamePage,
 } from "../constants/translationConstants";
-import { TGameDetailReferral } from "../constants/eventStreamConstants";
+import {
+	GameTileHiddenActionType,
+	TGameDetailReferral,
+} from "../constants/eventStreamConstants";
+import { GameTileHiddenReason } from "../types/gameTileHiddenReason";
+import useGameTileHiddenAction from "../hooks/useGameTileHiddenAction";
 import {
 	TGameData,
 	TGetPlaceDetails,
@@ -45,6 +52,8 @@ import {
 } from "../constants/tileDisplayConfigConstants";
 import useGetGameLayoutData from "../hooks/useGetGameLayoutData";
 import GameTileOverlayPill from "./GameTileOverlayPill";
+
+export { GameTileHiddenReason };
 
 const gameIconSize = 32;
 const gameIconOverlap = 10;
@@ -290,6 +299,60 @@ export const GameTileSponsoredFooter = ({
 				/>
 			</div>
 		</div>
+	);
+};
+
+export const GameTileHiddenTileMessage = ({
+	message,
+}: {
+	message: string;
+}): JSX.Element => <span className="text-body-medium">{message}</span>;
+
+export const GameTileUndoButton = ({
+	translate,
+	onUndo,
+	className,
+	universeId,
+	topicId,
+	page,
+	hiddenReason,
+}: {
+	translate: WithTranslationsProps["translate"];
+	onUndo?: () => void;
+	className?: string;
+	universeId: number;
+	topicId?: string;
+	page?: PageContext;
+	hiddenReason?: GameTileHiddenReason;
+}): JSX.Element => {
+	const sendGameTileHiddenAction = useGameTileHiddenAction(
+		universeId,
+		topicId,
+		page,
+	);
+
+	const handleClick = useCallback(
+		(e: React.MouseEvent) => {
+			// Undo button shouldn't fire click events for the whole tile
+			e.stopPropagation();
+			sendGameTileHiddenAction(
+				GameTileHiddenActionType.GameTileHiddenUndone,
+				hiddenReason,
+			);
+			onUndo?.();
+		},
+		[sendGameTileHiddenAction, hiddenReason, onUndo],
+	);
+
+	return (
+		<Button
+			className={className}
+			variant="Standard"
+			size="XSmall"
+			onClick={handleClick}
+		>
+			{translate(FeatureGameDetails.ActionUndo, undefined, "Undo")}
+		</Button>
 	);
 };
 

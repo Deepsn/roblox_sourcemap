@@ -24,6 +24,24 @@ const getSettings = () => {
 				RealTimeSettings.IsRealtimeWebAnalyticsConnectionEventsEnabled;
 			settings.isRealtimeDurableReplayEnabled =
 				RealTimeSettings.IsRealtimeDurableReplayEnabled;
+			settings.isRealtimeTailLossPollingEnabled =
+				RealTimeSettings.IsRealtimeTailLossPollingEnabled;
+			settings.realtimeTailLossPollingBaseIntervalMs =
+				parseInt(RealTimeSettings.RealtimeTailLossPollingBaseIntervalMs, 10) ||
+				30000;
+			settings.realtimeTailLossPollingMaxIntervalMs =
+				parseInt(RealTimeSettings.RealtimeTailLossPollingMaxIntervalMs, 10) ||
+				300000;
+			settings.realtimeTailLossPollingBackoffMultiplier =
+				parseFloat(RealTimeSettings.RealtimeTailLossPollingBackoffMultiplier) ||
+				2;
+			settings.isRealtimeTailLossGapDetectionEnabled =
+				RealTimeSettings.IsRealtimeTailLossGapDetectionEnabled;
+			settings.realtimeTailLossPollingRetryMaxAttempts =
+				parseInt(
+					RealTimeSettings.RealtimeTailLossPollingRetryMaxAttempts,
+					10,
+				) || 3;
 			settings.realtimeMessageDedupeLruCacheSize =
 				parseInt(RealTimeSettings.RealtimeMessageDedupeLruCacheSize, 10) || 32;
 		} else {
@@ -37,6 +55,12 @@ const getSettings = () => {
 			settings.isRealtimeWebAnalyticsEnabled = false;
 			settings.isRealtimeWebAnalyticsConnectionEventsEnabled = false;
 			settings.isRealtimeDurableReplayEnabled = false;
+			settings.isRealtimeTailLossPollingEnabled = false;
+			settings.realtimeTailLossPollingBaseIntervalMs = 30000;
+			settings.realtimeTailLossPollingMaxIntervalMs = 300000;
+			settings.realtimeTailLossPollingBackoffMultiplier = 2;
+			settings.isRealtimeTailLossGapDetectionEnabled = false;
+			settings.realtimeTailLossPollingRetryMaxAttempts = 3;
 			settings.realtimeMessageDedupeLruCacheSize = 32;
 		}
 	}
