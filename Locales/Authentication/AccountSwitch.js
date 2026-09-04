@@ -82,6 +82,8 @@ Roblox.LangDynamic["Authentication.AccountSwitch"] = {
 		"You can’t log into another account while signed into this account. Sign out to continue logging in.",
 	"Action.SignOut": "Sign out",
 	"Action.BackToHome": "Back to home",
+	"Description.ContinueSignOutOthersGeneric":
+		"Continuing will sign you out of your other accounts.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

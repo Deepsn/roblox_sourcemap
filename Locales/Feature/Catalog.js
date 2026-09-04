@@ -582,6 +582,8 @@ Roblox.LangDynamic["Feature.Catalog"] = {
 		"An item with particle effects gives off animated visuals, making it feel dynamic and alive.",
 	"Action.Owned": "{count} owned",
 	"Action.Try": "Try",
+	"Message.SellingBelowAveragePrice":
+		"This price is well below the recent average price of {averagePrice} Robux. Double-check the amount before you sell.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

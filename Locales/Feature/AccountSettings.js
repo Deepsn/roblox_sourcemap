@@ -587,7 +587,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Please enter your account password to generate new backup codes.",
 	"Action.Dialog.Continue": "Continue",
 	"Description.Dialog.RecoveryCodesGenerated":
-		"These are your new backup codes. Please save them as you will not be able to see the codes again later.",
+		"Backup codes can be used to recover your account. Please save them as you will not be able to see the codes again later.",
 	"Label.Dialog.RecoveryCodesSavedConfirmation": "I've saved my backup codes",
 	"Label.Dialog.GenerateNewRecoveryCodesClearNotice":
 		"{activeCodeCount} backup codes will become invalid when new ones are generated.",
@@ -2712,6 +2712,12 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Test in-development games from trusted friends and friends in similar age groups, before the games receive full evaluation. When you join the game, Roblox will conduct a preliminary review against our safety standard.",
 	"Description.ParentSide.PrivatePlaytest":
 		"Allow your child to test in-development games from trusted friends and friends in similar age groups, before the games receive full evaluation. When you child joins the game, Roblox will conduct a preliminary review against our safety standard.",
+	"Label.ThirdPartyFriendAccess": "Friend list API acccess",
+	"Description.ThirdPartyFriendAccess":
+		"Can developers have access to your friend list?",
+	"Action.Copy": "Copy",
+	"Message.RecoveryCodesCopied": "Backup Codes Copied to Keyboard",
+	"Action.Download": "Download",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
