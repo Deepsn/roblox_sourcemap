@@ -124,7 +124,7 @@ const NavItem = ({
 			className={classNames(
 				navItemClasses,
 				interactable,
-				isCurrentPath && "bg-surface-300",
+				isCurrentPath && "bg-shift-200",
 			)}
 			onClick={onActivate}
 		>
