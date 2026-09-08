@@ -2718,6 +2718,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.Copy": "Copy",
 	"Message.RecoveryCodesCopied": "Backup Codes Copied to Keyboard",
 	"Action.Download": "Download",
+	"Label.PrivatePlaytestSetting": "Private Playtest",
+	"Heading.PrivatePlaytestSetting": "Private playtest setting",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
