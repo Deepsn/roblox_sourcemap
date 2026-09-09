@@ -107,6 +107,7 @@ export const DeepLinkNavigationMap: Record<string, string> = {
 };
 
 export const UrlPart = {
+	Home: "/home",
 	Games: "/games",
 	Users: "/users",
 	Groups: "/groups",
@@ -158,6 +159,8 @@ export const CounterEvents = {
 		"DeeplinkParserExperienceDetailsResolutionFailed",
 	AvatarItemDetailsResolutionFailed:
 		"DeeplinkParserAvatarItemDetailsResolutionFailed",
+	AvatarItemAffiliateResolutionFailed:
+		"DeeplinkParserAvatarItemAffiliateResolutionFailed",
 	ExperienceAffiliateResolutionFailed:
 		"DeeplinkParserExperienceAffiliateResolutionFailed",
 	ContentPostResolutionFailed: "DeeplinkParserContentPostResolutionFailed",
