@@ -84,6 +84,10 @@ Roblox.LangDynamic["Feature.PrivateServers"] = {
 	"Label.UnlimitedIncludedWithBlackbird": "Included with Plus",
 	"Label.PrivateServerCreated": "Your server is created",
 	"Action.Join": "Join",
+	"Label.Active": "Active",
+	"Label.Inactive": "Inactive",
+	"Label.Expiring": "Expiring",
+	"Label.Unavailable": "Unavailable",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

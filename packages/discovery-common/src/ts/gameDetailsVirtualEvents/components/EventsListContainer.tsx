@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { getIsVNGLandingRedirectEnabled } from "@rbx/navigation";
 import { TranslateFunction } from "@rbx/core-scripts/react";
-import { throttle } from "lodash";
+import { throttle } from "es-toolkit";
 import { useQuery } from "@tanstack/react-query";
 import { usePlayabilityStatus } from "@rbx/game-play-button";
 import { tryParseDate } from "../utils/utils";

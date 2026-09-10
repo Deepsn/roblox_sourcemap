@@ -205,6 +205,11 @@ Roblox.LangDynamic["Feature.VIPServer"] = {
 		"Successfully changed friends allowed.",
 	"Label.FriendsAllowed.FriendsRename": "Friends Allowed",
 	"Label.EditServerName": "Edit server name",
+	"Label.Active": "Active",
+	"Label.Inactive": "Inactive",
+	"Label.Expiring": "Expiring",
+	"Label.Unavailable": "Unavailable",
+	"Label.IncludedWithPlus": "Included with Plus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
