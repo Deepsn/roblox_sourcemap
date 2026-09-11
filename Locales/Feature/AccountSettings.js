@@ -2720,6 +2720,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.Download": "Download",
 	"Label.PrivatePlaytestSetting": "Playtest",
 	"Heading.PrivatePlaytestSetting": "playtest setting",
+	"Message.RecoveryCodesNotCopied": "Backup Codes Failed to Copy",
+	"Label.Subscriptions.FreeWithPlusUntil":
+		"Free With Plus Until {freeExpirationDate}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
