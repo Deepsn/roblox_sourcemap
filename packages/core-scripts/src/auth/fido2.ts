@@ -319,6 +319,8 @@ export const formatCredentialRegistrationResponseWeb = (
 			clientDataJSON: base64StringToBase64UrlString(
 				arrayBufferToBase64String(clientDataJSON),
 			),
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- getTransports is missing on Firefox <113 and on stubbed test credentials
+			transports: response.getTransports?.() ?? [],
 		},
 	});
 };
