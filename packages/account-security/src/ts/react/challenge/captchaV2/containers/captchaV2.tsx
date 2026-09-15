@@ -70,6 +70,14 @@ const CaptchaV2: FC = () => {
 	// True whenever the spinner should cover the widget.
 	const [verifying, setVerifying] = useState(true);
 
+	// Blocks any vendor success callback that arrives after the challenge has
+	// already resolved (completed/invalidated/abandoned) from firing a wasted
+	// submitCaptcha against the consumed session.
+	const terminalRef = useRef(false);
+	// Latest ABR ReferenceID (block uuid), stamped on emitted abr* telemetry so
+	// data-lake events correlate to the HUMAN block (px_uuid on the server side).
+	const blockUuidRef = useRef<string | null>(null);
+
 	const closeModal = useCallback(() => {
 		dispatch({ type: CaptchaV2ActionType.HIDE_MODAL_CHALLENGE });
 	}, [dispatch]);
@@ -78,12 +86,14 @@ const CaptchaV2: FC = () => {
 	// Letting the abandoned effect in the context provider fire
 	// `onModalChallengeAbandoned` gives the consumer a chance to re-open it.
 	const abandon = useCallback(() => {
+		terminalRef.current = true;
 		closeModal();
 		dispatch({ type: CaptchaV2ActionType.SET_CHALLENGE_ABANDONED });
 	}, [dispatch, closeModal]);
 
 	const invalidate = useCallback(
 		(errorCode: ErrorCode) => {
+			terminalRef.current = true;
 			closeModal();
 			dispatch({
 				type: CaptchaV2ActionType.SET_CHALLENGE_INVALIDATED,
@@ -98,6 +108,7 @@ const CaptchaV2: FC = () => {
 
 	const complete = useCallback(
 		(redemptionToken: string) => {
+			terminalRef.current = true;
 			closeModal();
 			dispatch({
 				type: CaptchaV2ActionType.SET_CHALLENGE_COMPLETED,
@@ -112,6 +123,7 @@ const CaptchaV2: FC = () => {
 	// mounted; here we only stash the block response and flag the modal visible.
 	const showChallenge = useCallback(
 		(block: CaptchaV2BlockResponse, isRetry: boolean) => {
+			blockUuidRef.current = block.uuid;
 			setBlockResponse(block);
 
 			// Only reveal the modal on the initial challenge. On a retry the modal is
@@ -137,6 +149,11 @@ const CaptchaV2: FC = () => {
 			);
 
 			if (!result.isError) {
+				// On a re-verify (isRetry) this is the backend's verdict on a solved
+				// ABR: a pass means the backend accepted the solve.
+				if (isRetry) {
+					eventService.sendAbrAcceptedEvent(blockUuidRef.current ?? "");
+				}
 				complete(result.value.redemption_token);
 				return;
 			}
@@ -151,6 +168,11 @@ const CaptchaV2: FC = () => {
 					// still challenged us, so surface the retry message alongside the
 					// re-rendered challenge.
 					if (isRetry) {
+						// Backend rejected the solved ABR and re-challenged. Key this on the
+						// uuid of the block that was SOLVED (still in blockUuidRef until
+						// showChallenge swaps in the new block below), not the fresh block
+						// from the 403 — so abrSucceeded -> abrRejected joins by uuid.
+						eventService.sendAbrRejectedEvent(blockUuidRef.current ?? "");
 						setFailed(true);
 					}
 					// The re-rendered widget is interactive again; drop the verify spinner.
@@ -175,6 +197,7 @@ const CaptchaV2: FC = () => {
 			invalidate,
 			requestService.captchaV2,
 			showChallenge,
+			eventService,
 		],
 	);
 	verifyRef.current = verify;
@@ -189,11 +212,23 @@ const CaptchaV2: FC = () => {
 		}
 		localStorageService.setLocalStorage(CHALLENGE_ID_STORAGE_KEY, challengeId);
 
+		// Fresh challenge id: reset the terminal guard in case this component
+		// instance is reused across challenge ids.
+		terminalRef.current = false;
+
 		eventService.sendChallengeInitializedEvent();
 		metricsService.fireChallengeInitializedEvent();
 
 		setCaptchaSuccessCallback((isValid) => {
+			// Ignore any callback that arrives after the challenge already resolved
+			// (completed/invalidated/abandoned); acting on it would fire a wasted
+			// request against a consumed session.
+			if (terminalRef.current) {
+				return;
+			}
+			const uuid = blockUuidRef.current ?? "";
 			if (isValid) {
+				eventService.sendAbrSucceededEvent(uuid);
 				// Optimistically clear any prior retry error. If the re-verify comes
 				// back with another `403`, `verify(true)` sets it again.
 				setFailed(false);
@@ -202,6 +237,7 @@ const CaptchaV2: FC = () => {
 			} else {
 				// The user failed the widget; vendor keeps it mounted for another
 				// attempt, so prompt a retry.
+				eventService.sendAbrFailedEvent(uuid);
 				setFailed(true);
 			}
 		});
@@ -229,13 +265,18 @@ const CaptchaV2: FC = () => {
 		if (blockResponse === null || container === null) {
 			return undefined;
 		}
+		// The press-and-hold widget is (re)rendered here: once on the initial
+		// challenge and again on every retry (each new blockResponse). Emit one
+		// abrLoaded per load so the data lake counts actual presentations — the
+		// challengeDisplayed event fires only once for the whole retry loop.
+		eventService.sendAbrLoadedEvent(blockResponse.uuid);
 		return startCustomChallenge(blockResponse, {
 			buttonLabel: resources.Action.PressAndHold,
 			// A finished attempt (solve or fail) shows spinner, later "render" event clears.
 			onCaptchaEvent: (status) =>
 				setVerifying(status === "succeeded" || status === "failed"),
 		});
-	}, [blockResponse, container, resources.Action.PressAndHold]);
+	}, [blockResponse, container, resources.Action.PressAndHold, eventService]);
 
 	// Tear down once the challenge reaches a terminal state. The terminal
 	// callbacks still fire from the context provider's effects, which are

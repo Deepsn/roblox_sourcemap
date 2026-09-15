@@ -384,7 +384,7 @@ export const verifySecurityKeyCredential = (
 
 export const deleteSecurityKey = (
 	userId: string,
-	credentialNicknames: string[],
+	credentialIDs: string[],
 ): Promise<
 	Result<
 		TwoStepVerification.DeleteSecurityKeyReturnType,
@@ -393,7 +393,25 @@ export const deleteSecurityKey = (
 > =>
 	toResult(
 		http.post(TwoStepVerification.DELETE_SECURITY_KEY_CONFIG(userId), {
-			credentialNicknames,
+			credentialIDs,
+		}),
+		TwoStepVerification.TwoStepVerificationError,
+	);
+
+export const renameSecurityKey = (
+	userId: string,
+	credentialID: string,
+	newNickname: string,
+): Promise<
+	Result<
+		TwoStepVerification.RenameSecurityKeyReturnType,
+		TwoStepVerification.TwoStepVerificationError | null
+	>
+> =>
+	toResult(
+		http.post(TwoStepVerification.RENAME_SECURITY_KEY_CONFIG(userId), {
+			credentialID,
+			newNickname,
 		}),
 		TwoStepVerification.TwoStepVerificationError,
 	);

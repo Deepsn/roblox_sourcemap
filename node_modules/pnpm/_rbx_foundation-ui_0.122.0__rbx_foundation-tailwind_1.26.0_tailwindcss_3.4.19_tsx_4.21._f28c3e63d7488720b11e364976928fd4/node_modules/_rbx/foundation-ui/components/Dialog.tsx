@@ -1,0 +1,379 @@
+import clsx from 'clsx';
+import * as RadixDialog from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import React, { ReactNode, createContext, useContext, useMemo, useEffect } from 'react';
+import type {
+  TTailwindPaddingBottomClass,
+  TTailwindPaddingTopClass,
+  TTailwindPaddingXClass
+} from '@rbx/foundation-tailwind/classes';
+import './internal/Common.css';
+import './Dialog.css';
+import { CloseAffordance } from './internal/CloseAffordance';
+
+export const dialogSizes = ['Small', 'Medium', 'Large'] as const;
+export type TDialogSize = (typeof dialogSizes)[number];
+
+export const dialogTypes = ['Default'] as const;
+export type TDialogType = (typeof dialogTypes)[number];
+
+// Create Dialog Context
+const DialogContext = createContext<{
+  size: TDialogSize;
+  isModal: boolean;
+  hasCloseAffordance: boolean;
+  closeLabel?: string;
+  hasMarginTop: boolean;
+  hasMarginBottom: boolean;
+  hasDescription: boolean;
+  type: TDialogType;
+}>({
+  size: 'Medium',
+  isModal: true,
+  hasCloseAffordance: false,
+  hasMarginTop: true,
+  hasMarginBottom: true,
+  hasDescription: false,
+  type: 'Default'
+});
+
+// Hook to use Dialog Context
+const useDialogContext = () => {
+  const context = useContext(DialogContext);
+  if (!context) {
+    throw new Error('Dialog components must be used within a Dialog');
+  }
+  return context;
+};
+
+type TCloseAffordanceProps =
+  | {
+      /**
+       * Whether to show the close affordance (X button).
+       */
+      hasCloseAffordance: false;
+
+      /**
+       * The aria label for the close affordance (X button).
+       * Required if `hasCloseAffordance` might be `true`.
+       */
+      closeLabel?: never;
+    }
+  | {
+      /**
+       * Whether to show the close affordance (X button).
+       */
+      hasCloseAffordance: boolean;
+
+      /**
+       * The aria label for the close affordance (X button).
+       * Required if `hasCloseAffordance` might be `true`.
+       */
+      closeLabel: string;
+    };
+
+export type TDialogProps = TCloseAffordanceProps & {
+  /**
+   * The size of the dialog.
+   */
+  size: TDialogSize;
+
+  /**
+   * The type of the dialog.
+   */
+  type?: TDialogType;
+
+  /**
+   * When true, show the backdrop.
+   */
+  isModal: boolean;
+
+  /**
+   * Whether to add margin to the top of the dialog's body.
+   */
+  hasMarginTop?: boolean;
+
+  /**
+   * Whether to add margin to the bottom of the dialog's body.
+   */
+  hasMarginBottom?: boolean;
+
+  /**
+   * The controlled open state of the dialog. Must be used in conjunction with onOpenChange.
+   */
+  open?: boolean;
+
+  /**
+   * Event handler called when the open state of the dialog changes.
+   */
+  onOpenChange?: (open: boolean) => void;
+
+  /**
+   * Whether to disable pointer events styling on the body that is automatically applied by Radix.
+   * This is useful for certain multi-modal scenarios where the focus is trapped in a dialog.
+   * This is an experimental feature and it may be removed in the future.
+   * DO NOT USE UNLESS YOU HAVE REACHED OUT TO #foundation-web.
+   */
+  experimentalDisablePointerEventsStylingOnBody?: boolean;
+
+  /**
+   * Whether a DialogDescription is provided as a child.
+   * Currently this description is visually hidden and only used for accessibility.
+   * When true, Radix auto-wires aria-describedby to the description element.
+   * When false (default), the Radix warning is suppressed.
+   */
+  hasDescription?: boolean;
+
+  children: ReactNode;
+};
+
+const PADDING_X_CLASS_BY_SIZE: Record<TDialogSize, TTailwindPaddingXClass> = {
+  Small: 'padding-x-large',
+  Medium: 'padding-x-xlarge',
+  Large: 'padding-x-xlarge'
+};
+
+const PADDING_TOP_CLASS_BY_SIZE: Record<TDialogSize, TTailwindPaddingTopClass> = {
+  Small: 'padding-top-large',
+  Medium: 'padding-top-xlarge',
+  Large: 'padding-top-xlarge'
+};
+
+const PADDING_BOTTOM_CLASS_BY_SIZE: Record<TDialogSize, TTailwindPaddingBottomClass> = {
+  Small: 'padding-bottom-large',
+  Medium: 'padding-bottom-xlarge',
+  Large: 'padding-bottom-xlarge'
+};
+
+/**
+ * Foundation UI Dialog Component.
+ * A {@link DialogTitle} component MUST be provided as a child for accessibility.
+ */
+export const Dialog = ({
+  open,
+  onOpenChange,
+  children,
+  size,
+  type = 'Default',
+  isModal,
+  hasCloseAffordance,
+  closeLabel,
+  hasMarginTop = true,
+  hasMarginBottom = true,
+  hasDescription = false,
+  experimentalDisablePointerEventsStylingOnBody = false
+}: TDialogProps) => {
+  const contextValue = useMemo(
+    () => ({
+      size,
+      isModal,
+      type,
+      hasCloseAffordance,
+      closeLabel,
+      hasMarginTop,
+      hasMarginBottom,
+      hasDescription
+    }),
+    [
+      size,
+      isModal,
+      type,
+      hasCloseAffordance,
+      closeLabel,
+      hasMarginTop,
+      hasMarginBottom,
+      hasDescription
+    ]
+  );
+
+  useEffect(() => {
+    if (experimentalDisablePointerEventsStylingOnBody) {
+      setTimeout(() => {
+        Object.assign(document.body.style, { pointerEvents: 'unset' });
+      }, 0);
+    }
+  }, [experimentalDisablePointerEventsStylingOnBody, open]);
+
+  return (
+    <DialogContext.Provider value={contextValue}>
+      <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
+        {children}
+      </RadixDialog.Root>
+    </DialogContext.Provider>
+  );
+};
+
+Dialog.displayName = 'Dialog';
+
+export type TDialogContentProps = {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  overlayClassName?: string;
+  overlayStyle?: React.CSSProperties;
+  onOpenAutoFocus?: RadixDialog.DialogContentProps['onOpenAutoFocus'];
+};
+
+export const DialogContent = ({
+  children,
+  className,
+  style,
+  overlayClassName,
+  overlayStyle,
+  onOpenAutoFocus,
+  ...props
+}: TDialogContentProps) => {
+  const { size, isModal, hasCloseAffordance, closeLabel, hasDescription } = useDialogContext();
+
+  const overlayClasses = clsx(
+    'foundation-web-dialog-overlay padding-medium foundation-web-portal-zindex',
+    isModal && 'bg-common-backdrop',
+    overlayClassName
+  );
+
+  const contentClasses = clsx(
+    'relative radius-large bg-surface-100 stroke-muted stroke-standard foundation-web-dialog-content shadow-transient-high',
+    className
+  );
+
+  return (
+    <RadixDialog.Portal>
+      <RadixDialog.Overlay className={overlayClasses} style={overlayStyle}>
+        <RadixDialog.Content
+          className={contentClasses}
+          data-size={size}
+          style={style}
+          onOpenAutoFocus={onOpenAutoFocus}
+          {...(!hasDescription && { 'aria-describedby': undefined })}
+          {...props}>
+          {hasCloseAffordance && (
+            <div className='absolute foundation-web-dialog-close-container'>
+              <RadixDialog.Close asChild>
+                <CloseAffordance
+                  variant='OverMedia'
+                  size={size}
+                  isCircular
+                  aria-label={closeLabel}
+                />
+              </RadixDialog.Close>
+            </div>
+          )}
+          {children}
+        </RadixDialog.Content>
+      </RadixDialog.Overlay>
+    </RadixDialog.Portal>
+  );
+};
+
+DialogContent.displayName = 'DialogContent';
+
+export const DialogHeroMedia = ({
+  children,
+  className,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div className={clsx('foundation-web-dialog-hero-media', className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+DialogHeroMedia.displayName = 'DialogHeroMedia';
+
+export const DialogBody = ({
+  children,
+  className,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  const { size, hasMarginTop, hasMarginBottom } = useDialogContext();
+
+  const bodyClasses = clsx(
+    PADDING_X_CLASS_BY_SIZE[size],
+    hasMarginTop && PADDING_TOP_CLASS_BY_SIZE[size],
+    hasMarginBottom && PADDING_BOTTOM_CLASS_BY_SIZE[size],
+    className
+  );
+
+  return (
+    <div className={bodyClasses} {...props}>
+      {children}
+    </div>
+  );
+};
+
+DialogBody.displayName = 'DialogBody';
+
+export const DialogTitle = ({
+  children,
+  className,
+  hidden,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+  hidden?: boolean;
+}) => {
+  const title = (
+    <RadixDialog.Title className={className} {...props}>
+      {children}
+    </RadixDialog.Title>
+  );
+  return hidden ? <VisuallyHidden>{title}</VisuallyHidden> : title;
+};
+
+DialogTitle.displayName = 'DialogTitle';
+
+/**
+ * A visually hidden component that provides a description for the dialog for screen readers.
+ * When using this component, ensure that hasDescription in {@link Dialog} is set to true so that the aria-describedby attribute is correctly applied to the dialog content.
+ */
+export const DialogDescription = ({
+  children,
+  className,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  return (
+    <VisuallyHidden>
+      <RadixDialog.Description className={className} {...props}>
+        {children}
+      </RadixDialog.Description>
+    </VisuallyHidden>
+  );
+};
+
+DialogDescription.displayName = 'DialogDescription';
+
+export const DialogFooter = ({
+  children,
+  className,
+  ...props
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  const { size } = useDialogContext();
+
+  const footerClasses = clsx(
+    PADDING_X_CLASS_BY_SIZE[size],
+    PADDING_BOTTOM_CLASS_BY_SIZE[size],
+    className
+  );
+
+  return (
+    <div className={footerClasses} {...props}>
+      {children}
+    </div>
+  );
+};
+
+DialogFooter.displayName = 'DialogFooter';

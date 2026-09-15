@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import { httpService } from "core-utilities";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as AccountRecovery from "../types/accountRecovery";
@@ -15,7 +15,7 @@ export const requestRecovery = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.REQUEST_RECOVERY_CONFIG, {
+		httpService.post(AccountRecovery.REQUEST_RECOVERY_CONFIG, {
 			identifier,
 			identifierType,
 			recoverySessionId,
@@ -36,7 +36,7 @@ export const sendCode = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.SEND_CODE_CONFIG, {
+		httpService.post(AccountRecovery.SEND_CODE_CONFIG, {
 			contactMethod,
 			contactMethodType,
 			recoverySessionId,
@@ -55,7 +55,7 @@ export const resendCode = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.RESEND_CODE_CONFIG, {
+		httpService.post(AccountRecovery.RESEND_CODE_CONFIG, {
 			recoverySessionId,
 			contactMethodNumber,
 		}),
@@ -73,7 +73,7 @@ export const verifyCode = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.VERIFY_CODE_CONFIG, {
+		httpService.post(AccountRecovery.VERIFY_CODE_CONFIG, {
 			recoverySessionId,
 			code,
 			contactMethodNumber,
@@ -90,9 +90,39 @@ export const getRecoveryIntentStatus = (
 	>
 > =>
 	toResult(
-		http.get(AccountRecovery.GET_RECOVERY_INTENT_STATUS_CONFIG, {
+		httpService.get(AccountRecovery.GET_RECOVERY_INTENT_STATUS_CONFIG, {
 			recoveryId: recoverySessionId,
 		}),
+		AccountRecovery.AccountRecoveryError,
+	);
+
+// These endpoints are part of the account-recovery service even though the UI
+// presents them alongside linked accounts. Keeping them here preserves the
+// request layer's service ownership boundary.
+export const getRecoveryIntents = (): Promise<
+	Result<
+		AccountRecovery.GetRecoveryIntentsResponse,
+		AccountRecovery.AccountRecoveryError | null
+	>
+> =>
+	toResult(
+		httpService.get(AccountRecovery.GET_RECOVERY_INTENTS_CONFIG),
+		AccountRecovery.AccountRecoveryError,
+	);
+
+export const approveRecoveryIntent = (
+	request: AccountRecovery.RecoveryIntentRequest,
+): Promise<Result<void, AccountRecovery.AccountRecoveryError | null>> =>
+	toResult(
+		httpService.post(AccountRecovery.APPROVE_RECOVERY_INTENT_CONFIG, request),
+		AccountRecovery.AccountRecoveryError,
+	);
+
+export const denyRecoveryIntent = (
+	request: AccountRecovery.RecoveryIntentRequest,
+): Promise<Result<void, AccountRecovery.AccountRecoveryError | null>> =>
+	toResult(
+		httpService.post(AccountRecovery.DENY_RECOVERY_INTENT_CONFIG, request),
 		AccountRecovery.AccountRecoveryError,
 	);
 
@@ -105,7 +135,7 @@ export const verifyRecoveryIntent = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.VERIFY_RECOVERY_INTENT_CONFIG, {
+		httpService.post(AccountRecovery.VERIFY_RECOVERY_INTENT_CONFIG, {
 			recoverySessionId,
 		}),
 		AccountRecovery.AccountRecoveryError,
@@ -121,7 +151,7 @@ export const verifyBackupCode = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.VERIFY_BACKUP_CODE_CONFIG, {
+		httpService.post(AccountRecovery.VERIFY_BACKUP_CODE_CONFIG, {
 			recoverySessionId,
 			backupCode,
 		}),
@@ -141,7 +171,7 @@ export const continueRecovery = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.CONTINUE_RECOVERY_CONFIG, {
+		httpService.post(AccountRecovery.CONTINUE_RECOVERY_CONFIG, {
 			recoverySessionId,
 			userId,
 			recover2sv,
@@ -160,7 +190,7 @@ export const recoverySessionMetadata = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.RECOVERY_SESSION_METADATA_CONFIG, {
+		httpService.post(AccountRecovery.RECOVERY_SESSION_METADATA_CONFIG, {
 			recoverySessionId,
 		}),
 		AccountRecovery.AccountRecoveryError,
@@ -175,7 +205,7 @@ export const setEmail = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.SET_EMAIL_CONFIG, {
+		httpService.post(AccountRecovery.SET_EMAIL_CONFIG, {
 			recoverySessionId,
 		}),
 		AccountRecovery.AccountRecoveryError,
@@ -190,7 +220,7 @@ export const getCurrentTwoStepMethod = (
 	>
 > =>
 	toResult(
-		http.get(AccountRecovery.GET_CURRENT_TWO_STEP_METHOD_CONFIG, {
+		httpService.get(AccountRecovery.GET_CURRENT_TWO_STEP_METHOD_CONFIG, {
 			recoverySessionId,
 		}),
 		AccountRecovery.AccountRecoveryError,
@@ -206,7 +236,7 @@ export const disableTwoStepMethod = (
 	>
 > =>
 	toResult(
-		http.post(AccountRecovery.DISABLE_TWO_STEP_METHOD_CONFIG, {
+		httpService.post(AccountRecovery.DISABLE_TWO_STEP_METHOD_CONFIG, {
 			recoverySessionId,
 			twoStepMethod,
 		}),
