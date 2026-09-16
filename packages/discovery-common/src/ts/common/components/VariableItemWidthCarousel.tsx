@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { mergeRefs } from "react-merge-refs";
 import classNames from "classnames";
-import { throttle } from "lodash";
+import { throttle } from "es-toolkit";
 import { gamesPage } from "../constants/configConstants";
 import { debounce } from "../utils/helperUtils";
 import ScrollArrows from "../../gamesPage/components/ScrollArrows";
@@ -122,7 +122,7 @@ const VariableItemWidthCarousel = <TItem,>({
 					});
 				},
 				SCROLL_THROTTLE_MS,
-				{ leading: true, trailing: false },
+				{ edges: ["leading"] },
 			),
 		[],
 	);

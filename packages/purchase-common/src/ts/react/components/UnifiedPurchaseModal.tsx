@@ -31,7 +31,6 @@ import DiscountPriceDetail from "./DiscountPriceDetail";
 import { normalizeDiscountInformation } from "./discountInformation";
 import type { DiscountInformation } from "./discountInformation";
 import isPlusBenefitDiscount from "../utils/isPlusBenefitDiscount";
-import isPlusSubscriptionRolloutEnabled from "../utils/subscriptionRolloutMeta";
 import guacService from "../services/guacService";
 import useMarketplaceOffers from "../hooks/useMarketplaceOffers";
 // Reuse the shared paymentSession hook from @rbx/payments so we share the same
@@ -119,10 +118,7 @@ export const UnifiedPurchaseModalComponent: React.FC<
 		isLimitedItem: isLimited,
 		open,
 	});
-	/**
-	 * GUAC `app-policy` kill switch: when true, hide Plus entrypoints (in addition to
-	 * `isPlusSubscriptionRolloutEnabled` from page meta).
-	 */
+	/** GUAC `app-policy` kill switch: when true, hide Plus entrypoints. */
 	const [plusEntrypointsDisabledByPolicy, setPlusEntrypointsDisabledByPolicy] =
 		useState(false);
 
@@ -158,8 +154,7 @@ export const UnifiedPurchaseModalComponent: React.FC<
 			? resolvedDiscountInformation
 			: discountInformation;
 
-	const hideRobloxPlusEntrypoints =
-		plusEntrypointsDisabledByPolicy || !isPlusSubscriptionRolloutEnabled();
+	const hideRobloxPlusEntrypoints = plusEntrypointsDisabledByPolicy;
 
 	const isFreeTrial =
 		subscriptionProductInfo?.eligibleOffers?.some(

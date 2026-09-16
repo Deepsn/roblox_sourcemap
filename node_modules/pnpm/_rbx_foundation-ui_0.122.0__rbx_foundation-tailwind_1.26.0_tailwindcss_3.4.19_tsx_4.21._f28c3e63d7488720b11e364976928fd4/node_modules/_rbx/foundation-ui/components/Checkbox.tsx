@@ -1,0 +1,167 @@
+import './internal/Common.css';
+import './Checkbox.css';
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef } from 'react';
+import * as RadixCheckbox from '@radix-ui/react-checkbox';
+import type {
+  TTailwindPaddingTopClass,
+  TTailwindPaddingYClass,
+  TTailwindSizeClass,
+  TTailwindTextBodyClass
+} from '@rbx/foundation-tailwind/classes';
+import { interactable, StateLayer } from './internal/StateLayer';
+import useId from '../utils/useId';
+import { disabledOpacity } from '../utils/styles';
+
+export const checkboxSizes = ['XSmall', 'Small', 'Medium', 'Large'] as const;
+export type TCheckboxSize = (typeof checkboxSizes)[number];
+
+export const checkboxPlacements = ['Start', 'End'] as const;
+export type TCheckboxPlacement = (typeof checkboxPlacements)[number];
+
+export type TCheckboxCheckState = false | true | 'indeterminate';
+
+export type TCheckboxBaseProps = Omit<
+  ComponentPropsWithRef<'button'>,
+  'disabled' | 'defaultChecked' | 'aria-label' | 'aria-labelledby'
+> & {
+  size: TCheckboxSize;
+  placement: TCheckboxPlacement;
+  /** Initial checked state - use for uncontrolled inputs */
+  defaultChecked?: TCheckboxCheckState;
+  /** Controlled checked state - use for controlled inputs */
+  isChecked?: TCheckboxCheckState;
+  isDisabled?: boolean;
+  hint?: string;
+  onCheckedChange?: (isChecked: TCheckboxCheckState) => void;
+};
+
+/** Checkbox with visible label (label content provides the accessible name). */
+type TCheckboxWithLabel = TCheckboxBaseProps & {
+  label: string;
+  ['aria-label']?: string;
+  ['aria-labelledby']?: never;
+};
+
+/** Checkbox with aria-label (no visible label). */
+type TCheckboxWithAriaLabel = TCheckboxBaseProps & {
+  ['aria-label']: string;
+  label?: never;
+  ['aria-labelledby']?: string;
+};
+
+/** Checkbox with aria-labelledby (no visible label). */
+type TCheckboxWithAriaLabelledby = TCheckboxBaseProps & {
+  ['aria-labelledby']: string;
+  label?: never;
+  ['aria-label']?: string;
+};
+
+export type TCheckboxProps =
+  | TCheckboxWithLabel
+  | TCheckboxWithAriaLabel
+  | TCheckboxWithAriaLabelledby;
+
+const INDICATOR_SIZE_CLASS_BY_SIZE: Record<TCheckboxSize, TTailwindSizeClass> = {
+  XSmall: 'size-400',
+  Small: 'size-500',
+  Medium: 'size-600',
+  Large: 'size-600'
+};
+
+const CHECKBOX_WRAPPER_PADDING_Y_CLASS_BY_SIZE: Record<TCheckboxSize, TTailwindPaddingYClass | ''> =
+  {
+    XSmall: '',
+    Small: '',
+    Medium: '',
+    Large: 'padding-y-xxsmall'
+  };
+
+const LABEL_CLASS_BY_SIZE: Record<TCheckboxSize, TTailwindTextBodyClass> = {
+  XSmall: 'text-body-small',
+  Small: 'text-body-small',
+  Medium: 'text-body-medium',
+  Large: 'text-body-large'
+};
+
+const LABEL_PADDING_TOP_BY_SIZE: Record<TCheckboxSize, TTailwindPaddingTopClass | ''> = {
+  XSmall: '',
+  Small: 'padding-top-xxsmall',
+  Medium: 'padding-top-xxsmall',
+  Large: 'padding-top-xxsmall'
+};
+
+export const Checkbox: React.FC<TCheckboxProps> = ({
+  label,
+  className,
+  isChecked,
+  isDisabled,
+  size,
+  hint,
+  placement,
+  onCheckedChange,
+  id,
+  ...otherProps
+}) => {
+  const autoId = useId();
+  const resolvedId = id || autoId;
+
+  const labelAndHintDiv = label && (
+    <label
+      htmlFor={resolvedId}
+      className={clsx('flex flex-col grow-1 gap-xsmall', !isDisabled && 'cursor-pointer')}>
+      <span
+        className={clsx(
+          LABEL_CLASS_BY_SIZE[size],
+          LABEL_PADDING_TOP_BY_SIZE[size],
+          'content-emphasis'
+        )}>
+        {label}
+      </span>
+      {hint && <span className='text-body-medium content-default'>{hint}</span>}
+    </label>
+  );
+
+  return (
+    <div
+      className={clsx(
+        'foundation-web-checkbox flex gap-medium',
+        isDisabled && disabledOpacity,
+        !isDisabled && 'cursor-pointer',
+        className
+      )}>
+      {placement === 'End' && labelAndHintDiv}
+      <div className={clsx(CHECKBOX_WRAPPER_PADDING_Y_CLASS_BY_SIZE[size])}>
+        <RadixCheckbox.Root
+          data-slot='checkbox'
+          className={clsx(
+            INDICATOR_SIZE_CLASS_BY_SIZE[size],
+            interactable,
+            !isDisabled && 'cursor-pointer',
+            'flex items-center justify-center radius-small padding-none content-default',
+            'data-[state=unchecked]:bg-none data-[state=unchecked]:stroke-standard data-[state=unchecked]:stroke-contrast-alpha',
+            'data-[state=indeterminate]:bg-system-contrast data-[state=indeterminate]:stroke-none',
+            'data-[state=checked]:bg-system-contrast data-[state=checked]:stroke-none'
+          )}
+          id={resolvedId}
+          checked={isChecked}
+          disabled={isDisabled}
+          onCheckedChange={onCheckedChange}
+          aria-label={label}
+          {...otherProps}>
+          <StateLayer />
+          <RadixCheckbox.Indicator
+            data-slot='checkbox-indicator'
+            className={clsx(
+              INDICATOR_SIZE_CLASS_BY_SIZE[size],
+              'content-[var(--inverse-content-emphasis)] icon',
+              'data-[state=indeterminate]:icon-filled-minus',
+              'data-[state=checked]:icon-filled-check'
+            )}
+          />
+        </RadixCheckbox.Root>
+      </div>
+      {placement === 'Start' && labelAndHintDiv}
+    </div>
+  );
+};

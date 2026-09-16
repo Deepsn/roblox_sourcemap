@@ -6,6 +6,7 @@ import "@rbx/core-scripts/global";
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { SearchLandingService } from "@rbx/legacy-webapp-types/Roblox";
 import bedev2Services from "../common/services/bedev2Services";
+import getDeviceFeatures from "../common/utils/deviceFeaturesUtils";
 import { translationConfig } from "./app.config";
 import { mapExploreApiSortsResponse } from "../omniFeed/utils/gameSortUtils";
 import { TExploreApiSorts, TTreatmentType } from "../common/types/bedev2Types";
@@ -93,7 +94,7 @@ function SearchLandingPageOmniFeed({
 		}
 		setIsLoading(true);
 		bedev2Services
-			.getSearchLandingRecommendations(sessionInfo)
+			.getSearchLandingRecommendations(sessionInfo, getDeviceFeatures())
 			.then((data) => {
 				window.EventTracker?.fireEvent(
 					searchLandingPage.searchLandingPageFetchRecommendationsSuccess,

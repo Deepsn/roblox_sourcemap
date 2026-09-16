@@ -2731,6 +2731,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Your child may still be able to test a limited set of early access games created by friends before these games are available in our catalog for kids and young teens",
 	"Heading.PrivatePlaytest.ConsentTitle":
 		"Who can invite your child to preview their games?",
+	"Heading.PrivatePlaytestSettingCapitalized": "Preview games setting",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

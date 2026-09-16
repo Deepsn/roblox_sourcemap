@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
+// Dialog and AccountIntegrityChallengeService are window.Roblox globals (.NET only). 2SV render
+// stays on the global: importing renderChallenge from @rbx/account-security would inline the whole
+// 2SV UI + SCSS into the .NET bundle, and it isn't Next-safe yet (WEB-3271).
 import {
 	Dialog,
-	Endpoints,
 	AccountIntegrityChallengeService,
-	CurrentUser,
 } from "@rbx/legacy-webapp-types/Roblox";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
+import { userId } from "@rbx/core-scripts/meta/user";
 import { withTranslations, TranslateFunction } from "@rbx/core-scripts/react";
 import { TSystemFeedbackService } from "@rbx/core-ui/legacy/react-style-guide";
 import {
@@ -48,7 +51,7 @@ function promptToEnableTwoStepVerification({
 		acceptText: translate("Action.GoToSecurity"),
 		acceptColor: "btn-primary-md",
 		onAccept: () => {
-			window.location.href = Endpoints.getAbsoluteUrl("/my/account#!/security");
+			window.location.href = getAbsoluteUrl("/my/account#!/security");
 		},
 		declineText: translate("Action.Cancel"),
 		dismissable: true,
@@ -77,7 +80,7 @@ async function renderTwoStepVerificationModal({
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		AccountIntegrityChallengeService.TwoStepVerification.renderChallenge({
 			containerId: "two-sv-popup-entry",
-			userId: CurrentUser.userId,
+			userId: String(userId() ?? ""),
 			challengeId: challengeToken,
 			actionType: TwoStepVerification.ActionType.RobuxSpend,
 			renderInline: false,

@@ -72,6 +72,7 @@ export const NotificationStreamList = <T,>({
 				}
 			>
 				{isLoading ? loadingIndicator : emptyState}
+				{hasMore && <div ref={sentinelRef} aria-hidden="true" />}
 			</div>
 		);
 	}

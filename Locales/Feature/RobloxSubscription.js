@@ -292,6 +292,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.Benefit.AppThemeAndFrame": "Customize profile and app theme",
 	"Description.Benefit.DiscountBuyRobux":
 		"Up to {discountPercent} off on items and avatars",
+	"Message.AlreadySubscribed":
+		"You already have Plus. This link is for new members. Share your own to invite friends and get rewards.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

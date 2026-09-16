@@ -30,6 +30,7 @@ import {
 	REFERRAL_REWARD_ROBUX,
 	useIsPlusSubscriber,
 	usePendingPlusReferrals,
+	useSenderReferralEligibility,
 	type SubscriptionReferral,
 } from "@rbx/subscriptions-common";
 import { Thumbnail2d, ThumbnailTypes } from "@rbx/thumbnails";
@@ -476,6 +477,9 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 	// purchase, which left the recipient entry up and the share entry hidden until a reload.
 	const isBlackbird = useIsPlusSubscriber();
 	const isReferralRolloutEnabled = isPlusReferralRolloutEnabled();
+	const { eligibility: senderEligibility } = useSenderReferralEligibility({
+		enabled: isReferralRolloutEnabled && isBlackbird,
+	});
 	const { latestPendingReferral } = usePendingPlusReferrals();
 	// Only a non-subscriber with an invite waiting gets the referral card; everyone else keeps the
 	// plain Plus upsell below.
@@ -545,6 +549,7 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 				/>
 				{isReferralRolloutEnabled &&
 				isBlackbird &&
+				senderEligibility === "Eligible" &&
 				!blackbirdPathRegex.test(currentPath) ? (
 					<BlackbirdReferralNavItem />
 				) : null}
