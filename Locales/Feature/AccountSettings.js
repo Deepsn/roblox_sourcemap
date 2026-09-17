@@ -2732,6 +2732,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.PrivatePlaytest.ConsentTitle":
 		"Who can invite your child to preview their games?",
 	"Heading.PrivatePlaytestSettingCapitalized": "Preview games setting",
+	"Label.NoLimitSetByParent": "No limit set by parent",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

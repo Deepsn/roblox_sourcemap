@@ -210,6 +210,8 @@ Roblox.LangDynamic["Feature.VIPServer"] = {
 	"Label.Expiring": "Expiring",
 	"Label.Unavailable": "Unavailable",
 	"Label.IncludedWithPlus": "Included with Plus",
+	"Message.PurchasePriceChangedError":
+		"The price for purchasing this private server has changed. Please refresh the page and try again.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
