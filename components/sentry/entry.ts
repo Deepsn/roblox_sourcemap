@@ -1,8 +1,6 @@
 import {
 	init as initSentry,
 	browserTracingIntegration,
-	makeBrowserOfflineTransport,
-	makeFetchTransport,
 	setUser,
 	setTag,
 	startSpan,
@@ -21,6 +19,7 @@ import type { TracingResources } from "@rbx/www-common/sentry/tracingResources";
 import { getOtelCollectorTracesEndpoint } from "@rbx/www-common/sentry/otelEndpoint";
 import environmentUrls from "@rbx/environment-urls";
 import { reportWebVitals } from "@rbx/www-common/webVitals";
+import { buildTransport } from "@rbx/www-common/sentry/buildSentryTransport";
 import { buildSampleRate } from "./src/utils/buildSampleRate";
 import {
 	normalizeLocalePath,
@@ -28,6 +27,7 @@ import {
 	buildTracesSampler,
 } from "./src/utils/tracesSampler";
 import { filterSentryTransaction } from "./src/utils/filterSentryTransaction";
+import { getSelfHostedDsn } from "./src/utils/sentryEndpoint";
 
 declare global {
 	interface Window {
@@ -57,7 +57,14 @@ const environmentMetaTag = document.querySelector<HTMLMetaElement>(
 	'meta[name="environment-meta"]',
 );
 const { dsn, envName, sampleRate, tracesSampleRate } = metaTag?.dataset ?? {};
+const DEFAULT_DSN =
+	"https://24df60727c94bd0aa14ab1269d104a21@o293668.ingest.us.sentry.io/4509158985826304";
+const primaryDsn = dsn ?? DEFAULT_DSN;
 const otelEndpoint = getOtelCollectorTracesEndpoint(
+	window.location.hostname,
+	environmentMetaTag?.dataset,
+);
+const selfHostedDsn = getSelfHostedDsn(
 	window.location.hostname,
 	environmentMetaTag?.dataset,
 );
@@ -91,9 +98,7 @@ const tracingResources: TracingResources = {
 };
 
 initSentry({
-	dsn:
-		dsn ??
-		"https://24df60727c94bd0aa14ab1269d104a21@o293668.ingest.us.sentry.io/4509158985826304",
+	dsn: primaryDsn,
 	integrations: [
 		browserTracingIntegration({
 			detectRedirects: true,
@@ -133,8 +138,9 @@ initSentry({
 			return null;
 		return filterSentryTransaction(event);
 	},
-	// Enable offline transport for Sentry to work when the user is offline or when page changes before sentry can send the events
-	transport: makeBrowserOfflineTransport(makeFetchTransport),
+	// Builds a dual write transport system to write to on-prem Sentry
+	// Can be reverted when fully migrated off Sentry Cloud for errors
+	transport: buildTransport(primaryDsn, selfHostedDsn),
 });
 
 // Send Core Web Vitals to the event stream (Superset) at 100% on page hide.

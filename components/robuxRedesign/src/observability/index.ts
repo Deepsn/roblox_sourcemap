@@ -162,14 +162,8 @@ export const observabilityRegistry = {
 				"TransferPendingAcceptClick",
 				"PendingTransferDeepLink",
 				"SendTransferDeepLink",
-				{ name: "SendRobuxExperimentEvaluated", dimensions: ["variant"] },
-				"SendRobuxExperimentExposed",
 			],
-			errors: [
-				"QRCodeGenerationFailed",
-				"SendRobuxExperimentFetchFailed",
-				"SendRobuxExperimentExposureFailed",
-			],
+			errors: ["QRCodeGenerationFailed"],
 		},
 		userSearch: {
 			counters: [

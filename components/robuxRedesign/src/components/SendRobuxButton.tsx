@@ -13,7 +13,6 @@ import { Button, SheetRoot } from "@rbx/foundation-ui";
 import { SendRobuxSheet } from "./modals/SendRobuxSheet";
 import { TrackingContext } from "../contexts/TrackingContext";
 import { trackCriticalError } from "../observability";
-import { useSendRobuxExperiment } from "../hooks/useSendRobuxExperiment";
 
 // Send sheet requires a userId; route unauth clicks to login instead.
 const UNAUTH_LOGIN_PATH = "/login";
@@ -36,11 +35,6 @@ export function SendRobuxButton({
 		useContext(TrackingContext);
 
 	const isAuthed = Boolean(authenticatedUser()?.id);
-	const {
-		isFriendListFilterEnabled,
-		isLoading: isExperimentLoading,
-		logExposure,
-	} = useSendRobuxExperiment(isAuthed);
 
 	const handleSheetChange = useCallback(
 		(isOpen: boolean) => {
@@ -55,12 +49,6 @@ export function SendRobuxButton({
 	useEffect(() => {
 		trackTransferSendImpression();
 	}, [trackTransferSendImpression]);
-
-	useEffect(() => {
-		if (sheetOpen && !isExperimentLoading) {
-			logExposure();
-		}
-	}, [isExperimentLoading, logExposure, sheetOpen]);
 
 	const onError = useCallback((error: unknown) => {
 		trackCriticalError("SendRobuxButtonReactCrash", null, error);
@@ -88,10 +76,7 @@ export function SendRobuxButton({
 			</Button>
 
 			<SheetRoot open={sheetOpen} onOpenChange={handleSheetChange}>
-				<SendRobuxSheet
-					isFriendListFilterEnabled={isFriendListFilterEnabled}
-					isExperimentLoading={isExperimentLoading}
-				/>
+				<SendRobuxSheet />
 			</SheetRoot>
 		</ErrorBoundary>
 	);

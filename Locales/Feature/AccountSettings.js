@@ -2733,6 +2733,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Who can invite your child to preview their games?",
 	"Heading.PrivatePlaytestSettingCapitalized": "Preview games setting",
 	"Label.NoLimitSetByParent": "No limit set by parent",
+	"Label.PasskeysAddedEnsureAccessSingular":
+		"{passkeyCount} passkey added. Add passkeys on all your devices for a faster login",
+	"Label.PasskeysAddedEnsureAccessPlural":
+		"{passkeyCount} passkeys added. Make sure you will always have access to at least one of them",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
