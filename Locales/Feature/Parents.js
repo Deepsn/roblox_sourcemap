@@ -785,6 +785,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Email.PrivatePlaytest.Control":
 		"You can manage your child's game preview access anytime in {aTagWithHref}{parentalControlsLink}{hrefEnd}Parental Controls{htmlCloseAHref}.",
 	"Email.PrivatePlaytest.Closing": "Thank you,{lineBreak}The Roblox Team",
+	"Description.ChildCardViewMessagingActivity":
+		"View your child's messaging activity directly in their account.",
+	"Description.ChildCardViewCommunitiesAndCreations":
+		"View your child’s communities and creations on their profile.",
 	"Action.CloseParentMode": "Close parent mode",
 	"Action.OnDeviceParent.HidePin": "Hide",
 	"Action.OnDeviceParent.RemovePin": "Remove PIN",
