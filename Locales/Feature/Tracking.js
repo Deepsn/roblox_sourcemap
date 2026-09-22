@@ -59,7 +59,7 @@ Roblox.LangDynamic["Feature.Tracking"] = {
 	"Heading.AnalyticsCookies": "Analytics Cookies",
 	"Description.CookieT": "User authentication token cookie",
 	"Description.RBXcp":
-		"Stores your choice to limit non-essential tracking so we can honor it on future visits.",
+		"Stores whether non-essential tracking is limited for your account, so we can apply that on future visits.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
