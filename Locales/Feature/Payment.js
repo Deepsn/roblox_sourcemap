@@ -303,6 +303,10 @@ Roblox.LangDynamic["Feature.Payment"] = {
 	"Label.CashApp": "Cash App Pay",
 	"Description.LegalDisclosurePaymentMethodsV2WithBonusRobux":
 		"One-time bonus included in the package. By purchasing Robux, you agree to our {termsLinkStart}Terms of Use{termsLinkEnd}, including the arbitration clause and revocation policy.",
+	"Label.SomethingWentWrong": "Something went wrong",
+	"Description.OrderDetailsError":
+		"There was a problem getting your order details.",
+	"Button.TryAgain": "Try again",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ValueOf } from "@rbx/core-types";
-import { Link } from "@rbx/core-ui";
+
 import analytics from "@rbx/core-scripts/payments-flow";
 import { useTranslation } from "@rbx/core-scripts/react";
 import { authenticatedUser } from "@rbx/core-scripts/meta/user";
@@ -10,6 +10,7 @@ import {
 	getVngShopSignedRedirectionUrl,
 } from "../services/navigationService";
 import LeaveRobloxPopupDisclaimer from "../components/robux-popover/LeaveRobloxPopupDisclaimer";
+import Link from "../components/NavLink";
 
 export default function NavigationRobux() {
 	const { translate } = useTranslation();

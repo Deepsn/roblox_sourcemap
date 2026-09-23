@@ -9,7 +9,7 @@ import type {
 	PeriodType,
 	RobloxSubscriptionProductFeatureConfig,
 	SubscriptionTenureDiscount,
-} from "@rbx/client-subscriptions-api/v2";
+} from "@rbx/client-subscriptions-api/v1";
 import type { TTailwindIconClass } from "@rbx/foundation-tailwind/classes";
 import type { FC, ReactNode } from "react";
 

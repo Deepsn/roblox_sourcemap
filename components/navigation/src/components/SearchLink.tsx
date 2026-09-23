@@ -1,7 +1,7 @@
 import { MouseEventHandler, useState } from "react";
 import ClassNames from "classnames";
 import { useTranslation } from "@rbx/core-scripts/react";
-import { Link } from "@rbx/core-ui";
+
 import {
 	Thumbnail2d,
 	ThumbnailTypes,
@@ -14,6 +14,8 @@ import {
 	TGamesAutocompleteSuggestionEntry,
 } from "../services/searchService";
 import links, { UniversalSearchLink } from "../constants/linkConstants";
+import Link from "./NavLink";
+import NavIcon from "./NavIcon";
 
 const { gameSearchLink, avatarSearchLink } = links;
 
@@ -42,11 +44,11 @@ export function AutocompleteSearchLink({
 					url={gameSearchLink.url + encodeURIComponent(searchQuery)}
 					onClick={onClick}
 				>
-					<span
-						className={ClassNames(
-							gameSearchLink.icon,
-							"navbar-list-option-icon",
-						)}
+					<NavIcon
+						legacyClass={gameSearchLink.icon}
+						name={gameSearchLink.foundationIcon}
+						size="Medium"
+						className="navbar-list-option-icon"
 					/>
 					<span className="navbar-list-option-text">{searchQuery}</span>
 					<span className="navbar-list-option-suffix">
@@ -83,8 +85,11 @@ export function AutocompleteSearchLink({
 				url={gameSearchLink.url + encodeURIComponent(searchQuery)}
 				onClick={onClick}
 			>
-				<span
-					className={ClassNames(gameSearchLink.icon, "navbar-list-option-icon")}
+				<NavIcon
+					legacyClass={gameSearchLink.icon}
+					name={gameSearchLink.foundationIcon}
+					size="Medium"
+					className="navbar-list-option-icon"
 				/>
 				<span className="navbar-list-option-text">{searchQuery}</span>
 				<span className="navbar-list-option-suffix">
@@ -119,11 +124,11 @@ export function AvatarAutocompleteSearchLink({
 				url={avatarSearchLink.url + encodeURIComponent(query)}
 				onClick={onClick}
 			>
-				<span
-					className={ClassNames(
-						avatarSearchLink.icon,
-						"navbar-list-option-icon",
-					)}
+				<NavIcon
+					legacyClass={avatarSearchLink.icon}
+					name={avatarSearchLink.foundationIcon}
+					size="Medium"
+					className="navbar-list-option-icon"
 				/>
 				<span className="navbar-list-option-text">{query}</span>
 				<span className="navbar-list-option-suffix">
@@ -149,7 +154,7 @@ export function SearchLink({
 }) {
 	const { translate } = useTranslation();
 
-	const { url, label, icon } = suggestion;
+	const { url, label, icon, foundationIcon } = suggestion;
 
 	const listClass = ClassNames("navbar-search-option rbx-clickable-li", {
 		"new-selected": selected,
@@ -161,7 +166,12 @@ export function SearchLink({
 				url={url + encodeURIComponent(searchInput)}
 				onClick={onClick}
 			>
-				<span className={ClassNames(icon, "navbar-list-option-icon")} />
+				<NavIcon
+					legacyClass={icon}
+					name={foundationIcon}
+					size="Medium"
+					className="navbar-list-option-icon"
+				/>
 				<span className="navbar-list-option-text">
 					{searchInput.toLowerCase()}
 				</span>

@@ -2712,9 +2712,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Choose whose early access games you can be invited to test, before these games are available in our catalog for kids and young teens.",
 	"Description.ParentSide.PrivatePlaytest":
 		"Choose whose early access games your child can be invited to test, before these games are available in our catalog for kids and young teens.",
-	"Label.ThirdPartyFriendAccess": "Friend list API acccess",
+	"Label.ThirdPartyFriendAccess": "Friend list developer access",
 	"Description.ThirdPartyFriendAccess":
-		"Can developers have access to your friend list?",
+		"Allow developers access to your friend list",
 	"Action.Copy": "Copy",
 	"Message.RecoveryCodesCopied": "Backup Codes Copied to Keyboard",
 	"Action.Download": "Download",

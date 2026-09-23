@@ -96,6 +96,7 @@ Roblox.LangDynamic["Common.GameSorts"] = {
 	SubtitleRecommendedItems: "Enhance play with these recommended items",
 	"Label.CohortCCUSubtitlev2":
 		"Player counts reflect the selected device and location filters",
+	"Title.TopBuildGamesv2": "Made With Build",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

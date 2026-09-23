@@ -584,6 +584,9 @@ Roblox.LangDynamic["Feature.Catalog"] = {
 	"Action.Try": "Try",
 	"Message.SellingBelowAveragePrice":
 		"This price is well below the recent average price of {averagePrice} Robux. Double-check the amount before you sell.",
+	"Label.LicensingOfficial": "Official",
+	"Label.LicensingLicensed": "Licensed",
+	"Label.LicensedBy": "Licensed by",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

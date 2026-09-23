@@ -44,6 +44,7 @@ import { useRealTime } from "./useRealTime";
 import { useLiveUserNameForDisplay } from "../../hooks/useLiveUserNameForDisplay";
 import {
 	recordReferralNavClick,
+	shouldShowReferralEntry,
 	shouldShowReferralNewBadge,
 	type ReferralNavEntry,
 } from "../../util/plusReferralBadgeUtil";
@@ -551,7 +552,8 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 				{isReferralRolloutEnabled &&
 				isBlackbird &&
 				senderEligibility === "Eligible" &&
-				!blackbirdPathRegex.test(currentPath) ? (
+				!blackbirdPathRegex.test(currentPath) &&
+				shouldShowReferralEntry("share") ? (
 					<BlackbirdReferralNavItem />
 				) : null}
 				{pendingReferral ? (

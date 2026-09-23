@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import events from "../constants/notificationsEventStreamConstants";
+import NavIcon from "./NavIcon";
 
 const UNREAD_ABBREVIATION_THRESHOLD = 100;
 const abbreviateUnreadCount = (count: number): string =>
@@ -56,8 +57,10 @@ export default function ReactNotificationBell({
 					id="nav-ns-icon"
 					className="rbx-menu-item notification-stream-icon"
 				>
-					<span
-						className="icon-common-notification-bell"
+					<NavIcon
+						legacyClass="icon-common-notification-bell"
+						name="icon-regular-bell"
+						size="XLarge"
 						id="common-notification-bell"
 					/>
 					{unreadCount > 0 && (

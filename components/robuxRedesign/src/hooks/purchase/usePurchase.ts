@@ -22,6 +22,7 @@ import {
 import { SamsungPaymentMethods } from "../samsungPaymentMethods/useSamsungPaymentMethods";
 import { loginRedirectService } from "../../services/loginRedirectService";
 import { trackRedirectClickTime } from "../../utils/trackRedirectClickTime";
+import { stampRedirectStartTsOnClick } from "../../utils/stampRedirectStartTs";
 
 export function usePurchase(
 	{
@@ -199,6 +200,8 @@ export function usePurchase(
 					openRedirectErrorModal();
 					return;
 				}
+
+				stampRedirectStartTsOnClick(event);
 
 				const loginRedirectVersion = redirect.isInExperiment
 					? redirect.url.includes("/v2")

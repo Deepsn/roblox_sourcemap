@@ -1,7 +1,7 @@
 import { useTranslation } from "@rbx/core-scripts/react";
 import { useMemo } from "react";
 
-import type { Money } from "@rbx/client-subscriptions-api/v2";
+import type { Money } from "@rbx/client-subscriptions-api/v1";
 
 const useLocalizedMoney = (
 	money: Money,

@@ -191,6 +191,7 @@ export const observabilityRegistry = {
 					name: "RedirectClickTime",
 					dimensions: ["bucket"],
 				},
+				"StampRedirectStartTsFailed",
 			],
 			errors: [
 				"MobileRedirectUrlGenerationFailed",
