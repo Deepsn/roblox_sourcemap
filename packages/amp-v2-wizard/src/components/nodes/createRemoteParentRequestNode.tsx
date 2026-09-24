@@ -280,7 +280,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				className="gap-large flex flex-col"
 				data-testid="remote-parent-request-confirmation"
 			>
-				<h2 className="text-heading-medium content-emphasis">
+				<h2 className="text-heading-small content-emphasis">
 					{translate("Title.RequestSent")}
 				</h2>
 				{parentEmails.length === 1 && !requestCreatedWithoutEmail ? (
@@ -313,7 +313,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				className="gap-large flex flex-col"
 				data-testid="remote-parent-request-error"
 			>
-				<h2 className="text-heading-medium content-emphasis">
+				<h2 className="text-heading-small content-emphasis">
 					{translate("Message.SomethingWentWrong")}
 				</h2>
 				{errorKey === "Message.SomethingWentWrong" ? null : (
@@ -363,8 +363,8 @@ export const RemoteParentRequestNode: NodeComponent = ({
 			className="gap-large flex flex-col"
 			data-testid="remote-parent-request-email"
 		>
-			<div className="gap-small flex flex-col">
-				<h2 className="text-heading-medium content-emphasis">
+			<div className="gap-xsmall flex flex-col">
+				<h2 className="text-heading-small content-emphasis">
 					{legallySensitiveCopy.title ?? translate("Title.EnterParentEmailV2")}
 				</h2>
 				<p
@@ -375,17 +375,21 @@ export const RemoteParentRequestNode: NodeComponent = ({
 						__html: legallySensitiveCopy.description ?? "",
 					}}
 				/>
+			</div>
+			<div className="gap-xxlarge flex flex-col">
 				<TextInput
 					type="email"
+					size="Medium"
 					inputMode="email"
 					autoComplete="email"
-					aria-label={
+					label={
 						legallySensitiveCopy.textboxLabel ?? translate("Label.ParentEmail")
 					}
 					placeholder={
 						legallySensitiveCopy.placeholderText ??
 						translate("Label.EmailCapitalized")
 					}
+					isRequired
 					value={email}
 					onChange={(event) => {
 						setEmail(event.target.value);
@@ -393,16 +397,6 @@ export const RemoteParentRequestNode: NodeComponent = ({
 					error={emailError}
 					hasError={emailError !== undefined}
 				/>
-				{legallySensitiveCopy.footer ? (
-					<p
-						className="text-caption-body content-default"
-						// The legally-sensitive-content service supplies reviewed markup (for policy links).
-						// eslint-disable-next-line react/no-danger
-						dangerouslySetInnerHTML={{ __html: legallySensitiveCopy.footer }}
-					/>
-				) : null}
-			</div>
-			<div className="gap-small flex flex-col">
 				<Button
 					variant="Emphasis"
 					size="Medium"
@@ -416,22 +410,20 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				>
 					{legallySensitiveCopy.button ?? translate("Action.SendEmail")}
 				</Button>
-				<Button
-					variant="Standard"
-					size="Medium"
-					className="w-full"
-					onClick={() => {
-						reportOnce(CANCEL);
-					}}
-				>
-					{translate("Action.Cancel")}
-				</Button>
 			</div>
+			{legallySensitiveCopy.footer ? (
+				<p
+					className="text-body-small content-default"
+					// The legally-sensitive-content service supplies reviewed markup (for policy links).
+					// eslint-disable-next-line react/no-danger
+					dangerouslySetInnerHTML={{ __html: legallySensitiveCopy.footer }}
+				/>
+			) : null}
 		</div>
 	);
 };
 
 RemoteParentRequestNode.ownsLoadingState = true;
 
-// The host's dialog draws an X reporting Cancel, the same outcome as this node's own Cancel button.
+// The host's dialog draws the email screen's only dismiss action, reporting Cancel.
 RemoteParentRequestNode.dismissesOnCancel = true;

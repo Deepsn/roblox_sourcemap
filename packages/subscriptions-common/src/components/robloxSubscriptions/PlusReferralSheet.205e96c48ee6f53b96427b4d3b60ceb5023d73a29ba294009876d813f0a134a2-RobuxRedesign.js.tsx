@@ -13,10 +13,9 @@ import {
 	SheetTitle,
 } from "@rbx/foundation-ui";
 import { translateHtml } from "@rbx/translation-utils";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 
 import BenefitList from "./BenefitList";
-import referralEventService from "../../events/referralEventService";
 import { useCreateSubscriptionReferral } from "../../hooks/useCreateSubscriptionReferral";
 import useLocalizedMoney from "../../hooks/useLocalizedMoney";
 import { usePlusSubscribeProduct } from "../../hooks/usePlusSubscribeProduct";
@@ -40,12 +39,10 @@ import type { FC, ReactNode } from "react";
 const REFERRAL_TRANSLATION_CONFIG = ["Feature.RobloxSubscription"] as const;
 
 /**
- * Centred pictogram, sized so the CTA and legal text stay above the fold on mobile. The sheet
- * caps at 90vh, so 320px (180px tall at 16:9) pushes the bottom off-screen on shorter viewports.
- * From medium up the center sheet has enough room for the full canvas.
+ * Full 320x180 canvas, centred, per the referral Figma. Anything smaller shrinks the artwork
+ * inside it, which sits well within the canvas edges.
  */
-const PICTOGRAM_CLASS =
-	"margin-x-auto width-full max-width-[200px] medium:max-width-[320px]";
+const PICTOGRAM_CLASS = "margin-x-auto width-full max-width-[320px]";
 
 /**
  * The Figma leaves 24px between the artwork and the heading, but the artwork stops 16.5px short of
@@ -210,40 +207,8 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 		},
 	];
 
-	const didClickSubscribe = useRef(false);
-
-	useEffect(() => {
-		if (open) {
-			didClickSubscribe.current = false;
-		}
-	}, [open]);
-
-	const handleSubscribeClick = useCallback(() => {
-		didClickSubscribe.current = true;
-		referralEventService.refereeSubscribeClick(
-			face,
-			referrerUserId,
-			referralCode,
-		);
-		trackCounter("ReferralSubscribeClick", { face });
-	}, [face, referrerUserId, referralCode]);
-
-	const handleOpenChange = useCallback(
-		(nextOpen: boolean) => {
-			if (!nextOpen && !didClickSubscribe.current) {
-				referralEventService.refereeDismissed(
-					face,
-					referrerUserId,
-					referralCode,
-				);
-			}
-			onOpenChange(nextOpen);
-		},
-		[face, onOpenChange, referrerUserId, referralCode],
-	);
-
 	return (
-		<SheetRoot open={open} onOpenChange={handleOpenChange}>
+		<SheetRoot open={open} onOpenChange={onOpenChange}>
 			<SheetContent
 				centerSheetSize="Medium"
 				// `SheetActions` always renders a `Divider` ahead of the action row with no prop to opt
@@ -259,7 +224,7 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 
 				{face === "pitch" ? (
 					// 16px between every body section, per the referral Figma.
-					<SheetBody className="gap-y-medium padding-top-small padding-bottom-small medium:padding-top-medium medium:padding-bottom-medium flex flex-col">
+					<SheetBody className="gap-y-large padding-top-small padding-bottom-small medium:padding-top-medium medium:padding-bottom-medium flex flex-col">
 						{/* Foundation ships one pictogram per theme rather than a themeable component. */}
 						<img
 							alt=""
@@ -350,7 +315,6 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 								{...checkoutProps}
 								className="width-full"
 								size="Large"
-								trackSubscriptionButtonClick={handleSubscribeClick}
 								variant="Emphasis"
 							>
 								{subscribeLabel}
@@ -372,7 +336,6 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 							{...subscribeButtonProps}
 							className="width-full"
 							size="Large"
-							trackSubscriptionButtonClick={handleSubscribeClick}
 							variant="Emphasis"
 						>
 							{joinPlusLabel}
@@ -382,7 +345,7 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 							size="Large"
 							variant="Standard"
 							onClick={() => {
-								handleOpenChange(false);
+								onOpenChange(false);
 							}}
 						>
 							{translate("Action.Cancel", undefined, "Cancel")}
@@ -397,10 +360,8 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 const PlusReferralSheetImpression: FC<{
 	face: PlusReferralSheetFace;
 	hasReferrerId: boolean;
-	referrerId?: string;
-	referralCode?: string;
 	open: boolean;
-}> = ({ face, hasReferrerId, referrerId, referralCode, open }) => {
+}> = ({ face, hasReferrerId, open }) => {
 	const hasFired = useRef(false);
 	useEffect(() => {
 		if (hasFired.current || !open) {
@@ -411,13 +372,7 @@ const PlusReferralSheetImpression: FC<{
 			face,
 			hasReferrerId: String(hasReferrerId),
 		});
-		referralEventService.refereeImpression(
-			face,
-			hasReferrerId,
-			referrerId,
-			referralCode,
-		);
-	}, [face, hasReferrerId, referrerId, referralCode, open]);
+	}, [face, hasReferrerId, open]);
 	return null;
 };
 
@@ -515,8 +470,6 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 				face={face}
 				hasReferrerId={invite?.referrerId !== undefined}
 				open={open}
-				referralCode={invite?.code}
-				referrerId={invite?.referrerId}
 			/>
 			<TranslationProvider config={[...REFERRAL_TRANSLATION_CONFIG]}>
 				<PlusReferralSheetBody

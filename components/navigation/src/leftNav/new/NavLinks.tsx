@@ -28,6 +28,7 @@ import {
 	PLUS_REFERRALS_PATH,
 	PlusReferralSheet,
 	REFERRAL_REWARD_ROBUX,
+	referralEventService,
 	useIsPlusSubscriber,
 	usePendingPlusReferrals,
 	useSenderReferralEligibility,
@@ -300,12 +301,14 @@ const ReferralNavItem = ({
 	label,
 	entry,
 	onSelect,
+	onExpose,
 }: {
 	/** Omitted by entries that open a popup in place rather than navigating. */
 	href?: string;
 	label: string;
 	entry: ReferralNavEntry;
 	onSelect?: () => void;
+	onExpose?: () => void;
 }) => {
 	const { translate } = useTranslation();
 	const [showNewBadge, setShowNewBadge] = useState(() =>
@@ -341,16 +344,23 @@ const ReferralNavItem = ({
 		</Fragment>
 	);
 
+	const card =
+		href === undefined ? (
+			<button className={cardClassName} type="button" onClick={onClick}>
+				{cardContent}
+			</button>
+		) : (
+			<a className={cardClassName} href={href} onClick={onClick}>
+				{cardContent}
+			</a>
+		);
+
 	return (
 		<li>
-			{href === undefined ? (
-				<button className={cardClassName} type="button" onClick={onClick}>
-					{cardContent}
-				</button>
+			{onExpose ? (
+				<EntrypointExposure onExposure={onExpose}>{card}</EntrypointExposure>
 			) : (
-				<a className={cardClassName} href={href} onClick={onClick}>
-					{cardContent}
-				</a>
+				card
 			)}
 		</li>
 	);
@@ -362,8 +372,6 @@ const ReferralNavItem = ({
  */
 const BlackbirdReferralNavItem = () => {
 	const { translate, intl } = useTranslation();
-	// Locale-formatted, matching the recipient entry below: the two sit in the same nav and would
-	// otherwise disagree on grouping separators.
 	const rewardAmount = intl.n(REFERRAL_REWARD_ROBUX);
 
 	return (
@@ -375,6 +383,12 @@ const BlackbirdReferralNavItem = () => {
 				{ amount: rewardAmount },
 				`Share Plus to get ${rewardAmount} Robux`,
 			)}
+			onExpose={() => {
+				referralEventService.flyoutShareImpression();
+			}}
+			onSelect={() => {
+				referralEventService.flyoutShareClick();
+			}}
 		/>
 	);
 };
@@ -391,6 +405,7 @@ const BlackbirdJoinReferralNavItem = ({
 	const { translate, intl } = useTranslation();
 	const [isInviteOpen, setIsInviteOpen] = useState(false);
 	const rewardAmount = intl.n(REFERRAL_REWARD_ROBUX);
+	const referrerId = String(referral.senderUserId);
 
 	return (
 		<Fragment>
@@ -402,11 +417,15 @@ const BlackbirdJoinReferralNavItem = ({
 					`Join Plus to get ${rewardAmount} Robux`,
 				)}
 				onSelect={() => {
+					referralEventService.flyoutJoinClick(referrerId);
 					setIsInviteOpen(true);
+				}}
+				onExpose={() => {
+					referralEventService.flyoutJoinImpression(referrerId);
 				}}
 			/>
 			<PlusReferralSheet
-				invite={{ referrerId: String(referral.senderUserId) }}
+				invite={{ referrerId }}
 				open={isInviteOpen}
 				onOpenChange={setIsInviteOpen}
 			/>
@@ -421,22 +440,35 @@ const BlackbirdUpsellNavItem = ({ currentPath }: { currentPath: string }) => {
 		return null;
 	}
 
+	const card = (
+		<a
+			href="/plus"
+			className="gap-y-medium flex flex-col padding-medium bg-shift-100 stroke-default stroke-thick radius-medium text-body-medium"
+			onClick={() => {
+				referralEventService.flyoutUpsellClick();
+			}}
+		>
+			<Icon name="icon-regular-roblox-plus" />
+			<span>
+				{translate("Description.ExclusiveBenefits", {
+					product: translate("Label.Blackbird"),
+				})}
+			</span>
+			<span className="content-default [text-decoration:underline] [text-decoration-skip-ink:none] [text-underline-offset:3px]">
+				{translate("Action.Subscribe")}
+			</span>
+		</a>
+	);
+
 	return (
 		<li className="padding-top-xsmall">
-			<a
-				href="/plus"
-				className="gap-y-medium flex flex-col padding-medium bg-shift-100 stroke-default stroke-thick radius-medium text-body-medium"
+			<EntrypointExposure
+				onExposure={() => {
+					referralEventService.flyoutUpsellImpression();
+				}}
 			>
-				<Icon name="icon-regular-roblox-plus" />
-				<span>
-					{translate("Description.ExclusiveBenefits", {
-						product: translate("Label.Blackbird"),
-					})}
-				</span>
-				<span className="content-default [text-decoration:underline] [text-decoration-skip-ink:none] [text-underline-offset:3px]">
-					{translate("Action.Subscribe")}
-				</span>
-			</a>
+				{card}
+			</EntrypointExposure>
 		</li>
 	);
 };
