@@ -9,10 +9,9 @@ const isUserInMarketplaceWidgetsLandingPageRollout = (
 		return false;
 	}
 
-	return (
-		parsedUserId % 100 ===
-		catalogConstants.marketplaceWidgetsLandingPageRollout.lastTwoDigits
-	);
+	const { modulus, lastTwoDigits } =
+		catalogConstants.marketplaceWidgetsLandingPageRollout;
+	return parsedUserId % modulus === lastTwoDigits;
 };
 
 export default isUserInMarketplaceWidgetsLandingPageRollout;

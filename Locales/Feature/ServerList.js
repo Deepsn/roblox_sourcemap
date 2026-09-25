@@ -63,6 +63,11 @@ Roblox.LangDynamic["Feature.ServerList"] = {
 	"Label.BestLatency": "Best Connection (Ping)",
 	"Label.OccupancyDescending": "Most Players",
 	"Label.OccupancyAscending": "Fewest Players",
+	"Label.PingSignalHigh": "Connection (Ping) Strength",
+	"Label.PingSignalLow": "Connection (Ping) Strength",
+	"Label.PingSignalMedium": "Connection (Ping) Strength",
+	"Label.PlayersWithLanguageMatch": "Players With Language Match",
+	"Label.FriendsInGame": "Friends In Game",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -9,6 +9,7 @@ import {
 } from "@rbx/foundation-ui";
 import {
 	PlusReferralSheet,
+	PlusReferralSurface,
 	REFERRAL_REWARD_ROBUX,
 	useReferrerHandle,
 	type SubscriptionReferral,
@@ -116,6 +117,7 @@ function PendingReferralRow({ referral }: { referral: SubscriptionReferral }) {
 			<PlusReferralSheet
 				invite={{ referrerId: String(referral.senderUserId) }}
 				open={isInviteOpen}
+				surface={PlusReferralSurface.BuyRobuxPage}
 				onOpenChange={setIsInviteOpen}
 			/>
 		</Fragment>

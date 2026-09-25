@@ -29,6 +29,7 @@ import {
 import { trackCounter } from "../../utils/trackCounter";
 import SubscriptionButton from "../shared/SubscriptionButton";
 
+import type { PlusReferralSurface } from "../../events/referralEventConstants";
 import type { PlusSubscribeButtonProps } from "../../hooks/usePlusSubscribeProduct";
 import type {
 	Money,
@@ -114,6 +115,8 @@ export type PlusReferralSheetProps = {
 	onOpenChange: (open: boolean) => void;
 	/** Omit for a referral that already failed to resolve — that goes straight to the invalid face. */
 	invite?: PlusReferralInvite;
+	/** Which surface opened this sheet, emitted with every referee event. */
+	surface?: PlusReferralSurface;
 	/**
 	 * Checkout wiring from the surrounding page. `/plus` has the product loaded and passes it down;
 	 * anywhere else omits it and the sheet looks the product up itself.
@@ -135,6 +138,7 @@ type PlusReferralSheetBodyProps = {
 	onOpenChange: (open: boolean) => void;
 	referralCode?: string;
 	referrerUserId?: string;
+	surface?: PlusReferralSurface;
 	subscribeButtonProps: PlusSubscribeButtonProps;
 	subscribePrice?: Money;
 	subscribePeriodType?: PeriodType;
@@ -151,6 +155,7 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 	onOpenChange,
 	referralCode,
 	referrerUserId,
+	surface,
 	subscribeButtonProps,
 	subscribePrice,
 	subscribePeriodType,
@@ -224,9 +229,10 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 			face,
 			referrerUserId,
 			referralCode,
+			surface,
 		);
 		trackCounter("ReferralSubscribeClick", { face });
-	}, [face, referrerUserId, referralCode]);
+	}, [face, referrerUserId, referralCode, surface]);
 
 	const handleOpenChange = useCallback(
 		(nextOpen: boolean) => {
@@ -235,11 +241,12 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 					face,
 					referrerUserId,
 					referralCode,
+					surface,
 				);
 			}
 			onOpenChange(nextOpen);
 		},
-		[face, onOpenChange, referrerUserId, referralCode],
+		[face, onOpenChange, referrerUserId, referralCode, surface],
 	);
 
 	return (
@@ -399,8 +406,9 @@ const PlusReferralSheetImpression: FC<{
 	hasReferrerId: boolean;
 	referrerId?: string;
 	referralCode?: string;
+	surface?: PlusReferralSurface;
 	open: boolean;
-}> = ({ face, hasReferrerId, referrerId, referralCode, open }) => {
+}> = ({ face, hasReferrerId, referrerId, referralCode, surface, open }) => {
 	const hasFired = useRef(false);
 	useEffect(() => {
 		if (hasFired.current || !open) {
@@ -416,8 +424,9 @@ const PlusReferralSheetImpression: FC<{
 			hasReferrerId,
 			referrerId,
 			referralCode,
+			surface,
 		);
-	}, [face, hasReferrerId, referrerId, referralCode, open]);
+	}, [face, hasReferrerId, referrerId, referralCode, surface, open]);
 	return null;
 };
 
@@ -431,6 +440,7 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 	open,
 	onOpenChange,
 	invite,
+	surface,
 	subscribeButtonProps,
 	subscribePrice,
 	subscribePeriodType,
@@ -517,6 +527,7 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 				open={open}
 				referralCode={invite?.code}
 				referrerId={invite?.referrerId}
+				surface={surface}
 			/>
 			<TranslationProvider config={[...REFERRAL_TRANSLATION_CONFIG]}>
 				<PlusReferralSheetBody
@@ -528,6 +539,7 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 					subscribeButtonProps={resolvedSubscribeProps}
 					subscribePeriodType={resolvedSubscribePeriodType}
 					subscribePrice={resolvedSubscribePrice}
+					surface={surface}
 					onOpenChange={onOpenChange}
 				/>
 			</TranslationProvider>

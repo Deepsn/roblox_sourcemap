@@ -4,6 +4,8 @@ import { formatNumber } from "@rbx/core-scripts/format/number";
 import { Icon, SheetRoot } from "@rbx/foundation-ui";
 import {
 	PlusReferralSheet,
+	PlusReferralSurface,
+	referralEventService,
 	useReferrerHandle,
 	type SubscriptionReferral,
 } from "@rbx/subscriptions-common";
@@ -153,6 +155,16 @@ export function InlinePendingRequests({
 		}
 	}, [pendingTransfers, trackPendingTransfersImpression]);
 
+	useEffect(() => {
+		const referral = pendingReferrals.at(0);
+		if (referral !== undefined) {
+			referralEventService.buyRobuxReferralImpression(
+				String(referral.senderUserId),
+				referral.referralId,
+			);
+		}
+	}, [pendingReferrals]);
+
 	const handleSheetChange = (isOpen: boolean) => {
 		// The transfers funnel predates referrals, so a referral-only open is not a sheet view for it.
 		if (isOpen && pendingTransfers.length > 0) {
@@ -201,8 +213,19 @@ export function InlinePendingRequests({
 	// matters: accepting any invite makes the user a subscriber, which settles the rest.
 	const openReview = () => {
 		if (latestReferral !== undefined) {
+			referralEventService.buyRobuxReferralReviewClick(
+				String(latestReferral.senderUserId),
+				latestReferral.referralId,
+			);
 			setIsInviteOpen(true);
 			return;
+		}
+		const firstReferral = pendingReferrals.at(0);
+		if (firstReferral !== undefined) {
+			referralEventService.buyRobuxReferralReviewClick(
+				String(firstReferral.senderUserId),
+				firstReferral.referralId,
+			);
 		}
 		handleSheetChange(true);
 	};
@@ -272,6 +295,7 @@ export function InlinePendingRequests({
 				<PlusReferralSheet
 					invite={{ referrerId: String(latestReferral.senderUserId) }}
 					open={isInviteOpen}
+					surface={PlusReferralSurface.BuyRobuxPage}
 					onOpenChange={setIsInviteOpen}
 				/>
 			)}
