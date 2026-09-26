@@ -1,4 +1,4 @@
-import { EnvironmentUrls } from "Roblox";
+import { EnvironmentUrls } from "@rbx/legacy-webapp-types/Roblox";
 
 const { userAgreementsServiceApi } = EnvironmentUrls;
 // Needed as part of the agreement-resolution request to UAQS

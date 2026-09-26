@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { createModal, Link } from "react-style-guide";
+import { createModal, Link } from "@rbx/core-ui/legacy/react-style-guide";
 import userAgreementsService from "../services/userAgreementsService";
 import agreementConstants from "../constants/agreementConstants";
 import cachedAgreementUtils from "../utils/agreementCacheUtils";
@@ -30,7 +30,15 @@ const UserAgreementsChecker = ({ translate, agreements }) => {
 
 	const AgreementListHeader = () => {
 		const { agreementListHeaderTextKey } = agreementConstants;
-		return <div>{translate(agreementListHeaderTextKey)}</div>;
+		// Terms of Service and Privacy Policy are always updated together and share an effective date,
+		// so whichever response carries the text describes the whole modal.
+		const agreementBodyText = agreements.find(
+			(agreement) => agreement.agreementBodyText != null,
+		)?.agreementBodyText;
+
+		return (
+			<div>{agreementBodyText ?? translate(agreementListHeaderTextKey)}</div>
+		);
 	};
 
 	const { modalTitleKey } = agreementConstants;
@@ -80,6 +88,7 @@ UserAgreementsChecker.propTypes = {
 			agreementType: PropTypes.string.isRequired,
 			clientType: PropTypes.string.isRequired,
 			regulationType: PropTypes.string.isRequired,
+			agreementBodyText: PropTypes.string,
 		}),
 	).isRequired,
 };

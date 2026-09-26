@@ -18,6 +18,11 @@ Roblox.LangDynamic["Feature.ProfileBadges"] = {
 	VerifiedBadgeInfoTitle: "Verified Badge",
 	GroupNameChangeWithVerifiedBadge: "the verified badge will be removed.",
 	"action.close": "Close",
+	"Action.FirstPage": "First Page",
+	"Action.Previous": "Previous",
+	"Action.Next": "Next",
+	"Action.LastPage": "Last Page",
+	"Label.Loading": "loading",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

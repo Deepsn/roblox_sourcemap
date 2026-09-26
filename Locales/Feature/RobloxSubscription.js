@@ -81,6 +81,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"This subscription isn't available to purchase on this device.",
 	"Label.month": "month",
 	"Label.months": "months",
+	"label.week": "week",
+	"label.weeks": "weeks",
 	"Description.SavingWithPlus":
 		"Saving {amountStart}{robuxAmount}{amountEnd} with Plus",
 	"Description.SubscriptionLegal":
@@ -234,9 +236,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.ReferralRewardRobux": "{amount} Robux",
 	"Heading.ReferralShare": "Share Plus, get",
 	"Description.ReferralShare":
-		"Invite someone to Plus and you both get {amount} Robux when they join.",
-	"Description.ReferralReferrerReward":
-		"When anyone joins Plus with your link.",
+		"Invite someone to Plus and you both get {amount} Robux when they buy plus.",
+	"Description.ReferralReferrerReward": "When anyone buys Plus with your link.",
 	"Label.ReferralYouGet": "You get",
 	"Description.ReferralRecipientReward":
 		"Offer valid for new Plus subscribers only.",
@@ -324,14 +325,16 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Feature.RobloxSubscription.Label.BlackbirdVTDiscountSecondV2":
 		"{discountPercent}% off these items {periodIndex} {periodType} after your {trialDuration} {trialPeriodLabel}",
 	"Description.Benefit.DiscountV3":
-		"10% off during your {trialDuration}-{trialPeriodLabel} trial and the first 60 days of membership, then 20% off items and avatars",
+		"10% off first {trialUnlockDays} days, then 20% off items and avatars",
 	"Label.PricePerMonth": "{price}/month",
 	"Label.PricePerWeek": "{price}/week",
 	"Label.PricePerYear": "{price}/year",
 	"Label.RobloxPlusPriceRowV3":
-		"{boldStart}{trialDuration}-{trialPeriodLabel} free,{boldEnd} then {price}/{periodType}",
+		"{boldStart}{trialDuration} {trialPeriodLabel} free,{boldEnd} then {price}/{periodType}",
 	"Label.FreeTrialDisclosureV3":
-		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your free trial will end in {trialDuration}-{trialPeriodLabel} and you will be charged automatically each {billingPeriodLabel} and can cancel at any time.',
+		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms.{linkEnd} Your free trial will end in {trialDuration} {trialPeriodLabel} and you will be charged automatically each {billingPeriodLabel} and can cancel at any time.',
+	"Description.SubscriptionFreeTrialLegalV2":
+		'By clicking "Try it for free," you agree to the {linkStart}Roblox Subscription Terms{linkEnd}. Your {trialDuration} {trialPeriodLabel} free trial ends on {date} and you will be charged automatically each {billingPeriodLabel} and can cancel at any time.',
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

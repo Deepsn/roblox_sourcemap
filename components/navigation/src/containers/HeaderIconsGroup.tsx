@@ -48,6 +48,7 @@ export default function HeaderIconsGroup({
 		typeof RobuxBadgeType
 	> | null>(null);
 	const [robuxError, setRobuxError] = useState("");
+	const [vngMetadataError, setVngMetadataError] = useState("");
 	const [creditDisplayConfig, setCreditDisplayConfig] = useState<
 		ValueOf<typeof layoutConstants.creditDisplayConfigVariants>
 	>(layoutConstants.creditDisplayConfigVariants.control);
@@ -64,6 +65,7 @@ export default function HeaderIconsGroup({
 			getUserCurrency(userId)
 				.then(
 					({ data: usercurrencyData }) => {
+						setRobuxError("");
 						setRobuxAmount(usercurrencyData.robux);
 					},
 					() => {
@@ -82,11 +84,14 @@ export default function HeaderIconsGroup({
 		if (user != null) {
 			getGuacBehavior().then(
 				(guacData) => {
+					setVngMetadataError("");
 					setIsEligibleForVng(guacData.shouldShowVng);
 					setCanAccessStream(guacData.notificationsCanAccessStream);
 				},
 				() => {
-					setRobuxError(translate(layoutConstants.economySystemOutageMessage));
+					setVngMetadataError(
+						translate(layoutConstants.economySystemOutageMessage),
+					);
 				},
 			);
 		}
@@ -127,30 +132,13 @@ export default function HeaderIconsGroup({
 		}
 	};
 
-	useEffect(() => {
-		window.addEventListener(`navigation-update-user-currency`, () => {
-			getUserCurrencyLocal();
-		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	useEffect(() => {
+	const getCreditBalanceLocal = () => {
 		if (user != null) {
-			// Set account notification count
-			getAccountNotificationCount().then(setAccountNotificationCount);
-
-			getUserCurrencyLocal();
-
-			// Get vng metadata
-			getVngMetadata();
-
-			// Get Robux badge data
-			getRobuxBadgeLocal();
-
 			// Set credit amount
 			getCreditBalanceForNavigation()
 				.then(
 					({ data: creditData }) => {
+						setCreditError("");
 						if (
 							creditData.creditDisplayConfig === null ||
 							creditData.creditBalance === null ||
@@ -177,6 +165,41 @@ export default function HeaderIconsGroup({
 				.finally(() => {
 					setIsExperimentCallDone(true);
 				});
+		}
+	};
+
+	useEffect(() => {
+		const handleCurrencyUpdate = () => {
+			getUserCurrencyLocal();
+			getCreditBalanceLocal();
+		};
+		window.addEventListener(
+			"navigation-update-user-currency",
+			handleCurrencyUpdate,
+		);
+		return () => {
+			window.removeEventListener(
+				"navigation-update-user-currency",
+				handleCurrencyUpdate,
+			);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (user != null) {
+			// Set account notification count
+			getAccountNotificationCount().then(setAccountNotificationCount);
+
+			getUserCurrencyLocal();
+
+			// Get vng metadata
+			getVngMetadata();
+
+			// Get Robux badge data
+			getRobuxBadgeLocal();
+
+			getCreditBalanceLocal();
 
 			// Conditionally display account switched confirmation banner
 			try {
@@ -253,7 +276,7 @@ export default function HeaderIconsGroup({
 			{canAccessStream && notificationStream}
 			<BuyRobuxPopover
 				robuxAmount={robuxAmount}
-				robuxError={robuxError}
+				robuxError={robuxError || vngMetadataError}
 				creditAmount={creditAmount}
 				currencyCode={currencyCode}
 				creditError={creditError}

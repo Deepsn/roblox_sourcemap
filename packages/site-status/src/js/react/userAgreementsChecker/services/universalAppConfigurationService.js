@@ -1,4 +1,4 @@
-import { Guac } from "Roblox";
+import { Guac } from "@rbx/legacy-webapp-types/Roblox";
 
 export default {
 	getCooldownPeriodInMs() {

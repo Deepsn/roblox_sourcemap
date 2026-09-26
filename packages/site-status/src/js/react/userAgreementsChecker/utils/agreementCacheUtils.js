@@ -1,6 +1,6 @@
-import { DeviceMeta } from "Roblox";
-import { localStorageService } from "core-roblox-utilities";
-import { authenticatedUser } from "header-scripts";
+import { DeviceMeta } from "@rbx/legacy-webapp-types/Roblox";
+import { localStorageService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { authenticatedUser } from "@rbx/core-scripts/legacy/header-scripts";
 import agreementConstants from "../constants/agreementConstants";
 import universalAppConfigurationService from "../services/universalAppConfigurationService";
 

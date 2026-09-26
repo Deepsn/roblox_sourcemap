@@ -1,4 +1,4 @@
-import { httpService } from "core-utilities";
+import { httpService } from "@rbx/core-scripts/legacy/core-utilities";
 import urlConstants from "../constants/urlConstants";
 
 export default {

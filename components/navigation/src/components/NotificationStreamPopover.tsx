@@ -105,7 +105,8 @@ export default function NotificationStreamPopover() {
 					<PopoverContent
 						side="bottom"
 						align="end"
-						alignOffset={-133}
+						alignOffset={-108}
+						collisionPadding={12}
 						ariaLabel={ariaLabel}
 						{...popoverDismissGuard(ref)}
 					>

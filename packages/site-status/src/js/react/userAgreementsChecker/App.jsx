@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { withTranslations } from "react-utilities";
+import { withTranslations } from "@rbx/core-scripts/legacy/react-utilities";
 import { translationConfig } from "./translation.config";
 import userAgreementsService from "./services/userAgreementsService";
 import UserAgreementsChecker from "./components/UserAgreementsChecker";
