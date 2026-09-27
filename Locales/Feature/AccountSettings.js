@@ -2764,6 +2764,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.ManagePin": "Parent PIN",
 	"Action.UpdateParentPin": "Update parent PIN",
 	"Action.RemoveParentPin": "Remove parent PIN",
+	"Action.CreateParentAccount": "Create parent account",
+	"Action.UpdateParentEmail": "Update parent email",
+	"Description.CreateParentAccount":
+		"Get email updates about your child and manage their settings whenever you like",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
