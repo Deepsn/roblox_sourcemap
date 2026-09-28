@@ -2720,9 +2720,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.RobuxTransferLimits": "Robux transfer limits",
 	"Heading.EligibleGamesForPlaytest": "Preview games",
 	"Description.PrivatePlaytest":
-		"Choose whose early access games you can be invited to test, before these games are available in our catalog for kids and young teens.",
+		"Choose whose early access games you can be invited to test, before these games may be rated or published to our games catalog for kids and young teens.",
 	"Description.ParentSide.PrivatePlaytest":
-		"Choose whose early access games your child can be invited to test, before these games are available in our catalog for kids and young teens.",
+		"Choose whose early access games your child can be invited to test, before these games may be rated or published to our games catalog for kids and young teens.",
 	"Label.AllowIdVerificationSetting": "Id verification setting",
 	"Label.ThirdPartyFriendAccess": "Friend list developer access",
 	"Description.ThirdPartyFriendAccess":
@@ -2768,6 +2768,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Action.UpdateParentEmail": "Update parent email",
 	"Description.CreateParentAccount":
 		"Get email updates about your child and manage their settings whenever you like",
+	"Disclaimer.PrivatePlaytestOnContentMaturitySetting":
+		"You may still be able to test a limited set of early access games created by friends before these games are available in our catalog for kids and young teens.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
