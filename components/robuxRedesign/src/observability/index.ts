@@ -5,8 +5,7 @@ import { createPageLifecycle } from "@rbx/observability-framework/page-lifecycle
 import { createObsErrorBoundary } from "@rbx/observability-framework/react";
 import { captureException } from "@rbx/payments/error";
 import { createWithApiMetricsV2 } from "@rbx/payments/withApiMetrics";
-import { createFireTelemetryCounter } from "@rbx/web-telemetry/fire";
-import { createFireTelemetryHistogram } from "@rbx/web-telemetry/histogram";
+import { createFireTelemetryCounter } from "@rbx/web-telemetry/v2/fire";
 
 export const observabilityRegistry = {
 	featureName: "BuyRobuxRedesign",
@@ -14,7 +13,6 @@ export const observabilityRegistry = {
 
 	features: {
 		health: {
-			pagePerformance: true,
 			counters: ["PageLoad", "PageView"],
 			criticalErrors: [
 				"BuyRobuxPageReactCrash",
@@ -57,7 +55,7 @@ export const observabilityRegistry = {
 		},
 		purchase: {
 			counters: [
-				"StartPurchase",
+				{ name: "StartPurchase", dimensions: ["isQuickPay"] },
 				"DesktopPurchaseRedirect",
 				"MobilePurchaseRedirect",
 				"IneligiblePurchase",
@@ -85,8 +83,12 @@ export const observabilityRegistry = {
 			counters: [
 				{ name: "PurchaseWarningModalShown", dimensions: ["action"] },
 				{ name: "StoppedPurchaseWarning", dimensions: ["action"] },
+				"PurchaseWarningAcknowledged",
 			],
-			errors: ["PurchaseWarningEmailVerificationException"],
+			errors: [
+				"PurchaseWarningEmailVerificationException",
+				"PurchaseWarningAcknowledgeFailed",
+			],
 		},
 		firstTimePurchaseConsent: {
 			counters: ["FirstTimePurchaseConsentNotFetchedInTime"],
@@ -104,37 +106,125 @@ export const observabilityRegistry = {
 		},
 		quickPay: {
 			counters: [
-				"StartQuickPay",
-				{ name: "QuickPayPaymentMethodSelected", dimensions: ["method"] },
-				"QuickPayPaypalSelected",
-				"QuickPayPaypalRedirect",
-				"QuickPayRedirect",
-				"QuickPayPurchaseSuccessRedirect",
-				"QuickPay3DSModalShown",
-				"QuickPay3DSMessageReceived",
-				"QuickPayPreparePaymentStarted",
-				"QuickPayPreparePaymentSuccess",
-				"QuickPayChallengeAbandoned",
-				"QuickPayProfileRemovedByFraud",
+				{
+					name: "QuickPayPaymentFlow",
+					dimensions: ["step"],
+					steps: {
+						dimension: "step",
+						values: [
+							{
+								value: "start",
+								role: "start",
+							},
+							{
+								value: "complete",
+								role: "success",
+							},
+							{
+								value: "redirect",
+								role: "success",
+							},
+							{
+								value: "3dsModalShown",
+								role: "neutral",
+							},
+							{
+								value: "noData",
+								role: "error",
+							},
+							{
+								value: "error",
+								role: "error",
+							},
+							{
+								value: "3dsError",
+								role: "error",
+							},
+						],
+					},
+				},
+				{
+					name: "QuickPayPreparePaymentFlow",
+					dimensions: ["step"],
+					steps: {
+						dimension: "step",
+						values: [
+							{
+								value: "start",
+								role: "start",
+							},
+							{
+								value: "success",
+								role: "success",
+							},
+							{
+								value: "redirect",
+								role: "success",
+							},
+							{
+								value: "error",
+								role: "error",
+							},
+							{
+								value: "noData",
+								role: "error",
+							},
+							{
+								value: "genericChallengeAbandoned",
+								role: "error",
+							},
+							{
+								value: "profileRemovedByFraud",
+								role: "error",
+							},
+						],
+					},
+				},
+				{
+					name: "QuickPayGetMetadataFlow",
+					dimensions: ["step"],
+					steps: {
+						dimension: "step",
+						values: [
+							{ value: "start", role: "start" },
+							{ value: "success", role: "success" },
+							{ value: "ineligible", role: "drop" },
+							{ value: "noPaymentProfiles", role: "error" },
+							{ value: "noEligiblePaymentProfiles", role: "error" },
+							{ value: "noData", role: "error" },
+						],
+					},
+				},
+				{
+					name: "QuickPayPaymentMethodSelected",
+					dimensions: ["method"],
+				},
+				{
+					name: "QuickPay3DSFlow",
+					dimensions: ["step"],
+					steps: {
+						dimension: "step",
+						values: [
+							{ value: "start", role: "start" },
+							{ value: "messageReceived", role: "neutral" },
+							{ value: "success", role: "success" },
+							{ value: "error", role: "error" },
+							{ value: "urlNotSet", role: "error" },
+							{ value: "clientSecretNotSet", role: "error" },
+							{ value: "stripeError", role: "error" },
+							{ value: "unsuccessful", role: "error" },
+						],
+					},
+				},
 			],
 			errors: [
-				"QuickPayPaymentProfilesNoneReceived",
-				"QuickPayPaymentProfilesNoneEligibleReceived",
-				"QuickPayStripeException",
-				"QuickPayPercentStringException",
-				"QuickPayPreparePaymentNoData",
-				"QuickPayPreparePaymentNoPaymentProfile",
-				"QuickPayPreparePaymentError",
-				"QuickPayProcessPaymentFailure",
 				{
 					name: "QuickPayStripeProcessPaymentError",
 					dimensions: ["stripeErrorCode"],
 				},
-				"QuickPay3DSException",
-				"QuickPay3DSStripeError",
-				"QuickPay3DSUnsuccessful",
-				"QuickPay3DSUrlNotSet",
-				"QuickPay3DSClientSecretNotSet",
+				"QuickPayPreparePaymentNoPaymentProfile",
+				"QuickPayStripeException",
+				"QuickPayPercentStringException",
 			],
 		},
 		subscriptionV2: {
@@ -234,14 +324,8 @@ export const withApiEventsV2 = createWithApiMetricsV2<ApiCall>(
 	captureException,
 );
 
-const publishPerformance = createFireTelemetryHistogram(
-	observabilityRegistry.featureName,
-	{},
-);
-
 export const { reportPageLoad, reportPageView } = createPageLifecycle({
 	publishCounter: publishMetric,
-	publishPerformance,
 });
 
 export const ObsErrorBoundary = createObsErrorBoundary({

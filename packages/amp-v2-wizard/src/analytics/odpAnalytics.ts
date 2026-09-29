@@ -18,6 +18,9 @@ import type { FlowAnalyticsStrings, NodeContext } from "../types";
 
 /** Analytics that ODP nodes can report. */
 export type OdpAnalytics = {
+	handoffShown: (analyticsSessionId?: string) => void;
+	handoffContinue: (analyticsSessionId?: string) => void;
+	handoffBack: (analyticsSessionId?: string) => void;
 	verificationMethodSelectorShown: (
 		sessionId?: string,
 		preselectedMethod?: string,
@@ -52,6 +55,23 @@ export function createOdpAnalytics(
 	const ageGroup = strings?.[AgeGroupKey];
 
 	return {
+		handoffShown: (analyticsSessionId) => {
+			sendEventWithTarget(OdpEventName.Pageload, OdpEventContext.Handoff, {
+				state: buildState(analyticsSessionId, ageGroup),
+			});
+		},
+		handoffContinue: (analyticsSessionId) => {
+			sendEventWithTarget(OdpEventName.ButtonClick, OdpEventContext.Handoff, {
+				btn: OdpEventButton.ContinueAsParent,
+				state: buildState(analyticsSessionId, ageGroup),
+			});
+		},
+		handoffBack: (analyticsSessionId) => {
+			sendEventWithTarget(OdpEventName.ButtonClick, OdpEventContext.Handoff, {
+				btn: OdpEventButton.Back,
+				state: buildState(analyticsSessionId, ageGroup),
+			});
+		},
 		verificationMethodSelectorShown: (sessionId, preselectedMethod) => {
 			sendEventWithTarget(
 				OdpEventName.ModalShown,

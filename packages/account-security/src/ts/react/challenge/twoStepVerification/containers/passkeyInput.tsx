@@ -2,6 +2,7 @@ import * as fido2Util from "@rbx/core-scripts/auth/fido2";
 import * as hybridResponseService from "@rbx/core-scripts/auth/hybrid-response";
 import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-style-guide";
+import { Button } from "@rbx/foundation-ui";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import * as TwoStepVerification from "../../../../common/request/types/twoStepVerification";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
@@ -235,14 +236,6 @@ const PasskeyInput: React.FC<Props> = ({
 	const marginBottomClassName = renderInline
 		? "inline-challenge-margin-bottom"
 		: "modal-margin-bottom";
-	let actionButtonClassName = renderInline
-		? "inline-challenge-action-button"
-		: "modal-action-button";
-	actionButtonClassName = actionButtonClassName.concat(" ", "btn-cta-md");
-	actionButtonClassName = actionButtonClassName.concat(
-		" ",
-		marginBottomClassName,
-	);
 	const marginBottomLargeClassName = renderInline
 		? "inline-margin-bottom-xlarge"
 		: "modal-margin-bottom-xlarge";
@@ -278,20 +271,20 @@ const PasskeyInput: React.FC<Props> = ({
 				<p className={marginBottomClassName}>
 					{resources.Label.PasskeyDirections}
 				</p>
-				<button
+				<Button
 					ref={buttonRef}
-					type="button"
-					className={`${actionButtonClassName} focus-visible:outline-focus`}
+					variant="Emphasis"
+					size="Medium"
+					className={`challenge-action-button ${marginBottomClassName}`}
 					aria-label={resources.Action.Verify}
-					disabled={requestInFlight}
+					isDisabled={requestInFlight}
+					isLoading={requestInFlight}
 					onClick={verifyCode}
+					data-testid="passkey-verify-button"
 				>
-					{requestInFlight ? (
-						<span className="spinner spinner-xs spinner-no-margin" />
-					) : (
-						resources.Action.Verify
-					)}
-				</button>
+					{resources.Action.Verify}
+				</Button>
+				{children}
 				{shouldShowRememberDeviceCheckbox && (
 					<RememberDeviceCheckBox
 						disabled={requestInFlight}
@@ -300,7 +293,6 @@ const PasskeyInput: React.FC<Props> = ({
 						className={marginBottomClassName}
 					/>
 				)}
-				{children}
 				<SupportHelp className={marginBottomClassName} />
 				<p className={textErrorClassName}>{requestError}</p>
 			</BodyElement>

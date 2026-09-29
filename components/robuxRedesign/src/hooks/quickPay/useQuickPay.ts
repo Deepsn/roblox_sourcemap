@@ -50,6 +50,18 @@ const isGenericChallengeAbandonedError = (error: unknown): boolean => {
 	);
 };
 
+type QuickPay3DSErrorStep =
+	| "error"
+	| "urlNotSet"
+	| "clientSecretNotSet"
+	| "stripeError"
+	| "unsuccessful";
+
+const track3DSError = (step: QuickPay3DSErrorStep, error?: unknown): void => {
+	trackError("QuickPay3DSFlow", { step }, error);
+	trackError("QuickPayPaymentFlow", { step: "3dsError" });
+};
+
 const getAxiosResponseFailureReason = (error: unknown): string | undefined => {
 	if (!isAxiosError(error)) {
 		return undefined;
@@ -160,12 +172,6 @@ export function useQuickPay({
 
 	const prepareRequestIdRef = useRef(0);
 
-	useEffect(() => {
-		if (isPayPalProviderPayload(selectedPaymentProfile?.providerPayload)) {
-			trackCounter("QuickPayPaypalSelected");
-		}
-	}, [selectedPaymentProfile]);
-
 	const firePaymentMethodSelectedCounter = useCallback(
 		(profile: PaymentProfile | undefined) => {
 			if (!profile) {
@@ -190,20 +196,24 @@ export function useQuickPay({
 			quickPayFlowType = QuickPayFlowType.BuyRobuxPagePreselectedProduct;
 		}
 
+		trackCounter("QuickPayGetMetadataFlow", { step: "start" });
+
 		const data = await getQuickPayMetadata(quickPayFlowType);
 		if (!data) {
+			trackError("QuickPayGetMetadataFlow", { step: "noData" });
 			return;
 		}
 
 		setLegalDisclosureTranslationKey(data.legalDisclosureTranslationKey);
 
 		if (!data.isUserEligible) {
+			trackCounter("QuickPayGetMetadataFlow", { step: "ineligible" });
 			return;
 		}
 
 		const profiles = await getPaymentProfiles();
 		if (!profiles?.length) {
-			trackError("QuickPayPaymentProfilesNoneReceived");
+			trackError("QuickPayGetMetadataFlow", { step: "noPaymentProfiles" });
 			return;
 		}
 
@@ -217,9 +227,13 @@ export function useQuickPay({
 		);
 
 		if (!eligibleProfiles.length) {
-			trackError("QuickPayPaymentProfilesNoneEligibleReceived");
+			trackError("QuickPayGetMetadataFlow", {
+				step: "noEligiblePaymentProfiles",
+			});
 			return;
 		}
+
+		trackCounter("QuickPayGetMetadataFlow", { step: "success" });
 
 		eligibleProfiles.sort((a, b) => b.lastChargeTime - a.lastChargeTime);
 
@@ -282,9 +296,9 @@ export function useQuickPay({
 			);
 			const paymentMethod = isPayPalPayment ? "BraintreePaypal" : "StripeCard";
 
-			trackCounter("QuickPayPreparePaymentStarted");
+			trackCounter("QuickPayPreparePaymentFlow", { step: "start" });
 
-			const data = await preparePayment(
+			const { data, isError } = await preparePayment(
 				purchaseFlowId,
 				paymentMethod,
 				paymentSession.id,
@@ -298,10 +312,9 @@ export function useQuickPay({
 				 * If the user cancels out, then it will reject the promise
 				 * */
 				.then((response) => {
-					trackCounter("QuickPayPreparePaymentSuccess");
 					setIsQuickPayLoading(false);
 					openQuickPayModal(product);
-					return response;
+					return { data: response, isError: false };
 				})
 				.catch((err: unknown) => {
 					setIsQuickPayLoading(false);
@@ -309,18 +322,23 @@ export function useQuickPay({
 					setCheckoutSessionId(null);
 
 					if (isGenericChallengeAbandonedError(err)) {
-						trackCounter("QuickPayChallengeAbandoned");
+						trackError("QuickPayPreparePaymentFlow", {
+							step: "genericChallengeAbandoned",
+						});
 					} else if (
 						getAxiosResponseFailureReason(err) === "RemovedPaymentProfile"
 					) {
-						trackCounter("QuickPayProfileRemovedByFraud");
+						trackError("QuickPayPreparePaymentFlow", {
+							step: "profileRemovedByFraud",
+						});
 					} else {
-						trackError("QuickPayPreparePaymentError", null, err);
+						trackError("QuickPayPreparePaymentFlow", { step: "error" }, err);
 					}
 
 					// For any kinds of error, we send the user to the non-quick-pay flow
 					const purchaseUrl = getPurchaseUrl(product, isSub);
 					window.location.href = purchaseUrl;
+					return { data: undefined, isError: true };
 				});
 
 			if (prepareRequestIdRef.current !== requestId) {
@@ -328,7 +346,9 @@ export function useQuickPay({
 			}
 
 			if (!data) {
-				trackError("QuickPayPreparePaymentNoData");
+				if (!isError) {
+					trackError("QuickPayPreparePaymentFlow", { step: "noData" });
+				}
 				return;
 			}
 
@@ -339,11 +359,13 @@ export function useQuickPay({
 				// Redirect to old flow (Select Payment Methods page)
 				const purchaseUrl = getPurchaseUrl(product, isSub);
 				if (paymentProfiles.length === 1 && purchaseUrl) {
-					trackCounter("QuickPayRedirect");
+					trackCounter("QuickPayPreparePaymentFlow", { step: "redirect" });
 					window.location.href = purchaseUrl;
 				}
 				return;
 			}
+
+			trackCounter("QuickPayPreparePaymentFlow", { step: "success" });
 
 			setPreparePaymentProviderPayload(data.providerPayload);
 			setCheckoutSessionId(data.checkoutSessionId);
@@ -376,6 +398,8 @@ export function useQuickPay({
 				return { isLoading: false };
 			}
 
+			trackCounter("QuickPayPaymentFlow", { step: "start" });
+
 			const data = await processPayment({
 				checkoutSessionId: checkoutSessionId ?? undefined,
 				paymentProviderType,
@@ -385,7 +409,7 @@ export function useQuickPay({
 			});
 
 			if (!data) {
-				trackError("QuickPayProcessPaymentFailure");
+				trackError("QuickPayPaymentFlow", { step: "noData" });
 				// generate a new checkout session id and provider payload if purchase fails
 				// selectedProduct should always be defined here
 				if (selectedProduct) {
@@ -407,6 +431,7 @@ export function useQuickPay({
 
 			if (stripeErrorCode) {
 				trackError("QuickPayStripeProcessPaymentError", { stripeErrorCode });
+				trackError("QuickPayPaymentFlow", { step: "error" });
 				let quickPayError: QuickPayError;
 				switch (stripeErrorCode) {
 					case StripeErrorCode.CARD_DECLINED: {
@@ -438,14 +463,15 @@ export function useQuickPay({
 			const redirectUrl = getRedirectUrl(responsePayload);
 			if (redirectUrl) {
 				if (isPayPalPayment) {
-					trackCounter("QuickPayPaypalRedirect");
+					trackCounter("QuickPayPaymentFlow", { step: "redirect" });
 					// PayPal redirects directly to PayPal flow
 					window.location.href = redirectUrl;
 					return {
 						isLoading: true,
 					};
 				} else {
-					trackCounter("QuickPay3DSModalShown");
+					trackCounter("QuickPayPaymentFlow", { step: "3dsModalShown" });
+					trackCounter("QuickPay3DSFlow", { step: "start" });
 					openQuickPay3DSModal(redirectUrl);
 					return {
 						isLoading: false,
@@ -453,7 +479,7 @@ export function useQuickPay({
 				}
 			}
 
-			trackCounter("QuickPayPurchaseSuccessRedirect");
+			trackCounter("QuickPayPaymentFlow", { step: "complete" });
 			trackQuickPayPurchase(selectedProduct);
 			window.location.href = `/upgrades/checkout/success?checkoutSessionId=${checkoutSessionId}`;
 
@@ -583,11 +609,11 @@ export function useQuickPay({
 				return;
 			}
 
-			trackCounter("QuickPay3DSMessageReceived");
+			trackCounter("QuickPay3DSFlow", { step: "messageReceived" });
 
 			try {
 				if (!quickPay3DSUrl || !isValidHttpUrl(quickPay3DSUrl)) {
-					trackError("QuickPay3DSUrlNotSet");
+					track3DSError("urlNotSet");
 					return QuickPayError.GenericError;
 				}
 
@@ -595,7 +621,7 @@ export function useQuickPay({
 					"payment_intent_client_secret",
 				);
 				if (!clientSecret) {
-					trackError("QuickPay3DSClientSecretNotSet");
+					track3DSError("clientSecretNotSet");
 					return QuickPayError.GenericError;
 				}
 
@@ -603,19 +629,21 @@ export function useQuickPay({
 					await stripe.retrievePaymentIntent(clientSecret);
 
 				if (error) {
-					trackError("QuickPay3DSStripeError", null, error);
+					track3DSError("stripeError", error);
 					return QuickPayError.GenericError;
 				}
 
 				if (paymentIntent.status !== "succeeded") {
-					trackError("QuickPay3DSUnsuccessful");
+					track3DSError("unsuccessful");
 					return QuickPayError.GenericError;
 				}
+
+				trackCounter("QuickPay3DSFlow", { step: "success" });
 
 				window.location.href = `/upgrades/checkout/success?checkoutSessionId=${checkoutSessionId}`;
 				return undefined;
 			} catch (e) {
-				trackError("QuickPay3DSException", null, e);
+				track3DSError("error", e);
 
 				return QuickPayError.GenericError;
 			} finally {
