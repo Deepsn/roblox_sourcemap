@@ -231,7 +231,10 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 			referralCode,
 			surface,
 		);
-		trackCounter("ReferralSubscribeClick", { face });
+		trackCounter("ReferralSubscribeClick", {
+			face,
+			...(surface ? { surface } : {}),
+		});
 	}, [face, referrerUserId, referralCode, surface]);
 
 	const handleOpenChange = useCallback(
@@ -243,6 +246,10 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 					referralCode,
 					surface,
 				);
+				trackCounter("ReferralDismissed", {
+					face,
+					...(surface ? { surface } : {}),
+				});
 			}
 			onOpenChange(nextOpen);
 		},
@@ -418,6 +425,7 @@ const PlusReferralSheetImpression: FC<{
 		trackCounter("PlusReferralSheetShown", {
 			face,
 			hasReferrerId: String(hasReferrerId),
+			...(surface ? { surface } : {}),
 		});
 		referralEventService.refereeImpression(
 			face,

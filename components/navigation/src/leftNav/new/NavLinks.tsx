@@ -50,7 +50,6 @@ import {
 	shouldShowReferralNewBadge,
 	type ReferralNavEntry,
 } from "../../util/plusReferralBadgeUtil";
-import { EventNavItem } from "../EventNavItem";
 
 // Temporarily copied from `@rbx/foundation-ui` since the NavigationRail component is not available yet.
 const interactable =
@@ -678,7 +677,6 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 				{!isBlackbird && !pendingReferral ? (
 					<BlackbirdUpsellNavItem currentPath={currentPath} />
 				) : null}
-				<EventNavItem />
 			</ul>
 		</nav>
 	);

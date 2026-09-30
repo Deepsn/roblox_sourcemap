@@ -238,7 +238,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Label.ReferralRewardRobux": "{amount} Robux",
 	"Heading.ReferralShare": "Share Plus, get",
 	"Description.ReferralShare":
-		"Invite someone to Plus and you both get {amount} Robux when they buy plus.",
+		"Invite someone to Plus and you both get {amount} Robux when they buy Plus.",
 	"Description.ReferralReferrerReward": "When anyone buys Plus with your link.",
 	"Label.ReferralYouGet": "You get",
 	"Description.ReferralRecipientReward":

@@ -8,14 +8,19 @@ import {
 } from "react";
 import classNames from "classnames";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
+import pfas from "@rbx/core-scripts/payments-flow";
 import {
+	BillingPeriodSheet,
+	type BillingPeriodOption,
 	LearnMoreSheet,
 	RobloxSubscriptionWidget,
 } from "@rbx/subscriptions-common";
 import { Icon, SheetRoot } from "@rbx/foundation-ui";
 
 import { useTranslation } from "@rbx/core-scripts/react";
+import { usePlusBillingPeriodSelection } from "../../hooks/subscriptionV2/usePlusBillingPeriodSelection";
 import { useSubscriptionV2TrackingFields } from "../../hooks/subscriptionV2/useSubscriptionV2TrackingFields";
+import type { TrackSubscriptionV2SubscribeClickArgs } from "../../hooks/subscriptionV2/useSubscriptionV2Tracking";
 import {
 	SectionBase,
 	SectionSubscriptionV2,
@@ -30,6 +35,8 @@ import { trackCounter } from "../../observability";
 import { getSectionTrackingProps } from "../../hooks/useScrollTracking";
 import { BundleCarousel } from "../subscription/BundleCarousel";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
+import { getTriggerContext } from "../../utils/getTriggerContext";
+import { partitionPlusBillingPeriods } from "../../utils/plusBillingPeriodOptions";
 
 type SubscriptionV2Props = BaseSectionProps & {
 	sectionBase: SectionBase;
@@ -82,8 +89,61 @@ export function SubscriptionV2({
 		[handleLearnMoreSelect],
 	);
 
-	const { products } = subscriptionV2;
+	const { tileProducts: products, billingPeriodOptions } = useMemo(
+		() => partitionPlusBillingPeriods(subscriptionV2.products),
+		[subscriptionV2.products],
+	);
+	const tileSubscriptionV2 = useMemo(
+		() => ({ ...subscriptionV2, products }),
+		[subscriptionV2, products],
+	);
 	const primaryProduct = products.at(0);
+
+	const baseProductId = billingPeriodOptions.find(
+		(option) => option.months === 1,
+	)?.productId;
+	const isPlusBillingPeriodSelectionEligible = products.some(
+		(product) =>
+			product.subscriptionProductId === baseProductId && !product.isRedirect,
+	);
+	const { isTreatment, logExposure } = usePlusBillingPeriodSelection(
+		isPlusBillingPeriodSelectionEligible,
+	);
+	const [isBillingPeriodSheetOpen, setIsBillingPeriodSheetOpen] =
+		useState(false);
+	const billingPeriodAnalyticsContext = useMemo(
+		() => ({
+			triggeringContext: getTriggerContext(),
+			viewName: pfas.ENUM_VIEW_NAME.ROBLOX_PLUS_BUY_ROBUX,
+		}),
+		[],
+	);
+
+	const openBillingPeriodSheet = useCallback(() => {
+		logExposure();
+		setIsBillingPeriodSheetOpen(true);
+	}, [logExposure]);
+
+	const handleTileSubscribeClick = useCallback(
+		(args: TrackSubscriptionV2SubscribeClickArgs) => {
+			if (args.productId === baseProductId) {
+				logExposure();
+			}
+			trackSubscriptionV2SubscribeClick(args);
+		},
+		[baseProductId, logExposure, trackSubscriptionV2SubscribeClick],
+	);
+
+	const handleBillingPeriodSubscribeClick = useCallback(
+		(option: BillingPeriodOption) => {
+			trackCounter("SubscriptionV2SubscribeClick", {
+				isFreeTrial: String(option.freeTrialEndDate !== undefined),
+				productId: option.productId,
+				isRedirect: "false",
+			});
+		},
+		[],
+	);
 
 	const isFreeTrial = useMemo(
 		() =>
@@ -112,12 +172,12 @@ export function SubscriptionV2({
 	}, [trackSubscriptionV2Shown, isFreeTrial]);
 
 	const handleSubscriptionSubscribeClick = useCallback(() => {
-		trackSubscriptionV2SubscribeClick({
+		handleTileSubscribeClick({
 			isFreeTrial: isFreeTrial,
 			productId: primaryProduct?.subscriptionProductId ?? "Unknown",
 			isRedirect: false,
 		});
-	}, [trackSubscriptionV2SubscribeClick, isFreeTrial, primaryProduct]);
+	}, [handleTileSubscribeClick, isFreeTrial, primaryProduct]);
 
 	if (!primaryProduct) {
 		trackCounter("SubscriptionV2NoPrimaryProduct");
@@ -186,13 +246,17 @@ export function SubscriptionV2({
 			</SectionHeader>
 			{hasMultipleTiers ? (
 				<BundleCarousel
+					baseProductId={baseProductId}
 					deviceMeta={deviceMeta}
 					isPrimary={Boolean(isPrimary)}
+					onBaseProductSubscribe={
+						isTreatment ? openBillingPeriodSheet : undefined
+					}
 					onSubscriptionSectionViewShown={handleSubscriptionSectionViewShown}
-					onSubscriptionSubscribeClick={trackSubscriptionV2SubscribeClick}
+					onSubscriptionSubscribeClick={handleTileSubscribeClick}
 					paymentSessionId={paymentSession?.id}
 					redirect={redirect}
-					subscriptionV2={subscriptionV2}
+					subscriptionV2={tileSubscriptionV2}
 				/>
 			) : (
 				<SectionBody isPrimary={isPrimary}>
@@ -204,10 +268,13 @@ export function SubscriptionV2({
 								handleSubscriptionSectionViewShown
 							}
 							onSubscriptionSubscribeClick={handleSubscriptionSubscribeClick}
-							subscriptionV2={subscriptionV2}
+							subscriptionV2={tileSubscriptionV2}
 							onLearnMoreClick={handleLearnMoreSelect}
 							learnMoreHref={isInApp ? undefined : LEARN_MORE_HREF}
 							paymentSessionId={paymentSession?.id}
+							onSubscribeOverride={
+								isTreatment ? openBillingPeriodSheet : undefined
+							}
 						/>
 					</div>
 				</SectionBody>
@@ -219,6 +286,17 @@ export function SubscriptionV2({
 				>
 					<LearnMoreSheet />
 				</SheetRoot>
+			)}
+			{isTreatment && (
+				<BillingPeriodSheet
+					analyticsContext={billingPeriodAnalyticsContext}
+					deviceMeta={deviceMeta}
+					isOpen={isBillingPeriodSheetOpen}
+					options={billingPeriodOptions}
+					paymentSessionId={paymentSession?.id}
+					onOpenChange={setIsBillingPeriodSheetOpen}
+					onSubscribeClick={handleBillingPeriodSubscribeClick}
+				/>
 			)}
 		</Section>
 	);

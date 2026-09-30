@@ -4,15 +4,11 @@ import {
 	localStorageService,
 } from "core-roblox-utilities";
 import { withTranslations, WithTranslationsProps } from "react-utilities";
-import { AxiosResponse } from "core-utilities";
 import { ScrollBar } from "react-style-guide";
 import classNames from "classnames";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import { isAuthenticated, userId } from "@rbx/core-scripts/meta/user";
-import Roblox from "@rbx/legacy-webapp-types/Roblox";
-import { TWebPerformanceMetric, reportWebVitals } from "@rbx/web-vitals";
-import { TRawBaseEvent } from "@rbx/unified-logger";
 import ItemsContainer from "../itemsContainer/components/ItemsContainer";
 import SearchOptions, {
 	SearchOptionsProps,
@@ -56,7 +52,6 @@ import MarketplaceOfferBanner from "../marketplaceOfferModal/MarketplaceOfferBan
 import { MarketplaceOfferProvider } from "../marketplaceOfferModal/MarketplaceOfferContext";
 import type { MarketplaceOffer } from "../../services/marketplaceSalesOffersService";
 import useUrlParameterCleanup from "../../hooks/useUrlParameterCleanup";
-import useExperimentSearchV2 from "../../hooks/catalogSearch/useExperimentSearchV2";
 import SearchOptionsTopBar, {
 	SearchOptionsTopBarProps,
 } from "../searchOptionsTop/SearchOptionsTopBar";
@@ -528,21 +523,6 @@ function CatalogPage({
 		if (layoutInitialized) {
 			return;
 		}
-
-		reportWebVitals({
-			logWebVitalsEvent: (event: TWebPerformanceMetric | TRawBaseEvent) => {
-				const metric = event as TWebPerformanceMetric;
-				Roblox.EventStream.SendEventWithTarget(
-					metric.eventName,
-					"RobloxWWW",
-					{
-						metricName: metric.metricName,
-						metricValue: metric.metricValue,
-					},
-					Roblox.EventStream.TargetTypes.WWW,
-				);
-			},
-		});
 
 		setupLibrary();
 		setupAds();

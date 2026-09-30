@@ -7,6 +7,7 @@
 import type { JSX } from "react";
 import { ProgressCircle } from "@rbx/foundation-ui";
 
+import { useOdpAnalytics } from "../../analytics/odpAnalytics";
 import { ChallengeOutcome } from "../../constants/nodeOutcomes";
 import { asText } from "../../utils/nodeDetails";
 import {
@@ -38,20 +39,25 @@ export const createOnDeviceParentVerificationNode = (
 ): NodeComponent => {
 	const OnDeviceParentVerificationNode = ({
 		props,
+		ctx,
 		report,
 	}: NodeProps): JSX.Element => {
 		const sessionId = asText(props.sessionId) ?? "";
+		const odpAnalytics = useOdpAnalytics(ctx);
 
 		useOnDeviceParentVerification({
 			sessionId,
 			method,
 			onSettled: (result) => {
+				if (result.outcome === VendorOutcome.Failed) {
+					odpAnalytics.verificationFailed(method, result.failure);
+				}
 				reportSettled(report, result);
 			},
 		});
 
 		return (
-			<div className="flex justify-center">
+			<div className="pointer-events-none fixed [inset:0] flex items-center justify-center">
 				<ProgressCircle
 					ariaLabel="Verifying"
 					variant="Indeterminate"

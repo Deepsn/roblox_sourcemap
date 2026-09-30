@@ -5,6 +5,11 @@ import useServerList from "./useServerList";
 import translationConfig from "../translation.config";
 import GameListSection from "../components/GameListSection";
 import { serverListMetadataPropType } from "../constants/sharedPropTypes";
+import serverListConstants from "../constants/serverListConstants";
+import serverListService from "../services/serverListService";
+import useServerCardMetaExperiment from "../../../ts/serverList/hooks/useServerCardMetaExperiment";
+
+const { serverListTypes } = serverListConstants;
 
 function RunningGameServers({
 	type,
@@ -22,6 +27,19 @@ function RunningGameServers({
 		universeId,
 		userCanManagePlace,
 	} = serverListMetadata;
+	const {
+		isServerCardPingIconEnabled,
+		isServerCardLanguageIconEnabled,
+		isServerCardFriendsIconEnabled,
+		isFriendsServerListV2Enabled,
+		isLoading: isExperimentLoading,
+	} = useServerCardMetaExperiment();
+	const isFriends = type === serverListTypes.friend.key;
+	const resolvedGetGameServers = isFriends
+		? isFriendsServerListV2Enabled
+			? serverListService.getFriendsGameInstancesV2
+			: serverListService.getFriendsGameInstances
+		: getGameServers;
 
 	const {
 		servers,
@@ -32,7 +50,7 @@ function RunningGameServers({
 		isBusy,
 		setIsBusy,
 		hasError,
-	} = useServerList(getGameServers, false, placeId);
+	} = useServerList(resolvedGetGameServers, false, placeId);
 
 	return (
 		<GameListSection
@@ -54,6 +72,10 @@ function RunningGameServers({
 				creatorName: sellerName,
 				universeId,
 				isAuthenticated,
+				isServerCardPingIconEnabled,
+				isServerCardLanguageIconEnabled,
+				isServerCardFriendsIconEnabled,
+				deferFetch: isFriends && isExperimentLoading,
 			}}
 		/>
 	);

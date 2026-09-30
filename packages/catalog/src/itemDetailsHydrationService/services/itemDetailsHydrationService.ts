@@ -12,6 +12,7 @@ import {
 	TCollectibleDetailEntry,
 	TAwaitedHydratedCollectibleDetails,
 } from "../constants/itemDetailsHydrationConstants";
+import { trackError } from "../../observability";
 import {
 	getItemDetail,
 	createItemDetailHydrationEntry,
@@ -46,6 +47,9 @@ export const postItemDetailsWithRetries = async (
 ): Promise<Array<TDetailEntry> | undefined> => {
 	try {
 		if (retriesRemaining <= 0 || items.length <= 0) {
+			if (retriesRemaining <= 0 && items.length > 0) {
+				trackError("ItemDetailsHydrationExhausted");
+			}
 			return undefined;
 		}
 		const resultArray = new Array<TDetailEntry>();

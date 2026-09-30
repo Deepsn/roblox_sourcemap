@@ -8,6 +8,7 @@
  */
 import React, { ReactNode } from "react";
 import reportAXError from "../../analytics/reportAXError";
+import { trackCriticalError } from "../../observability";
 
 interface ErrorBoundaryProps {
 	children: ReactNode;
@@ -66,6 +67,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
 		// Report the error
 		// We need to specify container name as counters name so we can build the graphs on grafana
 		reportAXError({ itemName, counterName: containerName, log });
+		trackCriticalError("CatalogPageReactCrash", null, error);
 	}
 
 	render(): React.ReactNode {

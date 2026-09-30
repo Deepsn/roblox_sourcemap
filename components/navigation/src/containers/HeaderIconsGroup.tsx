@@ -97,7 +97,7 @@ export default function HeaderIconsGroup({
 		}
 	};
 	const getRobuxBadgeLocal = () => {
-		if (user != null) {
+		if (user != null && shouldShowRobuxUpdateBadge() != null) {
 			getRobuxBadge()
 				.then(({ data: robuxBadgeData }) => {
 					const robuxUpdateBadge = shouldShowRobuxUpdateBadge();

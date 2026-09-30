@@ -268,6 +268,14 @@ const SecurityKeyInput: React.FC<Props> = ({
 				<p className={marginBottomClassName}>
 					{resources.Label.SecurityKeyDirections} {maybeDelayedText ?? ""}
 				</p>
+				{shouldShowRememberDeviceCheckbox && (
+					<RememberDeviceCheckBox
+						disabled={requestInFlight}
+						rememberDevice={rememberDevice}
+						setRememberDevice={setRememberDevice}
+						className={marginBottomClassName}
+					/>
+				)}
 				<Button
 					ref={buttonRef}
 					variant="Emphasis"
@@ -282,14 +290,6 @@ const SecurityKeyInput: React.FC<Props> = ({
 					{resources.Action.Verify}
 				</Button>
 				{children}
-				{shouldShowRememberDeviceCheckbox && (
-					<RememberDeviceCheckBox
-						disabled={requestInFlight}
-						rememberDevice={rememberDevice}
-						setRememberDevice={setRememberDevice}
-						className={marginBottomClassName}
-					/>
-				)}
 				<SupportHelp className={marginBottomClassName} />
 				<p className={textErrorClassName}>{requestError}</p>
 			</BodyElement>

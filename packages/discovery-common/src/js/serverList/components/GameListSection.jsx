@@ -11,7 +11,6 @@ import translationConfig from "../translation.config";
 
 const [SystemFeedback, systemFeedbackService] = createSystemFeedback();
 const {
-	slowGameFpsThreshold,
 	resources,
 	numGameInstancesPerRow,
 	defaultOptions,
@@ -54,13 +53,19 @@ function GameListSection({
 	creatorName,
 	universeId,
 	isAuthenticated = false,
+	isServerCardPingIconEnabled = false,
+	isServerCardLanguageIconEnabled = false,
+	isServerCardFriendsIconEnabled = false,
+	deferFetch = false,
 }) {
 	const cssKey = `${type}-`;
 	const emptyGameInstanceList = gameInstances.length === 0;
+	const itemContainerClass = `card-list rbx-${cssKey}game-server-item-container`;
 	const footerClass = `rbx-${cssKey}running-games-footer`;
 	const id = `rbx-${cssKey}running-games`;
-	const itemContainerClass = `card-list rbx-${cssKey}game-server-item-container`;
 	const itemContainerId = `rbx-${cssKey}game-server-item-container`;
+
+	const isPublic = type === serverListTypes.public.key;
 
 	const displayedGameInstances = useMemo(() => {
 		// We display N items in a row in this UI treatment, but we fetch 10 at a time from the API,
@@ -75,8 +80,6 @@ function GameListSection({
 		return gameInstances;
 	}, [gameInstances, showLoadMoreButton]);
 
-	const isPublic = type === serverListTypes.public.key;
-
 	// The correct default sort is known up front, so the list is fetched exactly
 	// once with it (firing a second refresh while the first is in flight makes
 	// useServerList throw).
@@ -85,9 +88,14 @@ function GameListSection({
 	);
 
 	useEffect(() => {
+		if (deferFetch) {
+			return;
+		}
 		refreshGameInstances?.(options);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [options]);
+	}, [options, deferFetch]);
+
+	const showLoading = isLoading || deferFetch;
 
 	return (
 		<Fragment>
@@ -104,7 +112,7 @@ function GameListSection({
 							<h2 className="server-list-header">{headerTitle}</h2>
 							<Button
 								className="btn-more rbx-refresh refresh-link-icon"
-								isDisabled={isLoading}
+								isDisabled={showLoading}
 								onClick={() => refreshGameInstances(options)}
 								size={Button.sizes.extraSmall}
 								variant={Button.variants.control}
@@ -128,7 +136,7 @@ function GameListSection({
 
 				{emptyGameInstanceList ? (
 					<div className="section-content-off empty-game-instances-container">
-						{isLoading ? (
+						{showLoading ? (
 							<Loading />
 						) : (
 							<p className="no-servers-message">
@@ -150,57 +158,68 @@ function GameListSection({
 										maxPlayers,
 										name,
 										owner,
-										pfs, // TODO(SHARE-414): Is this information that we actually get from the backend? Let's remove if not.
 										players,
 										playing,
+										languageMatchCount,
+										pingSignalLevel,
+										friendCount,
 										vipServerId,
 										vipServerSubscription,
 									},
 									index,
-								) => (
-									<GameInstanceCard
-										key={vipServerId}
-										{...{
-											accessCode,
-											canManagePlace: userCanManagePlace,
-											cssKey,
-											currentPlayersCount: playing || players.length,
-											gameServerStatus: translate(resources.playerCountText, {
-												currentPlayers: playing || players.length,
-												maximumAllowedPlayers: maxPlayers,
-											}),
-											id: instanceId,
-											isLoading,
-											maxPlayers,
-											name,
-											onShutdownServerSuccess: () => {
-												handleGameInstanceShutdownAtIndex(index);
-											},
-											owner,
-											placeId,
-											players,
-											serverListType: type,
-											setIsLoading,
-											showSlowGameMessage: pfs < slowGameFpsThreshold,
-											systemFeedbackService,
-											translate,
-											vipServerId,
-											vipServerSubscription,
-											privateServerNewJoinsDisallowed,
-											placeName,
-											price,
-											creatorName,
-											universeId,
-										}}
-									/>
-								),
+								) => {
+									const filledSlots = playing || players.length;
+
+									return (
+										<GameInstanceCard
+											key={vipServerId}
+											{...{
+												accessCode,
+												canManagePlace: userCanManagePlace,
+												cssKey,
+												currentPlayersCount: filledSlots,
+												gameServerStatus: translate(resources.playerCountText, {
+													currentPlayers: filledSlots,
+													maximumAllowedPlayers: maxPlayers,
+												}),
+												id: instanceId,
+												isLoading,
+												maxPlayers,
+												name,
+												onShutdownServerSuccess: () => {
+													handleGameInstanceShutdownAtIndex(index);
+												},
+												owner,
+												placeId,
+												players,
+												languageMatchCount,
+												pingSignalLevel,
+												friendCount,
+												isServerCardPingIconEnabled,
+												isServerCardLanguageIconEnabled,
+												isServerCardFriendsIconEnabled,
+												serverListType: type,
+												setIsLoading,
+												systemFeedbackService,
+												translate,
+												vipServerId,
+												vipServerSubscription,
+												privateServerNewJoinsDisallowed,
+												placeName,
+												price,
+												creatorName,
+												universeId,
+											}}
+										/>
+									);
+								},
 							)}
 						</ul>
 						<div className={footerClass}>
 							{showLoadMoreButton && (
 								<Button
 									className="rbx-running-games-load-more"
-									isDisabled={isLoading}
+									isDisabled={showLoading}
 									onClick={() => loadMoreGameInstances(options)}
 									type="button"
 									variant={Button.variants.control}
@@ -224,6 +243,10 @@ GameListSection.defaultProps = {
 	gameInstances: [],
 	privateServerNewJoinsDisallowed: false,
 	isAuthenticated: false,
+	isServerCardPingIconEnabled: false,
+	isServerCardLanguageIconEnabled: false,
+	isServerCardFriendsIconEnabled: false,
+	deferFetch: false,
 };
 
 GameListSection.propTypes = {
@@ -247,6 +270,10 @@ GameListSection.propTypes = {
 	price: PropTypes.number.isRequired,
 	creatorName: PropTypes.string.isRequired,
 	universeId: PropTypes.number.isRequired,
+	isServerCardPingIconEnabled: PropTypes.bool,
+	isServerCardLanguageIconEnabled: PropTypes.bool,
+	isServerCardFriendsIconEnabled: PropTypes.bool,
+	deferFetch: PropTypes.bool,
 };
 
 export default withTranslations(GameListSection, translationConfig.serverList);

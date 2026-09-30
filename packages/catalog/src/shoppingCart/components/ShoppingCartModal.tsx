@@ -21,6 +21,7 @@ import { TDetailEntry } from "@rbx/legacy-webapp-types/Roblox";
 import sendAXTracking from "../../analytics/sendAXTracking";
 import AXAnalyticsConstants from "../../analytics/AXAnalyticsConstants";
 import { AXSendTrackingActionType } from "../../analytics/types";
+import { trackCounter } from "../../observability";
 import { userId } from "@rbx/core-scripts/meta/user";
 import {
 	Dropdown,
@@ -851,6 +852,7 @@ function ShoppingCartModalFooter({
 				userId: userId(),
 			};
 			if (successOccurred) {
+				trackCounter("CartPurchaseSuccess");
 				window.dispatchEvent(
 					new CustomEvent(`navigation-update-user-currency`),
 				);
@@ -879,6 +881,7 @@ function ShoppingCartModalFooter({
 				);
 			}
 			if (errorOccurred) {
+				trackCounter("CartPurchaseError");
 				sendAXTracking({
 					itemName: AXAnalyticsConstants.PurchaseErrorShoppingCart,
 					excludeTelemetry: true,

@@ -2,6 +2,7 @@ import { httpService } from "core-utilities";
 import { ItemDetailsHydrationService } from "@rbx/legacy-webapp-types/Roblox";
 import { userId } from "@rbx/core-scripts/meta/user";
 import { EnvironmentUrls } from "@rbx/environment-urls";
+import { trackError } from "../../observability";
 import actionReducer from "../utils/actionReducer";
 import {
 	rand,
@@ -110,7 +111,8 @@ export async function fetchCartItemDetails(
 		items.map(async (item) => {
 			try {
 				return await fetchItemDetails([item]);
-			} catch {
+			} catch (error) {
+				trackError("CartItemHydrationFailed", null, error);
 				return [] as TItemDetails[];
 			}
 		}),

@@ -12,6 +12,7 @@ export const OdpEventName = {
 
 export const OdpEventField = {
 	VerifyMethod: "verifyMethod",
+	VerificationFailed: "verificationFailed",
 } as const;
 
 export const OdpEventButton = {
@@ -26,6 +27,8 @@ export const OdpAssociatedText = {
 	VerificationMethodOptions:
 		"Facial age estimation / Credit card / Government ID",
 	VerificationMethodContinue: "Continue",
+	VerificationMethodBack: "< back chevron",
+	VerificationFailed: "Verification failed - Try again later",
 } as const;
 
 /** The name the backend's age-group rule is configured under. */

@@ -1,4 +1,4 @@
-import { uuidService as coreUuidService } from "@rbx/core";
+import { uuidService as coreUuidService } from "@rbx/core-legacy";
 import * as fmtNumber from "../format/number";
 import * as fmtString from "../format/string";
 import { createKeyboardEventHandler } from "../util/accessibility";
@@ -30,7 +30,7 @@ export {
 	PagerError,
 	regex,
 	SortOrder,
-} from "@rbx/core";
+} from "@rbx/core-legacy";
 export {
 	PaginationCache,
 	CursorPager,

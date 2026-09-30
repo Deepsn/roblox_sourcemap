@@ -29,6 +29,7 @@ import usePagination from "./usePagination";
 import { CatalogQuery } from "../catalogQuery/catalogQuery.types";
 import { SearchOptionsData } from "../searchOptions/searchOptions.types";
 import isUserInMarketplaceWidgetsLandingPageRollout from "../../utils/isUserInMarketplaceWidgetsLandingPageRollout";
+import { trackError } from "../../../observability";
 
 export type CatalagSearchParams = {
 	catalogQuery: CatalogQuery;
@@ -365,6 +366,7 @@ const useCatalogSearch = (params: CatalagSearchParams) => {
 						if (!isRequestCurrent()) {
 							return;
 						}
+						trackError("SearchHydrationFailed", null, response);
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 						const errorResultData = response?.data as ErrorData;
 						if (errorResultData) {
@@ -631,6 +633,7 @@ const useCatalogSearch = (params: CatalagSearchParams) => {
 							}
 							setLoading(false);
 							resetPageContentAndLoading(clearResults);
+							trackError("SearchItemsFailed", null, response);
 							setSearchItemsError("error");
 							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							const errorResultData = response?.data as ErrorData;

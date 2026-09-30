@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { trackError } from "../../observability";
 import {
 	createCartService,
 	fetchCartItemDetails,
@@ -58,7 +59,8 @@ export function useCartItemDetails(items: TCartItem[]): {
 			};
 
 			setItemDetails(newItemDetails);
-		})().catch(() => {
+		})().catch((error: unknown) => {
+			trackError("CartItemHydrationFailed", null, error);
 			console.error("could not refresh cart state");
 		});
 	}, [itemIds.join(",")]);
@@ -95,7 +97,8 @@ export default function useShoppingCart(): {
 	useEffect(() => {
 		const freshCartState = getCartState();
 		setCartState(freshCartState);
-		dispatch(refreshCartAction()).catch(() => {
+		dispatch(refreshCartAction()).catch((error: unknown) => {
+			trackError("CartRefreshFailed", null, error);
 			console.error("could not refresh cart state");
 		});
 	}, []);
