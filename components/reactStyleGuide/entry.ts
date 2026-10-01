@@ -41,7 +41,10 @@ import {
 import ExperimentationService from "@rbx/experimentation";
 import * as localStorage from "@rbx/core-lib/local-storage";
 import { type LocalStorageJsonSerializable } from "@rbx/core-lib/local-storage";
-import { authenticatedUser } from "@rbx/core-scripts/meta/user";
+import {
+	authenticatedUser,
+	isBlackbirdUser,
+} from "@rbx/core-scripts/meta/user";
 import "./main.css";
 
 addExternal("ReactStyleGuide", {
@@ -103,7 +106,7 @@ const variantClass = "classic-theme-variant-1";
 
 const applyClassThemeVariant = () => {
 	const id = authenticatedUser()?.id?.toString();
-	if (id == null) {
+	if (id == null || !isBlackbirdUser()) {
 		return;
 	}
 	const themeData = localStorage.getItem("classic-theme-variant") ?? {

@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { httpService } from "core-utilities";
 import {
-	StreamNotification,
+	StreamNotificationPage,
 	markInteractedUrlConfig,
 } from "./notificationStreamApi";
 import { GET_RECENT_QUERY_KEY } from "./useGetRecentNotifications";
@@ -20,17 +20,18 @@ export const useMarkInteracted = (): ReturnType<
 		mutationFn: (eventId: string) =>
 			httpService.post(markInteractedUrlConfig, { eventId }),
 		onMutate: (eventId: string) => {
-			queryClient.setQueryData<InfiniteData<StreamNotification[]>>(
+			queryClient.setQueryData<InfiniteData<StreamNotificationPage>>(
 				GET_RECENT_QUERY_KEY,
 				(prev) =>
 					prev
 						? {
 								...prev,
-								pages: prev.pages.map((page) =>
-									page.map((n) =>
+								pages: prev.pages.map((page) => ({
+									...page,
+									notifications: page.notifications.map((n) =>
 										n.id === eventId ? { ...n, isInteracted: true } : n,
 									),
-								),
+								})),
 							}
 						: prev,
 			);

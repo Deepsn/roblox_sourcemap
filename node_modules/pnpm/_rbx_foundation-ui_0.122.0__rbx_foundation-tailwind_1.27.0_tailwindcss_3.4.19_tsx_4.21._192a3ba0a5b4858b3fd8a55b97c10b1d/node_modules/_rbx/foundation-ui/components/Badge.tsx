@@ -1,0 +1,191 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef } from 'react';
+import type {
+  TTailwindBgClass,
+  TTailwindContentClass,
+  TTailwindIconClass,
+  TTailwindStrokeClass
+} from '@rbx/foundation-tailwind/classes';
+import { Icon } from './Icon';
+import type { TIconSize } from './Icon';
+
+export const badgeVariants = [
+  /** @deprecated Use 'Standard' instead. */
+  'Neutral',
+  'Standard',
+  'Contrast',
+  'Emphasis',
+  'Success',
+  'Warning',
+  'Alert',
+  'OverMedia'
+] as const;
+export type TBadgeVariant = (typeof badgeVariants)[number];
+
+export const badgeSizes = ['Small', 'XSmall'] as const;
+export type TBadgeSize = (typeof badgeSizes)[number];
+
+export const badgeShapes = ['Pill', 'Box'] as const;
+export type TBadgeShape = (typeof badgeShapes)[number];
+
+export const badgeIconPositions = ['Leading', 'Trailing'] as const;
+export type TBadgeIconPosition = (typeof badgeIconPositions)[number];
+
+export type TBadgeProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+  /** The badge text. If omitted and an icon is provided, an icon-only badge is rendered. */
+  label?: string;
+  /** The badge variant. @default 'Standard' */
+  variant?: TBadgeVariant;
+  /** Optional icon. Also used for icon-only variant when text is not provided. */
+  icon?: TTailwindIconClass;
+  /** The icon position relative to the label. @default 'Leading' */
+  iconPosition?: TBadgeIconPosition;
+  /** The badge size. @default 'Small' */
+  size?: TBadgeSize;
+  /** The badge shape. @default 'Pill' */
+  shape?: TBadgeShape;
+};
+
+const BACKGROUND_BY_VARIANT: Record<TBadgeVariant, TTailwindBgClass | `bg-[rgb(${string})]`> = {
+  Neutral: 'bg-shift-200',
+  Standard: 'bg-shift-200',
+  Contrast: 'bg-system-contrast',
+  Emphasis: 'bg-system-emphasis',
+  Success: 'bg-[rgb(from_var(--color-system-success)_r_g_b_/_0.2)]',
+  Warning: 'bg-[rgb(from_var(--color-system-warning)_r_g_b_/_0.2)]',
+  Alert: 'bg-[rgb(from_var(--color-system-alert)_r_g_b_/_0.2)]',
+  OverMedia: 'bg-over-media-0'
+};
+
+type TBadgeContentClass = TTailwindContentClass | `content-[var(${string})]`;
+
+const CONTENT_BY_VARIANT: Record<TBadgeVariant, TBadgeContentClass> = {
+  Neutral: 'content-emphasis',
+  Standard: 'content-emphasis',
+  Contrast: 'content-inverse-emphasis',
+  Emphasis: 'content-[var(--dark-mode-content-emphasis)]',
+  Success: 'content-emphasis',
+  Warning: 'content-emphasis',
+  Alert: 'content-emphasis',
+  OverMedia: 'content-emphasis'
+};
+
+const ICON_CONTENT_BY_VARIANT: Record<TBadgeVariant, TBadgeContentClass> = {
+  Neutral: 'content-emphasis',
+  Standard: 'content-emphasis',
+  Contrast: 'content-inverse-emphasis',
+  Emphasis: 'content-[var(--dark-mode-content-emphasis)]',
+  Success: 'content-system-success',
+  Warning: 'content-system-warning',
+  Alert: 'content-system-alert',
+  OverMedia: 'content-emphasis'
+};
+
+const STROKE_CLASSES_BY_VARIANT: Record<TBadgeVariant, TTailwindStrokeClass> = {
+  Neutral: 'stroke-none',
+  Standard: 'stroke-none',
+  Contrast: 'stroke-none',
+  Emphasis: 'stroke-none',
+  Success: 'stroke-none',
+  Warning: 'stroke-none',
+  Alert: 'stroke-none',
+  OverMedia: 'stroke-none'
+};
+
+const HEIGHT_BY_SIZE: Record<TBadgeSize, string> = {
+  Small: 'height-600',
+  XSmall: 'height-400'
+};
+
+const PADDING_X_BY_SIZE: Record<TBadgeSize, string> = {
+  Small: 'padding-x-small',
+  XSmall: 'padding-x-xsmall'
+};
+
+const ICON_ONLY_WIDTH_BY_SIZE: Record<TBadgeSize, string> = {
+  Small: 'width-600',
+  XSmall: 'width-400'
+};
+
+const TEXT_BY_SIZE: Record<TBadgeSize, string> = {
+  Small: 'text-label-small',
+  XSmall: 'text-caption-small'
+};
+
+const TEXT_PADDING_Y_BY_SIZE: Record<TBadgeSize, string> = {
+  Small: 'padding-y-xsmall',
+  XSmall: 'padding-y-none'
+};
+
+const ICON_SIZE_BY_SIZE: Record<TBadgeSize, TIconSize> = {
+  Small: 'XSmall',
+  XSmall: 'XSmall'
+};
+
+const RADIUS_BY_SHAPE: Record<TBadgeShape, string> = {
+  Pill: 'radius-circle',
+  Box: 'radius-small'
+};
+
+export const Badge = React.forwardRef<HTMLDivElement, TBadgeProps>(
+  (
+    {
+      className,
+      label: text,
+      variant = 'Standard',
+      icon,
+      iconPosition = 'Leading',
+      size = 'Small',
+      shape = 'Pill',
+      ...rest
+    },
+    ref
+  ) => {
+    const isIconOnly = icon && !text;
+    let textPaddingX = 'padding-x-xxsmall';
+    if (icon) {
+      textPaddingX = iconPosition === 'Leading' ? 'padding-right-xxsmall' : 'padding-left-xxsmall';
+    }
+    const renderedIcon = icon && (
+      <Icon
+        name={icon}
+        size={ICON_SIZE_BY_SIZE[size]}
+        className={ICON_CONTENT_BY_VARIANT[variant]}
+      />
+    );
+    return (
+      <div
+        ref={ref}
+        {...rest}
+        className={clsx(
+          'foundation-web-badge flex items-center select-none gap-[var(--size-150)]',
+          RADIUS_BY_SHAPE[shape],
+          HEIGHT_BY_SIZE[size],
+          isIconOnly
+            ? [ICON_ONLY_WIDTH_BY_SIZE[size], 'justify-center']
+            : ['width-[fit-content]', PADDING_X_BY_SIZE[size]],
+          BACKGROUND_BY_VARIANT[variant],
+          CONTENT_BY_VARIANT[variant],
+          STROKE_CLASSES_BY_VARIANT[variant],
+          className
+        )}>
+        {iconPosition === 'Leading' && renderedIcon}
+        {text && (
+          <span
+            className={clsx(
+              'text-no-wrap text-truncate-split',
+              TEXT_BY_SIZE[size],
+              TEXT_PADDING_Y_BY_SIZE[size],
+              textPaddingX,
+              CONTENT_BY_VARIANT[variant]
+            )}>
+            {text}
+          </span>
+        )}
+        {iconPosition === 'Trailing' && renderedIcon}
+      </div>
+    );
+  }
+);
+
+Badge.displayName = 'Badge';

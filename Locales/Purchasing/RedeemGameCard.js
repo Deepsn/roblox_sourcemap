@@ -262,6 +262,10 @@ Roblox.LangDynamic["Purchasing.RedeemGameCard"] = {
 	"Description.FreeItemReceived":
 		"Your code has been successfully redeemed and you've received a free item.",
 	"Action.Equip": "Equip",
+	"Heading.RedemptionTakingLonger":
+		"Redemptions are taking longer than usual right now",
+	"Message.RedemptionTakingLonger":
+		"We are processing your redemption. Your balance will update soon!",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

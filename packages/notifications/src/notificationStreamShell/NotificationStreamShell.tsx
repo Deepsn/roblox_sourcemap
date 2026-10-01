@@ -59,7 +59,7 @@ const NotificationStreamShellInner = (): JSX.Element => {
 		isFetchingNextPage,
 		hasNextPage,
 		fetchNextPage,
-		refetch,
+		reload: resetStream,
 	} = useGetRecentNotifications();
 	const { models: gameUpdateModels, isLoading: isResolvingGameUpdates } =
 		useGameUpdates(gameUpdates);
@@ -157,6 +157,39 @@ const NotificationStreamShellInner = (): JSX.Element => {
 		[],
 	);
 
+	const dismissBanner = useCallback(() => {
+		setBannerVisible(false);
+		setNewCount(0);
+	}, []);
+
+	const reload = useCallback(() => {
+		dismissBanner();
+		document.dispatchEvent(
+			new CustomEvent("Roblox.NotificationStream.ClearUnreadNotifications"),
+		);
+		fireAndReport(resetStream, "streamBannerReload");
+	}, [dismissBanner, resetStream, fireAndReport]);
+
+	// notificationStreamBodyDirective.js: true while the last click or touch landed in the stream body,
+	// which excludes the header.
+	const bodyRef = useRef<HTMLDivElement>(null);
+	const bodyInteractedRef = useRef(false);
+	useEffect(() => {
+		const onPointer = (event: Event) => {
+			const { target } = event;
+			bodyInteractedRef.current =
+				target instanceof Element &&
+				Boolean(bodyRef.current?.contains(target)) &&
+				!target.closest(".notification-stream-header");
+		};
+		document.addEventListener("click", onPointer);
+		document.addEventListener("touchstart", onPointer);
+		return () => {
+			document.removeEventListener("click", onPointer);
+			document.removeEventListener("touchstart", onPointer);
+		};
+	}, []);
+
 	useNotificationStreamRealtime({
 		onNewNotification: () => {
 			setNewCount((count) => {
@@ -167,19 +200,11 @@ const NotificationStreamShellInner = (): JSX.Element => {
 			setBannerVisible(true);
 		},
 		onNotificationRevoked: () => {
-			fireAndReport(refetch, "streamRevokedRefetch");
+			if (!bodyInteractedRef.current) {
+				reload();
+			}
 		},
 	});
-
-	const dismissBanner = useCallback(() => {
-		setBannerVisible(false);
-		setNewCount(0);
-	}, []);
-
-	const reload = useCallback(() => {
-		dismissBanner();
-		fireAndReport(refetch, "streamBannerReload");
-	}, [dismissBanner, refetch, fireAndReport]);
 
 	// A dismissed error banner must reappear on the next disconnect, so reset once reconnected.
 	useEffect(() => {
@@ -195,9 +220,6 @@ const NotificationStreamShellInner = (): JSX.Element => {
 					notification={notification}
 					onInteract={(id: string) => markInteracted.mutate(id)}
 					onRemove={removeNotification}
-					onActionFailed={() => {
-						fireAndReport(refetch, "streamActionFailedRefetch");
-					}}
 					gameUpdateModels={gameUpdateModels}
 					onViewGameUpdates={() =>
 						selectContentView(GAME_UPDATE_NS_PAGES.gameUpdates)
@@ -209,8 +231,6 @@ const NotificationStreamShellInner = (): JSX.Element => {
 		[
 			markInteracted,
 			removeNotification,
-			refetch,
-			fireAndReport,
 			gameUpdateModels,
 			canLaunchGameFromGameUpdate,
 			selectContentView,
@@ -220,7 +240,7 @@ const NotificationStreamShellInner = (): JSX.Element => {
 	return (
 		<SendrTemplateContext.Provider value>
 			<div>
-				<div className="notification-stream-base builder-font">
+				<div ref={bodyRef} className="notification-stream-base builder-font">
 					{showGameUpdates ? (
 						<GameUpdatesPanel
 							models={gameUpdateModels}
@@ -279,7 +299,10 @@ const NotificationStreamShellInner = (): JSX.Element => {
 									hasMore={Boolean(hasNextPage)}
 									isLoading={isLoading || isFetchingNextPage}
 									onLoadMore={() => {
-										fireAndReport(fetchNextPage, "streamFetchNextPage");
+										fireAndReport(
+											() => fetchNextPage({ cancelRefetch: false }),
+											"streamFetchNextPage",
+										);
 									}}
 									loadingIndicator={<span className="spinner spinner-sm" />}
 									emptyState={

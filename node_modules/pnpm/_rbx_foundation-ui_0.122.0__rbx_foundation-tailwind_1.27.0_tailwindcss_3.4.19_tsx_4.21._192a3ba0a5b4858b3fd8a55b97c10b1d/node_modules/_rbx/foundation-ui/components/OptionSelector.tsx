@@ -1,0 +1,314 @@
+import clsx from 'clsx';
+import React, { ForwardedRef, forwardRef, useMemo } from 'react';
+import type {
+  TTailwindTextTitleClass,
+  TTailwindSizeClass,
+  TTailwindTextBodyClass,
+  TTailwindIconClass,
+  TTailwindPaddingClass,
+  TTailwindPaddingYClass,
+  TTailwindPaddingTopClass
+} from '@rbx/foundation-tailwind/classes';
+import { interactable, StateLayer } from './internal/StateLayer';
+import { Icon, TIconSize } from './Icon';
+import { disabledOpacity } from '../utils/styles';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+import './internal/Common.css';
+
+export const optionSelectorSizes = ['XSmall', 'Small', 'Medium'] as const;
+export type TOptionSelectorSize = (typeof optionSelectorSizes)[number];
+
+export const optionSelectorTypes = ['Checkmark', 'Checkbox', 'Radio'] as const;
+export type TOptionSelectorType = (typeof optionSelectorTypes)[number];
+
+export const optionSelectorLayouts = ['Horizontal', 'Vertical'] as const;
+export type TOptionSelectorLayout = (typeof optionSelectorLayouts)[number];
+
+export type TOptionSelectorProps = {
+  layout: TOptionSelectorLayout;
+  size: TOptionSelectorSize;
+  type: TOptionSelectorType;
+  isDisabled?: boolean;
+  label: React.ReactNode;
+  metadata?: React.ReactNode;
+  description?: React.ReactNode;
+  media?: React.ReactNode;
+  icon?: TTailwindIconClass;
+
+  isSelected: boolean;
+  onSelect: () => void;
+
+  hideSelectedIndicator?: boolean;
+};
+
+const CONTROL_SIZE_BY_SIZE: Record<TOptionSelectorSize, TTailwindSizeClass> = {
+  XSmall: 'size-400',
+  Small: 'size-500',
+  Medium: 'size-600'
+};
+
+const RADIO_INDICATOR_SIZE_BY_SIZE: Record<TOptionSelectorSize, TTailwindSizeClass> = {
+  XSmall: 'size-150',
+  Small: 'size-200',
+  Medium: 'size-250'
+};
+
+const MEDIA_SIZE_BY_SIZE: Record<TOptionSelectorSize, TTailwindSizeClass> = {
+  XSmall: 'size-1200',
+  Small: 'size-1400',
+  Medium: 'size-1600'
+};
+
+const TITLE_CLASS_BY_SIZE: Record<TOptionSelectorSize, TTailwindTextTitleClass> = {
+  XSmall: 'text-title-small',
+  Small: 'text-title-small',
+  Medium: 'text-title-medium'
+};
+
+const TITLE_PADDING_Y_CLASS_BY_SIZE: Record<
+  TOptionSelectorSize,
+  TTailwindPaddingYClass | TTailwindPaddingTopClass | undefined
+> = {
+  // pulled from Figma
+  // basically to align the title with the control (checkbox, radio, etc.)
+  XSmall: undefined,
+  Small: 'padding-top-xxsmall',
+  Medium: 'padding-y-xxsmall'
+};
+
+const DESCRIPTION_BODY_CLASS_BY_SIZE: Record<TOptionSelectorSize, TTailwindTextBodyClass> = {
+  XSmall: 'text-body-small',
+  Small: 'text-body-small',
+  Medium: 'text-body-medium'
+};
+
+const PADDING_CLASS_BY_SIZE: Record<TOptionSelectorSize, TTailwindPaddingClass> = {
+  XSmall: 'padding-medium',
+  Small: 'padding-large',
+  Medium: 'padding-xlarge'
+};
+
+const ICON_SIZE_BY_SIZE: Record<TOptionSelectorSize, TIconSize> = {
+  XSmall: 'Small',
+  Small: 'Medium',
+  Medium: 'Large'
+};
+
+export const OptionSelector = forwardRef(
+  (
+    {
+      layout,
+      size,
+      type,
+      isDisabled,
+      label,
+      description,
+      media,
+      icon,
+      metadata,
+      isSelected,
+      onSelect,
+      hideSelectedIndicator = false
+    }: TOptionSelectorProps,
+    ref: ForwardedRef<HTMLButtonElement>
+  ) => {
+    const labelEl = useMemo(
+      () =>
+        label && (
+          <div
+            className={clsx(
+              TITLE_CLASS_BY_SIZE[size],
+              TITLE_PADDING_Y_CLASS_BY_SIZE[size],
+              'content-emphasis text-align-x-start',
+              'clip [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]'
+            )}>
+            {label}
+          </div>
+        ),
+      [label, size]
+    );
+
+    const metadataEl = useMemo(
+      () =>
+        metadata && (
+          <div
+            className={clsx(
+              'text-caption-small content-default text-align-x-start',
+              'text-truncate-split text-no-wrap width-full'
+            )}>
+            {metadata}
+          </div>
+        ),
+      [metadata]
+    );
+
+    const descriptionEl = useMemo(
+      () =>
+        description && (
+          <div
+            className={clsx(
+              DESCRIPTION_BODY_CLASS_BY_SIZE[size],
+              'content-default text-align-x-start'
+            )}>
+            {description}
+          </div>
+        ),
+      [description, size]
+    );
+
+    const iconEl = useMemo(
+      () => icon && <Icon name={icon} size={ICON_SIZE_BY_SIZE[size]} />,
+      [icon, size]
+    );
+
+    const controlEl = useMemo(() => {
+      switch (type) {
+        case 'Checkmark':
+          return isSelected && <Icon name='icon-filled-check' size={ICON_SIZE_BY_SIZE[size]} />;
+
+        case 'Checkbox':
+          return (
+            <div
+              className={clsx(
+                CONTROL_SIZE_BY_SIZE[size],
+                'flex items-center justify-center radius-small padding-none content-default',
+                isSelected ? 'stroke-none' : 'stroke-standard stroke-emphasis',
+                isSelected ? 'bg-system-contrast' : 'bg-none'
+              )}>
+              {isSelected && (
+                <div
+                  className={clsx(
+                    CONTROL_SIZE_BY_SIZE[size],
+                    'content-inverse-emphasis icon icon-filled-check'
+                  )}
+                />
+              )}
+            </div>
+          );
+
+        case 'Radio':
+          return (
+            <div
+              className={clsx(
+                CONTROL_SIZE_BY_SIZE[size],
+                'radius-circle flex items-center justify-center stroke-emphasis stroke-standard',
+                isSelected ? 'bg-system-contrast' : 'bg-none'
+              )}>
+              {isSelected && (
+                <div
+                  className={clsx(
+                    'radius-circle bg-inverse-action-sub-emphasis',
+                    RADIO_INDICATOR_SIZE_BY_SIZE[size]
+                  )}
+                />
+              )}
+            </div>
+          );
+        default: {
+          const exhaustiveCheck: never = type;
+          // eslint-disable-next-line no-console
+          console.error(`Invalid OptionSelector type ${exhaustiveCheck}`);
+          return null;
+        }
+      }
+    }, [type, size, isSelected]);
+
+    const mediaEl = useMemo(
+      () =>
+        media && (
+          <div
+            className={clsx(
+              MEDIA_SIZE_BY_SIZE[size],
+              'flex items-center justify-center clip shrink-0'
+            )}>
+            {media}
+          </div>
+        ),
+      [media, size]
+    );
+
+    const bodyEl = useMemo(() => {
+      const controlSlot = !hideSelectedIndicator && (
+        <div className={CONTROL_SIZE_BY_SIZE[size]}>{controlEl}</div>
+      );
+
+      switch (layout) {
+        case 'Horizontal':
+          return (
+            <div className='flex gap-large'>
+              {mediaEl}
+              <div className='flex flex-col gap-xsmall fill clip'>
+                <div className='flex gap-small items-start'>
+                  <div className='flex flex-col items-start fill clip'>
+                    <div className='flex gap-small items-center width-full'>
+                      {iconEl}
+                      {labelEl}
+                    </div>
+                    {metadataEl}
+                  </div>
+                  {controlSlot}
+                </div>
+                {descriptionEl}
+              </div>
+            </div>
+          );
+
+        case 'Vertical':
+          return (
+            <div className='flex flex-col gap-xsmall'>
+              <div className='flex gap-small'>
+                <div className='flex flex-col gap-medium fill min-width-0'>
+                  {mediaEl}
+                  <div className='flex flex-col gap-xsmall'>
+                    {iconEl}
+                    {labelEl}
+                    {metadataEl}
+                  </div>
+                </div>
+                {controlSlot}
+              </div>
+              {descriptionEl}
+            </div>
+          );
+
+        default: {
+          const exhaustiveCheck: never = layout;
+          // eslint-disable-next-line no-console
+          console.error(`Invalid OptionSelector layout ${exhaustiveCheck}`);
+          return null;
+        }
+      }
+    }, [
+      layout,
+      mediaEl,
+      iconEl,
+      labelEl,
+      descriptionEl,
+      controlEl,
+      size,
+      metadataEl,
+      hideSelectedIndicator
+    ]);
+
+    return (
+      <button
+        type='button'
+        className={clsx(
+          interactable,
+          'focus:outline-focus bg-none width-full radius-medium stroke-standard',
+          isSelected ? 'stroke-system-contrast' : 'stroke-contrast-alpha',
+          PADDING_CLASS_BY_SIZE[size],
+          isDisabled && disabledOpacity,
+          !isDisabled && 'cursor-pointer'
+        )}
+        disabled={isDisabled}
+        ref={ref}
+        onClick={() => onSelect()}>
+        {!isDisabled && <StateLayer />}
+        {bodyEl}
+      </button>
+    );
+  }
+) as TForwardRefComponent<TOptionSelectorProps>;
+
+OptionSelector.displayName = 'OptionSelector';

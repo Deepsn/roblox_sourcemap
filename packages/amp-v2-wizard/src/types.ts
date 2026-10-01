@@ -113,6 +113,7 @@ export type FlowEntrypointRequest = {
 };
 
 export type FlowContinueRequest = {
+	surface?: string;
 	flowId: string;
 	/** The state from the last fragment, echoed unmodified. */
 	state?: FlowState;
