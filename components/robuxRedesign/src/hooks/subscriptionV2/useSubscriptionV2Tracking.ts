@@ -34,7 +34,9 @@ export function useSubscriptionV2Tracking({
 }: Tracking): SubscriptionV2Tracking {
 	const trackSubscriptionV2Shown = useCallback(
 		(isFreeTrial: boolean) => {
-			trackFlow(ROBLOX_PLUS_BUY_ROBUX, VIEW_SHOWN, undefined, { isFreeTrial });
+			trackFlow(ROBLOX_PLUS_BUY_ROBUX, VIEW_SHOWN, undefined, {
+				isFreeTrial: String(isFreeTrial),
+			});
 		},
 		[trackFlow],
 	);
@@ -54,9 +56,9 @@ export function useSubscriptionV2Tracking({
 				? ROBLOX_PLUS_FREE_TRIAL
 				: ROBLOX_PLUS_SUBSCRIBE;
 			trackFlow(ROBLOX_PLUS_BUY_ROBUX, USER_INPUT, viewMessage, {
-				isFreeTrial,
+				isFreeTrial: String(isFreeTrial),
 				productId,
-				isRedirect,
+				isRedirect: String(isRedirect),
 			});
 		},
 		[trackFlow],

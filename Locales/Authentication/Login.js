@@ -259,6 +259,8 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"To view more of your child’s activity, switch to your Roblox account with parent privileges.",
 	"Description.SwitchAccountContinue":
 		"To continue, switch to your Roblox account with parent privileges.",
+	"Action.QrCode": "QR code",
+	"Label.OR": "OR",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

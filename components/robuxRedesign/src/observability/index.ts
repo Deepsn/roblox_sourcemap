@@ -104,6 +104,17 @@ export const observabilityRegistry = {
 				},
 			],
 		},
+		gifting: {
+			counters: [
+				"RobuxGiftingModalShown",
+				"RobuxGiftingModalClosed",
+				"RobuxGiftingCopyUrl",
+				{ name: "RobuxGiftingShare", dimensions: ["method"] },
+				"RobuxGiftingShareDismissed",
+				"RobuxGiftingQrGenerated",
+			],
+			errors: ["RobuxGiftingCopyFailed", "RobuxGiftingShareFailed"],
+		},
 		quickPay: {
 			counters: [
 				{

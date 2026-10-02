@@ -349,6 +349,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"{username} invited you to join Plus. You'll both get {amount} Robux when you purchase Plus.",
 	"Description.BillingInfoWithFreeTrialOfferV2":
 		"{boldTagStart}{trialPeriodType, select,\n    Week {{trialPeriod, plural, one {{trialPeriod} week} other {{trialPeriod} weeks}}}\n    Month {{trialPeriod, plural, one {{trialPeriod} month} other {{trialPeriod} months}}}\n    Year {{trialPeriod, plural, one {{trialPeriod} year} other {{trialPeriod} years}}}\n    other {{trialPeriod} {trialPeriodType}}\n  } free{boldTagEnd}, then {price}/{periodType, select,\n    Week {week}\n    Month {month}\n    Year {year}\n    other {periodType}\n  }",
+	"Action.Review": "Review",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
