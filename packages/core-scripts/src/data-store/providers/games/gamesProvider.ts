@@ -385,6 +385,12 @@ export interface RobloxGamesApiModelsResponseGameDetailResponse {
 	 * @memberof RobloxGamesApiModelsResponseGameDetailResponse
 	 */
 	genre?: string;
+	/**
+	 * Studio creation source (e.g. "build" for Build experiences).
+	 * @type {string}
+	 * @memberof RobloxGamesApiModelsResponseGameDetailResponse
+	 */
+	creationSource?: string;
 }
 
 /**

@@ -32,6 +32,39 @@ export const formatSeoName = (name: string): string => {
 	);
 };
 
+/**
+ * Drops matched `(...)` / `[...]` pairs, including nests and mixed delimiters like `(]`.
+ */
+const removeBracketedText = (input: string): string => {
+	const kept: string[] = [];
+	const openIndices: number[] = [];
+
+	for (const char of input) {
+		if (char === "(" || char === "[") {
+			openIndices.push(kept.length);
+			kept.push(char);
+		} else if (char === ")" || char === "]") {
+			const openIndex = openIndices.pop();
+			if (openIndex === undefined) {
+				kept.push(char);
+			} else {
+				kept.length = openIndex;
+			}
+		} else {
+			kept.push(char);
+		}
+	}
+
+	return kept.join("");
+};
+
+/**
+ * Strips matched `(...)` / `[...]` pairs, then slugifies with `formatSeoName`.
+ * Uses `unnamed` when nothing is left to slugify.
+ */
+export const formatStableSeoName = (name: string): string =>
+	formatSeoName(removeBracketedText(name)) || "unnamed";
+
 export enum connectors {
 	at = "@",
 	plus = "+",

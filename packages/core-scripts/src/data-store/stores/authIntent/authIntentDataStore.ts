@@ -1,8 +1,7 @@
 import "../../../global";
 import { getQueryParam } from "../../../util/url";
 import localStorage from "../../../local-storage";
-
-const { CurrentUser } = window.Roblox;
+import { authenticatedUser } from "../../../meta/user";
 
 export type GameIntent = {
 	gameId: string;
@@ -79,9 +78,10 @@ const hasUnclaimedAuthIntent = (): boolean =>
 
 // @ts-expect-error TODO: old, migrated code
 const retrieveAuthIntentDataForUser = (): UserAuthIntent => {
-	if (CurrentUser?.userId) {
+	const currentUserId = authenticatedUser()?.id;
+	if (currentUserId) {
 		// @ts-expect-error TODO: old, migrated code
-		return getAuthIntentData()[CurrentUser.userId];
+		return getAuthIntentData()[currentUserId];
 	}
 };
 
