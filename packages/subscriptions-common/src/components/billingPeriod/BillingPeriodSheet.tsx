@@ -1,3 +1,4 @@
+import { PeriodType } from "@rbx/client-subscriptions-api/v2";
 import { useTranslation } from "@rbx/core-scripts/react";
 import {
 	SheetActions,
@@ -6,6 +7,7 @@ import {
 	SheetRoot,
 	SheetTitle,
 } from "@rbx/foundation-ui";
+import { getFreeTrialDisplay } from "@rbx/payments/services/subscriptions";
 import { translateHtml } from "@rbx/translation-utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -101,7 +103,8 @@ const BillingPeriodSheet: FC<BillingPeriodSheetProps> = ({
 	}
 
 	const trackingArgs = { analyticsContext, paymentSessionId };
-	const { freeTrialEndDate } = selectedOption;
+	const { freeTrialEndDate, freeTrialDuration, freeTrialPeriodType } =
+		selectedOption;
 
 	const handleOpenChange = (open: boolean) => {
 		if (!open) {
@@ -110,6 +113,20 @@ const BillingPeriodSheet: FC<BillingPeriodSheetProps> = ({
 		onOpenChange(open);
 	};
 
+	// Resolve the trial length into display copy ("2 weeks"); billing cadence is monthly for the base trial.
+	const trialDisplay =
+		freeTrialDuration !== undefined && freeTrialPeriodType !== undefined
+			? getFreeTrialDisplay(
+					{
+						freeTrialOffer: {
+							duration: freeTrialDuration,
+							periodType: freeTrialPeriodType,
+						},
+					},
+					PeriodType.Month,
+				)
+			: null;
+
 	const legalFooter =
 		freeTrialEndDate === undefined
 			? translateHtml(
@@ -117,18 +134,34 @@ const BillingPeriodSheet: FC<BillingPeriodSheetProps> = ({
 					"Description.SubscriptionLegalBillingCycle",
 					termsLink,
 				)
-			: translateHtml(
-					translate,
-					"Description.SubscriptionFreeTrialLegal",
-					termsLink,
-					{
-						date: freeTrialEndDate.toLocaleDateString(undefined, {
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-						}),
-					},
-				);
+			: trialDisplay
+				? translateHtml(
+						translate,
+						"Description.SubscriptionFreeTrialLegalV2",
+						termsLink,
+						{
+							date: freeTrialEndDate.toLocaleDateString(undefined, {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							}),
+							trialDuration: String(trialDisplay.trialDuration),
+							trialPeriodLabel: translate(trialDisplay.trialPeriodKey),
+							billingPeriodLabel: translate(trialDisplay.billingPeriodKey),
+						},
+					)
+				: translateHtml(
+						translate,
+						"Description.SubscriptionFreeTrialLegal",
+						termsLink,
+						{
+							date: freeTrialEndDate.toLocaleDateString(undefined, {
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							}),
+						},
+					);
 
 	return (
 		<SheetRoot open={isOpen} onOpenChange={handleOpenChange}>

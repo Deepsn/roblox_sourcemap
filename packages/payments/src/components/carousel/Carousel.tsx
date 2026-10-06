@@ -210,9 +210,16 @@ export function Carousel({
 	);
 }
 
-export type CarouselTrackProps = ComponentProps<"div">;
+export type CarouselTrackProps = ComponentProps<"div"> & {
+	gap?: "medium" | "large";
+};
 
-function CarouselTrack({ className, children, ...rest }: CarouselTrackProps) {
+function CarouselTrack({
+	className,
+	children,
+	gap = "medium",
+	...rest
+}: CarouselTrackProps) {
 	const internalRef = useContext(CarouselTrackRefContext);
 
 	const setRef = useCallback(
@@ -228,7 +235,8 @@ function CarouselTrack({ className, children, ...rest }: CarouselTrackProps) {
 		<div
 			ref={setRef}
 			className={classNames(
-				"flex flex-row gap-medium min-width-0 width-full scroll-x",
+				"flex flex-row min-width-0 width-full scroll-x",
+				gap === "large" ? "gap-large" : "gap-medium",
 				className,
 			)}
 			data-testid="carousel-track"

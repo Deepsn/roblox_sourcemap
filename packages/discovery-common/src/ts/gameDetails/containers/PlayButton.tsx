@@ -12,7 +12,9 @@ import {
 	DefaultPlayButton,
 	ContextualMessage,
 	PlayabilityStatus,
+	shouldUsePlaytestActionNeeded,
 } from "@rbx/game-play-button";
+import { PlaytestActionNeededButton } from "@rbx/game-play-button/playtest-action-needed-button";
 import { EventContext } from "@rbx/unified-logging";
 import metadataConstants from "../constants/metadataConstants";
 import eventStreamConstants, {
@@ -32,6 +34,7 @@ import { PageContext } from "../../common/types/pageContext";
 import getExperienceAffiliateReferralUrlParams from "../../common/utils/getExperienceAffiliateReferralUrlParams";
 import { ExperienceNoticeType } from "../constants/experienceNoticeConstants";
 import usePlayButtonDownloadCtaExperiment from "../hooks/usePlayButtonDownloadCtaExperiment";
+import useGameDetailsForUniverseId from "../hooks/useGameDetailsForUniverseId";
 
 type TPlayButtonProps = {
 	attributionId: string;
@@ -56,7 +59,9 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 		refetchPlayabilityData,
 		unplayableDisplayText,
 		demoModeAvailable,
+		privatePlaytestInfo,
 	} = usePlayabilityStatus(universeId);
+	const { gameDetails } = useGameDetailsForUniverseId(universeId);
 	const {
 		experienceDetailsNoticeType,
 		shouldShowVpcPlayButtonUpsells,
@@ -210,6 +215,25 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 				/>
 			) : undefined,
 	};
+	const shouldShowPlaytestActionNeeded = shouldUsePlaytestActionNeeded(
+		playabilityStatus,
+		privatePlaytestInfo,
+	);
+
+	if (shouldShowPlaytestActionNeeded) {
+		const creatorId =
+			gameDetails?.creator.type === "User" ? gameDetails.creator.id : undefined;
+
+		return (
+			<PlaytestActionNeededButton
+				universeId={universeId}
+				creatorId={creatorId}
+				privatePlaytestInfo={privatePlaytestInfo}
+				refetchPlayabilityStatus={refetchPlayabilityData}
+				pageContext={EventContext.GameDetail}
+			/>
+		);
+	}
 
 	return (
 		<React.Fragment>

@@ -307,6 +307,12 @@ Roblox.LangDynamic["Feature.Payment"] = {
 	"Description.OrderDetailsError":
 		"There was a problem getting your order details.",
 	"Button.TryAgain": "Try again",
+	"Label.UsersWallet": "{username}'s Wallet",
+	"Label.RobloxWallet": "Roblox Wallet",
+	"Label.WalletBalance": "Wallet balance",
+	"Label.BalanceWithAmount": "Balance {amount}",
+	"Label.InsufficientBalance": "Not enough balance",
+	"Label.AdditionalBalanceNeeded": "Additional balance needed",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

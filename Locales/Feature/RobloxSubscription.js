@@ -350,6 +350,10 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.BillingInfoWithFreeTrialOfferV2":
 		"{boldTagStart}{trialPeriodType, select,\n    Week {{trialPeriod, plural, one {{trialPeriod} week} other {{trialPeriod} weeks}}}\n    Month {{trialPeriod, plural, one {{trialPeriod} month} other {{trialPeriod} months}}}\n    Year {{trialPeriod, plural, one {{trialPeriod} year} other {{trialPeriod} years}}}\n    other {{trialPeriod} {trialPeriodType}}\n  } free{boldTagEnd}, then {price}/{periodType, select,\n    Week {week}\n    Month {month}\n    Year {year}\n    other {periodType}\n  }",
 	"Action.Review": "Review",
+	"Label.ReferralsLegalDisclosure":
+		'By clicking "Refer to Plus", I agree to the {linkStart}Roblox Plus Referral Program Terms{linkEnd}.',
+	"Label.ReferralsLegalDisclosureV2":
+		"By clicking \\u{201C}Refer to Plus\\u{201D}, I agree to the {linkStart}Roblox Plus Referral Program Terms{linkEnd}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
