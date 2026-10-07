@@ -123,6 +123,10 @@ const EmailVerificationValidator = z
 
 const BlockSessionValidator = z.any();
 
+// Like BlockSession, ForcePasswordlessLogin is rendered via ForceActionRedirect and
+// carries optional dynamic translation keys from GCC, so accept any metadata.
+const ForcePasswordlessLoginValidator = z.any();
+
 const BiometricValidator = z
 	.object({
 		challengeId: z.string(),
@@ -175,4 +179,5 @@ export const ChallengeMetadataValidator: {
 	[ChallengeType.BIOMETRIC]: BiometricValidator,
 	[ChallengeType.CAPTCHA_V2]: CaptchaV2Validator,
 	[ChallengeType.TURNSTILE]: TurnstileValidator,
+	[ChallengeType.FORCE_PASSWORDLESS_LOGIN]: ForcePasswordlessLoginValidator,
 };

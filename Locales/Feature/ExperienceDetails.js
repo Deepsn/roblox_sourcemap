@@ -86,6 +86,7 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 	"Description.MadeWithBuild": "Build games are AI generated",
 	"Label.MadeByVerifiedCreatorWithBuild": "Made by {creatorName} with Build",
 	"PlayButtonText.Playtest": "Preview",
+	"PlayButtonText.PlayOnWeb": "Play on Web",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

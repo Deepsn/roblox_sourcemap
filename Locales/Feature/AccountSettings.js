@@ -2774,6 +2774,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Password must contain at least one letter and at least one number or symbol.",
 	"Response.PasswordTooSimilarToUsername":
 		"Password shouldn't be too similar to your username.",
+	"Heading.IdentityVerificationSetting": "Identity verification setting",
+	"Label.IdentityVerification": "Identity verification",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

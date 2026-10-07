@@ -5,10 +5,12 @@
  * exit rather than blanking.
  */
 
-import { useEffect, useRef, type JSX } from "react";
+import { useCallback, useEffect, useRef, type JSX } from "react";
 import { TranslationProvider } from "@rbx/core-scripts/react";
 import { ProgressCircle } from "@rbx/foundation-ui";
 
+import { useOdpAnalytics } from "../analytics/odpAnalytics";
+import { getTextScreenAnalytics } from "./nodes/TextScreenNode";
 import { defaultRegistry, getNodeComponent } from "../componentRegistry";
 import { useWizardWalker, type WalkerEvent } from "../hooks/useWizardWalker";
 import { GenericErrorModal } from "./GenericErrorModal";
@@ -19,6 +21,7 @@ import type {
 	FlowExitResult,
 	FlowResponse,
 	NodeContext,
+	OdpEventSurface,
 	Registry,
 	Target,
 } from "../types";
@@ -27,6 +30,7 @@ export type WizardHostProps = {
 	initialFragment: FlowResponse;
 	target?: Target;
 	rootFlow?: string;
+	odpEventSurface?: OdpEventSurface;
 	surface: string;
 	api: FlowApi;
 	/** Client-specific wiring threaded to nodes via ctx.config (e.g. a route a node navigates to). */
@@ -49,7 +53,11 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		onExit: props.onExit,
 		onEvent: props.onEvent,
 	});
-
+	const odpAnalytics = useOdpAnalytics({
+		analyticsStrings: walker.analyticsStrings,
+		analyticsSessionId: walker.analyticsSessionId,
+		odpEventSurface: props.odpEventSurface,
+	});
 	const unrenderableReportedRef = useRef(false);
 	const {
 		currentNode,
@@ -58,7 +66,14 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		isLoading,
 		presentingError,
 		acknowledgeError,
+		eventContext,
 	} = walker;
+	// The X reports the same Cancel as a flow's own Cancel button, so the event that tells them apart
+	// has to be sent here, where the X is drawn.
+	const dismiss = useCallback(() => {
+		getTextScreenAnalytics(odpAnalytics, eventContext.node).close();
+		report("Cancel");
+	}, [eventContext.node, odpAnalytics, report]);
 	const Component = currentNode
 		? getNodeComponent(registry, currentNode.type)
 		: undefined;
@@ -107,6 +122,7 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		analytics: walker.eventContext,
 		logEvent: walker.logEvent,
 		analyticsStrings: walker.analyticsStrings,
+		odpEventSurface: props.odpEventSurface,
 		analyticsSessionId: walker.analyticsSessionId,
 	};
 
@@ -157,16 +173,6 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		currentNode.transitions.Cancel != null;
 
 	return (
-		<Overlay
-			onClose={
-				dismissesOnCancel
-					? () => {
-							report("Cancel");
-						}
-					: undefined
-			}
-		>
-			{node}
-		</Overlay>
+		<Overlay onClose={dismissesOnCancel ? dismiss : undefined}>{node}</Overlay>
 	);
 }

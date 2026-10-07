@@ -1,13 +1,18 @@
+import { PeriodType } from "@rbx/client-subscriptions-api/v2";
 import { useTranslation } from "@rbx/core-scripts/react";
 import { Icon } from "@rbx/foundation-ui";
+import { useFormatter } from "@rbx/www-common/intl";
 import { useMemo } from "react";
 
-import { ONE_ROBUX_IN_MICROS } from "../../subscriptionConstants";
+import {
+	INTRODUCTORY_DISCOUNT_DAYS,
+	ONE_ROBUX_IN_MICROS,
+} from "../../subscriptionConstants";
 
 import type {
 	CurrencySubscriptionBenefit,
-	PeriodType,
 	RobloxSubscriptionProductFeatureConfig,
+	SubscriptionOffer,
 	SubscriptionTenureDiscount,
 } from "@rbx/client-subscriptions-api/v2";
 import type { TTailwindIconClass } from "@rbx/foundation-tailwind/classes";
@@ -29,13 +34,28 @@ export type BenefitListProps = {
 	featureConfig: RobloxSubscriptionProductFeatureConfig;
 	periodType: PeriodType;
 	currencySubscriptionBenefit?: CurrencySubscriptionBenefit | null;
+	freeTrialOffer?: SubscriptionOffer | null;
 };
+
+const DAYS_PER_WEEK = 7;
 
 const BenefitList: FC<BenefitListProps> = ({
 	featureConfig,
 	currencySubscriptionBenefit,
+	freeTrialOffer,
 }) => {
-	const { translate, intl } = useTranslation();
+	const { translate } = useTranslation();
+	const format = useFormatter();
+
+	// A weekly free trial is unpaid time and does not count toward the introductory-discount window (the
+	// backend credits only paid months toward the step-up to the higher tier). Extend the displayed window
+	// by the trial length so "N% off first X days" lines up with when the step-up actually unlocks. Monthly
+	// trials count normally, so they get no extension.
+	const introDiscountDays =
+		freeTrialOffer?.freeTrialOffer?.periodType === PeriodType.Week
+			? INTRODUCTORY_DISCOUNT_DAYS +
+				freeTrialOffer.freeTrialOffer.duration * DAYS_PER_WEEK
+			: INTRODUCTORY_DISCOUNT_DAYS;
 
 	const baseDiscount = useMemo(
 		() =>
@@ -65,15 +85,20 @@ const BenefitList: FC<BenefitListProps> = ({
 				(nextDiscount ? (
 					<BenefitItem
 						iconName="icon-regular-tag"
-						label={translate("Description.Benefit.DiscountV2")}
+						label={translate("Description.Benefit.DiscountV3", {
+							trialUnlockDays: format.number(introDiscountDays),
+						})}
 					/>
 				) : (
 					<BenefitItem
 						iconName="icon-regular-tag"
 						label={translate("Description.Benefit.DiscountBase", {
-							discountPercent: intl.n(baseDiscount.discountPercent * 0.01, {
-								style: "percent",
-							}),
+							discountPercent: format.number(
+								baseDiscount.discountPercent * 0.01,
+								{
+									style: "percent",
+								},
+							),
 						})}
 					/>
 				))}
@@ -94,7 +119,7 @@ const BenefitList: FC<BenefitListProps> = ({
 					<BenefitItem
 						iconName="icon-regular-robux"
 						label={translate("Description.Benefit.RobuxStipend", {
-							amount: intl.n(
+							amount: format.number(
 								Math.round(
 									currencySubscriptionBenefit.entitledAmountMicrosPerGrantingPeriod /
 										ONE_ROBUX_IN_MICROS,

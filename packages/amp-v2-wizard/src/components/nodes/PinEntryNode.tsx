@@ -5,11 +5,12 @@
  * All copy arrives pre-translated.
  */
 
-import { useCallback, useEffect, useState, type JSX } from "react";
+import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { Link, ProgressCircle } from "@rbx/foundation-ui";
 import { CodeInput } from "@rbx/user-settings";
 
 import { FullPageChrome } from "../FullPageChrome";
+import { useOdpAnalytics } from "../../analytics/odpAnalytics";
 import { asText } from "../../utils/nodeDetails";
 import type { NodeProps } from "../../types";
 
@@ -30,6 +31,7 @@ export type PinEntryDetails = {
 
 export function PinEntryNode({
 	props,
+	ctx,
 	report,
 	transitions,
 }: NodeProps): JSX.Element {
@@ -42,15 +44,52 @@ export function PinEntryNode({
 	const hidePinLabel = asText(props.hidePinLabel);
 	const error = asText(props.error);
 
+	const odpAnalytics = useOdpAnalytics(ctx);
 	const [pin, setPin] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const hasReportedPageload = useRef(false);
+	useEffect(() => {
+		if (!hasReportedPageload.current) {
+			hasReportedPageload.current = true;
+			odpAnalytics.pinEntryShown();
+		}
+	}, [odpAnalytics]);
+
+	// Input the field strips, like a pasted letter, still comes back through `onChange`, so only a
+	// count that differs from the last one reported is sent.
+	const reportedDigitCount = useRef(0);
 
 	// A wrong PIN comes back from the service as a re-render of this node carrying `error` in a fresh
 	// details object; that identity change is what drops the digits the last attempt typed.
 	useEffect(() => {
 		setPin("");
 		setIsSubmitting(false);
+		reportedDigitCount.current = 0;
 	}, [props]);
+
+	// Each rejected attempt arrives as a new details object, so the message is sent once per object.
+	const seenProps = useRef<NodeProps["props"] | undefined>(undefined);
+	useEffect(() => {
+		if (seenProps.current === props) {
+			return;
+		}
+		seenProps.current = props;
+		if (error != null && error !== "") {
+			odpAnalytics.pinEntryIncorrect();
+		}
+	}, [props, error, odpAnalytics]);
+
+	const onPinChange = useCallback(
+		(value: string) => {
+			if (value.length !== reportedDigitCount.current) {
+				reportedDigitCount.current = value.length;
+				odpAnalytics.pinEntryDigitsChanged(value.length);
+			}
+			setPin(value);
+		},
+		[odpAnalytics],
+	);
 
 	const onComplete = useCallback(
 		(code: string) => {
@@ -62,8 +101,9 @@ export function PinEntryNode({
 
 	const onForgotPin = useCallback(() => {
 		setIsSubmitting(true);
+		odpAnalytics.pinEntryForgotPin();
 		report("ForgotPin");
-	}, [report]);
+	}, [odpAnalytics, report]);
 
 	const hasBack = transitions?.Back != null;
 	const onBack = useCallback(() => {
@@ -108,11 +148,12 @@ export function PinEntryNode({
 					</div>
 					<CodeInput
 						value={pin}
-						onChange={setPin}
+						onChange={onPinChange}
 						onComplete={onComplete}
 						label={inputLabel}
 						showLabel={showPinLabel}
 						hideLabel={hidePinLabel}
+						onRevealToggle={odpAnalytics.pinEntryRevealToggled}
 						error={error}
 						length={PIN_LENGTH}
 						disabled={isSubmitting}

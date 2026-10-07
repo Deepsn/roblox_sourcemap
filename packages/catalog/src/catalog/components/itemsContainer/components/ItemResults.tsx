@@ -164,6 +164,7 @@ function ItemResults(
 						}
 						enableThumbnailPrice={enableThumbnailPrice}
 						timedOptions={processedTimedOptions}
+						licenseType={item.license?.licenseType}
 					/>
 				</div>
 			);

@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import classNames from "classnames";
 import { ValueOf } from "@rbx/core-types";
-import { useTranslation, TranslationProvider } from "@rbx/core-scripts/react";
+import { useTranslations } from "@rbx/www-common/i18n";
+import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import analytics from "@rbx/core-scripts/payments-flow";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { Popover as CoreUiPopover } from "@rbx/core-ui";
@@ -18,7 +19,7 @@ import layoutConstants from "../../constants/layoutConstants";
 import LeaveRobloxPopupDisclaimer from "./LeaveRobloxPopupDisclaimer";
 import { getVngShopSignedRedirectionUrl } from "../../services/navigationService";
 import RobuxBadgeType from "../../constants/robuxBadgeConstants";
-import { translations } from "../../../component.json";
+import { navNamespaces } from "../../constants/translationNamespaces";
 import { useIsTopNavFoundation } from "../../util/topNavFoundationIxp";
 import { popoverDismissGuard } from "../../util/popoverDismissGuard";
 
@@ -47,7 +48,7 @@ export default function BuyRobuxPopover({
 	isEligibleForVng?: boolean;
 	robuxBadgeType?: ValueOf<typeof RobuxBadgeType>;
 }) {
-	const { translate } = useTranslation();
+	const t = useTranslations("CommonUI.Features");
 
 	const { buyRobuxUrl } = links;
 	const { buyRobuxOnVng } = buyRobuxUrl;
@@ -106,10 +107,10 @@ export default function BuyRobuxPopover({
 	// Wallet credit balance only shown on showCreditAndRobux variant
 	const triggerLabel =
 		robuxAmount > 0
-			? translate("Label.sRobuxBalance", {
-					robuxAmount: formatNumber(robuxAmount),
-				}) || `Robux: ${formatNumber(robuxAmount)}`
-			: translate("Label.sRobux");
+			? t.has("Label.sRobuxBalance")
+				? t("Label.sRobuxBalance", { robuxAmount: formatNumber(robuxAmount) })
+				: `Robux: ${formatNumber(robuxAmount)}`
+			: t("Label.sRobux");
 
 	const trigger = (
 		<button
@@ -177,9 +178,7 @@ export default function BuyRobuxPopover({
 							ariaLabel={triggerLabel}
 							{...popoverDismissGuard(containerRef)}
 						>
-							<TranslationProvider config={translations}>
-								{robuxMenu}
-							</TranslationProvider>
+							{robuxMenu}
 						</PopoverContent>
 					</FoundationPopover>
 				) : (
@@ -191,13 +190,13 @@ export default function BuyRobuxPopover({
 						role="menu"
 						container={containerRef.current}
 					>
-						<TranslationProvider config={translations}>
+						<TranslationProviderSCC namespaces={navNamespaces}>
 							<div>
 								<ul id="buy-robux-popover-menu" className="dropdown-menu">
 									{robuxMenu}
 								</ul>
 							</div>
-						</TranslationProvider>
+						</TranslationProviderSCC>
 					</CoreUiPopover>
 				))}
 		</li>

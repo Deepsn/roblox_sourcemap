@@ -7,7 +7,7 @@ import {
 	DialogFooter,
 	DialogTitle,
 } from "@rbx/foundation-ui";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useTranslations } from "@rbx/www-common/i18n";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { translateHtml } from "@rbx/translation-utils";
 import macAppIcon from "@rbx/branding-assets/images/app_icons/app_icon_mac_1024.svg";
@@ -24,6 +24,7 @@ import {
 } from "@rbx/app-download";
 import { useDownloadModalIxp } from "../util/postSignupDownloadModalIxp";
 import { sendSignupDownloadModalEvent } from "../util/postSignupDownloadModalEvent";
+import { useAppDownloadTranslate } from "../hooks/useAppDownloadTranslate";
 
 const headingTranslationKey = "Heading.GetTheRobloxApp";
 const subtitleTranslationKey = "Description.PlayExploreBuildAndMore";
@@ -43,7 +44,9 @@ const consumeNewUserFlag = (): boolean => {
 };
 
 export default function PostSignupDownloadModal() {
-	const { translate } = useTranslation();
+	const t = useTranslations("Feature.DownloadLanding");
+	const tFeatures = useTranslations("CommonUI.Features");
+	const translate = useAppDownloadTranslate();
 	const [open, setOpen] = useState(false);
 	const [showInstructions, setShowInstructions] = useState(false);
 	const hasLoggedExposure = useRef(false);
@@ -108,7 +111,7 @@ export default function PostSignupDownloadModal() {
 			size={showInstructions ? "Large" : "Medium"}
 			isModal
 			hasCloseAffordance
-			closeLabel={translate("Action.Close")}
+			closeLabel={tFeatures("Action.Close")}
 			onOpenChange={() => {
 				setOpen(false);
 			}}
@@ -119,10 +122,10 @@ export default function PostSignupDownloadModal() {
 						<div className="flex flex-col gap-xlarge padding-xlarge">
 							<div className="flex flex-col gap-xsmall">
 								<DialogTitle className="text-heading-medium content-emphasis padding-none">
-									{translate("Heading.DownloadConfirmation")}
+									{t("Heading.DownloadConfirmation")}
 								</DialogTitle>
 								<p className="text-body-large">
-									{translate("Label.FollowInstallSteps")}{" "}
+									{t("Label.FollowInstallSteps")}{" "}
 									{translateHtml(translate, "Label.RetryDownload", [
 										{
 											opening: "startLink",
@@ -153,10 +156,10 @@ export default function PostSignupDownloadModal() {
 							<img src={appIconSrc} alt="" className="size-1600" />
 							<div className="flex flex-col items-center gap-xsmall text-align-x-center">
 								<DialogTitle className="text-heading-small padding-none">
-									{translate(headingTranslationKey)}
+									{t(headingTranslationKey)}
 								</DialogTitle>
 								<p className="text-body-medium content-default">
-									{translate(subtitleTranslationKey)}
+									{t(subtitleTranslationKey)}
 								</p>
 							</div>
 						</DialogBody>
@@ -169,7 +172,7 @@ export default function PostSignupDownloadModal() {
 									handleGetApp().catch(() => undefined);
 								}}
 							>
-								{translate(ctaTranslationKey)}
+								{t(ctaTranslationKey)}
 							</Button>
 						</DialogFooter>
 					</Fragment>

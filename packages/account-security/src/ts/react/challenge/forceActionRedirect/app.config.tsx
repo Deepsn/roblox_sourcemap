@@ -33,6 +33,14 @@ const BLOCK_SESSION_TRANSLATION_CONFIG: TranslationConfig = {
 	feature: "Feature.Denied",
 };
 
+export const FORCE_PASSWORDLESS_LOGIN_SIGNIFIER =
+	"forcepasswordlesslogin" as const;
+
+const FORCE_PASSWORDLESS_LOGIN_TRANSLATION_CONFIG: TranslationConfig = {
+	common: [],
+	feature: "Feature.ForcePasswordlessLogin",
+};
+
 /**
  * Language resource keys for force authenticator that are requested dynamically.
  */
@@ -56,6 +64,17 @@ export const BLOCK_SESSION_LANGUAGE_RESOURCES = [
 	"Denied.Body",
 	"Denied.Action",
 	"Denied.Delayed.BodyWithTrustedSession",
+];
+
+// GCC may override the header, body and action translation keys.
+export const FORCE_PASSWORDLESS_LOGIN_LANGUAGE_RESOURCES = [
+	"ForcePasswordlessLogin.Header",
+	"ForcePasswordlessLogin.Body",
+	"ForcePasswordlessLogin.QRCode",
+	"ForcePasswordlessLogin.Error",
+	"ForcePasswordlessLogin.EmailOtp",
+	"ForcePasswordlessLogin.Passkey",
+	"ForcePasswordlessLogin.Help",
 ];
 
 // translationsParametersByKey populates translation key templates by their key. Dynamic key
@@ -137,11 +156,34 @@ export const translationsParametersByKey = (
 				linkEnd: "</a>",
 			};
 		}
+		case "ForcePasswordlessLogin.Help": {
+			return {
+				supportLinkStart: `<a href="/support"
+          class="text-link"
+          data-testid="force-passwordless-login-support"
+          target="_blank"
+          rel="noopener noreferrer">`,
+				linkEnd: "</a>",
+			};
+		}
 		default: {
 			return {};
 		}
 	}
 };
+
+/**
+ * The shared config, plus what only this app needs. It is not added to the shared type because
+ * that package is free of app concerns.
+ */
+export type ForceActionRedirectConfig =
+	ForceActionRedirect.ForceActionRedirectChallengeConfig & {
+		/**
+		 * The body key used when GCC does not override it. It must live in the challenge type's own
+		 * translation namespace; unset means the Denied namespace's.
+		 */
+		defaultBodyKey?: string;
+	};
 
 // Hook that resolves the body translation key, multiplexing to the trusted-session
 // variant when the user has trusted sessions and the key is delay-related.
@@ -153,7 +195,9 @@ export const useMaybeConditionalDynamicBody = (
 	translate: ForceActionRedirect.ForceActionRedirectTranslateFunction,
 	delayParameters?: DelayParameters,
 ): string => {
-	const trustedSessionCount = useTrustedSessionCount();
+	const trustedSessionCount = useTrustedSessionCount(
+		maybeConditionalKey === "Denied.Delayed.Body",
+	);
 
 	switch (maybeConditionalKey) {
 		case "Denied.Delayed.Body": {
@@ -200,7 +244,7 @@ export const getForceActionRedirectChallengeConfig = ({
 	| "bodyTranslationKey"
 	| "headerTranslationKey"
 	| "delayParameters"
->): ForceActionRedirect.ForceActionRedirectChallengeConfig => {
+>): ForceActionRedirectConfig => {
 	switch (forceActionRedirectChallengeType) {
 		case ForceActionRedirect.ForceActionRedirectChallengeType
 			.ForceAuthenticator:
@@ -258,7 +302,7 @@ export const getForceActionRedirectChallengeConfig = ({
 							maybeDynamicBodyKey,
 							translationsParametersByKey(
 								maybeDynamicBodyKey,
-								delayParameters,
+								delayParameters ?? undefined,
 								translate,
 							),
 						),
@@ -269,6 +313,43 @@ export const getForceActionRedirectChallengeConfig = ({
 					} as const;
 				},
 			};
+		case ForceActionRedirect.ForceActionRedirectChallengeType
+			.ForcePasswordlessLogin: {
+			const defaultBodyKey = "ForcePasswordlessLogin.Body";
+			return {
+				redirectURLSignifier: FORCE_PASSWORDLESS_LOGIN_SIGNIFIER,
+				defaultBodyKey,
+				translationConfig: FORCE_PASSWORDLESS_LOGIN_TRANSLATION_CONFIG,
+				translationResourceKeys: FORCE_PASSWORDLESS_LOGIN_LANGUAGE_RESOURCES,
+				getTranslationResources: (
+					translate: ForceActionRedirect.ForceActionRedirectTranslateFunction,
+				) => {
+					const maybeDynamicHeaderKey =
+						headerTranslationKey || "ForcePasswordlessLogin.Header";
+					const maybeDynamicBodyKey = bodyTranslationKey || defaultBodyKey;
+					const maybeDynamicActionKey =
+						actionTranslationKey || "ForcePasswordlessLogin.QRCode";
+					return {
+						Header: translate(
+							maybeDynamicHeaderKey,
+							translationsParametersByKey(maybeDynamicHeaderKey),
+						),
+						Body: translate(
+							maybeDynamicBodyKey,
+							translationsParametersByKey(
+								maybeDynamicBodyKey,
+								delayParameters ?? undefined,
+								translate,
+							),
+						),
+						Action: translate(
+							maybeDynamicActionKey,
+							translationsParametersByKey(maybeDynamicActionKey),
+						),
+					} as const;
+				},
+			};
+		}
 		default:
 			throw new Error("Invalid ForceActionRedirectChallengeType");
 	}

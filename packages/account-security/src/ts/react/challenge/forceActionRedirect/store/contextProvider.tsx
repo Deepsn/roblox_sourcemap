@@ -9,7 +9,10 @@ import React, {
 import { TranslateFunction } from "react-utilities";
 import { ForceActionRedirect } from "@rbx/generic-challenge-types";
 import { DelayParameters } from "../../twoStepVerification/delay";
-import { useMaybeConditionalDynamicBody } from "../app.config";
+import {
+	ForceActionRedirectConfig,
+	useMaybeConditionalDynamicBody,
+} from "../app.config";
 import { ForceActionRedirectAction } from "./action";
 import { ForceActionRedirectState } from "./state";
 import forceActionStateReducer from "./stateReducer";
@@ -36,7 +39,7 @@ export const ForceActionRedirectContext =
 	);
 
 type Props = {
-	forceActionRedirectChallengeConfig: ForceActionRedirect.ForceActionRedirectChallengeConfig;
+	forceActionRedirectChallengeConfig: ForceActionRedirectConfig;
 	renderInline: boolean;
 	translate: TranslateFunction;
 	onModalChallengeAbandoned: ForceActionRedirect.OnModalChallengeAbandonedCallback | null;
@@ -61,8 +64,10 @@ export const ForceActionRedirectContextProvider = ({
 	bodyTranslationKey,
 	children,
 }: Props): ReactElement => {
-	const definedKey = bodyTranslationKey ?? "Denied.Body";
-	const definedNonEmptyKey = definedKey === "" ? "Denied.Body" : definedKey;
+	const defaultBodyKey =
+		forceActionRedirectChallengeConfig.defaultBodyKey ?? "Denied.Body";
+	const definedKey = bodyTranslationKey ?? defaultBodyKey;
+	const definedNonEmptyKey = definedKey === "" ? defaultBodyKey : definedKey;
 	const dynamicBody = useMaybeConditionalDynamicBody(
 		definedNonEmptyKey,
 		translate,

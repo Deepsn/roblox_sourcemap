@@ -261,6 +261,8 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"To continue, switch to your Roblox account with parent privileges.",
 	"Label.OtherSignInOptions": "Other sign-in options",
 	"Action.QrCode": "QR code",
+	"Action.Google": "Google",
+	"Action.Apple": "Apple",
 	"Label.OR": "OR",
 };
 window.Roblox &&

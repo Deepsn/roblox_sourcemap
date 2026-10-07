@@ -1,6 +1,6 @@
 import { recordGet } from "@rbx/core-lib";
 import { Link } from "@rbx/core-ui";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useTranslations } from "@rbx/www-common/i18n";
 import { formatNumber, truncNumber } from "@rbx/core-scripts/format/number";
 import dataStores from "@rbx/core-scripts/data-store";
 import links from "../../constants/linkConstants";
@@ -51,7 +51,8 @@ export default function LeftNavItem({
 	messagesData: { count?: number };
 	tradeData: { count: number };
 }) {
-	const { translate } = useTranslation();
+	const t = useTranslations("CommonUI.Features");
+	const label = t.has(labelTranslationKey) ? t(labelTranslationKey) : "";
 	const notificationItems = {
 		[links.scrollListItems.friends.name]: friendsData,
 		[links.scrollListItems.messages.name]: messagesData,
@@ -76,11 +77,8 @@ export default function LeftNavItem({
 					<div>
 						<span className={iconClass} />
 					</div>
-					<span
-						className="font-header-2 dynamic-ellipsis-item"
-						title={translate(labelTranslationKey)}
-					>
-						{translate(labelTranslationKey)}
+					<span className="font-header-2 dynamic-ellipsis-item" title={label}>
+						{label}
 					</span>
 				</button>
 			</li>
@@ -96,11 +94,8 @@ export default function LeftNavItem({
 				<div>
 					<span className={iconClass} />
 				</div>
-				<span
-					className="font-header-2 dynamic-ellipsis-item"
-					title={translate(labelTranslationKey)}
-				>
-					{translate(labelTranslationKey)}
+				<span className="font-header-2 dynamic-ellipsis-item" title={label}>
+					{label}
 				</span>
 				{notificationItem?.count != null && notificationItem.count > 0 && (
 					<div className="dynamic-width-item align-right">
