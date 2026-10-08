@@ -5,12 +5,15 @@ import { useFirstTimePurchaseConsent } from "@rbx/payments/firstTimePurchaseCons
 import {
 	BuyRobuxPageContext,
 	BuyRobuxPageContextProps,
+	BuyRobuxUrlParams,
 } from "./contexts/BuyRobuxPageContext";
 import { useBonusItem } from "./hooks/useBonusItem";
-import { useBuyRobuxPage } from "./hooks/useBuyRobuxPage";
 import { useRobuxBalance } from "./hooks/useRobuxBalance";
 import { useThumbnails } from "./hooks/useThumbnails";
-import { BuyRobuxPageData, PaymentSession } from "./types/buyRobuxPageData";
+import {
+	EnhancedBuyRobuxPageData,
+	PaymentSession,
+} from "./types/buyRobuxPageData";
 import { TrackingContainer } from "./containers/TrackingContainer";
 import { PurchasingContainer } from "./containers/PurchasingContainer";
 import { usePurchaseUrls } from "./hooks/purchase/usePurchaseUrls";
@@ -31,17 +34,17 @@ const persistPaymentSessionToLocalStorage = (
 	);
 };
 
-export const App = (buyRobuxPageData: BuyRobuxPageData) => {
+type AppProps = {
+	enhancedBuyRobuxPageData: EnhancedBuyRobuxPageData;
+	urlParams: BuyRobuxUrlParams;
+};
+
+export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 	const breakpoint = useBreakpoint();
 	useBonusItem();
 
-	const urlSearchParams = useMemo(
-		() => new URLSearchParams(window.location.search),
-		[],
-	);
-	useStyleOverrides(urlSearchParams);
+	useStyleOverrides(urlParams.ctx);
 
-	const buyRobuxPage = useBuyRobuxPage(buyRobuxPageData, urlSearchParams);
 	const {
 		limitedTimeBonusItem,
 		bonusItemDisplayName,
@@ -49,16 +52,18 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 		bonusItemRootPlaceId,
 		giftingUrl,
 		isSubscriber,
-		paymentSession,
 		productIds,
-		purchaseFlowId,
 		sectionNames,
 		subscriptionProductIds,
 		upsellProduct,
 		collectibleBonusItemMetadata,
 		productBadgeSlotCount,
 		atLeastOneProductHasBonusAmount,
-	} = buyRobuxPage;
+		buyRobuxPageData,
+	} = enhancedBuyRobuxPageData;
+
+	const { paymentSession, purchaseFlowId } =
+		enhancedBuyRobuxPageData.buyRobuxPageData;
 
 	useEffect(() => {
 		// Unauth payloads have no paymentSession, so there's nothing to persist.
@@ -111,7 +116,7 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 			sectionNames,
 			subscriptionProductIds,
 			upsellProduct,
-			urlSearchParams,
+			urlParams,
 			redirect,
 			collectibleBonusItemMetadata,
 			shouldShowFirstTimePurchaseConsent,
@@ -138,7 +143,7 @@ export const App = (buyRobuxPageData: BuyRobuxPageData) => {
 			sectionNames,
 			subscriptionProductIds,
 			upsellProduct,
-			urlSearchParams,
+			urlParams,
 			redirect,
 			collectibleBonusItemMetadata,
 			shouldShowFirstTimePurchaseConsent,

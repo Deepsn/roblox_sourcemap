@@ -9,10 +9,10 @@ import pfas from "@rbx/core-scripts/payments-flow";
 import type { Namespace } from "@rbx/www-common/i18n";
 import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import { ToastProvider } from "@rbx/payments/components";
+import { isPremiumUser } from "@rbx/core-scripts/meta/user";
 import { translations } from "./component.json";
 import { ROOT_ELEMENT_ID } from "./src/constants";
 import { App } from "./src/App";
-import { useBuyRobuxPageData } from "./src/hooks/useBuyRobuxPageData";
 import "./src/main.css";
 import "./src/stylesheets/robuxRedesign.scss";
 import "./src/stylesheets/styleGuidePatch.scss";
@@ -22,6 +22,8 @@ import {
 	ObsErrorBoundary,
 } from "./src/observability";
 import { reportInteractive } from "./src/utils/publishMetric";
+import { getBuyRobuxPageDataFromDOM } from "./src/utils/getBuyRobuxPageDataFromDOM";
+import { getEnhancedBuyRobuxPageData } from "./src/utils/getEnhancedBuyRobuxPageData";
 
 registerReferrerLookup((referrerId) =>
 	dataStores.userDataStore.getUser(referrerId),
@@ -39,13 +41,35 @@ const ToastWrapper = ({ children }: { children: React.ReactNode }) => {
 	);
 };
 
+const getUrlParams = () => {
+	if (typeof window === "undefined") {
+		return {};
+	}
+
+	const search = new URLSearchParams(window.location.search);
+	return {
+		ctx: search.get("ctx") ?? undefined,
+		product_id: search.get("product_id") ?? undefined,
+		showHeader: search.get("showHeader") ?? undefined,
+	};
+};
+
 ready(() => {
 	reportPageLoad();
 
-	const buyRobuxPageData = useBuyRobuxPageData();
+	const isSubscriber = isPremiumUser();
+	const urlParams = getUrlParams();
+
+	const buyRobuxPageData = getBuyRobuxPageDataFromDOM();
 	if (!buyRobuxPageData) {
 		return;
 	}
+
+	const enhancedBuyRobuxPageData = getEnhancedBuyRobuxPageData({
+		buyRobuxPageData,
+		isSubscriber,
+		urlProductId: urlParams.product_id,
+	});
 
 	reportInteractive();
 	reportPageView();
@@ -66,7 +90,10 @@ ready(() => {
 						context="RobuxRedesign"
 					>
 						<ToastWrapper>
-							<App {...buyRobuxPageData} />
+							<App
+								enhancedBuyRobuxPageData={enhancedBuyRobuxPageData}
+								urlParams={urlParams}
+							/>
 						</ToastWrapper>
 					</PaymentsTranslationProvider>
 				</TranslationProviderSCC>

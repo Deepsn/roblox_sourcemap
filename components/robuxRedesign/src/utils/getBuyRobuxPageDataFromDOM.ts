@@ -2,7 +2,7 @@ import { ROOT_ELEMENT_ID } from "../constants";
 import { trackCriticalError } from "../observability";
 import { BuyRobuxPageData } from "../types/buyRobuxPageData";
 
-export function useBuyRobuxPageData(): BuyRobuxPageData | undefined {
+export function getBuyRobuxPageDataFromDOM(): BuyRobuxPageData | undefined {
 	// it greatly simplifies things if we assert that `buyRobuxPage` is non-null
 	// before handing off to BuyRobuxPageContainer
 	const container = document.getElementById(ROOT_ELEMENT_ID);

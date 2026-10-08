@@ -259,7 +259,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Description.ReferralInvalid":
 		"This referral link is no longer valid. You can still join Roblox Plus without the referral reward.",
 	"Description.ReferralRecipientInvitedBy":
-		"{displayName} invited you to join Plus. You'll both get {amount} Robux when you join.",
+		"{displayName} invited you to join Plus. You'll both get {amount} Robux when you buy Plus.",
 	"Heading.ReferralRecipientJoin": "Join Plus, get",
 	"Label.SuccessfulReferrals": "Successful referrals",
 	"Label.RobuxEarned": "Robux earned",

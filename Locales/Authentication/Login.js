@@ -264,6 +264,8 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Action.Google": "Google",
 	"Action.Apple": "Apple",
 	"Label.OR": "OR",
+	"Label.ShowPassword": "Show password",
+	"Label.HidePassword": "Hide password",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

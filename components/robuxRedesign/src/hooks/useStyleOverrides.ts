@@ -14,7 +14,7 @@ const STYLE_OVERRIDES: string[] = [
 	"content-padding-top",
 ];
 
-export function useStyleOverrides(urlSearchParams: URLSearchParams): void {
+export function useStyleOverrides(ctx?: string): void {
 	useEffect(() => {
 		if (getDeviceMeta()?.isInApp) {
 			document.documentElement.style.setProperty(
@@ -22,7 +22,7 @@ export function useStyleOverrides(urlSearchParams: URLSearchParams): void {
 				"var(--container-main-margin-top-mobile-var",
 			);
 			// only hide the 2nd row of the header if the user came through a redirect flow
-		} else if (urlSearchParams.get("ctx") === "redirect") {
+		} else if (ctx === "redirect") {
 			STYLE_OVERRIDES.forEach((override) => {
 				document.documentElement.style.setProperty(
 					`--${override}`,
@@ -30,5 +30,5 @@ export function useStyleOverrides(urlSearchParams: URLSearchParams): void {
 				);
 			});
 		}
-	}, [urlSearchParams]);
+	}, [ctx]);
 }

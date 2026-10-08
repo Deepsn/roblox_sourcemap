@@ -941,6 +941,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"add this trusted friend",
 	"ODPChallenge.Prologue.Action.SendTransfer": "send Robux",
 	"ODPChallenge.Prologue.Action.ReceiveTransfer": "receive Robux",
+	"Heading.ConversationalRequest.LiftPlatformAccessRestriction":
+		"Do you allow your child to use Roblox?",
+	"Description.LiftPlatformAccessRestrictionConsent":
+		"With your permission, your child will be able to sign in to Roblox.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
