@@ -1,6 +1,5 @@
 import { PeriodType } from "@rbx/client-subscriptions-api/v2";
 import { isReferralEnabled } from "@rbx/core-scripts/meta/subscription";
-import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
 import plusRobuxDark from "@rbx/foundation-images/pictograms/plus_robux_dark.svg";
 import plusRobuxLight from "@rbx/foundation-images/pictograms/plus_robux_light.svg";
 import {
@@ -13,6 +12,7 @@ import {
 	SheetTitle,
 } from "@rbx/foundation-ui";
 import { translateHtml } from "@rbx/translation-utils";
+import { useFormatter, useTranslations } from "@rbx/www-common/i18n";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import BenefitList from "./BenefitList";
@@ -38,7 +38,8 @@ import type {
 } from "@rbx/client-subscriptions-api/v2";
 import type { FC, ReactNode } from "react";
 
-const REFERRAL_TRANSLATION_CONFIG = ["Feature.RobloxSubscription"] as const;
+const REFERRAL_TERMS_URL =
+	"https://en.help.roblox.com/hc/en-us/articles/52737229124628";
 
 /**
  * Centred pictogram, sized so the CTA and legal text stay above the fold on mobile. The sheet
@@ -117,6 +118,8 @@ export type PlusReferralSheetProps = {
 	invite?: PlusReferralInvite;
 	/** Which surface opened this sheet, emitted with every referee event. */
 	surface?: PlusReferralSurface;
+	/** Referral rollout, for hosts that do not emit the `subscription-referral-data` meta tag. */
+	isReferralRolloutEnabled?: boolean;
 	/**
 	 * Checkout wiring from the surrounding page. `/plus` has the product loaded and passes it down;
 	 * anywhere else omits it and the sheet looks the product up itself.
@@ -145,10 +148,6 @@ type PlusReferralSheetBodyProps = {
 	featureConfig?: RobloxSubscriptionProductFeatureConfig;
 };
 
-/**
- * The sheet itself. Split out only because `TranslationProvider` has to wrap whatever calls
- * `useTranslation`, which a single component cannot do for itself.
- */
 const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 	face,
 	open,
@@ -161,9 +160,14 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 	subscribePeriodType,
 	featureConfig,
 }) => {
-	const { translate, intl } = useTranslation();
+	const t = useTranslations("Feature.RobloxSubscription");
+	const translate = (
+		key: string,
+		params?: Record<string, string>,
+		fallback = "",
+	) => (t.has(key) ? t(key, params) : fallback);
 	const isPitch = face === "pitch";
-	const rewardAmount = intl.n(REFERRAL_REWARD_ROBUX);
+	const rewardAmount = useFormatter().number(REFERRAL_REWARD_ROBUX);
 	// Hooks cannot be skipped, so format a placeholder and gate the rendering on the real price.
 	const formattedPrice = useLocalizedMoney(subscribePrice ?? EMPTY_PRICE);
 	// Only the pitch names the referrer, so the other faces never spend a users api request.
@@ -198,7 +202,21 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 		};
 	}, [referralCode, referrerUserId, subscribeButtonProps]);
 
-	const termsLink = [
+	const referralTermsLink = [
+		{
+			opening: "linkStartRef",
+			closing: "linkEndRef",
+			render: (children: ReactNode) => (
+				<a
+					className="content-link underline"
+					href={REFERRAL_TERMS_URL}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					{children}
+				</a>
+			),
+		},
 		{
 			opening: "linkStart",
 			closing: "linkEnd",
@@ -374,8 +392,8 @@ const PlusReferralSheetBody: FC<PlusReferralSheetBodyProps> = ({
 							<span className="text-caption-medium content-muted">
 								{translateHtml(
 									translate,
-									"Description.SubscriptionLegal",
-									termsLink,
+									"Description.ReferralRecipientLegalDisclosure",
+									referralTermsLink,
 								)}
 							</span>
 						</div>
@@ -449,6 +467,7 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 	onOpenChange,
 	invite,
 	surface,
+	isReferralRolloutEnabled = isReferralEnabled(),
 	subscribeButtonProps,
 	subscribePrice,
 	subscribePeriodType,
@@ -456,7 +475,7 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 	subscribeEligibleOffers,
 }) => {
 	// Off the rollout the link still gets an answer — the invalid face — rather than doing nothing.
-	const isActionableInvite = invite !== undefined && isReferralEnabled();
+	const isActionableInvite = invite !== undefined && isReferralRolloutEnabled;
 
 	// Resolving the share link only proved it parses. Only this check says whether this visitor can
 	// accept the referral.
@@ -537,20 +556,18 @@ const PlusReferralSheet: FC<PlusReferralSheetProps> = ({
 				referrerId={invite?.referrerId}
 				surface={surface}
 			/>
-			<TranslationProvider config={[...REFERRAL_TRANSLATION_CONFIG]}>
-				<PlusReferralSheetBody
-					face={face}
-					featureConfig={resolvedSubscribeFeatureConfig}
-					open={open}
-					referralCode={invite?.code}
-					referrerUserId={invite?.referrerId}
-					subscribeButtonProps={resolvedSubscribeProps}
-					subscribePeriodType={resolvedSubscribePeriodType}
-					subscribePrice={resolvedSubscribePrice}
-					surface={surface}
-					onOpenChange={onOpenChange}
-				/>
-			</TranslationProvider>
+			<PlusReferralSheetBody
+				face={face}
+				featureConfig={resolvedSubscribeFeatureConfig}
+				open={open}
+				referralCode={invite?.code}
+				referrerUserId={invite?.referrerId}
+				subscribeButtonProps={resolvedSubscribeProps}
+				subscribePeriodType={resolvedSubscribePeriodType}
+				subscribePrice={resolvedSubscribePrice}
+				surface={surface}
+				onOpenChange={onOpenChange}
+			/>
 		</React.Fragment>
 	);
 };

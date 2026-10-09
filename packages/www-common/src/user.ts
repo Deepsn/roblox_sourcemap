@@ -54,3 +54,64 @@ export const parseUserId = (str: string): UserId | null => {
 	const big = parseBigInt(str);
 	return big == null ? null : userIdFromBigInt(big);
 };
+
+/** Roblox Plus membership, shared by the .NET meta tag and Next.js `data-user-membership`. */
+export const blackbirdMembership = "blackbird" as const;
+
+export type User = {
+	id: UserId;
+	userName?: string;
+	displayName?: string;
+	isPremiumUser: boolean;
+	membership?: typeof blackbirdMembership;
+	isVerified: boolean;
+	isUnder13: boolean;
+	/**
+	 * @deprecated Use `id` instead.
+	 */
+	isAuthenticated: true;
+};
+
+export const userMetaFromDataset = (
+	dataset: DOMStringMap,
+): User | undefined => {
+	const rawUserId = dataset.userid ?? dataset.user;
+
+	const userId =
+		rawUserId == null ? undefined : (parseUserId(rawUserId) ?? undefined);
+
+	if (typeof userId !== "string") {
+		return undefined;
+	}
+
+	return {
+		isAuthenticated: true,
+		id: userId,
+		userName: dataset.name ?? dataset.userName,
+		displayName: dataset.displayname ?? dataset.userDisplayName,
+		isPremiumUser:
+			dataset.ispremiumuser === "true" || dataset.userIsPremium === "true",
+		membership:
+			dataset.membership === blackbirdMembership ||
+			dataset.userMembership === blackbirdMembership
+				? blackbirdMembership
+				: undefined,
+		isVerified:
+			dataset.hasverifiedbadge === "true" ||
+			dataset.userHasVerifiedBadge === "true",
+		isUnder13:
+			dataset.isunder13 === "true" || dataset.userAgeBracket === "AgeUnder13",
+	};
+};
+
+export const getCurrentUser = (): User | undefined => {
+	if (typeof document === "undefined") {
+		return undefined;
+	}
+
+	const dataset =
+		document.querySelector<HTMLMetaElement>('meta[name="user-data"]')
+			?.dataset ?? document.documentElement.dataset;
+
+	return userMetaFromDataset(dataset);
+};

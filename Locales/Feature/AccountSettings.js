@@ -2775,7 +2775,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Response.PasswordTooSimilarToUsername":
 		"Password shouldn't be too similar to your username.",
 	"Heading.IdentityVerificationSetting": "Identity verification setting",
-	"Label.IdentityVerification": "Identity verification",
+	"Label.IdentityVerification": "Identity verification setting",
+	"Description.NoApprovedExperiencesChildSide":
+		"No allowed games yet. Once your parent approves a game you requested, it'll show up here.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

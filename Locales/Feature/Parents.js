@@ -945,6 +945,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Do you allow your child to use Roblox?",
 	"Description.LiftPlatformAccessRestrictionConsent":
 		"With your permission, your child will be able to sign in to Roblox.",
+	"Response.ODPBirthdayNotAllowed":
+		"This date can't be used for your child's account. Try another date.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

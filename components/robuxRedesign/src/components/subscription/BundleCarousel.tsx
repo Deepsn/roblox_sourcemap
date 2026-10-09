@@ -38,7 +38,9 @@ export function BundleCarousel({
 	const { products } = subscriptionV2;
 
 	const inverseThemeClass =
-		useTheme() === "dark" ? "light-theme" : "dark-theme";
+		useTheme() === "dark"
+			? "color-mode-light light-theme"
+			: "color-mode-dark dark-theme";
 
 	// Section-shown fires once per carousel mount and avoids
 	// double-counting impressions when the user swipes between tiers.

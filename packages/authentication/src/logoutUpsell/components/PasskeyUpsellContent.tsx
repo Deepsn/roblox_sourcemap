@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { assetUrl } from "@rbx/www-common/asset";
 import { useTheme } from "@rbx/core-scripts/react";
 import {
 	Button,
@@ -100,7 +101,9 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 				<div className="flex flex-col">
 					<div className="flex items-center justify-center width-full overflow-hidden aspect-2-1">
 						<img
-							src={theme === "dark" ? passkeyIconDark : passkeyIconLight}
+							src={assetUrl(
+								theme === "dark" ? passkeyIconDark : passkeyIconLight,
+							)}
 							alt=""
 							aria-hidden="true"
 						/>

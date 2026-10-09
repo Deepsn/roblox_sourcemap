@@ -6,8 +6,9 @@ import {
 } from "@rbx/core-scripts/event-stream";
 import layoutConstants from "../constants/layoutConstants";
 import links, { UniversalSearchLink } from "../constants/linkConstants";
+import { getIsTopSearchResultsEnabled } from "./topSearchResultsIxp";
 
-const { newUniversalSearchUrls, avatarSearchLink } = links;
+const { newUniversalSearchUrls, avatarSearchLink, topSearchLink } = links;
 
 const isGuest = authenticatedUser() == null;
 
@@ -74,7 +75,10 @@ const getNewUniversalSearchLinks = (): UniversalSearchLink[] => {
 	const unRelevantUrls = urls.filter(({ pageSort }) =>
 		pageSort.every((keyword) => !window.location.pathname.includes(keyword)),
 	);
-	return [...relevantUrls, ...unRelevantUrls];
+	const orderedUrls = [...relevantUrls, ...unRelevantUrls];
+	return getIsTopSearchResultsEnabled()
+		? [topSearchLink, ...orderedUrls]
+		: orderedUrls;
 };
 
 const getAvatarAutocompleteSearchLinks = () =>

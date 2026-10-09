@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { TranslateFunction } from "@rbx/core-scripts/react";
+import { type PurchaseTranslate } from "../../itemPurchase/useTranslate";
 import { Icon } from "@rbx/foundation-ui";
 import type {
 	PeriodType,
 	RobloxSubscriptionProductFeatureConfig,
 	SubscriptionTenureDiscount,
-} from "@rbx/client-subscriptions-api/v1";
+} from "@rbx/client-subscriptions-api/v2";
 import type { TTailwindIconClass } from "@rbx/foundation-tailwind/classes";
 
 type BenefitItemProps = {
@@ -21,7 +21,7 @@ const BenefitItem: React.FC<BenefitItemProps> = ({ iconName, label }) => (
 );
 
 export type BenefitListProps = {
-	translate: TranslateFunction;
+	translate: PurchaseTranslate;
 	featureConfig: RobloxSubscriptionProductFeatureConfig;
 	periodType: PeriodType;
 };

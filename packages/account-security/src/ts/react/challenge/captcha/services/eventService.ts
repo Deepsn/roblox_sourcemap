@@ -1,4 +1,7 @@
-import Roblox from "Roblox";
+import {
+	sendEventWithTarget,
+	targetTypes,
+} from "@rbx/core-scripts/event-stream";
 import { EVENT_CONSTANTS } from "../app.config";
 import { ActionType } from "../interface";
 
@@ -21,7 +24,7 @@ export class EventServiceDefault {
 		providerVersion: string,
 	): void {
 		const success = isSuccessful ? "true" : "false";
-		Roblox.EventStream.SendEventWithTarget(
+		sendEventWithTarget(
 			EVENT_CONSTANTS.eventName.captcha,
 			actionType,
 			{
@@ -32,7 +35,7 @@ export class EventServiceDefault {
 				ucid: unifiedCaptchaId || "",
 				providerVersion,
 			},
-			Roblox.EventStream.TargetTypes.WWW,
+			targetTypes.WWW,
 		);
 	}
 
@@ -44,7 +47,7 @@ export class EventServiceDefault {
 		errorMessage: string | null,
 		providerVersion: string,
 	): void {
-		Roblox.EventStream.SendEventWithTarget(
+		sendEventWithTarget(
 			EVENT_CONSTANTS.eventName.captchaInitiated,
 			actionType,
 			{
@@ -55,7 +58,7 @@ export class EventServiceDefault {
 				message: errorMessage || "",
 				providerVersion,
 			},
-			Roblox.EventStream.TargetTypes.WWW,
+			targetTypes.WWW,
 		);
 	}
 }

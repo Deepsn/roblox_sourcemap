@@ -20,7 +20,8 @@ export type DefaultSearchType =
 	| "defaultShops"
 	| "defaultGroups"
 	| "defaultLibrary"
-	| "defaultGames";
+	| "defaultGames"
+	| "defaultTopSearch";
 
 export const getAutocompleteSearchType = (
 	suggestion:
@@ -49,6 +50,9 @@ export const getAutocompleteSearchType = (
 export const getDefaultSearchType = (
 	suggestion: UniversalSearchLink,
 ): DefaultSearchType => {
+	if (suggestion.isTopSearchResult) {
+		return "defaultTopSearch";
+	}
 	switch (suggestion.label) {
 		case "Label.Players": {
 			return "defaultPlayers";

@@ -1,0 +1,77 @@
+import clsx from 'clsx';
+import React, { CSSProperties, ComponentPropsWithRef, forwardRef } from 'react';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+import './Skeleton.css';
+
+export const skeletonVariants = ['Rectangle', 'Text', 'Circle'] as const;
+export type TSkeletonVariant = (typeof skeletonVariants)[number];
+
+export type TSkeletonProps = Omit<ComponentPropsWithRef<'div'>, 'children'> & {
+  /** The visual shape of the skeleton. */
+  variant?: TSkeletonVariant;
+  /** Whether to play the shimmer animation. Defaults to `true`. */
+  isAnimated?: boolean;
+  /** Width of the skeleton. Accepts any valid CSS width value (e.g., `120`, `'80%'`). */
+  width?: CSSProperties['width'];
+  /** Height of the skeleton. Accepts any valid CSS height value (e.g., `16`, `'1em'`). */
+  height?: CSSProperties['height'];
+};
+
+const DEFAULT_TEXT_HEIGHT = '1em';
+const SHIMMER_CLASS_NAMES = [
+  "[&::after]:[content:'']",
+  '[&::after]:absolute',
+  '[&::after]:inset-[0]',
+  '[&::after]:[background:linear-gradient(90deg,var(--color-extended-white-0)_0%,var(--color-extended-white-20)_50%,var(--color-extended-white-0)_100%)]',
+  '[&::after]:[animation:foundation-web-skeleton-shimmer_1.5s_linear_infinite]',
+  'motion-reduce:[&::after]:[content:none]'
+];
+
+const SkeletonComponent = (
+  {
+    className,
+    style,
+    variant = 'Rectangle',
+    isAnimated = true,
+    width,
+    height,
+    ...rest
+  }: TSkeletonProps,
+  ref: ComponentPropsWithRef<'div'>['ref']
+) => {
+  const isText = variant === 'Text';
+  const isCircle = variant === 'Circle';
+
+  const shapeStyles: CSSProperties = {};
+  if (isText) {
+    shapeStyles.height = height ?? DEFAULT_TEXT_HEIGHT;
+    shapeStyles.width = width ?? '100%';
+  } else {
+    if (width !== undefined) shapeStyles.width = width;
+    if (height !== undefined) shapeStyles.height = height;
+  }
+
+  return (
+    <div
+      ref={ref}
+      aria-hidden='true'
+      data-variant={variant}
+      {...rest}
+      className={clsx(
+        'relative clip block bg-[var(--color-common-shimmer)]',
+        isText && 'radius-xsmall',
+        isCircle && 'radius-circle',
+        !isText && !isCircle && 'radius-small',
+        isAnimated && SHIMMER_CLASS_NAMES,
+        className
+      )}
+      style={{
+        ...shapeStyles,
+        ...style
+      }}
+    />
+  );
+};
+
+export const Skeleton = forwardRef(SkeletonComponent) as TForwardRefComponent<TSkeletonProps>;
+Skeleton.displayName = 'Skeleton';

@@ -5,6 +5,7 @@ import { Icon, SheetRoot } from "@rbx/foundation-ui";
 import {
 	PlusReferralSheet,
 	PlusReferralSurface,
+	buildPlusSubscribeDeepLink,
 	referralEventService,
 	useReferrerHandle,
 	type SubscriptionReferral,
@@ -19,10 +20,12 @@ import { PendingTransfersSheet } from "./modals/PendingTransfersSheet";
 import { TrackingContext } from "../contexts/TrackingContext";
 import { UserAvatar } from "./UserAvatar";
 import { useAvatarThumbnails } from "../hooks/useAvatarThumbnails";
+import { navigateToDeepLink } from "../utils/robuxTransfersDeepLinks";
 
 type InlinePendingRequestsProps = {
 	transfers?: SectionTransfers;
 	pendingReferrals: SubscriptionReferral[];
+	shouldDeeplinkToReferral?: boolean;
 };
 
 const BULLET = "•";
@@ -64,27 +67,20 @@ function MixedRequestsSummary({ countLabel }: { countLabel: string }) {
 
 /**
  * Names whoever invited, in place of the generic count, for a user with nothing else waiting.
- *
- * Falls back to the count while the handle is in flight and for accounts the users api withholds.
  */
 function ReferralRequestSummary({
 	referral,
-	countLabel,
+	handle,
 }: {
 	referral: SubscriptionReferral;
-	countLabel: string;
+	handle: string;
 }) {
 	const { translate } = useTranslation();
-	const { handle } = useReferrerHandle(String(referral.senderUserId));
 	const referrers = useMemo(
 		() => [{ id: referral.senderUserId }],
 		[referral.senderUserId],
 	);
 	const thumbnails = useAvatarThumbnails(referrers);
-
-	if (handle === undefined) {
-		return <MixedRequestsSummary countLabel={countLabel} />;
-	}
 
 	return (
 		<Fragment>
@@ -137,6 +133,7 @@ function TransfersOnlySummary({
 export function InlinePendingRequests({
 	transfers,
 	pendingReferrals,
+	shouldDeeplinkToReferral,
 }: InlinePendingRequestsProps) {
 	const { translate } = useTranslation();
 	const { trackPendingTransfersImpression, trackPendingTransfersSheetView } =
@@ -148,6 +145,17 @@ export function InlinePendingRequests({
 		() => transfers?.pendingTransfers ?? [],
 		[transfers],
 	);
+
+	// Hoisted so the hook is called unconditionally. Only used when a single
+	// referral (no transfers) would show the named "X referred you" line.
+	const latestReferralCandidate =
+		pendingTransfers.length === 0 ? pendingReferrals.at(0) : undefined;
+	const { handle: referrerHandle, isLoading: isReferrerLoading } =
+		useReferrerHandle(
+			latestReferralCandidate
+				? String(latestReferralCandidate.senderUserId)
+				: undefined,
+		);
 
 	useEffect(() => {
 		if (pendingTransfers.length > 0) {
@@ -188,6 +196,17 @@ export function InlinePendingRequests({
 		return null;
 	}
 
+	// Wait for the referrer handle to resolve before showing the row so the user
+	// doesn't see a flash of "N pending requests" that immediately becomes a name.
+	if (latestReferralCandidate !== undefined && isReferrerLoading) {
+		return null;
+	}
+
+	// If the handle couldn't be resolved (withheld account), fall back to the
+	// generic count view by clearing latestReferral.
+	const latestReferral =
+		referrerHandle !== undefined ? latestReferralCandidate : undefined;
+
 	const isTransfersOnly =
 		pendingTransfers.length > 0 && pendingReferrals.length === 0;
 
@@ -204,14 +223,26 @@ export function InlinePendingRequests({
 			: `${count} pending requests`,
 	);
 
-	// Transfers keep the counted summary since more than one person is behind it. `at(0)` is the
-	// latest, matching usePendingPlusReferrals.
-	const latestReferral =
-		pendingTransfers.length === 0 ? pendingReferrals.at(0) : undefined;
-
 	// The list would be a one-row detour to the invite the summary just named. Only the latest
 	// matters: accepting any invite makes the user a subscriber, which settles the rest.
 	const openReview = () => {
+		if (shouldDeeplinkToReferral && pendingTransfers.length === 0) {
+			const referral = pendingReferrals.at(0);
+			if (referral !== undefined) {
+				referralEventService.buyRobuxReferralReviewClick(
+					String(referral.senderUserId),
+					referral.referralId,
+				);
+				navigateToDeepLink(
+					buildPlusSubscribeDeepLink({
+						surface: "PlusReferralLandingSheet",
+						entrypoint: "BuyRobuxPage",
+						referrerId: referral.senderUserId,
+					}),
+				);
+				return;
+			}
+		}
 		if (latestReferral !== undefined) {
 			referralEventService.buyRobuxReferralReviewClick(
 				String(latestReferral.senderUserId),
@@ -245,7 +276,7 @@ export function InlinePendingRequests({
 						<MixedRequestsSummary countLabel={countLabel} />
 					) : (
 						<ReferralRequestSummary
-							countLabel={countLabel}
+							handle={referrerHandle ?? ""}
 							referral={latestReferral}
 						/>
 					)}
@@ -289,6 +320,7 @@ export function InlinePendingRequests({
 							transfers?.acceptTransfersTranslationKey
 						}
 						pendingReferrals={pendingReferrals}
+						shouldDeeplinkToReferral={shouldDeeplinkToReferral}
 					/>
 				</SheetRoot>
 			) : (

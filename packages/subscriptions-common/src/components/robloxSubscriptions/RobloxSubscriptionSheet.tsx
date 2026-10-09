@@ -8,6 +8,7 @@ import {
 	SheetTitle,
 } from "@rbx/foundation-ui";
 import { usePaymentSession } from "@rbx/payments/services/paymentSession";
+import { getFreeTrialDisplay } from "@rbx/payments/services/subscriptions";
 import { translateHtml } from "@rbx/translation-utils";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
@@ -158,9 +159,8 @@ const RobloxSubscriptionSheet = ({
 		paymentSessionId,
 	]);
 
-	const legalKey = isFreeTrial
-		? "Description.SubscriptionFreeTrialLegal"
-		: "Description.SubscriptionLegal";
+	const trialDisplay = getFreeTrialDisplay(freeTrialOffer, periodType);
+	const useVariableTrialCopy = isFreeTrial && trialDisplay != null;
 
 	const trialEndDate = useMemo(() => {
 		const endDate = freeTrialOffer?.freeTrialOffer?.estimatedTrialEndDate;
@@ -230,6 +230,16 @@ const RobloxSubscriptionSheet = ({
 					)}
 					{title ?? translate("Title.GetBlackbird")}
 				</div>
+				{/* Billing row (e.g. "2 weeks free, then $4.99/month") sits above the subtitle per design. */}
+				{showBillingInfo && (
+					<div className="margin-top-small">
+						<BillingInfoDisplay
+							eligibleOffers={eligibleOffers}
+							periodType={periodType}
+							price={localizedPrice}
+						/>
+					</div>
+				)}
 				{subtitle != null && (
 					<div className="margin-top-small text-body-large content-default">
 						{subtitle}
@@ -238,14 +248,6 @@ const RobloxSubscriptionSheet = ({
 			</SheetTitle>
 			<SheetBody>
 				<div className="padding-large gap-y-xlarge flex flex-col">
-					{showBillingInfo && (
-						<BillingInfoDisplay
-							eligibleOffers={eligibleOffers}
-							periodType={periodType}
-							price={localizedPrice}
-						/>
-					)}
-
 					{featureConfig && (
 						<BenefitList
 							featureConfig={{
@@ -253,6 +255,7 @@ const RobloxSubscriptionSheet = ({
 								isTradingEnabled: false,
 								isUgcPublishingEnabled: false,
 							}}
+							freeTrialOffer={freeTrialOffer}
 							periodType={periodType}
 						/>
 					)}
@@ -273,12 +276,28 @@ const RobloxSubscriptionSheet = ({
 					)}
 
 					<span className="text-caption-medium content-muted">
-						{translateHtml(
-							translate,
-							legalKey,
-							termsLink,
-							isFreeTrial ? { date: trialEndDate } : undefined,
-						)}
+						{useVariableTrialCopy
+							? translateHtml(
+									translate,
+									"Description.SubscriptionFreeTrialLegalV2",
+									termsLink,
+									{
+										date: trialEndDate,
+										trialDuration: String(trialDisplay.trialDuration),
+										trialPeriodLabel: translate(trialDisplay.trialPeriodKey),
+										billingPeriodLabel: translate(
+											trialDisplay.billingPeriodKey,
+										),
+									},
+								)
+							: translateHtml(
+									translate,
+									isFreeTrial
+										? "Description.SubscriptionFreeTrialLegal"
+										: "Description.SubscriptionLegal",
+									termsLink,
+									isFreeTrial ? { date: trialEndDate } : undefined,
+								)}
 					</span>
 				</div>
 			</SheetBody>

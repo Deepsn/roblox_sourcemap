@@ -1,6 +1,6 @@
 /* eslint-disable no-void */
 import { useCallback, useContext, useEffect, useState } from "react";
-import { CurrentUser } from "@rbx/core-scripts/legacy/Roblox";
+import { getCurrentUser } from "@rbx/www-common/user";
 import { useTranslation } from "@rbx/core-scripts/react";
 import { RequirementType } from "@rbx/user-settings";
 import { useToast } from "@rbx/payments/components";
@@ -67,15 +67,13 @@ export function usePurchaseEligibility(): {
 
 	const fetchParentalConsentRequiredForSettingUpdate =
 		useCallback(async (): Promise<boolean> => {
-			if (!CurrentUser) {
+			const userId = getCurrentUser()?.id;
+			if (userId === undefined) {
 				return false;
 			}
 
 			return Boolean(
-				await getConsentRequiredRequest(
-					CurrentUser.userId,
-					"UpdateUserSetting",
-				),
+				await getConsentRequiredRequest(userId, "UpdateUserSetting"),
 			);
 		}, []);
 

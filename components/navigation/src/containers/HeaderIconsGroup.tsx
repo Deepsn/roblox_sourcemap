@@ -130,8 +130,6 @@ export default function HeaderIconsGroup({
 						(error as Record<string, unknown>).status === 403
 					) {
 						setRobuxBadgeType(null);
-					} else if (error) {
-						throw error;
 					}
 				});
 		}

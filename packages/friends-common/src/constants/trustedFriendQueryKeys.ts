@@ -15,3 +15,11 @@ export const trustedFriendActionQueryKey = (
 	userId,
 	linkTokens?.join(",") ?? undefined,
 ];
+
+export const trustedFriendRequestsListQueryKey = [
+	"trustedFriendRequestsList",
+] as const;
+
+export const trustedFriendRequestsCountQueryKey = [
+	"trustedFriendRequestsCount",
+] as const;

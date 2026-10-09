@@ -1,5 +1,4 @@
 import React from "react";
-import { TranslateFunction } from "@rbx/core-scripts/react";
 import {
 	Button,
 	Dialog,
@@ -10,11 +9,17 @@ import {
 } from "@rbx/foundation-ui";
 import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import UnifiedProductDetails from "./UnifiedProductDetails";
-import { LANG_KEYS } from "../../../js/core/services/itemPurchaseUpsellService/constants/upsellConstants";
+import { LANG_KEYS } from "../../core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import useModalShownTracking from "../hooks/useModalShownTracking";
+import { SelfProvidedTranslate } from "../itemPurchase/SelfProvidedTranslate";
+import {
+	purchasingNamespaces,
+	usePurchasingTranslate,
+	type PurchaseTranslate,
+} from "../itemPurchase/useTranslate";
 
 export type UnifiedRobuxUpsellTooExpensiveModalProps = {
-	translate: TranslateFunction;
+	translate?: PurchaseTranslate;
 	expectedPrice: number;
 	thumbnail: React.ReactNode;
 	assetName: string;
@@ -24,8 +29,8 @@ export type UnifiedRobuxUpsellTooExpensiveModalProps = {
 	currentRobuxBalance?: number;
 	open?: boolean;
 };
-const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
-	UnifiedRobuxUpsellTooExpensiveModalProps
+const UnifiedRobuxUpsellTooExpensiveModalInner: React.FC<
+	UnifiedRobuxUpsellTooExpensiveModalProps & { translate: PurchaseTranslate }
 > = ({
 	translate,
 	expectedPrice,
@@ -94,5 +99,19 @@ const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
 		</Dialog>
 	);
 };
+
+// Dual-path translation boundary (detached-root render — self-wraps on .NET). See UnifiedRobuxUpsellModal.
+const UnifiedRobuxUpsellTooExpensiveModal: React.FC<
+	UnifiedRobuxUpsellTooExpensiveModalProps
+> = ({ translate, ...props }) => (
+	<SelfProvidedTranslate
+		translate={translate}
+		namespaces={purchasingNamespaces}
+		useTranslate={usePurchasingTranslate}
+		render={(t) => (
+			<UnifiedRobuxUpsellTooExpensiveModalInner {...props} translate={t} />
+		)}
+	/>
+);
 
 export default UnifiedRobuxUpsellTooExpensiveModal;

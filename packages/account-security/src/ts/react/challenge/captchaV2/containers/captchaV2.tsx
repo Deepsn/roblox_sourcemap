@@ -7,7 +7,7 @@ import {
 	ProgressCircle,
 } from "@rbx/foundation-ui";
 import { HttpResponseCodes } from "@rbx/core-scripts/http";
-import localStorageService from "@rbx/core-scripts/local-storage";
+import { getItem, setItem } from "@rbx/core-lib/local-storage";
 import { CaptchaV2BlockResponse } from "../../../../common/request/types/captchaV2";
 import {
 	CHALLENGE_ID_STORAGE_KEY,
@@ -204,13 +204,11 @@ const CaptchaV2: FC = () => {
 
 	// Inject the sensor, then verify once it is ready. Runs once per challenge.
 	useEffect(() => {
-		const currentChallengeId = localStorageService.getLocalStorage(
-			CHALLENGE_ID_STORAGE_KEY,
-		) as string | undefined;
+		const currentChallengeId = getItem(CHALLENGE_ID_STORAGE_KEY);
 		if (challengeId === currentChallengeId) {
 			return undefined;
 		}
-		localStorageService.setLocalStorage(CHALLENGE_ID_STORAGE_KEY, challengeId);
+		setItem(CHALLENGE_ID_STORAGE_KEY, challengeId);
 
 		// Fresh challenge id: reset the terminal guard in case this component
 		// instance is reused across challenge ids.

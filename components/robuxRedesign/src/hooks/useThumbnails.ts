@@ -1,6 +1,6 @@
 /* eslint-disable no-void */
 import { useCallback, useEffect, useState } from "react";
-import { CurrentUser } from "@rbx/core-scripts/legacy/Roblox";
+import { getCurrentUser } from "@rbx/www-common/user";
 import { getThumbnails, ThumbnailState } from "../services/thumbnailsService";
 
 type Thumbnails = {
@@ -31,6 +31,7 @@ export function useThumbnails({
 			bonusItemRootPlaceId: placeId,
 		}: Thumbnails) => {
 			const thumbnailArgs: object[] = [];
+			const currentUserId = getCurrentUser()?.id;
 			if (itemId) {
 				thumbnailArgs.push({
 					format: "png",
@@ -41,12 +42,12 @@ export function useThumbnails({
 				});
 			}
 
-			if (url && CurrentUser) {
+			if (url && currentUserId !== undefined) {
 				thumbnailArgs.push({
 					format: "png",
-					requestId: CurrentUser.userId,
+					requestId: currentUserId,
 					size: "150x150",
-					targetId: CurrentUser.userId,
+					targetId: currentUserId,
 					type: "AvatarHeadshot",
 				});
 			}
@@ -73,7 +74,7 @@ export function useThumbnails({
 					setBonusItemImageUrl(thumbnail.imageUrl);
 				}
 
-				if (thumbnail.targetId.toString() === CurrentUser?.userId) {
+				if (thumbnail.targetId.toString() === currentUserId) {
 					setGiftingAvatarImageUrl(thumbnail.imageUrl);
 				}
 

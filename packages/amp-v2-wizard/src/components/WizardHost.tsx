@@ -12,10 +12,14 @@ import { ProgressCircle } from "@rbx/foundation-ui";
 import { useOdpAnalytics } from "../analytics/odpAnalytics";
 import { getTextScreenAnalytics } from "./nodes/TextScreenNode";
 import { defaultRegistry, getNodeComponent } from "../componentRegistry";
+import { usePresentedOverPage } from "../hooks/usePresentedOverPage";
 import { useWizardWalker, type WalkerEvent } from "../hooks/useWizardWalker";
 import { GenericErrorModal } from "./GenericErrorModal";
 import { Overlay } from "./Overlay";
-import { WizardLoadingContext } from "./WizardLoadingContext";
+import {
+	WizardBackgroundedContext,
+	WizardLoadingContext,
+} from "./WizardLoadingContext";
 import type {
 	FlowApi,
 	FlowExitResult,
@@ -23,8 +27,11 @@ import type {
 	NodeContext,
 	OdpEventSurface,
 	Registry,
+	ReportFn,
 	Target,
 } from "../types";
+
+const ignoreReport: ReportFn = () => undefined;
 
 export type WizardHostProps = {
 	initialFragment: FlowResponse;
@@ -77,6 +84,7 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 	const Component = currentNode
 		? getNodeComponent(registry, currentNode.type)
 		: undefined;
+	const page = usePresentedOverPage(currentNode, Component);
 
 	useEffect(() => {
 		if (
@@ -126,21 +134,38 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		analyticsSessionId: walker.analyticsSessionId,
 	};
 
+	// A node that presents over a full page leaves that page in place, frozen in the busy state it
+	// entered on the Continue that led here. The presenting node is still mounted for its effects,
+	// but hidden: the page's own spinner is the one to show.
+	const Shown = page?.Component ?? Component;
+	const shownNode = page?.node ?? currentNode;
+	const isBusy = isLoading || page != null;
+
 	// Keep the node mounted while a Continue is in flight, dimmed and non-interactive, under a spinner.
 	// Nodes that have a busy state of their own (i.e a loading spinner) render it instead.
 	const node = (
 		<div className="relative">
 			<div
-				className={isLoading ? "pointer-events-none [opacity:0.5]" : undefined}
+				className={isBusy ? "pointer-events-none [opacity:0.5]" : undefined}
 				data-testid="amp-v2-wizard-node-container"
 			>
-				<Component
-					props={currentNode.details}
+				<Shown
+					props={shownNode.details}
 					ctx={ctx}
-					report={report}
-					transitions={currentNode.transitions}
+					report={page ? ignoreReport : report}
+					transitions={shownNode.transitions}
 				/>
 			</div>
+			{page ? (
+				<div hidden>
+					<Component
+						props={currentNode.details}
+						ctx={ctx}
+						report={report}
+						transitions={currentNode.transitions}
+					/>
+				</div>
+			) : null}
 			{isLoading && !Component.ownsLoadingState ? (
 				<div
 					className="absolute [inset:0] flex items-center justify-center"
@@ -157,10 +182,12 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 	);
 
 	// A node handing off to an overlay of its own gets no additional overlay.
-	if (Component.ownsOverlay === true) {
+	if (Shown.ownsOverlay === true) {
 		return (
-			<WizardLoadingContext.Provider value={isLoading}>
-				{node}
+			<WizardLoadingContext.Provider value={isBusy}>
+				<WizardBackgroundedContext.Provider value={page != null}>
+					{node}
+				</WizardBackgroundedContext.Provider>
 			</WizardLoadingContext.Provider>
 		);
 	}

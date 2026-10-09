@@ -1,4 +1,7 @@
-import Roblox from "Roblox";
+import {
+	sendEventWithTarget,
+	targetTypes,
+} from "@rbx/core-scripts/event-stream";
 import { EVENT_CONSTANTS } from "../app.config";
 
 /**
@@ -15,14 +18,14 @@ export class EventServiceDefault {
 		context: string,
 		additionalParams: Record<string, string> = {},
 	): void {
-		Roblox.EventStream.SendEventWithTarget(
+		sendEventWithTarget(
 			EVENT_CONSTANTS.eventName,
 			context,
 			{
 				challengeId: this.challengeId,
 				...additionalParams,
 			},
-			Roblox.EventStream.TargetTypes.WWW,
+			targetTypes.WWW,
 		);
 	}
 

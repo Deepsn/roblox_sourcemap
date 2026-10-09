@@ -6,7 +6,7 @@ import React, {
 	useReducer,
 	useState,
 } from "react";
-import { TranslateFunction } from "react-utilities";
+import { useTranslations } from "@rbx/www-common/i18n";
 import { RequestService } from "../../../../common/request";
 import { getResources } from "../constants/resources";
 import {
@@ -48,7 +48,6 @@ type Props = {
 	eventService: EventService;
 	metricsService: MetricsService;
 	requestService: RequestService;
-	translate: TranslateFunction;
 	onChallengeCompleted: OnChallengeCompletedCallback;
 	onChallengeInvalidated: OnChallengeInvalidatedCallback;
 	onModalChallengeAbandoned: OnModalChallengeAbandonedCallback | null;
@@ -67,7 +66,6 @@ export const SecurityQuestionsContextProvider = ({
 	eventService,
 	metricsService,
 	requestService,
-	translate,
 	onChallengeCompleted,
 	onChallengeInvalidated,
 	onModalChallengeAbandoned,
@@ -75,7 +73,9 @@ export const SecurityQuestionsContextProvider = ({
 }: Props): ReactElement => {
 	// We declare these variables as lazy-initialized state variables since they
 	// do not need to be re-computed if this component re-renders.
-	const [resources] = useState(() => getResources(translate));
+	const translate = useTranslations("Feature.SecurityQuestions");
+	const translateCommon = useTranslations("CommonUI.Messages");
+	const [resources] = useState(() => getResources(translate, translateCommon));
 	const [initialState] = useState<SecurityQuestionsState>(() => ({
 		// Immutable parameters:
 		userId,

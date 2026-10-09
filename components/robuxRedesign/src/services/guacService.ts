@@ -10,3 +10,15 @@ export const getTexasU18VPCOptimizationFlowPolicy =
 		await callBehaviour<GetTexasU18VPCOptimizationFlowPolicyResponse>(
 			"texas-u18-vpc-optimization",
 		);
+
+export type AppPolicyResponse = {
+	ShouldDeeplinkToReferral?: boolean;
+};
+
+export const getAppPolicy = async (): Promise<AppPolicyResponse> => {
+	try {
+		return await callBehaviour<AppPolicyResponse>("app-policy");
+	} catch {
+		return {};
+	}
+};

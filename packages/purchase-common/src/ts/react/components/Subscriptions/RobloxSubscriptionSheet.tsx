@@ -1,5 +1,6 @@
 import React from "react";
-import { TranslateFunction } from "@rbx/core-scripts/react";
+import { getFreeTrialDisplay } from "@rbx/payments/services/subscriptions";
+import { type PurchaseTranslate } from "../../itemPurchase/useTranslate";
 import { DeviceMeta } from "@rbx/legacy-webapp-types/Roblox";
 import { translateHtml } from "@rbx/translation-utils";
 import {
@@ -10,14 +11,14 @@ import {
 	Icon,
 	Link,
 } from "@rbx/foundation-ui";
-import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v1";
+import type { SubscriptionProductInfo } from "@rbx/client-subscriptions-api/v2";
 
 import BillingInfoDisplay from "./BillingInfoDisplay";
 import BenefitList from "./BenefitList";
 import SubscriptionButton from "./SubscriptionButton";
 
 type RobloxSubscriptionSheetProps = {
-	translate: TranslateFunction;
+	translate: PurchaseTranslate;
 	subscriptionProductInfo: SubscriptionProductInfo;
 	isFreeTrial: boolean;
 	open: boolean;
@@ -73,9 +74,30 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 		subscriptionProductInfo.productTypeDetails.robloxSubscriptionProductDetails
 			?.featureConfig;
 
-	const legalKey = isFreeTrial
-		? "Label.FreeTrialDisclosureV2"
-		: "Description.SubscriptionLegal";
+	const freeTrialOffer = eligibleOffers.find(
+		(o) => o.offerType === "FreeTrial",
+	);
+	const trialDisplay = getFreeTrialDisplay(freeTrialOffer, periodType);
+	const useVariableTrialCopy = isFreeTrial && trialDisplay != null;
+
+	const legalContent = useVariableTrialCopy
+		? translateHtml(
+				translate,
+				"Label.FreeTrialDisclosureV3",
+				SUBSCRIPTION_TERMS_TRANSLATE_LINK,
+				{
+					trialDuration: String(trialDisplay.trialDuration),
+					trialPeriodLabel: translate(trialDisplay.trialPeriodKey),
+					billingPeriodLabel: translate(trialDisplay.billingPeriodKey),
+				},
+			)
+		: translateHtml(
+				translate,
+				isFreeTrial
+					? "Label.FreeTrialDisclosureV2"
+					: "Description.SubscriptionLegal",
+				SUBSCRIPTION_TERMS_TRANSLATE_LINK,
+			);
 
 	return (
 		<SheetRoot
@@ -126,11 +148,7 @@ const RobloxSubscriptionSheet: React.FC<RobloxSubscriptionSheetProps> = ({
 						</SubscriptionButton>
 
 						<span className="text-caption-medium content-muted">
-							{translateHtml(
-								translate,
-								legalKey,
-								SUBSCRIPTION_TERMS_TRANSLATE_LINK,
-							)}
+							{legalContent}
 						</span>
 					</div>
 				</SheetBody>
