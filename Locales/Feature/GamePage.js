@@ -47,6 +47,7 @@ Roblox.LangDynamic["Feature.GamePage"] = {
 	LabelFilterPopularNearYou: "Popular Near You",
 	LabelFilterBecauseYouLiked: "Because You Liked {gameName}",
 	"Label.Sponsored": "Sponsored",
+	"Action.BackToTop": "Back to top",
 	"Label.SponsoredAd": "Sponsored",
 	LabelFilterMyFavorites: "My Favorites",
 	LabelFilterRecentlyPlayed: "Recently Played",

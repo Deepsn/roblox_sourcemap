@@ -176,7 +176,11 @@ export const RemoteParentRequestNode: NodeComponent = ({
 		try {
 			const [emails] = await Promise.all([
 				api.getLinkedParentEmails().catch(() => []),
-				api.sendToAllParents(requestType, requestDetails),
+				api.sendToAllParents(
+					requestType,
+					requestDetails,
+					ctx.analyticsSessionId,
+				),
 			]);
 			setParentEmails(emails);
 			setStep("confirmation");
@@ -189,7 +193,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 			setErrorKey(errorTranslationKey(errorCode(error)));
 			setStep("error");
 		}
-	}, [api, reportOnce, requestDetails, requestType]);
+	}, [api, ctx.analyticsSessionId, reportOnce, requestDetails, requestType]);
 
 	const prepareEmailEntry = useCallback(async (): Promise<void> => {
 		try {
@@ -240,6 +244,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				requestType,
 				requestDetails,
 				legallySensitiveActions.getBase64EncodedAuditHeader(),
+				ctx.analyticsSessionId,
 			);
 			setParentEmails([email]);
 			setStep("confirmation");

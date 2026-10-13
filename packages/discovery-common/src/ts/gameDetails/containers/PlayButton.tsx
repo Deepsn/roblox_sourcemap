@@ -1,10 +1,10 @@
 import React, { type ReactNode } from "react";
 import {
-	InstallInstructionsWithTranslation,
 	resolveAppDownload,
-	TokenizedDownloadButton,
 	type ResolvedAppDownload,
 } from "@rbx/app-download";
+import { InstallInstructionsWithTranslation } from "@rbx/app-download/InstallInstructions";
+import TokenizedDownloadButton from "@rbx/app-download/TokenizedDownloadButton";
 import { TranslationProvider, useTranslation } from "@rbx/core-scripts/react";
 import { Loading } from "@rbx/core-ui";
 import {
@@ -33,6 +33,7 @@ import usePlaceIdOverride from "../../common/hooks/usePlaceIdOverride";
 import { PageContext } from "../../common/types/pageContext";
 import getExperienceAffiliateReferralUrlParams from "../../common/utils/getExperienceAffiliateReferralUrlParams";
 import { ExperienceNoticeType } from "../constants/experienceNoticeConstants";
+import { usePlayOnWebEnabled } from "../hooks/usePlayOnWebEnabled";
 import usePlayButtonDownloadCtaExperiment from "../hooks/usePlayButtonDownloadCtaExperiment";
 import useGameDetailsForUniverseId from "../hooks/useGameDetailsForUniverseId";
 
@@ -54,6 +55,7 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 		privateServerLinkCode = "",
 		gameInstanceId = "",
 	} = metadataConstants.metadataData() || {};
+	const playOnWebEnabled = usePlayOnWebEnabled(universeId);
 	const {
 		playabilityStatus,
 		refetchPlayabilityData,
@@ -185,6 +187,8 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 		[EventStreamMetadata.AttributionId]: attributionId,
 		[EventStreamMetadata.Page]: referralParams.page,
 		[EventStreamMetadata.SortPos]: referralParams.sortPos,
+		[EventStreamMetadata.Position]: referralParams.position,
+		[EventStreamMetadata.IsAd]: referralParams.isAd,
 		[EventStreamMetadata.GameSetTypeId]: referralParams.gameSetTypeId,
 		[EventStreamMetadata.SortId]: referralParams.sortId,
 		[EventStreamMetadata.SortSubId]: referralParams.sortSubId,
@@ -253,6 +257,7 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 				shouldShowVpcPlayButtonUpsells={shouldShowVpcPlayButtonUpsells}
 				playabilityStatusCtaOverrides={playabilityStatusCtaOverrides}
 				pageContext={EventContext.GameDetail}
+				playOnWebEnabled={playOnWebEnabled}
 			/>
 			<ContextualMessage
 				playabilityStatus={playabilityStatus}

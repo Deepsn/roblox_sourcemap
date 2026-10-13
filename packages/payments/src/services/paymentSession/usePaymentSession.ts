@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CurrentUser } from "Roblox";
-import localStorageService from "@rbx/core-scripts/local-storage";
+import { getCurrentUser } from "@rbx/www-common/user";
+import { getItem, setItem } from "@rbx/core-lib/local-storage";
 import { urlService } from "@rbx/core-scripts/legacy/core-utilities";
 import {
 	createPaymentSession,
@@ -8,7 +8,8 @@ import {
 	PaymentSession,
 } from "./paymentSessionService";
 
-const PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2 = `paymentSession-${CurrentUser?.userId || "loggedout"}`;
+const PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2 =
+	`paymentSession-${getCurrentUser()?.id ?? "loggedout"}` as const;
 export const PAYMENT_SESSION_ID_URL_PARAM = "paymentSessionId";
 
 export type UsePaymentSessionResult = {
@@ -27,9 +28,10 @@ export function usePaymentSessionWithCreationInfo(
 	>(
 		createNewSession
 			? undefined
-			: (localStorageService.getLocalStorage(
-					PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2,
-				) as PaymentSession | undefined),
+			: // @ts-expect-error -- This per-user key is generated dynamically and is not declared in LocalStorageRegistry.
+				((getItem(PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2) ?? undefined) as
+					| PaymentSession
+					| undefined),
 	);
 	const [wasCreatedByCurrentClient, setWasCreatedByCurrentClient] =
 		useState(false);
@@ -42,10 +44,8 @@ export function usePaymentSessionWithCreationInfo(
 			return;
 		}
 
-		localStorageService.setLocalStorage(
-			PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2,
-			data.paymentSession,
-		);
+		// @ts-expect-error -- This per-user key is generated dynamically and is not declared in LocalStorageRegistry.
+		setItem(PAYMENT_SESSION_LOCAL_STORAGE_KEY_V2, data.paymentSession);
 		setPaymentSession(data.paymentSession);
 	}, []);
 

@@ -1,4 +1,8 @@
 import {
+	sendEventWithTarget,
+	targetTypes,
+} from "@rbx/core-scripts/event-stream";
+import {
 	deferredDeeplinkDownloadInstallerContext,
 	deferredDeeplinkCreateTokenAction,
 	deferredDeeplinkGroupName,
@@ -29,11 +33,11 @@ function sendDeeplinkTokenCreateAttempt(
 	};
 
 	try {
-		window.Roblox.EventStream?.SendEventWithTarget(
+		sendEventWithTarget(
 			deferredDeeplinkCreateTokenEventName,
 			deferredDeeplinkDownloadInstallerContext,
 			event,
-			window.Roblox.EventStream.TargetTypes.WWW,
+			targetTypes.WWW,
 		);
 	} catch {
 		// ignore

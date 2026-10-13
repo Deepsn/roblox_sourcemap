@@ -5,7 +5,7 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
 import {
 	Button,
 	Checkbox,

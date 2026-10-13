@@ -102,6 +102,22 @@ const ArkoseIframeInlineShim: React.FC<Props> = ({
 	// Arkose script callback to set up enforcement via `arkoseElementId`.
 	const setupEnforcement = useCallback(
 		(myEnforcement: ArkoseEnforcement) => {
+			let challengeShown = false;
+			let suppressionReported = false;
+			const reportSuppression = (captchaToken: string): void => {
+				if (suppressionReported) {
+					return;
+				}
+				suppressionReported = true;
+				handleCaptchaElementEvent({
+					arkoseIframeId,
+					eventId: CaptchaElementEventId.ChallengeSuppressed,
+					payload: {
+						captchaToken,
+					},
+				});
+			};
+
 			myEnforcement.setConfig({
 				selector: `#${arkoseElementId}`,
 				mode: useArkoseModal ? "lightbox" : "inline",
@@ -111,6 +127,11 @@ const ArkoseIframeInlineShim: React.FC<Props> = ({
 					blob: dataExchangeBlob,
 				},
 				onCompleted(response) {
+					// Arkose does not consistently invoke `onSuppress` for a silent pass.
+					// Infer suppression when the challenge completes without ever being shown.
+					if (!challengeShown) {
+						reportSuppression(response.token);
+					}
 					handleCaptchaElementEvent({
 						arkoseIframeId,
 						eventId: CaptchaElementEventId.ChallengeComplete,
@@ -130,6 +151,7 @@ const ArkoseIframeInlineShim: React.FC<Props> = ({
 					});
 				},
 				onShown(response) {
+					challengeShown = true;
 					handleCaptchaElementEvent({
 						arkoseIframeId,
 						eventId: CaptchaElementEventId.ChallengeShown,
@@ -139,13 +161,7 @@ const ArkoseIframeInlineShim: React.FC<Props> = ({
 					});
 				},
 				onSuppress(response) {
-					handleCaptchaElementEvent({
-						arkoseIframeId,
-						eventId: CaptchaElementEventId.ChallengeSuppressed,
-						payload: {
-							captchaToken: response.token,
-						},
-					});
+					reportSuppression(response.token);
 				},
 				onResize(response) {
 					handleCaptchaElementEvent({

@@ -964,6 +964,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Update notifications about your child's spending?",
 	"Heading.ConversationalRequest.RevokeExperienceApproval":
 		"Remove this game from your child’s list of allowed games?",
+	"Description.ConversationalRequest.RevokeExperienceApproval":
+		"Your child won't be able to play it unless its content maturity rating is now considered right for their age.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
