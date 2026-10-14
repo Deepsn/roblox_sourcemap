@@ -13,6 +13,8 @@ import PrivateServerOwner from "../components/PrivateServerOwner";
 import urlConstants from "../constants/urlConstants";
 import FriendsInServerLabel from "../components/FriendsInServerLabel";
 import ServerMetaIcons from "../util/ServerMetaIcons";
+import { getVisibleServerMetaIcons } from "../util/serverCardMeta";
+import { createServerListJoinTelemetry } from "../util/serverListJoinTelemetry";
 
 const { getUserProfileUrl } = urlConstants;
 const { resources, playerTruncationSize, serverListTypes } =
@@ -89,10 +91,15 @@ function GameInstanceCard({
 	price,
 	creatorName,
 	universeId,
+	position = -1,
+	sortOption = "NotDisplayed",
 }) {
 	const [subscription, setSubscription] = useState(vipServerSubscription);
 	const isOwner = owner?.id === authenticatedUser.id;
 	const isPrivateServer = !!vipServerId;
+	const tracksServerListJoin =
+		serverListType === serverListTypes.public.key ||
+		serverListType === serverListTypes.friend.key;
 
 	// If the access code does not exist, the server is inactive.
 	const isServerInactive = isPrivateServer && !accessCode;
@@ -156,6 +163,29 @@ function GameInstanceCard({
 	const showAtCapacityError = () => {
 		systemFeedbackService.warning(translate(resources.atCapacityError));
 	};
+
+	const displayedIcons = isPrivateServer
+		? []
+		: getVisibleServerMetaIcons({
+				pingSignalLevel,
+				languageMatchCount,
+				friendCount,
+				showPing: isServerCardPingIconEnabled,
+				showLanguage: isServerCardLanguageIconEnabled,
+				showFriends: isServerCardFriendsIconEnabled,
+			});
+	const serverListJoinTelemetry = tracksServerListJoin
+		? createServerListJoinTelemetry({
+				position,
+				sortOption,
+				displayedIcons,
+				metadata: {
+					pingSignalLevel,
+					languageMatchCount,
+					friendCount,
+				},
+			})
+		: undefined;
 
 	return (
 		<li className={`rbx-${cssKey}game-server-item col-md-3 col-sm-4 col-xs-6`}>
@@ -223,20 +253,15 @@ function GameInstanceCard({
 						maxPlayerCount={maxPlayers}
 						currentPlayerCount={currentPlayersCount}
 					/>
-					{!isPrivateServer &&
-						(isServerCardPingIconEnabled ||
-							isServerCardLanguageIconEnabled ||
-							isServerCardFriendsIconEnabled) && (
-							<ServerMetaIcons
-								pingSignalLevel={pingSignalLevel}
-								languageMatchCount={languageMatchCount}
-								friendCount={friendCount}
-								showPing={isServerCardPingIconEnabled}
-								showLanguage={isServerCardLanguageIconEnabled}
-								showFriends={isServerCardFriendsIconEnabled}
-								translate={translate}
-							/>
-						)}
+					{displayedIcons.length > 0 && (
+						<ServerMetaIcons
+							idPrefix={`${serverListType}-server-${id ?? vipServerId ?? position}`}
+							icons={displayedIcons}
+							languageMatchCount={languageMatchCount}
+							friendCount={friendCount}
+							translate={translate}
+						/>
+					)}
 					{serverListType === serverListTypes.friend.key && (
 						<FriendsInServerLabel {...{ translate, players }} />
 					)}
@@ -272,6 +297,7 @@ function GameInstanceCard({
 												players,
 												isOwner,
 												universeId,
+												serverListJoinTelemetry,
 											)
 								}
 								isDisabled={isLoading}
@@ -310,6 +336,8 @@ GameInstanceCard.defaultProps = {
 	maxPlayers: 0,
 	currentPlayersCount: 0,
 	privateServerNewJoinsDisallowed: false,
+	position: -1,
+	sortOption: "NotDisplayed",
 };
 
 GameInstanceCard.propTypes = {
@@ -357,6 +385,8 @@ GameInstanceCard.propTypes = {
 	price: PropTypes.number.isRequired,
 	creatorName: PropTypes.string.isRequired,
 	universeId: PropTypes.number.isRequired,
+	position: PropTypes.number,
+	sortOption: PropTypes.string,
 };
 
 export default GameInstanceCard;

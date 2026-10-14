@@ -18,6 +18,7 @@ import trackerClient, {
 	PrivateServerEventType,
 } from "../analytics/privateServerLogging";
 import serverListConstants from "../constants/serverListConstants";
+import type { ServerListJoinTelemetry } from "./serverListJoinTelemetry";
 
 const { isIE11 } = jsClientDeviceIdentifier;
 const { serverListTypes } = serverListConstants;
@@ -49,6 +50,7 @@ export const getJoinScript = (
 	players: Array<{ id: number | null; playerToken: string }>,
 	ownedByPlayer: boolean,
 	universeId: number,
+	telemetry?: ServerListJoinTelemetry,
 ): (() => void) => {
 	const startTime = performance.now();
 	window.EventTracker?.start(PrivateServerEventType.PRIVATE_SERVER_JOIN);
@@ -81,6 +83,19 @@ export const getJoinScript = (
 			properties,
 			targetTypes.WWW,
 		);
+		if (telemetry) {
+			sendEventWithTarget(
+				"serverListJoin",
+				gamePlayIntentContext,
+				{
+					...commonEventParams,
+					gameInstanceId: instanceId ?? undefined,
+					serverListType,
+					...telemetry,
+				},
+				targetTypes.WWW,
+			);
+		}
 	};
 
 	if (shouldUseGameLaunchInterface()) {

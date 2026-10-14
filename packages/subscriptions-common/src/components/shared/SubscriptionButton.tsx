@@ -1,4 +1,5 @@
 import { ProductType } from "@rbx/client-subscriptions-api/v2";
+import { window } from "@rbx/core-lib/browser";
 import { Button } from "@rbx/foundation-ui";
 import { useCallback, useMemo, useState } from "react";
 
@@ -72,6 +73,9 @@ const SubscriptionButton = ({
 		productType === ProductType.Blackbird ? "RobloxPlus" : productType;
 
 	const purchaseUrl = useMemo(() => {
+		if (!window) {
+			return undefined;
+		}
 		const path = isMobileInApp
 			? "/mobile-app-upgrades/buy"
 			: "/upgrades/paymentmethods";
@@ -99,7 +103,7 @@ const SubscriptionButton = ({
 	]);
 
 	const onClick = useCallback(() => {
-		if (isDisabled) {
+		if (isDisabled || !purchaseUrl) {
 			return;
 		}
 
@@ -122,6 +126,7 @@ const SubscriptionButton = ({
 		setIsLoadingInternal(true);
 	}, [
 		isDisabled,
+		purchaseUrl,
 		trackSubscriptionButtonClick,
 		redirectUrl,
 		onSubscribeClick,
@@ -134,7 +139,7 @@ const SubscriptionButton = ({
 			as="a"
 			className={className}
 			href={purchaseUrl}
-			isDisabled={isDisabled}
+			isDisabled={isDisabled || !purchaseUrl}
 			isLoading={loadingStateDisabled ? undefined : effectiveIsLoading}
 			size={size}
 			variant={variant}

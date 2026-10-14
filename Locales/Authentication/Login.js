@@ -266,6 +266,12 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Label.OR": "OR",
 	"Label.ShowPassword": "Show password",
 	"Label.HidePassword": "Hide password",
+	"Heading.OpeningRoblox": "Opening Roblox...",
+	"Description.OpenRobloxManually":
+		"If Roblox doesn't open automatically, {startTag}click here{endTag}.",
+	"Description.CloseTab": "You can close this tab after Roblox opens.",
+	"Message.UnexpectedSSOError":
+		"An unexpected error occurred. Go back to {startTag}roblox.com{endTag}.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
