@@ -2,7 +2,6 @@ import { RefObject, useCallback, useEffect, useRef } from "react";
 import { useTranslations } from "@rbx/www-common/i18n";
 import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import { formatNumber } from "@rbx/core-scripts/format/number";
-import { Popover as CoreUiPopover } from "@rbx/core-ui";
 import {
 	Popover as FoundationPopover,
 	PopoverContent,
@@ -18,7 +17,6 @@ import NotificationStreamIcon from "../containers/NotificationStreamIcon";
 import ReactNotificationBell from "./ReactNotificationBell";
 import NotificationStreamBase from "../containers/NotificationStreamBase";
 import events from "../constants/notificationsEventStreamConstants";
-import { useIsTopNavFoundation } from "../util/topNavFoundationIxp";
 import { popoverDismissGuard } from "../util/popoverDismissGuard";
 import { trackOpenToVisible } from "../topNav/observability";
 
@@ -28,7 +26,6 @@ export default function NotificationStreamPopover({
 	containerRef: RefObject<HTMLLIElement>;
 }) {
 	const t = useTranslations("CommonUI.Features");
-	const isFoundation = useIsTopNavFoundation();
 
 	const unreadCount = useUnreadNotificationCount();
 	const isReactBell = getIsReactNotificationBellEnabled();
@@ -109,7 +106,7 @@ export default function NotificationStreamPopover({
 		<NotificationStreamBase />
 	);
 
-	return isFoundation ? (
+	return (
 		<FoundationPopover
 			onOpenChange={(open) => {
 				if (open) {
@@ -132,19 +129,5 @@ export default function NotificationStreamPopover({
 				{streamContent}
 			</PopoverContent>
 		</FoundationPopover>
-	) : (
-		<CoreUiPopover
-			id="notification-stream-popover"
-			trigger="click"
-			placement="bottom"
-			closeOnClick={false}
-			button={trigger}
-			container={containerRef.current}
-			onEnter={handleStreamOpen}
-			onExit={handleStreamClose}
-			role="menu"
-		>
-			{streamContent}
-		</CoreUiPopover>
 	);
 }

@@ -2,10 +2,8 @@ import { useRef, useState } from "react";
 import classNames from "classnames";
 import { ValueOf } from "@rbx/core-types";
 import { useTranslations } from "@rbx/www-common/i18n";
-import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import analytics from "@rbx/core-scripts/payments-flow";
 import { formatNumber } from "@rbx/core-scripts/format/number";
-import { Popover as CoreUiPopover } from "@rbx/core-ui";
 import {
 	Popover as FoundationPopover,
 	PopoverContent,
@@ -19,8 +17,6 @@ import layoutConstants from "../../constants/layoutConstants";
 import LeaveRobloxPopupDisclaimer from "./LeaveRobloxPopupDisclaimer";
 import { getVngShopSignedRedirectionUrl } from "../../services/navigationService";
 import RobuxBadgeType from "../../constants/robuxBadgeConstants";
-import { navNamespaces } from "../../constants/translationNamespaces";
-import { useIsTopNavFoundation } from "../../util/topNavFoundationIxp";
 import { popoverDismissGuard } from "../../util/popoverDismissGuard";
 
 export default function BuyRobuxPopover({
@@ -61,7 +57,6 @@ export default function BuyRobuxPopover({
 	const containerRef = useRef<HTMLLIElement>(null);
 
 	// vng buy robux pop up a disclaimer before redirecting
-	const isFoundation = useIsTopNavFoundation();
 	const [
 		isLeaveRobloxDisclaimerModalOpen,
 		setIsLeaveRobloxDisclaimerModalOpen,
@@ -168,37 +163,19 @@ export default function BuyRobuxPopover({
 					onContinue={onBuyRobuxExternalContinue}
 				/>
 			)}
-			{isExperimentCallDone &&
-				(isFoundation ? (
-					<FoundationPopover>
-						<PopoverTrigger asChild>{trigger}</PopoverTrigger>
-						<PopoverContent
-							side="bottom"
-							align="end"
-							ariaLabel={triggerLabel}
-							{...popoverDismissGuard(containerRef)}
-						>
-							{robuxMenu}
-						</PopoverContent>
-					</FoundationPopover>
-				) : (
-					<CoreUiPopover
-						id="buy-robux-popover"
-						trigger="click"
-						placement="bottom"
-						button={trigger}
-						role="menu"
-						container={containerRef.current}
+			{isExperimentCallDone && (
+				<FoundationPopover>
+					<PopoverTrigger asChild>{trigger}</PopoverTrigger>
+					<PopoverContent
+						side="bottom"
+						align="end"
+						ariaLabel={triggerLabel}
+						{...popoverDismissGuard(containerRef)}
 					>
-						<TranslationProviderSCC namespaces={navNamespaces}>
-							<div>
-								<ul id="buy-robux-popover-menu" className="dropdown-menu">
-									{robuxMenu}
-								</ul>
-							</div>
-						</TranslationProviderSCC>
-					</CoreUiPopover>
-				))}
+						{robuxMenu}
+					</PopoverContent>
+				</FoundationPopover>
+			)}
 		</li>
 	);
 }

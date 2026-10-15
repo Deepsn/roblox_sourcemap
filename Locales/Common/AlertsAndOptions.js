@@ -19,6 +19,7 @@ Roblox.LangDynamic["Common.AlertsAndOptions"] = {
 		"You switched to {accountName}",
 	"Labels.NewItem": "New item",
 	"Labels.NewUpdate": "New update",
+	"Labels.LimitedTimeBonus": "Limited-time bonus",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -1,4 +1,5 @@
 import { httpClient, HttpResponseCodes } from "@rbx/core-scripts/http";
+import { hbaUnauthorizedEventName } from "@rbx/www-common/auth";
 import { renderSimpleAuth } from "../components/SimpleAuthModal";
 import {
 	MODAL_CONTAINER_ID,
@@ -18,6 +19,16 @@ const ensureContainer = (): HTMLElement => {
 		document.body.append(container);
 	}
 	return container;
+};
+
+const showSignInModal = (): void => {
+	ensureContainer();
+	renderSimpleAuth({
+		titleKey: MODAL_TITLE_KEY,
+		bodyContextKey: "",
+		bodyCtaKey: MODAL_BODY_CTA,
+		buttonKey: MODAL_SIGN_IN_KEY,
+	});
 };
 
 // Check for 401 response and render Auth modal.
@@ -41,13 +52,7 @@ const setupAuthInterceptor = (): void => {
 					errorCode === ERROR_CODE_GENERIC_AUTH &&
 					errorSubcode === ERROR_SUBCODE_GENERIC_HBA
 				) {
-					ensureContainer();
-					renderSimpleAuth({
-						titleKey: MODAL_TITLE_KEY,
-						bodyContextKey: "",
-						bodyCtaKey: MODAL_BODY_CTA,
-						buttonKey: MODAL_SIGN_IN_KEY,
-					});
+					showSignInModal();
 					return new Promise(() => {
 						// Promise never resolves or rejects to prevent caller error handlers from running
 					});
@@ -59,6 +64,10 @@ const setupAuthInterceptor = (): void => {
 			return Promise.reject(error);
 		},
 	);
+	document.addEventListener(hbaUnauthorizedEventName, (event) => {
+		event.preventDefault();
+		showSignInModal();
+	});
 };
 
 export default setupAuthInterceptor;

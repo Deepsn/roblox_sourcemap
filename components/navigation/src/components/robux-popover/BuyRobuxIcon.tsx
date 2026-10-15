@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { Fragment, ReactNode } from "react";
 import { ValueOf } from "@rbx/core-types";
-import { Tooltip as CoreUiTooltip } from "@rbx/core-ui";
 import {
 	Tooltip as FoundationTooltip,
 	TooltipTrigger,
@@ -9,35 +8,15 @@ import {
 import { truncNumber } from "@rbx/core-scripts/format/number";
 import layoutConstant from "../../constants/layoutConstants";
 import RobuxBadgeType from "../../constants/robuxBadgeConstants";
-import { useIsTopNavFoundation } from "../../util/topNavFoundationIxp";
 import NavIcon from "../NavIcon";
 
-const renderErrorTooltip = (
-	isFoundation: boolean,
-	robuxError: string,
-	icon: ReactNode,
-) => {
-	if (isFoundation) {
-		return (
-			<FoundationTooltip position="bottom-center" title={robuxError}>
-				<TooltipTrigger asChild>
-					<span>{icon}</span>
-				</TooltipTrigger>
-			</FoundationTooltip>
-		);
-	}
-
-	return (
-		<CoreUiTooltip
-			id="current-error"
-			content={robuxError}
-			placement="bottom"
-			containerClassName="nav-buy-robux-icon-tooltip-container"
-		>
-			{icon}
-		</CoreUiTooltip>
-	);
-};
+const renderErrorTooltip = (robuxError: string, icon: ReactNode) => (
+	<FoundationTooltip position="bottom-center" title={robuxError}>
+		<TooltipTrigger asChild>
+			<span>{icon}</span>
+		</TooltipTrigger>
+	</FoundationTooltip>
+);
 
 export default function BuyRobuxIcon({
 	robuxAmount,
@@ -52,7 +31,6 @@ export default function BuyRobuxIcon({
 	creditDisplayConfig: string;
 	robuxBadgeType?: ValueOf<typeof RobuxBadgeType>;
 }) {
-	const isFoundation = useIsTopNavFoundation();
 	const robuxAmountValue = robuxError
 		? layoutConstant.robuxOnEconomySystemOutage
 		: truncNumber(robuxAmount);
@@ -63,12 +41,7 @@ export default function BuyRobuxIcon({
 	});
 	const icon = (
 		<Fragment>
-			<NavIcon
-				legacyClass="icon-robux-28x28 roblox-popover-close"
-				name="icon-regular-robux"
-				size="XLarge"
-				id="nav-robux"
-			/>
+			<NavIcon name="icon-regular-robux" size="XLarge" id="nav-robux" />
 			{creditDisplayConfig !==
 				layoutConstant.creditDisplayConfigVariants.hideCreditAndRobux && (
 				<span
@@ -83,7 +56,7 @@ export default function BuyRobuxIcon({
 
 	return (
 		<span id="nav-robux-icon" className="nav-robux-icon rbx-menu-item">
-			{robuxError ? renderErrorTooltip(isFoundation, robuxError, icon) : icon}
+			{robuxError ? renderErrorTooltip(robuxError, icon) : icon}
 			<span className={robuxBadgeClass} />
 		</span>
 	);

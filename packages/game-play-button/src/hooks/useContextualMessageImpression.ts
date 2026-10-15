@@ -1,7 +1,7 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { type EventContext } from "@rbx/unified-logging";
 import { observeVisibility } from "@rbx/core-scripts/util/element-visibility";
-import { eventStreamService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
 import { TPlayabilityStatus } from "../types/playButtonTypes";
 
 const IMPRESSION_VISIBILITY_THRESHOLD = 0.5;
@@ -51,7 +51,7 @@ const useContextualMessageImpression = (
 			(isVisible) => {
 				if (isVisible && !hasFiredRef.current) {
 					hasFiredRef.current = true;
-					eventStreamService.sendEventWithTarget(
+					sendEventWithTarget(
 						"playButtonContextualMessageImpression",
 						pageContext,
 						{

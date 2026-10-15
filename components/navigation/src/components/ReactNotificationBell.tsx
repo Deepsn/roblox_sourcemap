@@ -58,7 +58,6 @@ export default function ReactNotificationBell({
 					className="rbx-menu-item notification-stream-icon"
 				>
 					<NavIcon
-						legacyClass="icon-common-notification-bell"
 						name="icon-regular-bell"
 						size="XLarge"
 						id="common-notification-bell"
