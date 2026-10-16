@@ -1,4 +1,5 @@
 import type ExperimentationService from "@rbx/experimentation";
+import { window } from "@rbx/core-lib/browser";
 
 const POLL_INTERVAL_MS = 100;
 const POLL_TIMEOUT_MS = 5_000;
@@ -9,6 +10,10 @@ const POLL_TIMEOUT_MS = 5_000;
 export const waitForExperimentationService = async (): Promise<
 	typeof ExperimentationService
 > => {
+	if (window === undefined) {
+		throw new Error("ExperimentationService requires a browser environment");
+	}
+
 	const deadline = Date.now() + POLL_TIMEOUT_MS;
 
 	let service: typeof ExperimentationService | undefined =
@@ -20,7 +25,7 @@ export const waitForExperimentationService = async (): Promise<
 		}
 		// eslint-disable-next-line no-await-in-loop
 		await new Promise<void>((resolve) => {
-			window.setTimeout(resolve, POLL_INTERVAL_MS);
+			setTimeout(resolve, POLL_INTERVAL_MS);
 		});
 		service = window.Roblox.ExperimentationService;
 	}

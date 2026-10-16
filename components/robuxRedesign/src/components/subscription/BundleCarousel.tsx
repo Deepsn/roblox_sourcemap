@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import type { DeviceMeta } from "@rbx/core-scripts/meta/device";
-import { useTheme } from "@rbx/core-scripts/react";
+import { useResolvedColorMode } from "@rbx/foundation-ui";
 import { Carousel } from "@rbx/payments/components/carousel";
 
 import type { TrackSubscriptionV2SubscribeClickArgs } from "../../hooks/subscriptionV2/useSubscriptionV2Tracking";
@@ -38,7 +38,7 @@ export function BundleCarousel({
 	const { products } = subscriptionV2;
 
 	const inverseThemeClass =
-		useTheme() === "dark"
+		useResolvedColorMode() === "dark"
 			? "color-mode-light light-theme"
 			: "color-mode-dark dark-theme";
 

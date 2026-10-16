@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { window } from "@rbx/core-lib/browser";
 import { breakpoints } from "./useBreakpoint";
 
 type BreakpointKey = keyof typeof breakpoints;
@@ -18,14 +19,12 @@ export function useResponsiveValue<T>(
 	defaultValue: T,
 	config: ResponsiveConfig<T>,
 ): T {
-	const [windowWidth, setWindowWidth] = useState(
-		typeof window !== "undefined" ? window.innerWidth : 0,
-	);
+	const [windowWidth, setWindowWidth] = useState(window?.innerWidth ?? 0);
 
 	useEffect(() => {
-		const handleResize = () => setWindowWidth(window.innerWidth);
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
+		const handleResize = () => setWindowWidth(window?.innerWidth ?? 0);
+		window?.addEventListener("resize", handleResize);
+		return () => window?.removeEventListener("resize", handleResize);
 	}, []);
 
 	// 1. Convert all keys (strings or numbers) into a sorted array of [pixelValue, T]

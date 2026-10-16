@@ -1,4 +1,5 @@
 import { Hybrid } from "@rbx/legacy-webapp-types/Roblox";
+import { window, document } from "@rbx/core-lib/browser";
 
 const id = "web";
 
@@ -211,7 +212,7 @@ export function createWithTtiMetrics(namespace: string): {
 					return;
 				}
 
-				const param = new URLSearchParams(window.location.search).get(
+				const param = new URLSearchParams(window?.location.search ?? "").get(
 					"ttiStartMs",
 				);
 				const ttiStartMs = param === null ? NaN : Number(param);
@@ -323,10 +324,10 @@ export function createWithTtiMetrics(namespace: string): {
 			buildAndSend({ partial: true });
 		};
 
-		if (typeof document !== "undefined") {
+		if (document) {
 			if (document.readyState === "complete") {
 				loaded = true;
-			} else if (typeof window !== "undefined") {
+			} else if (window) {
 				window.addEventListener(
 					"load",
 					() => {
@@ -338,13 +339,13 @@ export function createWithTtiMetrics(namespace: string): {
 			}
 
 			document.addEventListener("visibilitychange", () => {
-				if (document.visibilityState === "hidden") {
+				if (document?.visibilityState === "hidden") {
 					flush();
 				}
 			});
 		}
 
-		if (typeof window !== "undefined") {
+		if (window) {
 			// pagehide + unload cover WebView/desktop navigation-away; visibilitychange
 			// (above) covers iOS/WKWebView, which doesn't reliably fire unload.
 			window.addEventListener("pagehide", flush);

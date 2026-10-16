@@ -1,5 +1,6 @@
 import { useCallback, useContext, useState } from "react";
 import { UrlSearchParams } from "@rbx/core-lib/url";
+import { window } from "@rbx/core-lib/browser";
 import { Modals } from "../useModals";
 import { TrackingContext } from "../../contexts/TrackingContext";
 
@@ -31,6 +32,10 @@ export function useSamsungPaymentMethods({
 	}, [trackSamsungPaymentMethodsSamsungPayClick, closeModal]);
 
 	const handleRedeemCreditClick = useCallback(() => {
+		if (window === undefined) {
+			return;
+		}
+
 		trackSamsungPaymentMethodsRedeemCreditClick();
 
 		window.location.href = `/upgrades/redeem?${UrlSearchParams.new({

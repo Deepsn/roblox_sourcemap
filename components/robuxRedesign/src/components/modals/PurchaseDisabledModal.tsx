@@ -8,6 +8,7 @@ import {
 	DialogFooter,
 	DialogTitle,
 } from "@rbx/foundation-ui";
+import { window } from "@rbx/core-lib/browser";
 import { ModalContext } from "../../contexts/ModalContext";
 import { TrackingContext } from "../../contexts/TrackingContext";
 
@@ -45,6 +46,10 @@ export function PurchaseDisabledModal() {
 	}, [showVPCOptimization, hasUserDisabledPurchases, translate]);
 
 	const onPurchaseVPCCheckModalConfirm = useCallback(() => {
+		if (window === undefined) {
+			return;
+		}
+
 		trackPurchaseDisabledConfirm(showVPCOptimization);
 		window.location.href = "/my/account#!/billing";
 	}, [trackPurchaseDisabledConfirm, showVPCOptimization]);

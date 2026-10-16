@@ -3,6 +3,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 // prettier-ignore
 // @ts-expect-error - Legacy Roblox module types
 import { EmailVerificationService } from "@rbx/core-scripts/legacy/Roblox";
+import { document } from "@rbx/core-lib/browser";
 import { isInApp, isOnDesktop } from "../../utils/platform";
 import { Product } from "../../types/buyRobuxPageData";
 import {
@@ -40,7 +41,7 @@ export function usePurchaseWarning(): {
 		useState<boolean>(false);
 
 	useEffect(() => {
-		const rootDataset = document.getElementById(DATASET_ELEMENT_ID)?.dataset;
+		const rootDataset = document?.getElementById(DATASET_ELEMENT_ID)?.dataset;
 
 		if (rootDataset) {
 			setIsPurchaseWarningModalEnabled(

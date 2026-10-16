@@ -1,8 +1,13 @@
+import { window } from "@rbx/core-lib/browser";
 import { REDIRECT_START_TS_QUERY_PARAM } from "../constants/loginRedirect";
 import { trackCounter } from "../observability";
 
 /** Appends/overwrites `redirectStartTs` on a redirect URL (click-time stamp). */
 export function withRedirectStartTs(url: string, now = Date.now()): string {
+	if (window === undefined) {
+		return url;
+	}
+
 	const parsed = new URL(url, window.location.origin);
 	parsed.searchParams.set(REDIRECT_START_TS_QUERY_PARAM, String(now));
 
@@ -20,10 +25,14 @@ export function withRedirectStartTs(url: string, now = Date.now()): string {
 export function stampRedirectStartTsOnClick(
 	event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
 ): void {
+	if (window === undefined) {
+		return;
+	}
+
 	try {
 		const { currentTarget } = event;
 		if (
-			!(currentTarget instanceof HTMLAnchorElement) ||
+			!(currentTarget instanceof window.HTMLAnchorElement) ||
 			!currentTarget.getAttribute("href")
 		) {
 			return;

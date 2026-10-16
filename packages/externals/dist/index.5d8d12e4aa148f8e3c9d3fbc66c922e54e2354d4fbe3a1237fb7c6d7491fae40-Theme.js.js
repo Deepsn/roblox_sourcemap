@@ -64,6 +64,8 @@ var externals = {
 	"@rbx/legacy-webapp-types/Roblox": "Roblox",
 	"@rbx/legacy-webapp-types/roblox-event-tracker": "EventTracker",
 	"@rbx/legacy-webapp-types/roblox-item-purchase": "RobloxItemPurchase",
+	// Set by the ItemPurchase component, which imports the module by its ts/react/... path.
+	"@rbx/purchase-common/item-purchase": "RobloxItemPurchase",
 	"@rbx/core-scripts/local-storage": [
 		"Roblox",
 		"core-scripts",
