@@ -272,6 +272,9 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Description.CloseTab": "You can close this tab after Roblox opens.",
 	"Message.UnexpectedSSOError":
 		"An unexpected error occurred. Go back to {startTag}roblox.com{endTag}.",
+	"Message.GenericSsoError":
+		"Close this window, then try signing in again from where you started.",
+	"Header.SomethingWentWrong": "Something went wrong",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

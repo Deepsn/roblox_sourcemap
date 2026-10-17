@@ -1,17 +1,16 @@
-import React from "react";
-import { render } from "react-dom";
-import { ready } from "core-utilities";
-import App from "./App";
+import "./src/main.css";
+import ready from "@rbx/core-scripts/util/ready";
+import { renderWithErrorBoundary } from "@rbx/core-scripts/react";
+import App from "@rbx/payments/priceTag/App";
 import {
 	DEFAULT_FIAT_PRICE_TAG_ELEMENT_ID_SELECTOR,
 	DEFAULT_FIAT_PRICE_TAG_ELEMENTS_CLASSNAME_SELECTOR,
 	RENDER_PRICE_TAGS_CUSTOM_EVT,
-} from "./constants/priceTagConstants";
+} from "@rbx/payments/priceTag/constants/priceTagConstants";
 import {
 	TPriceDivTagDataSet,
 	TPriceTagEventOptions,
-} from "./constants/typeDefinitions";
-import "../../../css/priceTag/priceTag.scss";
+} from "@rbx/payments/priceTag/constants/typeDefinitions";
 
 /**
  * Render the price tag react apps on one page for divs with the `targetClassName` as classname
@@ -44,7 +43,10 @@ function renderPriceTags(options?: TPriceTagEventOptions) {
 
 	allPriceTagElements.forEach((element) => {
 		const dataset = (element as HTMLElement).dataset as TPriceDivTagDataSet;
-		render(<App containerDataset={dataset} options={options} />, element);
+		renderWithErrorBoundary(
+			<App containerDataset={dataset} options={options} />,
+			element,
+		);
 	});
 }
 

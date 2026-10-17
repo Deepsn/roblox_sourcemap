@@ -270,7 +270,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestSocialLinksVisibility":
 		"This allows others on Roblox to see links to your child's profile on social networks. Your child can manage these links in their settings.",
 	"Description.VPCRequestEnablePurchases":
-		"This allows your child to buy Robux or subscriptions. It doesn’t include redeeming gift cards or spending Robux. {breakLine}Selecting ‘off’ won’t cancel existing subscriptions. View details about your child’s {premiumSubLinkStart}Premium subscriptions{premiumSubLinkEnd} or {subInExpLinkStart}subscriptions within experiences{subInExpLinkEnd}.",
+		"This allows your child to buy Robux or subscriptions. It doesn’t include redeeming gift cards or spending Robux. {breakLine}Selecting ‘off’ won’t cancel existing subscriptions. View details about your child’s {premiumSubLinkStart}Roblox subscriptions{premiumSubLinkEnd} or {subInExpLinkStart}subscriptions within experiences{subInExpLinkEnd}.",
 	"Description.VPCRequestThirdPartyApplications":
 		"This allows your child to access third-party applications with their Roblox account and give apps permission to take actions for them. Turning this off will revoke your child’s existing third-party app permissions.",
 	"Description.VPCRequestEmailNotifications":

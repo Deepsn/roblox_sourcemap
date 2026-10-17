@@ -1,16 +1,16 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { fireEvent } from "roblox-event-tracker";
 import PriceTag from "./components/PriceTag";
 import { TAppProps } from "./constants/typeDefinitions";
-import { COUNTERS } from "./constants/priceTagConstants";
+import { trackCriticalError } from "../observability";
 
 function App({ containerDataset, options }: TAppProps): JSX.Element | null {
 	const amount =
 		options?.amount ?? parseFloat(containerDataset?.amount ?? String());
 	const currencyCode = options?.currencyCode ?? containerDataset?.currencyCode;
 	if (!currencyCode || (!amount && amount !== 0) || Number.isNaN(amount)) {
-		fireEvent(COUNTERS.PRICE_DATA_NOT_VALID);
+		trackCriticalError("PriceTag_DataNotValid", {
+			currencyCode: currencyCode ?? "unknown",
+		});
 		return null;
 	}
 

@@ -1,1 +1,1 @@
-var __WEBPACK_NAMESPACE_OBJECT__ = CoreUtilities;
+module.exports = CoreUtilities;

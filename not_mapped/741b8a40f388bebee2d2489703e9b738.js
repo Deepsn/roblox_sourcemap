@@ -1,4 +1,4 @@
-// bundle: pageEnd___22d3fcab039d71ed1015fafd3809728a_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_FriendsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ServerListResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VIPServerResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PromotedChannelsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameDetailsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_CommunityLinksResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SubscriptionResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SocialShareResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VirtualEventsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GamePassResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
+// bundle: pageEnd___2b19211fa157f848896a17f8166d3bb4_m // files: ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_LoginResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_OneTimePasscodeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_CaptchaResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceAuthenticatorResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ForceTwoStepVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProofOfWorkChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ReauthenticationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RostileChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_SecurityQuestionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PrivateAccessTokenChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DeviceIntegrityChallengeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_VerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AccountSettingsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_AccountSwitchResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_ControlsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_RecommendationsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_FeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ProfileBadgesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_MessagesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_AlertsAndOptionsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_VisitGameResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_DownloadLandingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ShopDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_RedeemGameCardResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_NotApprovedResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Authentication_PasskeyResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_TrackingResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_IdVerificationResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_AgeVerificationUpsellResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ParentsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_FriendsResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Verification_IdentityResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_ExternalLinksResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Common_PremiumFeaturesResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_PaymentResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js, ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js // ~/Generated/js/Roblox_TranslationResources_Common_PresenceResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Common.Presence"] = {
@@ -2310,26 +2310,7 @@ Roblox.Lang["Verification.Identity"] = {
 	"Title.CameraUpsell2": "Bring Your Avatar To Life",
 	"Title.ProcessingVerification": "Processing Verification",
 };
-Roblox.Lang["IdentityResources"] = Roblox.Lang["Verification.Identity"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameBadgesResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.GameBadges"] = {
-	HeadingGameBadges: "Badge",
-	"Label.RarityCakeWalk": "Cake Walk",
-	"Label.RarityChallenging": "Challenging",
-	"Label.RarityEasy": "Easy",
-	"Label.RarityExtreme": "Extreme",
-	"Label.RarityFreebie": "Freebie",
-	"Label.RarityHard": "Hard",
-	"Label.RarityImpossible": "Impossible",
-	"Label.RarityInsane": "Insane",
-	"Label.RarityModerate": "Moderate",
-	LabelRarity: "Rarity",
-	LabelSeeMore: "See More",
-	LabelWonEver: "Won Ever",
-	LabelWonYesterday: "Won Yesterday",
-};
-Roblox.Lang["GameBadgesResources"] = Roblox.Lang["Feature.GameBadges"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js
+Roblox.Lang["IdentityResources"] = Roblox.Lang["Verification.Identity"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PremiumResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.Premium"] = {
@@ -2530,7 +2511,535 @@ Roblox.Lang["Feature.Premium"] = {
 	"Message.UpgradeUnavailableModal":
 		"We are sorry, we cannot change your subscription because there is currently no package equivalent to Lifetime Builders Club.",
 };
-Roblox.Lang["PremiumResources"] = Roblox.Lang["Feature.Premium"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js
+Roblox.Lang["PremiumResources"] = Roblox.Lang["Feature.Premium"]; // ~/Generated/js/Roblox_TranslationResources_Common_ExternalLinksResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Common.ExternalLinks"] = {
+	BillingHelp: "https://en.help.roblox.com/hc/categories/200213820",
+	"Link.AccountHelp": "https://en.help.roblox.com/hc/categories/200217934",
+	"Link.AccountHelpLink": "https://en.help.roblox.com/hc/categories/200217934",
+	"Link.AccountSafetyLink":
+		"https://en.help.roblox.com/hc/en-us/articles/203313380-Account-Security-Keeping-your-Account-Safe-",
+	"Link.AccountSafetyPage":
+		"https://en.help.roblox.com/hc/en-us/articles/203313380-Account-Security-Keeping-your-Account-Safe-",
+	"Link.BillingHelp": "https://en.help.roblox.com/hc/categories/200213820",
+	"Link.Help": "https://en.help.roblox.com/hc/en-us",
+	"Link.PrivacyPolicy":
+		"https://en.help.roblox.com/hc/en-us/articles/115004630823-Roblox-Privacy-and-Cookie-Policy",
+	"Link.RobuxHelp":
+		"https://en.help.roblox.com/hc/en-us/articles/203313200-How-to-Get-Robux/",
+	"Link.SafetyHelp":
+		"https://en.help.roblox.com/hc/en-us/categories/200213830-Parents-Safety-and-Moderation",
+	"Link.Support": "https://roblox.com/support",
+	"Link.TermsOfService":
+		"https://en.help.roblox.com/hc/en-us/articles/115004647846-Roblox-Terms-of-Use",
+};
+Roblox.Lang["ExternalLinksResources"] = Roblox.Lang["Common.ExternalLinks"]; // ~/Generated/js/Roblox_TranslationResources_Common_PremiumFeaturesResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Common.PremiumFeatures"] = {
+	"Description.BuyRobuxMetaTag":
+		"Robux allows you to purchase upgrades for your avatar or buy special abilities in experiences.",
+	"Description.PremiumPageMetaTag":
+		"Get Roblox Premium and receive Robux each month along with access to Premium-only items, special discounts, item trades, and more.",
+	"Description.RedeemGiftCardMetaTag":
+		"Enter your Roblox gift card or promo code to get Robux and unlock a free exclusive virtual item.",
+	"Email.ContactUsLinkText": "Contact Us",
+	"Email.FirstOffSaleWarningSubject":
+		"Warning: Avatar Items at Risk of Being Taken Off-Sale",
+	"Email.LegalText":
+		"You are receiving this email because your Roblox Premium subscription expired. Please do not reply to this email. For billing help, visit Roblox Support. All sales subject to Roblox Terms And Conditions.",
+	"Email.PremiumExpiredEmailTemplate":
+		"Dear {userName}, {lineBreak}{lineBreak} Your Roblox Premium subscription ended today {labelStartTag}{formattedDate}{labelEndTag} {lineBreak}{lineBreak} If you renew {aStartTag} {bStartTag}Roblox Premium{bEndTag}{aEndTag}, you will continue to receive benefits such as… {lineBreak}{lineBreak} {pStartTag}- Robux deposited into your account once per month{pEndTag}{pStartTag}- 10% more when you purchase Robux in the future{pEndTag}{pStartTag}- Premium benefits in experiences{pEndTag}{pStartTag}- Ability to trade{pEndTag}{lineBreak}{lineBreak}The Roblox Team",
+	"Email.PremiumExpiredEmailTemplateV2":
+		"Dear {userName}, {lineBreak}{lineBreak} Your Roblox Premium subscription ended today {labelStartTag}{formattedDate}{labelEndTag} {lineBreak}{lineBreak}If you renew {aStartTag} {bStartTag}Roblox Premium{bEndTag}{aEndTag}, you will continue to receive benefits such as… {lineBreak}{lineBreak} {pStartTag}- {bStartTag}Robux deposited{bEndTag} into your account once per month{pEndTag}{pStartTag}- {bStartTag}10% more{bEndTag} when you purchase Robux in the future{pEndTag}{pStartTag}- Premium {bStartTag}benefits{bEndTag} in experiences{pEndTag}{pStartTag}- Ability to {bStartTag}trade{bEndTag}{pEndTag}{lineBreak}{lineBreak}The Roblox Team",
+	"Email.PremiumLapsedOffSaleWarningTemplate":
+		"Dear {userName}, {lineBreak}{lineBreak} Your Premium subscription has expired, and the avatar items you are currently selling are at risk of being taken off-sale. {lineBreak}{lineBreak}As a reminder, Premium 1000 or 2200 is a requirement to keep existing avatar items on-sale. For group items, the group owner must also maintain Premium 1000 or 2200. See full details on Premium requirements {aStartTag}here{aEndTag}{lineBreak}{lineBreak} {bStartTag}Next week, all avatar items that you are currently selling are set to be taken off-sale. Get {a2StartTag}Premium 1000/2200{a2EndTag} by {formattedDate} to keep your items on sale.{bEndTag}{lineBreak}{lineBreak} The Roblox Team",
+	"Email.RenewButtonText": "Renew Roblox Premium",
+	"Email.SecondOffSaleWarningSubject":
+		"[ACTION REQUIRED] Avatar Items at Risk of Being Taken Off-Sale",
+	"Email.SecondOffSaleWarningTemplate":
+		"Dear {userName}, {lineBreak}{lineBreak} Tomorrow, all avatar items that you are currently selling are set to be taken off-sale due to missing Premium. {lineBreak}{lineBreak} Get {aStartTag}Premium 1000/2200{aEndTag} by {formattedDate} to keep your items on sale. As a reminder, Premium 1000 or 2200 is a requirement to keep existing avatar items on-sale. For group items, the group owner must also maintain Premium 1000 or 2200. See full details on Premium requirements {a2StartTag} here {a2EndTag}. {lineBreak}{lineBreak} The Roblox Team",
+	"Email.TermsOfUseLinkText": "Terms Of Use",
+	"Label.AnnualPremium": "Annual Premium",
+	"Label.AnnualPremiumWithRobuxAmount": "Annual Premium {amount}",
+	"Label.BuyRobuxPageTitle": "Buy Robux",
+	"Label.PremiumPageTitle": "Roblox Premium",
+	"Label.RedeemGiftCardPageTitle": "Redeem Roblox Gift Cards and Codes",
+	"Label.RobloxPremium": "Roblox Premium {amount}",
+	"Label.RobloxPremiumName": "Roblox Premium",
+	"Label.RobuxPackage": "{amount} Robux",
+	"Lable.AnnualPremium": "Annual Premium",
+	"Lable.AnnualPremiumWithAmount": "Annual Premium {amount}",
+	"Message.PremiumExpiredMessageSubject":
+		"Your Premium Subscription has Expired",
+	"Message.PremiumExpiredMessageTemplate":
+		"Dear {userName}, {lineBreak}{lineBreak} Your Roblox Premium subscription ended today {labelStartTag}{formattedDate}{labelEndTag} {lineBreak}{lineBreak} If you renew {aStartTag} {bStartTag}Roblox Premium{bEndTag}{aEndTag}, you will continue to receive benefits such as… {lineBreak}{lineBreak} {pStartTag}- Robux deposited into your account once per month{pEndTag}{pStartTag}- 10% more when you purchase Robux in the future{pEndTag}{pStartTag}- Premium benefits in experiences{pEndTag}{pStartTag}- Ability to trade{pEndTag}{lineBreak}{lineBreak}{aStartTag} {bStartTag}Renew Roblox Premium{bEndTag}{aEndTag}{lineBreak}{lineBreak}The Roblox Team",
+	"Message.PremiumExpiredMessageTemplateV2":
+		"Dear {userName}, {lineBreak}{lineBreak} Your Roblox Premium subscription ended today {labelStartTag}{formattedDate}{labelEndTag} {lineBreak}{lineBreak}If you renew {aStartTag} {bStartTag}Roblox Premium{bEndTag}{aEndTag}, you will continue to receive benefits such as… {lineBreak}{lineBreak} {pStartTag}- {bStartTag}Robux deposited{bEndTag} into your account once per month{pEndTag}{pStartTag}- {bStartTag}10% more{bEndTag} when you purchase Robux in the future{pEndTag}{pStartTag}- Premium {bStartTag}benefits{bEndTag} in experiences{pEndTag}{pStartTag}- Ability to {bStartTag}trade{bEndTag}{pEndTag}{lineBreak}{lineBreak}{aStartTag} {bStartTag}Renew Roblox Premium{bEndTag}{aEndTag}{lineBreak}{lineBreak}The Roblox Team",
+};
+Roblox.Lang["PremiumFeaturesResources"] = Roblox.Lang["Common.PremiumFeatures"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PaymentResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Feature.Payment"] = {
+	"Action.Back": "Back",
+	"Action.Cancel": "Cancel",
+	"Action.Continue": "Continue",
+	"Action.DownloadPDF": "Download PDF",
+	"Action.PreviewCard": "Preview Card",
+	"Action.Print": "Print",
+	"Action.SubmitOrder": "Submit Order",
+	"Description.AfterUpgrades":
+		"Please allow up to 5 minutes for the upgrades or changes you have purchased to be applied to your account. We hope you find your time at Roblox to be both safe and fun. If there is ever anything we can do to make your experience even better, please let us know.",
+	"Description.AllSalesAreFinal":
+		"All sales are final. See our {linkStart}Terms and Conditions{linkEnd}.",
+	"Description.AlreadyPurchased":
+		"You've already successfully purchased Premium for this month. {lineBreak} If you need further assistance, please contact {linkStart}customer support{linkEnd}.",
+	"Description.AuthorizingPayment": "Authorizing Payment",
+	"Description.CardSecurityCode":
+		"The {digitSpanStart}3{digitSpanEnd} digits displayed on the {locationSpanStart}back{locationSpanEnd} of your card",
+	"Description.ClickSubmitOrder":
+		'*By clicking "Submit Order", you authorize us to charge you {priceInfoSpanStart}{priceInfoSpanEnd}{priceSpanStart}{priceText}{priceSpanEnd} automatically until you cancel.',
+	"Description.CreditCardNumber": "The 16 digits of your credit card",
+	"Description.DepulicatedRecentPurchase":
+		"You've purchased this item within the last 5 minutes. Are you sure you want to continue with this purchase?",
+	"Description.PaymentBeingProcessed":
+		"Your purchase is being processed. We are waiting for confirmation from our 3rd party payment provider. This can take a few days. Please check your email inbox and find the barcode to complete this transaction. For questions regarding your payment processing status, please contact {linkStart}Xsolla{linkEnd}. {lineBreak}{lineBreak} We hope you find your time at Roblox to be both safe and fun. If there is ever anything we can do to make your experience even better, please let us know.",
+	"Description.RedeemOrOtherOptions":
+		"{linkStart}Click here{linkEnd} to redeem ROBLOX credit or to view other payment options.",
+	"Description.RenewsMonthly": "Renews monthly. Cancel anytime.",
+	"Description.SubmitOrderAcknowledgement":
+		"You acknowledge that you understand and agree to the {linkStart}Terms and Conditions{linkEnd}. You can cancel at any time by clicking cancel membership on the billing tab of the settings page.",
+	"Description.SubmitOrderAcknowledgementV2":
+		"You acknowledge that you understand and agree to the {linkStart}Terms and Conditions{linkEnd}. You can cancel at any time by clicking cancel subscription on the billing tab of the settings page.",
+	"Description.SubscriptionCopyReceipt":
+		"For any issues or questions, please see our Subscriptions {linkStart}help pages{linkEnd}.",
+	"Description.SubscriptionPurchaseSuccess":
+		"Thank you for your purchase! Your subscription will be reflected in your account shortly. Cancel anytime in {linkStart}Subscriptions settings{linkEnd}. No partial refunds.",
+	"Description.ThanksNote": "Thanks again, {lineBreak} The Roblox Team",
+	"Description.ThankYouForSupporting":
+		"Thank you for supporting {starNameSpan}!",
+	"Description.VisitSupportPage":
+		"Please visit our {linkStart}support page{linkEnd} if you are experiencing any issues or have any questions.",
+	"Heading.BillingInfo": "Billing Info",
+	"Heading.ConfirmPurchase": "Confirm Purchase",
+	"Heading.Failure": "Failure",
+	"Heading.PaymentAlmostComplete": "Your payment is almost complete!",
+	"Heading.PaypalPayment": "PayPal",
+	"Heading.SecureCreditCard": "Secure Credit Card",
+	"Heading.SecureCreditCardPayment": "Secure Credit Card Payment",
+	"Heading.SecurePayment": "Secure Payment",
+	"Heading.SecurePaymentWithRoblox": "Secure Payment with Roblox",
+	"Heading.Success": "Success",
+	"Heading.SuperchargeYourPurchase": "Supercharge Your Purchase!",
+	"Heading.ThankYouForPurchase": "Thank you for your purchase!",
+	"Label.AddProductForPrice": "Add {productName} for {productPrice}",
+	"Label.AddressLineOne": "Address Line 1:",
+	"Label.AddressLineOnePlaceholder": "Street address",
+	"Label.AddressLineTwo": "Address Line 2:",
+	"Label.AddressLineTwoPlaceholder": "Apartment, suite, unit, floor, etc.",
+	"Label.AmazonPay": "Amazon Pay",
+	"Label.BalanceDue": "Balance Due:",
+	"Label.BalanceDueText": "Balance Due: {balance}",
+	"Label.Boleto": "Boleto",
+	"Label.CardSecurityCode": "Card Security Code:",
+	"Label.City": "City:",
+	"Label.ClickHere": "Click here!",
+	"Label.Country": "Country:",
+	"Label.CreditCard": "Credit Card",
+	"Label.CreditCardNumber": "Credit Card Number:",
+	"Label.DebitCard": "Debit Card",
+	"Label.DurationTitle": "Monthly",
+	"Label.DurationTitleYearly": "Yearly",
+	"Label.Email": "Email:",
+	"Label.EnterAStarCode": "Enter a star code:",
+	"Label.Error": "Error",
+	"Label.ExpirationDate": "Expiration Date:",
+	"Label.ExpiresOn": "Expires On: {expireDate}",
+	"Label.FirstName": "First Name:",
+	"Label.HaveACode": "Have a code to support your favorite Roblox Video Star?",
+	"Label.LastName": "Last Name:",
+	"Label.Ok": "OK",
+	"Label.Other": "Other",
+	"Label.OXXO": "OXXO",
+	"Label.Paypal": "PayPal",
+	"Label.PerMonth": "/month",
+	"Label.Phone": "Phone:",
+	"Label.PIX": "PIX",
+	"Label.PrintGiftCard": "Print your gift card now!",
+	"Label.RedeemRobloxCard": "Redeem Roblox Card",
+	"Label.RenewsOn": "Renews On: {renewDate}",
+	"Label.Rixty": "Rixty",
+	"Label.RobloxCredit": "Roblox Credit",
+	"Label.SelectPaymentType": "Select payment type:",
+	"Label.SOFORT": "SOFORT",
+	"Label.StateOrProvince": "State/Province:",
+	"Label.Validate": "Validate",
+	"Label.XsollaPIX": "PIX",
+	"Label.ZipOrPostalCode": "Zip/Postal Code:",
+	"Message.AgeUnder13PurchaseLimitReached":
+		"Sorry, your transaction cannot be completed as you have reached a purchasing limit. Please try your transaction again in 24-72 hours. If unsuccessful, you may need to wait up to 30 days to make a new purchase. Purchasing limits cannot be changed or removed.",
+	"Message.BraintreePayPalPreparePaymentError":
+		"There was an error connecting to PayPal. Please try again.",
+	"Message.FraudBlockedPaymentCheckInfoErrorMessage":
+		"Unfortunately we are unable to process your payment. Please confirm the billing information entered matches the card provided and try again. If this fails, please try another card or different payment method.\t",
+	"Message.FraudBlockedPaymentErrorMessage":
+		"Your charge has been blocked due to suspicious activity. If you believe this is in error, please contact us at {linkStart}roblox.com/support{linkEnd}.",
+	"Message.FraudWarningMesgForUnder13UsingCreditCard":
+		"Make sure you have your parent's permission before using their credit cards. Card owners may be contacted for confirmation.{lineStart}Using a card without permission will result in your account being deleted.{lineEnd}",
+	"Message.FraudWarningMessageFor13To17":
+		"By selecting a payment type, I agree that I am the parent or legal guardian of the account owner and I authorize this purchase.",
+	"Message.FraudWarningMessageForUnder13UsingCreditCard":
+		"You must be the parent or legal guardian of the account owner to make this purchase. Card owners may be contacted for confirmation. ",
+	"Message.FraudWarningMessageForUnder13UsingCreditCard2":
+		"Using a card without permission will result in the account being deleted.",
+	"Message.PaymentUnavailable":
+		"Payment services are currently unavailable. Please try again later.",
+	"Message.RefreshAndTryAgain":
+		"Something went wrong, please refresh and try again.",
+	"Response.BraintreeDeclined":
+		"An error occurred and payment was unsuccessful. Please try again.",
+	"Response.BraintreePending":
+		"An unexpected error occurred. It may take up to 5 minutes for your transaction to process. Please check the My Transactions page to see if it processed successfully.",
+	"Response.CannotUseCreditCard":
+		"One or more of the products you selected cannot be purchased with a credit card.",
+	"Response.CardNotValid":
+		"This card number is not valid. Please check number and try again.",
+	"Response.Declined": "ERROR: PayPal transaction has been declined.",
+	"Response.DeclinedByPaypal":
+		"ERROR: Transaction was declined by payment provider.",
+	"Response.DuplicatePurchase":
+		"Duplicate transaction detected from the payment provider. Purchase did not go through. Please try again in a few minutes. Do not refresh the payment web page.",
+	"Response.Error":
+		"{errorMessage} For more information or questions about purchasing, please visit our {linkStart}Help Center{linkEnd}.",
+	"Response.ErrorProcessingPayment":
+		"There was an error in processing your payment. Please try again.",
+	"Response.ExperiencedErrrorOnProcessing":
+		"We have experienced an error in processing your payment. Please try again.",
+	"Response.ExpirationDateInvalid": "Your Expiration Date is invalid.",
+	"Response.GeneralErrorOccurred":
+		"Sorry an error has occurred. Please try again later.",
+	"Response.InvalidEmail": "Invalid email",
+	"Response.InvalidSecurityCode":
+		"This security code is invalid. Please check number and try again.",
+	"Response.MontlyPurchaseLimit":
+		"You have reached the purchase limit on this account for the current month.",
+	"Response.NonNumericCharacters":
+		"The card entry included non-numeric characters. Please check number and try again.",
+	"Response.PaymentFail": "Payment has failed. Please try again.",
+	"Response.PaymentMethodNotSupported":
+		"That payment method is not supported for the selected product.",
+	"Response.PaypalPaymentBlocked":
+		"ERROR: PayPal transaction has been blocked.",
+	"Response.PriceChanged":
+		"One or more of the products you selected has changed in price. Please review your order before continuing.",
+	"Response.PurchaseFailed": "Purchase Failed!",
+	"Response.SecurityCodeTooFewDigits":
+		"This security code has too few digits. Please check number and try again.",
+	"Response.SecurityCodeTooManyDigits":
+		"This security code has too many digits. Please check number and try again.",
+	"Response.TooFewDigits":
+		"This card number has too few digits. Please check number and try again.",
+	"Response.TooManyDigits":
+		"This card number has too many digits. Please check number and try again.",
+	"Response.TransactionDeclined": "Transaction declined by bank.",
+	"Response.TransactionFailed": "Transaction failed. Error code: {errorCode}",
+	"Response.TransactionLimit":
+		"Your transaction cannot be completed at this time, as you have reached a transaction limit. Please visit our {startLink}Help Center{endLink} for general information on purchasing. Please note Customer Support cannot change or remove these limits.",
+	"Response.UnexpectedError":
+		"An unexpected error has occurred. Please try again in a few minutes.",
+	"Response.UnexpectedPaypalError":
+		"An unexpected error has occurred with your payment.",
+};
+Roblox.Lang["PaymentResources"] = Roblox.Lang["Feature.Payment"]; // ~/Generated/js/Roblox_TranslationResources_Purchasing_PurchaseDialogResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Purchasing.PurchaseDialog"] = {
+	"Action.BackToShop": "Back to Shop",
+	"Action.Buy": "Buy",
+	"Action.BuyAccess": "Buy Access",
+	"Action.BuyNow": "Buy Now",
+	"Action.BuyRobux": "Buy Robux",
+	"Action.BuyRobuxAndItem": "Buy Robux and Item",
+	"Action.Cancel": "Cancel",
+	"Action.Configure": "Configure",
+	"Action.Continue": "Continue",
+	"Action.Customize": "Customize",
+	"Action.Done": "Done",
+	"Action.EquipMyAvatar": "Equip My Avatar",
+	"Action.Get": "Get",
+	"Action.GetNow": "Get Now",
+	"Action.GoToRobuxStore": "Go to Robux Store",
+	"Action.GoToSecurity": "Go To Security",
+	"Action.GoToSettings": "Go to Settings",
+	"Action.NotNow": "Not Now",
+	"Action.Ok": "OK",
+	"Action.RentNow": "Rent Now",
+	"Action.ResendCode": "Resend Code",
+	"Action.Subscribe": "Subscribe",
+	"Action.Verify": "Verify",
+	"Heading.BuyItem": "Buy Item",
+	"Heading.BuyItems": "Buy Items",
+	"Heading.EconomicRestrictionsError": "Cannot complete this action",
+	"Heading.ErrorOccured": "Error Occurred",
+	"Heading.FloodcheckFailure":
+		"Purchase failed, too many requests, please try again in {throttleTime} minutes",
+	"Heading.GeneralError":
+		"Something went wrong, please refresh and try again later",
+	"Heading.GetItem": "Get Item",
+	"Heading.InsufficientFunds": "Insufficient Funds",
+	"Heading.InsufficientFundsFailure": "Purchase failed, insufficient funds",
+	"Heading.InsufficientRobux": "Insufficient Robux",
+	"Heading.ItemsOwnedFailure": "Purchase failed, item(s) already owned",
+	"Heading.NetworkErrorFailure":
+		"Purchase failed, network error, please try again later",
+	"Heading.NoSellersFailure": "Purchase failed, no sellers",
+	"Heading.PartialSuccessFloodcheckFailure":
+		"{itemCountSuccess} item(s) has/have been purchased, {itemCountFailure} item(s) failed due to too many requests",
+	"Heading.PartialSuccessGeneralFailure":
+		"{itemCountSuccess} item(s) has/have been purchased, {itemCountFailure} item(s) failed",
+	"Heading.PartialSuccessInsufficientFundsFailure":
+		"{itemCountSuccess} item(s) has/have been purchased, {itemCountFailure} item(s) failed due to insufficient funds",
+	"Heading.PartialSuccessItemsOwnedFailure":
+		"{itemCountSuccess} item(s) has/have been purchased, {itemCountFailure} item(s) you already own",
+	"Heading.PartialSuccessNetworkErrorFailure":
+		"{itemCountSuccess} item(s) has/have been purchased, {itemCountFailure} item(s) failed due to network error",
+	"Heading.PartialSuccessNoSellersFailure":
+		"{itemCountSuccess} has/have been purchased,{itemCountFailure} failed due to no sellers",
+	"Heading.PartialSuccessPremiumNeededFailure":
+		"{itemCountSuccess} has/have been purchased, {itemCountFailure} failed due to premium account needed",
+	"Heading.PendingDeveloperProductLimitReached": "Can't Purchase",
+	"Heading.PremiumNeededFailure": "Purchase failed, premium account needed",
+	"Heading.PriceChanged": "Item Price Has Changed",
+	"Heading.PurchaseComplete": "Purchase Complete",
+	"Heading.PurchaseCompleted": "Purchase Completed",
+	"Heading.PurchaseFailure": "Purchase failed, please try again later",
+	"Heading.PurchaseSucceeded": "Purchase Succeeded",
+	"Heading.QuantityLimitReached": "Unable to Buy at Original Price",
+	"Heading.RentItem": "Rent Item",
+	"Heading.TwoStepVerificationRequired": "Email Verification Required",
+	"Heading.TwoStepVerificationRequiredV2": "Email Verification Required",
+	"Heading.TwoStepVerificationRequiredV3": "2-Step Verification Required",
+	"Label.AgreeAndPay": "Agree and Pay",
+	"Label.CodeInputPlaceholder": "Enter 6-digit Code",
+	"Label.EnterEmailCode": "Enter the code we just sent you via email",
+	"Label.Free": "Free",
+	"Label.NeedHelpContactRobloxSupport": "Need help? Contact Roblox Support",
+	"Label.NeedHelpContactSupport": "Need help? Contact {supportLink}",
+	"Label.PlusNumber": "+{numberCount}",
+	"Label.PurchasingTheItem": "Purchasing the item...",
+	"Label.RobloxSupport": "Roblox Support",
+	"Label.TwoStepVerification": "2-Step Verification",
+	"Label.WaitingForRobux": "Waiting for Robux to be granted...",
+	"Message.BalanceAfter":
+		"Your balance after this transaction will be {robuxBalance}.",
+	"Message.InsufficientFunds": "You need {robux} more to purchase this item.",
+	"Message.InsufficientRobux":
+		"{divTagStart}You need an additional {robuxNeeded}. Would you like to buy a {robuxPackageAmount} package?{divTagEnd}{lineBreak}{divTagStart}Your payment method will be charged. Roblox {aTagStart}Terms of Use{aTagEnd} apply.{divTagEnd}",
+	"Message.InsufficientRobuxExceedLargestPackage":
+		"{divTagStart}You need an additional {robuxNeeded}. Please purchase more Robux Packages, then come back to the shop.{divTagEnd}",
+	"Message.ItemGrantDelay":
+		"There may be a delay before you see the item in your inventory.",
+	"Message.PriceChanged":
+		"While you were shopping, the price of this item changed from {robuxBefore} to {robuxAfter}.",
+	"Message.PromptBatchBuy":
+		"Would you like to buy these {itemCount} items for {robux}?",
+	"Message.PromptBuy":
+		'Would you like to buy the {assetType} "{assetName}" from {seller} for {robux}?',
+	"Message.PromptBuyAccess":
+		'Would you like to buy access to the {assetType} "{assetName}" from {seller} for {robux}?',
+	"Message.PromptGetFree":
+		'Would you like to get the {assetType} "{assetName}" from {seller} for {freeTextStart}Free{freeTextEnd}?',
+	"Message.PromptGetFreeAccess":
+		'Would you like to get access to the {assetType} "{assetName}" from {seller} for {freeTextStart}Free{freeTextEnd}?',
+	"Message.PromptRent":
+		'Would you like to rent the {assetType} "{assetName}" from {seller} for {robux}?',
+	"Message.PromptRentAccess":
+		'Would you like to rent access to the {assetType} "{assetName}" from {seller} for {robux}?',
+	"Message.PurchaseErrorOccured":
+		"An error occurred with your purchase. Please try again later.",
+	"Message.PurchaseSucceeded": "Now you own {assetName}!",
+	"Message.PurchaseSucceededRobuxBalance":
+		"Your balance is now {userRobuxBalance}.",
+	"Message.PurchaseSucceededToBalance":
+		"{robuxLeft} has been credited to your balance.",
+	"Message.PurchasingUnavailable":
+		"Purchasing is temporarily unavailable. Please try again later.",
+	"Message.QuantityLimitReached":
+		"Whoops! The creator has limits on how many copies a single user can purchase from them.",
+	"Message.RemainingBalance":
+		"Your balance after this transaction will be {remainingBalance}",
+	"Message.SuccessfullyAcquired":
+		"You have successfully acquired the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyAcquiredAccess":
+		"You have successfully acquired access to the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyBought":
+		"You have successfully bought the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyBoughtAccess":
+		"You have successfully bought access to the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyRenewed":
+		"You have successfully renewed the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyRenewedAccess":
+		"You have successfully renewed access to the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyRented":
+		"You have successfully rented the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.SuccessfullyRentedAccess":
+		"You have successfully rented access to the {assetName} {assetType} from {seller} for {robux}.",
+	"Message.TwoStepVerificationBatchPurchase":
+		"You reached the daily purchase limit. Complete 2-Step Verification to continue purchase.",
+	"Message.TwoStepVerificationRequired":
+		"2-Step Verification is required to make further transactions. Go to Settings > Security to complete 2-Step Verification.",
+	"Message.TwoStepVerificationRequiredv2":
+		"2-Step Verification is required to make further transactions. Go to your Security page to enable and complete 2-Step Verification via email.",
+	"Message.TwoStepVerificationRequiredV3":
+		"2-Step Verification is required to make further transactions. Go to your Security page to enable and complete 2-Step Verification via email.",
+	"Message.TwoStepVerificationRequiredV4":
+		"2-Step Verification is required to make further transactions. Go to your Security page to enable and complete 2-Step Verification.",
+	"Response.CodeSent": "Code Sent",
+	"Response.InvalidCode": "Invalid code. Please try again.",
+	"Response.InvalidCodeTryAgain": "Invalid code. Please try again.",
+	"Response.SuccessfulVerification": "You have successfully verified!",
+	"Response.SuccessfulVerificationV2":
+		"You have successfully verified! Please retry your previous action.",
+	"Response.VerificationError": "System error occurred during verification.",
+};
+Roblox.Lang["PurchaseDialogResources"] =
+	Roblox.Lang["Purchasing.PurchaseDialog"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ItemResources_en_us_standard.js
+var Roblox = Roblox || {};
+Roblox.Lang = Roblox.Lang || {};
+Roblox.Lang["Feature.Item"] = {
+	"Action.Add": "Add",
+	"Action.AddToGame": "Add To Experience",
+	"Action.AddToProfile": "Add to Profile",
+	"Action.Advertise": "Advertise",
+	"Action.Agree": "Agree",
+	"Action.Buy": "Buy",
+	"Action.Cancel": "Cancel",
+	"Action.Configure": "Configure",
+	"Action.Confirm": "Confirm",
+	"Action.Delete": "Delete from Inventory",
+	"Action.DisableBadge": "Disable Badge",
+	"Action.EditAvatar": "Edit Avatar",
+	"Action.EnableBadge": "Enable Badge",
+	"Action.Get": "Get",
+	"Action.GetPremium": "Get Premium",
+	"Action.Install": "Install",
+	"Action.Inventory": "Inventory",
+	"Action.No": "No",
+	"Action.Ok": "OK",
+	"Action.Remove": "Remove",
+	"Action.RemoveFromProfile": "Remove from Profile",
+	"Action.Rent": "Rent",
+	"Action.ReportItem": "Report Item",
+	"Action.Sell": "Sell",
+	"Action.SellNow": "Sell Now",
+	"Action.SponsorItem": "Sponsor This Item",
+	"Action.TakeOff": "Take Off",
+	"Action.TakeOffSale": "Take Off Sale",
+	"Action.TryInStudio": "Try in Studio",
+	"Action.TryOn": "Try On",
+	"Action.Upgrade": "Upgrade",
+	"Action.Wear": "Wear",
+	"Action.Yes": "Yes",
+	"Heading.IncludedItems": "Included Items",
+	"Heading.PromoteItem": "Promote Item",
+	"Label.AllowPlayersPlusEarn":
+		"Allow visitors to use this gear inside your experience plus earn {affiliateSaleTotal} when it's purchased from your experience page.",
+	"Label.AssetGrantedModalAcceptText": "OK",
+	"Label.AssetGrantedModalMessage":
+		"You just got this item courtesy of our sponsor.",
+	"Label.AssetGrantedModalTitle": "This item is now yours",
+	"Label.Attributes": "Attributes",
+	"Label.BestPrice": "Best Price",
+	"Label.BuildersClubExclusive": "Builders Club exclusive.",
+	"Label.By": "By {creator}",
+	"Label.CountdownTimerDayHourMinute":
+		"Offsale in {numberOfDays} d {numberOfHours} h {numberOfMinutes} m",
+	"Label.DeleteFromInventoryConfirm":
+		"Are you sure you want to permanently DELETE this item from your inventory?",
+	"Label.DeleteItem": "Delete Item",
+	"Label.Description": "Description",
+	"Label.DisableBadgeConfirm": "Are you sure you want to disable this Badge?",
+	"Label.DiscontinuedItem": "Discontinued item, resellable.",
+	"Label.EarnBadgeGameLink": "Earn this Badge in: {placeLink}",
+	"Label.EnableBadgeConfirm": "Are you sure you want to enable this Badge?",
+	"Label.ErrorOccurred": "Error occurred",
+	"Label.Free": "Free",
+	"Label.Genres": "Genres",
+	"Label.GetBuildersClub":
+		"Only Builders Club members can re-sell collectible items. Get Builders Club today!",
+	"Label.GetPremiumMembership":
+		"Only Premium members can re-sell collectible items. Get Premium today!",
+	"Label.GetPremiumSubscription":
+		"Only Premium subscribers can re-sell collectible items. Get Premium today!",
+	"Label.In": "in {experienceName}",
+	"Label.InvalidPlace": "Invalid Place.",
+	"Label.InvalidProduct": "Invalid Product.",
+	"Label.ItemOwned": "Item Owned",
+	"Label.ItemOwnedAmount": "Item Owned ({amount})",
+	"Label.ItemRecentPrice": "{name}'s recent average price is {price}.",
+	"Label.Made.In": "Made in",
+	"Label.MadeInExperienceName": "Made In {experienceName}",
+	"Label.MarketplaceFee": "Marketplace fee (at {percent}%)",
+	"Label.None": "None",
+	"Label.NotAvailable": "N/A",
+	"Label.OffsaleCountdownHourMinuteSecond":
+		"Offsale in {numberOfHours} h {numberOfMinutes} m {numberOfSeconds} s",
+	"Label.PremiumDiscountOpportunityPrompt":
+		"Get Premium and buy for {premiumDiscountedPrice}",
+	"Label.PremiumDiscountSavings":
+		"You save {discountPercentage}% with Premium (original price: {originalPrice})",
+	"Label.PremiumExclusiveEligiblePrompt": "Available because you have Premium",
+	"Label.PremiumExclusiveIneligiblePrompt": "Available for Premium users only",
+	"Label.Price": "Price",
+	"Label.PriceIsInvalid": "Price is invalid",
+	"Label.PriceMinimumOne": "Price (minimum 1)",
+	"Label.PurchaseCompleted": "Purchase Completed",
+	"Label.Rarity": "Rarity",
+	"Label.ReadMore": "Read More",
+	"Label.RentingItem": "Renting Item",
+	"Label.ReportFailure":
+		"Your report couldn't be submitted. Please try again later.",
+	"Label.ReportSuccess":
+		"Report submitted and will be reviewed by our team shortly.",
+	"Label.Rthro": "Rthro",
+	"Label.SellConfirm": "Are you sure you want to sell {name} for {price}?",
+	"Label.SellYourCollectibleItem": "Sell Your Collectible Item",
+	"Label.SerializedLimitedRelease": "Serialized limited release, resellable.",
+	"Label.SerialNotAvailable": "Serial N/A",
+	"Label.SerialNumber": "Serial Number",
+	"Label.SerialNumberOfTotal": "Serial #{number} of {total}",
+	"Label.ShowLess": "Show Less",
+	"Label.Tags": "Tags",
+	"Label.TakeOffSale": "Take off Sale",
+	"Label.TakeOffSaleConfirm":
+		"Are you sure you want to take the item off sale?",
+	"Label.ThirteenPlusOnly": "13+ Only.",
+	"Label.Type": "Type",
+	"Label.Updated": "Updated",
+	"Label.UpdatedBy": "(by {link})",
+	"Label.UseGamePassLink": "Use this Pass in: {placeLink}",
+	"Label.YouGet": "You get",
+	"Response.AddedToProfile": "Added to your profile",
+	"Response.AddedToYourAvater": "Added to your Avatar",
+	"Response.AlreadyHaveMaxItems":
+		"You already have the maximum number of items on your experience!",
+	"Response.DisabledBadge": "Successfully disabled the badge",
+	"Response.EnabledBadge": "Successfully enabled the badge",
+	"Response.FailedToAddToProfile": "Failed to add to profile",
+	"Response.FailedToDeleteFromInventory":
+		"Failed to delete item from inventory",
+	"Response.FailedToDisableBadge": "Failed to disable badge",
+	"Response.FailedToEnableBadge": "Failed to enable badge",
+	"Response.FailedToRemoveFromProfile": "Failed to remove from profile",
+	"Response.GearAddSuccess": "Added to your experience, {placeName}.",
+	"Response.GearAlreadyAdded":
+		"You have already added this gear to {placeName}.",
+	"Response.RemovedFromInventory": "Successfully removed from your inventory",
+	"Response.RemovedFromProfile": "Removed from your profile",
+	"Response.RemovedFromYourAvater": "Removed from your Avatar",
+};
+Roblox.Lang["ItemResources"] = Roblox.Lang["Feature.Item"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ItemModelResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.ItemModel"] = {
@@ -2577,234 +3086,7 @@ Roblox.Lang["Feature.ItemModel"] = {
 	"Label.XboxOneExclusiveItem": "This is a Xbox One exclusive item.",
 	"Label.YouAreSelling": "You are selling this item.",
 };
-Roblox.Lang["ItemModelResources"] = Roblox.Lang["Feature.ItemModel"]; // ~/Generated/js/Roblox_TranslationResources_Feature_ServerListResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.ServerList"] = {
-	"Action.Ascending": "Ascending",
-	"Action.ConfigureServer": "Configure",
-	"Action.Descending": "Descending",
-	"Action.LoadMore": "Load More",
-	"Heading.OtherServers": "Other Servers",
-	"Heading.RunningServers": "All Running Servers",
-	"Heading.ServersMyFriendsAreIn": "Servers My Friends Are In",
-	"Label.Cancel": "Cancel",
-	"Label.CurrentPlayerCount":
-		"{currentPlayers} of {maximumAllowedPlayers} people max",
-	"Label.ExcludeFullServers": "Exclude Full Servers",
-	"Label.FriendInServer": "Friends in this server: {friend}",
-	"Label.Inactive": "Inactive.",
-	"Label.InsufficientFunds":
-		"This server has been deactivated. We were not able to process the recurring payment due to insufficient funds in your account.",
-	"Label.ManyFriendsInThisServer":
-		"Friends in this server: {firstFriend}, {secondFriend}, and  {numOtherFriends, plural, =1 {# other} other {# others}}.",
-	"Label.MyPrivateServer": "My Private Server",
-	"Label.MyVipServer": "My VIP Server",
-	"Label.NoPrivateServers": "No Private Server Instances Found.",
-	"Label.NoServersFound": "No Servers Found.",
-	"Label.NoVipServers": "No VIP Server Instances Found.",
-	"Label.NumberOfPlayers": "Number of Players",
-	"Label.PaymentCancelled": "Payment Cancelled",
-	"Label.PlacesNotLoading": "Sorry, something went wrong loading places.",
-	"Label.RenewalCanceled": "Renewal Canceled",
-	"Label.ServerListJoin": "Join",
-	"Label.ServerListRenew": "Renew",
-	"Label.ShutDownServer": "Shut Down This Server",
-	"Label.SlowGame": "Slow Server",
-	"Label.TwoFriendsInServer":
-		"Friends in this server: {firstFriend} and {secondFriend}",
-	"Message.LoadServersFailure": "Unable to load servers.",
-	"Message.RenewSubscriptionError": "Unable to renew subscription.",
-	"Message.RenewSubscriptionSuccess": "Successfully renewed subscription.",
-	"Message.ShutdownServerError": "Unable to shut down server.",
-	"Message.ShutdownServerSuccess": "Successfully shut down server.",
-};
-Roblox.Lang["ServerListResources"] = Roblox.Lang["Feature.ServerList"]; // ~/Generated/js/Roblox_TranslationResources_Feature_VIPServerResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.VIPServer"] = {
-	"Action.ActivateSubscription": "Activate Subscription",
-	"Action.Add": "Add",
-	"Action.AddPlayers": "Add People",
-	"Action.BackToPrivateServers": "Back to Private Servers",
-	"Action.Cancel": "Cancel",
-	"Action.CancelPayments": "Cancel Payments",
-	"Action.CancelSubscription": "Cancel Subscription",
-	"Action.ChangeName": "Change Name",
-	"Action.Deactivate": "Deactivate",
-	"Action.Generate": "Generate",
-	"Action.GoBack": "Go Back",
-	"Action.Rectivate": "Reactivate",
-	"Action.RegenerateJoinLink": "Regenerate",
-	"Action.Remove": "Remove",
-	"Action.Renew": "Renew",
-	"Action.RenewPrivateServer": "Renew Private Server",
-	"Action.RenewVipServer": "Renew VIP Server",
-	"Action.SeeAll": "See All",
-	"Description.MaxFreePrivateServers":
-		"You have created the maximum number of free private servers for this experience.",
-	"Description.MaxFreeVipServers":
-		"You have created the maximum number of free VIP servers for this experience.",
-	"Description.MaxVIPServers":
-		"You have created the maximum number of VIP servers for this experience.",
-	"Description.PrivateServerStatus":
-		"Disabling this makes the private server inaccessible for you and other users that you have invited to this private server, and invalidates the current link code. You can reactivate the private server at any time.",
-	"Description.RenewSubscription":
-		"Are you sure you want to enable future payments for your private server {privateServerName} for {gameName}?{lineBreak} This private server will start renewing every month at {robuxWithIcon} until you cancel.",
-	"Description.SubscriptionStatusDisabled":
-		"You will be able to renew your private server subscription after it expires on {expirationDate}.",
-	"Heading.CancelPayments": "Cancel Payments",
-	"Heading.ChangeName": "Change VIP Server Name",
-	"Heading.ChangePrivateServerName": "Change Private Server Name",
-	"Heading.ConfigurePrivateServer": "Configure Private Server",
-	"Heading.ConfigureVipServer": "Configure VIP Server",
-	"Heading.RemovePlayer": "Remove User",
-	"Heading.RenewPrivateServer": "Renew Private Server",
-	"Heading.RenewSubscription": "Renew Subscription",
-	"Heading.RenewVipServer": "Renew VIP Server",
-	"Heading.TransactionFailed": "Transaction Failed",
-	"Label.AddedPlayersError": "Unable to add users to server members.",
-	"Label.AddedPlayersSuccess": "Successfully added users to server members.",
-	"Label.AddPlayerPrivacyError":
-		"You may not invite this user due to their privacy settings.",
-	"Label.AllowJoining": "Allow Joining",
-	"Label.CancelPrivateServerSubscription":
-		"Are you sure you want to cancel future payments for your private server of {name} by {creator}? If you cancel, your private server will be deactivated on {date}.",
-	"Label.ChangeFriendsAllowedError": "Unable to change connections allowed.",
-	"Label.ChangeFriendsAllowedError.FriendsRename":
-		"Unable to change friends allowed.",
-	"Label.ChangeFriendsAllowedSuccess":
-		"Successfully changed connections allowed.",
-	"Label.ChangeFriendsAllowedSuccess.FriendsRename":
-		"Successfully changed friends allowed.",
-	"Label.ChangeNameBodyMessage":
-		"Are you sure you want to cancel future payments for your VIP Server of {name} by {creator}? If you cancel, your VIP Server will be deactivated on {date}.",
-	"Label.ChangeNameError": "Unable to change private server name.",
-	"Label.ChangeNamePlaceholder": "VIP Server Name (1-50 Characters)",
-	"Label.ChangeNameSuccess": "Successfully changed private server name.",
-	"Label.ChangePrivateServerNamePlaceholder":
-		"Private Server Name (1-50 Characters)",
-	"Label.ChangeServerStatusError": "Unable to change private server status.",
-	"Label.ChangeServerStatusSuccess":
-		"Successfully changed private server status.",
-	"Label.ChangeSubscriptionStatusError":
-		"Unable to change private server subscription status.",
-	"Label.ChangeSubscriptionStatusSuccess":
-		"Successfully changed private server subscription status.",
-	"Label.ClanAccess": "Clan Access",
-	"Label.ExpirationDate": "Expiration Date",
-	"Label.Free": "Free",
-	"Label.FriendsAllowed": "Connections Allowed",
-	"Label.FriendsAllowed.FriendsRename": "Friends Allowed",
-	"Label.Game": "Experience",
-	"Label.GameName": "Experience Name",
-	"Label.JoinGameLink": "Join Experience Link...",
-	"Label.NameChangeError": "Unable to change private server name.",
-	"Label.None": "None",
-	"Label.Off": "Off",
-	"Label.Offline": "Offline",
-	"Label.On": "On",
-	"Label.Online": "Online",
-	"Label.PickEnemyClan": "Pick Enemy Clan",
-	"Label.PrivateServerExpirationDate": "Your private server expired on {date}",
-	"Label.PrivateServerLink": "Private Server Link",
-	"Label.PrivateServerStatus": "Private Server Status",
-	"Label.PrivateServerSubscriptionMonthlyPaymentDue":
-		"Your private server monthly payment is {value}",
-	"Label.PrivateServerWillExpireDate":
-		"Your private server will expire on {dateToExpire}",
-	"Label.RemovePlayerBodyMessage":
-		"Are you sure you want to remove {name} from your VIP Server? They will no longer be able to join your VIP Server.",
-	"Label.RemovePlayerError": "Unable to remove user from server members.",
-	"Label.RemovePlayerPrivateServerBodyMessage":
-		"Are you sure you want to remove {name} from your private server? They will no longer be able to join your private server.",
-	"Label.RemovePlayerSuccess": "Successfully removed user from server members.",
-	"Label.RenewalDate": "Renewal Date",
-	"Label.RenewPrivateServerBodyMessageConfirmation":
-		"Are you sure you want to enable future payments for your private server of {name} by {creator}?",
-	"Label.RenewPrivateServerBodyMessageStart":
-		"This private server will start renewing every month at {date} until you cancel.",
-	"Label.RenewVipServerBodyMessageConfirmation":
-		"Are you sure you want to enable future payments for your VIP Server of {name} by {creator}?",
-	"Label.RenewVipServerBodyMessageStart":
-		"This VIP Server will start renewing every month at {date} until you cancel.",
-	"Label.SearchForPlayers": "Search for Users",
-	"Label.Server": "Server",
-	"Label.ServerExpirationDate": "Your VIP Server expired on {date}",
-	"Label.ServerMembers": "Server Members",
-	"Label.ServerName": "Server Name",
-	"Label.ServerWillExpireDate": "Your VIP Server will expire on {dateToExpire}",
-	"Label.SubscriptionChargeDate": "You will be charged again on {date}",
-	"Label.SubscriptionMonthlyPaymentDue":
-		"Your VIP Server monthly payment is {value}",
-	"Label.SubscriptionPrice": "Subscription Price",
-	"Label.SubscriptionStatus": "Subscription Status",
-	"Label.ThumbnailAlt": "Headshot of {username}'s character.",
-	"Label.UpdateJoinGameLinkError": "Unable to update join experience link.",
-	"Label.UpdateJoinGameLinkSuccess":
-		"Successfully updated join experience link.",
-	"Label.VIPServerLink": "VIP Server Link",
-	"Label.VIPServerStatus": "VIP Server Status",
-	"Label.YourClan": "Your Clan",
-	"Message.AddAtLeastOnePlayer": "Please select at least one user to add",
-	"Message.CannotActivateCancelledServerError":
-		"You cannot activate a cancelled private server.",
-	"Message.CannotChangeWhitelistInactiveServer":
-		"You may only add or remove users when your private server is active.",
-	"Message.CannotConfigureCancelledServer":
-		"You may not configure a cancelled private server. Please renew your subscription before configuring.",
-	"Message.CannotManageGameError":
-		"User does not have sufficient privileges to manage this experience.",
-	"Message.ConfigurationFloodedError":
-		"Please wait a few minutes before configuring your private server again.",
-	"Message.CreatorDisabledPrivateServersError":
-		"The creator of this experience has disabled private servers for this experience.",
-	"Message.FriendOnlyGameError":
-		"The experience must not be Friends Only to allow private servers.",
-	"Message.IneligibleForVoiceChat": "You are not eligible for voice chat.",
-	"Message.InsufficientFunds":
-		"You do not have enough funds available to renew the subscription for this private server.",
-	"Message.InternalErrorChangePriceError":
-		"There was a problem changing the price of private servers for your experience. Please try again in a few minutes.",
-	"Message.InternalErrorFetchSaleDetails":
-		"There was an error fetching your private server sale details. Please try again in a few minutes. If the problem persists, please check out {startLink1}our status{endLink1}. If you need additional assistance, please visit our {startLink2}Help Center{endLink2}.",
-	"Message.InternalErrorPurchaseError":
-		"We are having a problem completing your purchase. Please try again in a few minutes.",
-	"Message.InvalidLinkCodeError": "The provided link code is invalid.",
-	"Message.InvalidPriceError": "Invalid private server price.",
-	"Message.InvalidServerNameError":
-		"The name of the private server is either empty or too long.",
-	"Message.InvalidServerOwnerError":
-		"You are not the owner of this private server.",
-	"Message.InvalidServerSale":
-		"There was an error with your private server's sale information. For additional assistance, please visit our {startLink}Help Center{endLink}.",
-	"Message.InvalidUserError": "Invalid user.",
-	"Message.InvalidUserInWhitelistError":
-		"You may only add or remove valid users to your private server's invite list.",
-	"Message.LoadPrivateServerError": "Unable to load private server information",
-	"Message.MaxPlayersAdded":
-		"You cannot add more than {maxPlayers} users to the private server's invite list.",
-	"Message.NoSubscriptionChangeForFreeServer":
-		"You cannot change the subscription status of a free private server.",
-	"Message.PriceChangedCannotRenewError":
-		"The price for this private server has been changed by the developer. You may renew your subscription after the private server expires.",
-	"Message.RecentPurchaseConfirmation":
-		"You have recently purchased a private server for this experience. Are you sure you want to purchase another?",
-	"Message.RenewPriceChangedError":
-		"The price for renewing this private server has changed. Please refresh the page and try again.",
-	"Message.ServerNotExistError": "That private server does not exist.",
-	"Message.SubscriptionAlreadyActiveError":
-		"The subscription to this private server is already active. There is no need to renew.",
-	"Message.TooManyFreeServersOnGame":
-		"You can not have more free private servers on this experience.",
-	"Message.TooManyTotalActiveFreeServers":
-		"You cannot have more active free private servers. Please deactivate some other servers first.",
-	"Message.UnknownError": "Unknown error.",
-	"Message.UserAlreadyInvited": "User is already invited to the private server",
-	"Message.WhitelistCountExceeded":
-		"You cannot add so many users to the private server's invite list.",
-};
-Roblox.Lang["VIPServerResources"] = Roblox.Lang["Feature.VIPServer"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js
+Roblox.Lang["ItemModelResources"] = Roblox.Lang["Feature.ItemModel"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameLaunchGuestModeResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["Feature.GameLaunchGuestMode"] = {
@@ -2826,443 +3108,12 @@ Roblox.Lang["Feature.GameLaunchGuestMode"] = {
 	"Description.Dialog.YouArePlayingSomeDaysRemaining":
 		"You are visiting in guest mode. To use all features available on Roblox, you will need to create an account. You have {numDays} gameplays left before we require free sign up.",
 	"Heading.ChooseAvatar": "Choose Your Avatar",
-	"Heading.Dialog.SignUpOrLogin": "Sign up for a free account or log in!",
+	"Heading.Dialog.SignUpOrLogin": "Sign in or create a free account",
 	"Heading.Dialog.SignUpToday": "Sign Up Today!",
 	"Label.HaveAccount": "I have an account",
 };
 Roblox.Lang["GameLaunchGuestModeResources"] =
-	Roblox.Lang["Feature.GameLaunchGuestMode"]; // ~/Generated/js/Roblox_TranslationResources_Feature_PromotedChannelsResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.PromotedChannels"] = {
-	"Action.AddLink": "Add Link",
-	"Action.Remove": "Remove",
-	"Action.Save": "Save",
-	HeadingSocialLinks: "Social Links",
-	HeadingSocialMedia: "Social Media",
-	"Label.Limits": "You can add up to {socialLinkLimit} social links.",
-	"Label.Title": "Title",
-	"Label.Url": "Url",
-	"Message.NoGroupPermission":
-		"You do not have permission to configure this community.",
-	"Message.SocialLinkInvalidError": "The social link no longer exists.",
-	"Message.SocialLinkoffPlatformModalBody":
-		"Heads up, Robloxian – by clicking “continue,” you will be redirected to a retail website that is not owned or operated by Roblox. They may have different terms and privacy policies.{lineBreak} Please note that you need to be over 18 to purchase products online. We hope to see you again soon!",
-	"Message.SocialLinkoffPlatformModalCancelButtonText": "Cancel",
-	"Message.SocialLinkoffPlatformModalContinueButtonText": "Continue",
-	"Message.SocialLinkoffPlatformModalTitle": "You are leaving Roblox",
-	"Message.SocialLinkRemoved": "The social media link has been deleted.",
-	"Message.SocialLinkSaved": "{title} has been saved.",
-	"Message.SocialLinksEditDisabledError":
-		"Social links may not be edited at this time.",
-	"Message.SocialLinkTypeLimitError":
-		"Cannot have more than one {socialMediaType} social media links.",
-	"Message.TitleEmptyError": "The title cannot be empty.",
-	"Message.TitleModeratedError":
-		"The title has been moderated, please try something else.",
-	"Message.UnauthorizedError":
-		"You do not have permission to update social links.",
-	"Message.UnknownError": "Something went wrong, please try again.",
-	"Message.UrlEmptyError": "The url cannot be empty.",
-	"Message.UrlSocialMediaTypeMismatchError":
-		"The url must match the social media type.",
-};
-Roblox.Lang["PromotedChannelsResources"] =
-	Roblox.Lang["Feature.PromotedChannels"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GameDetailsResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.GameDetails"] = {
-	"Action.CopyLink": "Copy Link",
-	"Action.ShareGameToChat": "Share to chat",
-	"Action.SwapToSource": "Translate to Original Language",
-	"Action.SwapToTranslation": "Translate to {userLanguage}",
-	"Action.Translate": "Translate",
-	"Action.View": "View",
-	"Description.AllowCopyingDisclaimer":
-		"By checking this box, {boldTagStart}you are granting every other user of Roblox the right to use{boldTagEnd} (in various ways) the content you are now sharing. {boldTagStart2}If you do not want to grant this right, please do not check this box{boldTagEnd2}. For more information about sharing content, please review the Roblox {linkStart}Terms of Use{linkEnd}.",
-	"Description.PlaceDescriptionDefault":
-		"This is your very first Roblox creation. Check it out, then make it your own with Roblox Studio!",
-	"Error.CopyLinkFailed":
-		"Failed to copy link to clipboard. Please try again later.",
-	"Heading.Community": "Join the community",
-	"Heading.Description": "Description",
-	"Heading.PlaceTitleDefault": "{creatorName}'s Place",
-	"Heading.RecommendedGames": "Recommended Experiences",
-	"Label.About": "About",
-	"Label.AgeGuidelines": "Age Guidelines",
-	"Label.AllAges": "All Ages",
-	"Label.AllowCopyingCheckbox": "Allow Copying",
-	"Label.AllowedGear": "Allowed Gear",
-	"Label.By": "By",
-	"Label.ByCreator": "{byText} {creatorLink}",
-	"Label.Camera": "Camera",
-	"Label.ChatFeatures": "Chat Features",
-	"Label.Communication": "Communication",
-	"Label.ContainsStrongLanguagePillWarning": "Contains strong language",
-	"Label.ContainsStrongLanguageWarningWithGuideline":
-		"{guideline}, contains strong language",
-	"Label.CopyingTitle": "Copying",
-	"Label.Created": "Created",
-	"Label.ExperimentalMode": "Experimental Mode",
-	"Label.ExperimentalWarning":
-		"{aTagStartWithHref}{ExperimentalGamesInfoLink}{hrefEnd}This experience may not function as intended.{aTagEnd} The developer needs to update the experience.",
-	"Label.Favorites": "Favorites",
-	"Label.GameCopyLocked": "This experience is copylocked",
-	"Label.GameDoesNotSell": "No passes available.",
-	"Label.GameRequiresBuildersClub": "This Experience requires Builders Club",
-	"Label.Genre": "Genre",
-	"Label.GenreAdventure": "Adventure",
-	"Label.GenreAll": "All",
-	"Label.GenreBuilding": "Building",
-	"Label.GenreComedy": "Comedy",
-	"Label.GenreFighting": "Fighting",
-	"Label.GenreFPS": "FPS",
-	"Label.GenreMedieval": "Medieval",
-	"Label.GenreMilitary": "Military",
-	"Label.GenreNaval": "Naval",
-	"Label.GenreRPG": "RPG",
-	"Label.GenreSciFi": "Sci-Fi",
-	"Label.GenreWestern": "Western",
-	"Label.LabelGenreHorror": "Horror",
-	"Label.LabelGenreSports": "Sports",
-	"Label.LabelGenreTownAndCity": "Town and City",
-	"Label.Leaderboards": "Leaderboards",
-	"Label.LearnMore": "Learn More",
-	"Label.LinkCopied": "Link Copied",
-	"Label.MaxPlayers": "Server Size",
-	"Label.Microphone": "Microphone",
-	"Label.No": "No",
-	"Label.None": "None",
-	"Label.NoRunningGames": "There are currently no running experiences.",
-	"Label.PlaceCopyingAllowed": "This experience's source can be copied.",
-	"Label.Playing": "Active",
-	"Label.PrivateSource": "Private Source",
-	"Label.PrivateSourceDescription": "This experience's source is private",
-	"Label.PublicPrivateSourceCheckBox":
-		"By leaving this checkbox checked, you are agreeing to allow every other user of Roblox the right to use (in various ways) the content you are now making available, as set out in the Terms. If you do not want to grant this right, please uncheck this box.",
-	"Label.PublicSource": "Public Source",
-	"Label.PublicSourceDescription": "This experience's source is public",
-	"Label.ReportAbuse": "Report Abuse",
-	"Label.Servers": "Servers",
-	"Label.Store": "Store",
-	"Label.SuitableForEveryone": "Suitable for everyone",
-	"Label.Unavailable": "N/A",
-	"Label.Updated": "Updated",
-	"Label.Visits": "Visits",
-	"Label.VoiceEnabled": "Voice Enabled",
-	"Label.Yes": "Yes",
-	"Message.ExternalLinkWarning":
-		'By clicking "Continue", you will be redirected to a website that is not owned or operated by Roblox. They may have different terms and privacy policies.',
-	"Message.LeavingRobloxTitle": "Leaving Roblox",
-	RatingPercentOnly: "{percentRating}% Rating",
-	"Toast.LinkCopied": "Link copied to clipboard",
-	"Tooltip.CopyLink": "Copy Link to Clipboard",
-};
-Roblox.Lang["GameDetailsResources"] = Roblox.Lang["Feature.GameDetails"]; // ~/Generated/js/Roblox_TranslationResources_Feature_CommunityLinksResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.CommunityLinks"] = {
-	"Description.CommunityDefault":
-		"Join the official Guilded community for {experienceName} to view announcements and more!",
-	"Heading.CommunityTitle": "Join the community",
-	"Label.ViewButton": "View",
-};
-Roblox.Lang["CommunityLinksResources"] = Roblox.Lang["Feature.CommunityLinks"]; // ~/Generated/js/Roblox_TranslationResources_Feature_SubscriptionResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.Subscription"] = {
-	"Action.ParentOrGuardian": "I'm a Parent or Guardian",
-	"Action.ReportSubscription": "Report Subscription",
-	"Action.SeeMore": "See More",
-	"Action.Subscribe": "Subscribe",
-	"Banner.Header.InsufficientBalance": "Insufficient Roblox Credit",
-	"Banner.Header.LowBalanceWarning": "Roblox Credit Balance Low",
-	"Banner.Message.LowBalance":
-		"You'll need to {redeemUrlStartTag}redeem{redeemUrlEndTag} a new code or {giftCardUrlStartTag}purchase{giftCardUrlEndTag} a gift card to renew this subscription",
-	"Email.AnnuallyLabel": "annually",
-	"Email.DeveloperCancellationHeader": "Subscription Sunset",
-	"Email.DeveloperCancellationSubjectPartial": "has canceled your subscription",
-	"Email.DeveloperDeletionHeader": "Subscription Termination",
-	"Email.DeveloperDeletionSubject": "Your Subscription has been terminated",
-	"Email.DevsubDeveloperCancellationBodyP1":
-		"Unfortunately, {experienceShortName} has decided to remove {productName} from sale.  This email confirms that your subscription on account {userName} has been canceled.",
-	"Email.DevsubDeveloperCancellationBodyP2":
-		"You will continue to have access to benefits until {expirationDateTime}. To review this subscription, visit your Subscription settings page.",
-	"Email.DevsubDeveloperDeletionBodyP1":
-		"Unfortunately, {experienceShortName} {productName} is no longer available.  This email confirms that your subscription on account {userName} has been terminated.",
-	"Email.DevsubDeveloperDeletionBodyP2":
-		"The subscription may have been terminated by {experienceShortName}, or because the experience is no longer available. For this inconvenience, you will receive a refund for your last subscription renewal on your payment method above. Please note that it may take 5-7 days for the refund to appear on your account.",
-	"Email.ExperienceLabel": "Experience",
-	"Email.ExpirationDateLabel": "Expires on",
-	"Email.ExpiredLabel": "Expired",
-	"Email.Greetings": "Hi",
-	"Email.InsufficientBalance.Body.P1.Over13":
-		"We weren’t able to renew your subscription for {experienceShortName} {productName} on your account {userName} because you don’t have enough Roblox Credit. To complete your payment and keep your subscription benefits, {redeemUrlStartTag}redeem a new code{redeemUrlEndTag}.",
-	"Email.InsufficientBalance.Body.P1.Under13":
-		"We weren’t able to renew the subscription for {experienceShortName} {productName} on your child’s account {userName} because they don’t have enough Roblox Credit. To complete payment and keep the subscription benefits, {redeemUrlStartTag}redeem a new code{redeemUrlEndTag}.",
-	"Email.InsufficientBalance.Body.P2.Over13":
-		"You can also purchase a gift card online or find a retailer near you {giftCardUrlStartTag}here{giftCardUrlEndTag}. To view your Roblox Credit balance and subscription benefits, visit your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}.",
-	"Email.InsufficientBalance.Body.P2.Under13":
-		"You can also purchase a gift card online or find a retailer near you {giftCardUrlStartTag}here{giftCardUrlEndTag}. To view the Roblox Credit balance and subscription benefits, visit your child’s {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}.",
-	"Email.InsufficientBalance.Header":
-		"Payment Issue: Insufficient Roblox Credit",
-	"Email.InsufficientBalance.Subject":
-		"Issue with your Subscription Renewal Payment",
-	"Email.LowBalanceWarning.Body.P1.Over13":
-		"Your subscription to {experienceShortName} {productName} on your account {userName} is set to automatically renew soon. However, you do not have sufficient Roblox Credit to make payment. Please top up your balance by {redeemUrlStartTag}redeeming a new code{redeemUrlEndTag} before your renewal date below in order to keep your benefits.",
-	"Email.LowBalanceWarning.Body.P1.Under13":
-		"Your subscription to {experienceShortName} {productName} on your child’s account {userName} is set to automatically renew soon. However, the account does not have sufficient Roblox Credit to make payment. Please top up your child’s balance by {redeemUrlStartTag}redeeming a new code{redeemUrlEndTag} before the renewal date below in order to keep your child’s benefits.",
-	"Email.LowBalanceWarning.Body.P2.Over13":
-		"You can also purchase a gift card online or find a retailer near you {giftCardUrlStartTag}here{giftCardUrlEndTag}. You can check your available Roblox Credit balance or cancel renewals from your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}. If you would like to cancel, please do so at least a day before the renewal date to avoid being charged. Please note that charges may vary due to any applicable taxes.",
-	"Email.LowBalanceWarning.Body.P2.Under13":
-		"You can also purchase a gift card online or find a retailer near you {giftCardUrlStartTag}here{giftCardUrlEndTag}. You can check the available Roblox Credit balance or cancel renewals from your child’s {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}. If you would like to cancel, please do so at least a day before the renewal date to avoid being charged. Please note that charges may vary due to any applicable taxes.",
-	"Email.LowBalanceWarning.Header": "Your Roblox Credit Balance is Low",
-	"Email.LowBalanceWarning.Subject":
-		"Your Subscription Renewal: Low Balance Warning",
-	"Email.MakePaymentLabel": "Make payment by",
-	"Email.MonthlyLabel": "monthly",
-	"Email.NonDeveloperCancellationBodyP1":
-		"Thank you for trying {experienceShortName} {productName} on your account {userName}.  This email confirms that your subscription has been canceled.",
-	"Email.NonDeveloperCancellationBodyP2":
-		"You will no longer have access to benefits after {expirationDateTime}.  You can come back any time after the subscription has expired and re-subscribe if it is still available for purchase.  To review this subscription, visit your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag} page. ",
-	"Email.NonDeveloperCancellationHeader": "Subscription Renewal Cancellation",
-	"Email.NonDeveloperCancellationSubject": "Your Subscription Cancellation",
-	"Email.PriceLabel": "Price",
-	"Email.PricePerMonthLabel": "{purchasePrice}/month",
-	"Email.PricePerYearLabel": "{purchasePrice}/year",
-	"Email.PurchaseConfirmationBodyP1":
-		"Thank you for subscribing to {experienceShortName} {productName} on the account {userName}.  This email confirms your subscription purchase.",
-	"Email.PurchaseConfirmationBodyP2":
-		"Your subscription will automatically recur {cadence} at {localPrice} until canceled.  Please note that charges may vary due to any applicable taxes. You can check your renewal date or cancel anytime on your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag} page.",
-	"Email.PurchaseConfirmationHeader": "Subscription Confirmation",
-	"Email.PurchaseConfirmationSubject": "Your Subscription Confirmation",
-	"Email.PurchaseConsentFooter":
-		"Do not reply to this email directly. You are receiving this email because you made a purchase on Roblox. If you did not make this purchase, we strongly recommend opening your Roblox settings and changing your password.",
-	"Email.PurchaseDateLabel": "Purchased on",
-	"Email.RenewalPayment.Body.P1.Over13":
-		"Your renewal payment of {localPrice} for {experienceShortName} {productName} on your account {userName} has been charged to your Roblox Credit balance.",
-	"Email.RenewalPayment.Body.P1.Under13":
-		"Your renewal payment of {localPrice} for {experienceShortName} {productName} on your child’s account {userName} has been charged to the account’s Roblox Credit balance.",
-	"Email.RenewalPayment.Body.P2.Over13":
-		"Charges may vary due to any applicable taxes. You can check your available Roblox Credit balance or cancel renewals from your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}. If you would like to cancel, you must do so at least a day before the renewal date to avoid being charged.",
-	"Email.RenewalPayment.Body.P2.Under13":
-		"Charges may vary due to any applicable taxes. You can check the available Roblox Credit balance or cancel renewals from your child’s {settingUrlStartTag}Subscriptions settings{settingUrlEndTag}. If you would like to cancel, you must do so at least a day before the renewal date to avoid being charged.",
-	"Email.RenewalPayment.Subject": "Subscription Renewal Payment Receipt ",
-	"Email.RenewsOnLabel": "Renews On",
-	"Email.Sender": "The Roblox Team",
-	"Email.SubscriptionLabel": "Subscription",
-	"Email.SupportLinkFooter":
-		"To learn more about subscriptions, please visit our {helpLinkStart}Help Center{helpLinkEnd}. Questions about this charge? Please contact {suppportLinkStart}Roblox Support{suppportLinkEnd}.",
-	"Email.Thanks": "Thanks",
-	"Email.UpcomingRenewalBodyP1":
-		"We hope you’re enjoying your subscription to {experienceShortName} {productName} on your account {userName}. Your subscription is set to automatically renew soon.",
-	"Email.UpcomingRenewalBodyP2":
-		"Your card will be charged {localPrice} and any applicable taxes on {renewalDateTime}. No action is needed if you wish to keep your subscription.<br><br>If you wish to cancel this renewal, please do so at least a day before the renewal date on your {settingUrlStartTag}Subscriptions settings{settingUrlEndTag} page to avoid being charged.",
-	"Email.UpcomingRenewalHeader": "Subscription Renewal",
-	"Email.UpcomingRenewalSubject": "Your Subscription Renewal",
-	"Error.GenericError": "Something went wrong. Please try again later.",
-	"Error.ParentalRestriction":
-		"Subscriptions aren’t available to accounts with Monthly Spend Restrictions.",
-	"Error.StripeCardDeclined":
-		"Card declined. Please review the card details or try a different card.",
-	"Error.StripeCardExpired":
-		"Card expired. Please review the card details or try a different card",
-	"Error.StripeIncorrectCVC":
-		"Incorrect CVC. Please check your information and try again.",
-	"Error.StripeSaveCardGeneralError":
-		"Something went wrong. We could not save your card. Please try again later.",
-	"Error.StripeSavedCardSomethingWentWrong":
-		"Something went wrong. We could not save your card. Please try again later.",
-	"Error.UnsupportedLocale":
-		"This subscription isn’t available in your country at this time.",
-	"Heading.AddPaymentMethod": "Add Payment Method",
-	"Heading.BillingAddress": "Billing Address",
-	"Heading.BillingEmail": "Billing Email",
-	"Heading.CannotSubscribe": "Can't Subscribe",
-	"Heading.GetSubscription": "Get subscription",
-	"Heading.ParentPermissionNeeded": "Parent Permission Needed",
-	"Heading.StripeFormAddPaymentMethodNote":
-		"You have to add a payment method before subscribing",
-	"Heading.Subscriptions": "Subscriptions",
-	"Message.CannotPlayInExperience":
-		"You can’t access content in this experience.",
-	"Message.MonthlySpendRestrictions.SubscriptionUnavailable":
-		"Subscriptions aren't available to accounts with Monthly Spend Restrictions",
-	"Message.MonthlySpendRestrictionsMonthlyLimitExceed":
-		"You have reached the monthly purchasing limit set in Parental Controls. You will not be able to make a new purchase until next month.",
-	"Message.NoSubscriptionsAvailable": "No subscriptions available.",
-	"Message.ParentPermissionVPC":
-		"To subscribe, your parent will need to help you add a payment method to your account.",
-	"Message.ReportSubmitted":
-		"Report submitted and will be reviewed by our team shortly.",
-	"Message.StripeAddPaymentMethodDisclosure":
-		"If you save your payment information, this will be your default purchase method for all future purchases. You can delete your saved payment information anytime. Your payment information will be stored by Stripe, Inc. By saving, you agree to Stripe’s {stripeTermsOfUseLinkStart}Terms of Use{stripeTermsOfUseLinkEnd} and {stripePrivacyPolicyLinkStart}Privacy Policy{stripePrivacyPolicyLinkEnd}.",
-	"Message.StripeEmailInputSubText":
-		"Please provide an email you would like to use for this payment method. Once saved, the email cannot be changed.",
-	"Message.SubscriptionNotAvailableExperienceOver17":
-		"This experience is only available for users ages 17+",
-	"Message.SubscriptionNotAvailableInCountry":
-		"This subscription isn't available in your country at this time.",
-	"Text.DisclaimerMonthly": "Renews monthly. Cancel anytime.",
-	"Text.PerMonth": "/month",
-	"Text.Subscribed": "Subscribed",
-};
-Roblox.Lang["SubscriptionResources"] = Roblox.Lang["Feature.Subscription"]; // ~/Generated/js/Roblox_TranslationResources_Common_GameSortsResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Common.GameSorts"] = {
-	"Action.SeeAll": "See All ",
-	AvatarShops: "Avatar Shops",
-	"Label.17Plus": "Exclusive For Ages 17+",
-	"Label.Adventure": "Adventure",
-	"Label.AllCreativity": "All Creativity",
-	"Label.ApiError": "Experiences failed to load",
-	"Label.AvatarShops": "Avatar Shops",
-	"Label.BestOfVr": "Best of VR",
-	"Label.BuildersClub": "Builders Club",
-	"Label.Challenge": "Challenge",
-	"Label.Concert": "Roblox Concert Series",
-	"Label.Contest": "Contest",
-	"Label.ContinuePlaying": "Continue",
-	"Label.EggHunt": "Egg Hunt",
-	"Label.EggHunt2020": "Egg Hunt 2020",
-	"Label.ExclusiveSubscriptionBenefits": "Exclusive Subscription Benefits",
-	"Label.Experimental": "Recommended",
-	"Label.Favorites": "Favorites",
-	"Label.Featured": "Featured",
-	"Label.Fighting": "Fighting",
-	"Label.FriendActivity": "Friend Activity",
-	"Label.FriendsPlaying": "Friends Visiting",
-	"Label.Games": "Experiences",
-	"Label.GamesForYou": "Experiences for You",
-	"Label.Halloween": "Halloween",
-	"Label.HalloweenTheme": "Halloween Theme",
-	"Label.HalloweenThemed": "Halloween Themed",
-	"Label.HotGames": "Hot Experiences",
-	"Label.ImmersiveShops": "Immersive Shops",
-	"Label.LearnAndExplore": "Learn & Explore",
-	"Label.LNXSort": "Roblox Presents Lil Nas X Concert Experience",
-	"Label.LuobuWorkshop":
-		"Luobu Workshop: outstanding creations from dev Creation Contest",
-	"Label.MoreResultsFor": "More Results for",
-	"Label.MostEngaging": "Most Engaging",
-	"Label.MyFavorite": "My Favorite",
-	"Label.MyFavorites": "My Favorites",
-	"Label.MyRecent": "My Recent",
-	"Label.Newest": "Newest",
-	"Label.NewGamesLastWeek": "New experiences last week",
-	"Label.NewGamesThisWeek": "New experiences this week",
-	"Label.Obby": "Obby",
-	"Label.PeopleLove": "People Love",
-	"Label.PersonalizedByLiked": "Because You Liked",
-	"Label.PersonalServer": "Personal Server",
-	"Label.PlayersLove": "People Love",
-	"Label.PlayTogether": "Visit Together (10 Robux VIP Servers)",
-	"Label.PlayTogetherFreePrivateServers": "Free Private Servers",
-	"Label.PlayTogetherFreeVipServers": "Visit Together (Free VIP Servers)",
-	"Label.Popular": "Popular",
-	"Label.PopularAmongPremium": "Popular Among Premium",
-	"Label.PopularInCountry": "Popular in {CountryName}",
-	"Label.PopularInVr": "Popular in VR",
-	"Label.PopularNearYou": "Popular Near You",
-	"Label.PopularWorldwide": "Popular Worldwide",
-	"Label.Purchased": "Purchased",
-	"Label.Recommended": "Recommended",
-	"Label.RecommendedForYou": "Recommended For You",
-	"Label.RecommendedGames": "Recommended",
-	"Label.Roleplay": "Roleplay",
-	"Label.Simulator": "Simulator",
-	"Label.Sponsored": "Sponsored",
-	"Label.SponsoredAdsDisclosureStatic":
-		"Sponsored Experiences are paid for by Creators. For EU users, they may be shown to you based on general information about your device type, location, and demographics. Outside of the EU, ads may also be shown based on additional information.",
-	"Label.SuggestedGames": "Suggested",
-	"Label.TheHunt": "The Hunt: First Edition",
-	"Label.TopFavorite": "Top Favorite",
-	"Label.TopGrossing": "Top Earning",
-	"Label.TopPaid": "Top Paid",
-	"Label.TopRated": "Top Rated",
-	"Label.TopResult": "Top Result",
-	"Label.TopRetaining": "Recommended",
-	"Label.TopVoiceGames": "Voice Enabled",
-	"Label.Tycoon": "Tycoon",
-	"Label.UpAndComing": "Up-and-Coming",
-	"Label.WeekendParty": "Weekend party",
-	"Label.WinterSort": "Winter Sort",
-	MegaHuntTooltip:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends March 30 at 12 PM PDT.",
-	MegaHuntTooltipAprilAM:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends April {X} at {Y} AM PT.",
-	MegaHuntTooltipAprilPM:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends April {X} at {Y} PM PT.",
-	MegaHuntTooltipMarch30:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends March 30 at 12 PM PT.",
-	MegaHuntTooltipMarchAM:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends March {X} at {Y} AM PT.",
-	MegaHuntTooltipMarchPM:
-		"Complete quests in these experiences to earn badges and unlock prizes. Event ends March {X} at {Y} PM PT.",
-	MoreResultsFor: "More Results for",
-};
-Roblox.Lang["GameSortsResources"] = Roblox.Lang["Common.GameSorts"]; // ~/Generated/js/Roblox_TranslationResources_Feature_SocialShareResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.SocialShare"] = {
-	"Action.Share": "Share",
-	"Description.ExperienceDoesNotExist": "This experience no longer exists.",
-	"Description.InvalidLinkError": "This link doesn't exist.",
-	"Description.InviteExpiredError":
-		"The invite link has expired. Would you still like to join {experienceName}?",
-	"Description.InviterNotHereError":
-		"The inviter has left the experience. Would you still like to join {experienceName}?",
-	"Label.InvalidLinkError": "Invalid Link",
-	"Label.InviteExpiredError": "Invite Link Expired",
-	"Label.InviterNotHereError": "Inviter Not Here",
-};
-Roblox.Lang["SocialShareResources"] = Roblox.Lang["Feature.SocialShare"]; // ~/Generated/js/Roblox_TranslationResources_Feature_VirtualEventsResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.VirtualEvents"] = {
-	AttendanceBeforeEvent: "Interested",
-	AttendanceDuringEvent: "Attending Now",
-	Cancelled: "CANCELLED",
-	DescriptionLabel: "Description",
-	EventCancelledText: "This event has been cancelled.",
-	EventModeratedTitle: "[CONTENT MODERATED]",
-	EventsListTitle: "Events",
-	FriendsInterestedTextMulti:
-		"{username1}, {username2} and {number} friends or following",
-	GetNotifiedButton: "Enable",
-	GoHome: "Go Home",
-	HostedByLabel: "Hosted By",
-	JoinEvent: "Join Event",
-	"Label.HappeningNowShort": "Now",
-	NetworkError: "Something went wrong. Please try again later",
-	NotifyMe: "Notify Me",
-	PrivateExperienceErrorDescriptor: "This experience is private.",
-	RsvpGoing: "Interested",
-	RsvpNotGoing: "Interested?",
-	SeeMore: "See More",
-	ShareModalBody:
-		"Copy the event link below to invite people to this event or share the event in chat.",
-	ShareModalCallToAction: "Share via Chat...",
-	ShareModalLinkCopy: "Copy",
-	ShareModalTitle: "Share This Event",
-	TodayString: "TODAY",
-	UnfollowEvent: "Unfollow Event",
-	Unpublished: "UNPUBLISHED",
-};
-Roblox.Lang["VirtualEventsResources"] = Roblox.Lang["Feature.VirtualEvents"]; // ~/Generated/js/Roblox_TranslationResources_Feature_GamePassResources_en_us_standard.js
-var Roblox = Roblox || {};
-Roblox.Lang = Roblox.Lang || {};
-Roblox.Lang["Feature.GamePass"] = {
-	"Action.AddPass": "Add Pass",
-	"Action.SeeMore": "See More",
-	"Heading.PassesForThisGame": "Passes",
-	"Heading.StoreCarousel": "Store",
-	"Label.Buy": "Buy",
-	"Label.NoPasses": "No passes available.",
-	"Label.Owned": "Owned",
-};
-Roblox.Lang["GamePassResources"] = Roblox.Lang["Feature.GamePass"]; // ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js
+	Roblox.Lang["Feature.GameLaunchGuestMode"]; // ~/Generated/js/Roblox_TranslationResources_CommonUI_UserAgreementsResources_en_us_standard.js
 var Roblox = Roblox || {};
 Roblox.Lang = Roblox.Lang || {};
 Roblox.Lang["CommonUI.UserAgreements"] = {
