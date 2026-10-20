@@ -1,4 +1,7 @@
-import "../global";
+import * as json from "@rbx/core-lib/json";
+import { parseFloat, parseInt } from "@rbx/core-lib/number";
+import { stringToBase64 } from "@rbx/core-lib/string";
+import { UrlSearchParams } from "@rbx/core-lib/url";
 import {
 	buildDeepLinkLaunchGameEvent,
 	buildResolveLinkEvent,
@@ -11,23 +14,14 @@ import {
 	DeepLinkParams,
 	AmpFeatureName,
 	AmpNamespace,
-} from "./deepLinkConstants";
-import { launchGame, buildPlayGameProperties } from "../game";
-import { startDesktopAndMobileWebChat } from "../util/chat";
-import { sendEventWithTarget } from "../event-stream";
-import getPlaceIdFromUniverseId from "./getPlaceIdFromUniverseId";
-import getUniverseIdFromPlaceId from "./getUniverseIdFromPlaceId";
-import { resolveShareLinks, resolveShareLinksV2 } from "./resolveShareLinks";
-import {
-	getQueryParam,
-	getHelpDeskUrl,
-	ZendeskDeepLinkParams,
-} from "../util/url";
+} from "./constants";
 import {
 	ProfileShareFriendshipSourceType,
 	ShareLinksType,
 	ShareLinksTypeV2,
 	ExperienceJoinData,
+	ResolveShareLinksResponse,
+	ResolveShareLinksV2Response,
 } from "./shareLinksTypes";
 import ExperienceInviteStatus from "./enums/ExperienceInviteStatus";
 import FriendInviteStatus from "./enums/FriendInviteStatus";
@@ -41,9 +35,97 @@ import ExperienceAffiliateStatus from "./enums/ExperienceAffiliateStatus";
 import ContentPostStatus from "./enums/ContentPostStatus";
 import ExperienceEventStatus from "./enums/ExperienceEventStatus";
 import ExperienceAffiliateDeepLinkFallbackType from "./enums/ExperienceAffiliateDeepLinkFallbackType";
-import { getDeviceMeta } from "../meta/device";
 
-const fireEvent = window.EventTracker?.fireEvent;
+export type PlayGameProperties = {
+	rootPlaceId?: string;
+	placeId?: string;
+	gameInstanceId?: string;
+	playerId?: string;
+	privateServerLinkCode?: string;
+	referredByPlayerId?: string;
+	joinData?: { launchData?: string; eventId?: string };
+};
+
+export type LaunchGameEvent = {
+	eventName: string;
+	ctx: string;
+	gamePlayIntentEventCtx: string;
+	properties: Record<string, string | number | undefined>;
+};
+
+export type StudioLinkData = {
+	placeId: string;
+	universeId: string;
+	startTeamTest: boolean;
+	instanceId?: string;
+	annotationId?: string;
+};
+
+export type DeepLinkDeviceMeta = {
+	isIosApp?: boolean;
+	isInApp?: boolean;
+	isDesktop?: boolean;
+};
+
+type ZendeskParams = {
+	articleId?: string;
+	domain: string;
+	locale?: string;
+	type?: string;
+};
+
+export type DeepLinkHost = {
+	getDeviceMeta: () => DeepLinkDeviceMeta | null | undefined;
+	// Undefined where the page has no Hybrid bridge.
+	navigateToHybridFeature?: (feature: Record<string, string>) => void;
+	sendEvent: (
+		type: string,
+		context: string,
+		params: Record<string, string>,
+	) => void;
+	fireCounter: (name: string) => void;
+	resolveShareLinks: (
+		linkId: string,
+		linkType: ShareLinksType,
+	) => Promise<{ data: ResolveShareLinksResponse }>;
+	resolveShareLinksV2: (
+		linkId: string,
+	) => Promise<{ data: ResolveShareLinksV2Response }>;
+	getPlaceIdFromUniverseId: (universeId: string) => Promise<number>;
+	getUniverseIdFromPlaceId: (placeId: string) => Promise<number>;
+	launchGame: (properties: PlayGameProperties, event: LaunchGameEvent) => void;
+	joinMultiplayerGame: (placeId: number) => void;
+	startGameWithDeepLinkUrl: (deepLinkUrl: string, placeId: number) => void;
+	// Returns false when the page cannot start the flow, so the caller falls back to a redirect.
+	startDeepLinkFlow: (deepLinkUrl: string) => boolean;
+	openStudio: (data: StudioLinkData) => void;
+	// Returns null when the upsell service is not on the page.
+	startAccessManagementUpsell: (params: {
+		featureName: string;
+		namespace: string;
+	}) => Promise<unknown> | null;
+	startChat: (userId: string) => void;
+	getQueryParam: (name: string) => unknown;
+	getHelpDeskUrl: (locale?: string, articleId?: string) => string;
+};
+
+const buildPlayGameProperties = (
+	rootPlaceId?: string,
+	placeId?: string,
+	gameInstanceId?: string,
+	playerId?: string,
+	privateServerLinkCode?: string,
+	referredByPlayerId?: string,
+	joinData?: PlayGameProperties["joinData"],
+): PlayGameProperties => ({
+	rootPlaceId,
+	placeId,
+	gameInstanceId,
+	playerId,
+	privateServerLinkCode,
+	referredByPlayerId,
+	joinData,
+});
 
 const isItemDeeplink = (navigateSubPath: string, params: DeepLinkParams) =>
 	navigateSubPath === PathPart.ItemDetails.valueOf() &&
@@ -69,6 +151,7 @@ const buildRedirectUrlWithJoinData = (
 	joinData: ExperienceJoinData,
 ): string => {
 	const [baseUrl, queryString] = url.split("?");
+	// eslint-disable-next-line no-restricted-globals -- core-lib UrlSearchParams serializes differently
 	const searchParams = new URLSearchParams(queryString);
 	// TODO: old, migrated code
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -83,31 +166,10 @@ const buildRedirectUrlWithJoinData = (
 	return `${baseUrl}?${searchParams.toString()}`;
 };
 
-const launchStudio = (
-	placeId: string,
-	universeId: string,
-	startTeamTest: boolean,
-	instanceId?: string,
-	annotationId?: string,
-): void => {
-	const { GameLauncher } = window.Roblox;
-	if (GameLauncher && placeId && universeId) {
-		// checking of whether or not Team Create is actually enabled should be done in Studio if needed
-		// this is done to be consistent with how Studio share link errors should show up in Studio if possible
-		GameLauncher.editGameInStudio(
-			placeId,
-			universeId,
-			true, // allowUpload
-			true, // isTeamCreateEnabled
-			false, // enableTeamCreatePreemptiveStart
-			startTeamTest,
-			instanceId,
-			annotationId,
-		);
-	}
-};
-
-const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
+const deepLinkNavigate = (
+	host: DeepLinkHost,
+	target: DeepLink,
+): Promise<boolean> => {
 	const { path, params } = target;
 	let urlTarget: string | undefined;
 
@@ -130,7 +192,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		// roblox://navigation/game_details?gameId=<universeId>
 		// navigate to game page. Deeplink provides a universe id, but we need a
 		// placeId for the url - so we call the game info endpoint first
-		return getPlaceIdFromUniverseId(params.gameId)
+		return host
+			.getPlaceIdFromUniverseId(params.gameId)
 			.then((rootPlaceId: number) => {
 				if (rootPlaceId) {
 					window.location.href = `${UrlPart.Games}/${rootPlaceId}`;
@@ -160,7 +223,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		// roblox://navigation/share_links?code=<linkId>&v=v2
 		if (params.v === "v2" && params.code !== undefined) {
 			const code = params.code || "";
-			return resolveShareLinksV2(params.code)
+			return host
+				.resolveShareLinksV2(params.code)
 				.then((response) => {
 					if (response.data.linkType === "Referral") {
 						const referralStatus = response.data.status;
@@ -169,14 +233,16 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							ShareLinksTypeV2.REFERRAL,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							referralEvent.type,
 							referralEvent.context,
 							referralEvent.params,
 						);
 
 						if (referralStatus !== "Valid") {
-							fireEvent?.(CounterEvents.RobloxPlusReferralResolutionFailed);
+							host.fireCounter(
+								CounterEvents.RobloxPlusReferralResolutionFailed,
+							);
 						}
 
 						const referrerParam = response.data.targetId
@@ -200,7 +266,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						code,
 						ShareLinksTypeV2.EXPERIENCE_V2,
 					);
-					sendEventWithTarget(
+					host.sendEvent(
 						resolveLinkEvent.type,
 						resolveLinkEvent.context,
 						resolveLinkEvent.params,
@@ -212,7 +278,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						window.location.href = `${UrlPart.Games}/${response.data.targetId}`;
 						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						const launchData = response.data.customData || "{}";
-						launchGame(
+						host.launchGame(
 							buildPlayGameProperties(
 								response.data.targetId,
 								response.data.targetId,
@@ -233,7 +299,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							response.data.linkType === "StudioTeamTest") &&
 						response.data.targetId
 					) {
-						return getUniverseIdFromPlaceId(response.data.targetId)
+						return host
+							.getUniverseIdFromPlaceId(response.data.targetId)
 							.then((id: number) => {
 								const universeId = id.toString();
 								if (!universeId) {
@@ -256,31 +323,13 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 									}
 								}
 
-								// Check if ShareLinks WebApp has registered a custom handler for Studio links
-								const { studioLinkHandler } = window.Roblox;
-								if (
-									studioLinkHandler &&
-									typeof studioLinkHandler === "function"
-								) {
-									const studioData = {
-										placeId: response.data.targetId,
-										universeId,
-										startTeamTest,
-										instanceId: additionalParams.instanceId,
-										annotationId: additionalParams.annotationId,
-									};
-									studioLinkHandler(studioData);
-									return true;
-								}
-
-								// Default behavior is to launch Studio
-								launchStudio(
-									response.data.targetId,
+								host.openStudio({
+									placeId: response.data.targetId,
 									universeId,
 									startTeamTest,
-									additionalParams.instanceId,
-									additionalParams.annotationId,
-								);
+									instanceId: additionalParams.instanceId,
+									annotationId: additionalParams.annotationId,
+								});
 								return true;
 							})
 							.catch(() => false);
@@ -289,7 +338,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							response.data.linkType === "StudioTrustedConnection") &&
 						response.data.targetId
 					) {
-						if (!parseInt(response.data.targetId, 10)) {
+						if (!parseInt(response.data.targetId)) {
 							return false;
 						}
 
@@ -302,7 +351,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							linkTypeV2,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveLinkEvent.type,
 							resolveLinkEvent.context,
 							resolveLinkEvent.params,
@@ -322,7 +371,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							ShareLinksTypeV2.MOMENTS,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveMomentsEvent.type,
 							resolveMomentsEvent.context,
 							resolveMomentsEvent.params,
@@ -337,24 +386,18 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							ShareLinksTypeV2.SCHOOL_INVITE,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveSchoolInviteEvent.type,
 							resolveSchoolInviteEvent.context,
 							resolveSchoolInviteEvent.params,
 						);
 
 						if (response.data.status !== "Valid") {
-							fireEvent?.(CounterEvents.SchoolInviteResolutionFailed);
+							host.fireCounter(CounterEvents.SchoolInviteResolutionFailed);
 							return false;
 						}
 
-						if (
-							window.Roblox.ProtocolHandlerClientInterface?.startDeepLinkFlow
-						) {
-							window.Roblox.ProtocolHandlerClientInterface.startDeepLinkFlow(
-								target.url,
-							);
-						} else {
+						if (!host.startDeepLinkFlow(target.url)) {
 							window.location.href = target.url;
 						}
 					}
@@ -367,10 +410,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			case ShareLinksType.EXPERIENCE_INVITE: {
 				if (params.code != null) {
 					const { code } = params;
-					return resolveShareLinks(
-						params.code,
-						ShareLinksType.EXPERIENCE_INVITE,
-					)
+					return host
+						.resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_INVITE)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -384,7 +425,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								code,
 								ShareLinksType.EXPERIENCE_INVITE,
 							);
-							sendEventWithTarget(
+							host.sendEvent(
 								resolveLinkEvent.type,
 								resolveLinkEvent.context,
 								resolveLinkEvent.params,
@@ -394,7 +435,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								data.instanceId
 							) {
 								window.location.href = `${UrlPart.Games}/${data.placeId}`;
-								launchGame(
+								host.launchGame(
 									buildPlayGameProperties(
 										// @ts-expect-error TODO: old, migrated code
 										data.placeId,
@@ -416,12 +457,13 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								data.status === ExperienceInviteStatus.EXPIRED ||
 								data.status === ExperienceInviteStatus.INVITER_NOT_IN_EXPERIENCE
 							) {
+								// eslint-disable-next-line no-restricted-properties -- core-lib setItem would JSON-encode the base64 value
 								window.localStorage.setItem(
 									"ref_info",
-									btoa(
-										JSON.stringify({
+									stringToBase64(
+										json.serialize({
 											[data.placeId.toString()]: data.inviterId.toString(),
-										}),
+										}).value,
 									),
 								);
 								window.location.href = `${UrlPart.Games}/${data.placeId}?experienceInviteLinkId=${params.code}&experienceInviteStatus=${data.status}`;
@@ -430,7 +472,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return false;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.InviteResolutionFailed);
+							host.fireCounter(CounterEvents.InviteResolutionFailed);
 							return false;
 						});
 				}
@@ -438,10 +480,11 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			}
 			case ShareLinksType.NOTIFICATION_EXPERIENCE_INVITE: {
 				if (params.code) {
-					return resolveShareLinks(
-						params.code,
-						ShareLinksType.NOTIFICATION_EXPERIENCE_INVITE,
-					)
+					return host
+						.resolveShareLinks(
+							params.code,
+							ShareLinksType.NOTIFICATION_EXPERIENCE_INVITE,
+						)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -457,18 +500,15 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								}${includeInstanceId ? `&gameInstanceId=${data.instanceId}` : ""}${
 									data.inviterId ? `&referredByPlayerId=${data.inviterId}` : ""
 								}`;
-								// TODO: old, migrated code
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-								window.Roblox.ProtocolHandlerClientInterface!.startGameWithDeepLinkUrl(
-									launchLink,
-									data.placeId,
-								);
+								host.startGameWithDeepLinkUrl(launchLink, data.placeId);
 								return true;
 							}
 							return false;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.NotificationInviteResolutionFailed);
+							host.fireCounter(
+								CounterEvents.NotificationInviteResolutionFailed,
+							);
 							return false;
 						});
 				}
@@ -477,7 +517,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			case ShareLinksType.FRIEND_INVITE: {
 				if (params.code) {
 					const { code } = params;
-					return resolveShareLinks(params.code, ShareLinksType.FRIEND_INVITE)
+					return host
+						.resolveShareLinks(params.code, ShareLinksType.FRIEND_INVITE)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -490,7 +531,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								code,
 								ShareLinksType.FRIEND_INVITE,
 							);
-							sendEventWithTarget(
+							host.sendEvent(
 								resolveLinkEvent.type,
 								resolveLinkEvent.context,
 								resolveLinkEvent.params,
@@ -506,7 +547,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return false;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.FriendRequestResolutionFailed);
+							host.fireCounter(CounterEvents.FriendRequestResolutionFailed);
 							return false;
 						});
 				}
@@ -515,7 +556,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			case ShareLinksType.PROFILE: {
 				if (params.code) {
 					const { code } = params;
-					return resolveShareLinks(params.code, ShareLinksType.PROFILE)
+					return host
+						.resolveShareLinks(params.code, ShareLinksType.PROFILE)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -528,7 +570,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								code,
 								ShareLinksType.PROFILE,
 							);
-							sendEventWithTarget(
+							host.sendEvent(
 								resolveLinkEvent.type,
 								resolveLinkEvent.context,
 								resolveLinkEvent.params,
@@ -536,7 +578,9 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							if (data.status === ProfileShareStatus.VALID) {
 								// TODO: old, migrated code
 								// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-								const profileShareSource = getQueryParam("source") as string;
+								const profileShareSource = host.getQueryParam(
+									"source",
+								) as string;
 								const friendshipSourceType =
 									getFriendshipSourceType(profileShareSource);
 								window.location.href = `${UrlPart.Users}/${data.userId}${UrlPart.Profile}?friendshipSourceType=${friendshipSourceType}`;
@@ -545,7 +589,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return false;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.ProfileShareResolutionFailed);
+							host.fireCounter(CounterEvents.ProfileShareResolutionFailed);
 							return false;
 						});
 				}
@@ -554,10 +598,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			case ShareLinksType.SCREENSHOT_INVITE: {
 				if (params.code) {
 					const { code } = params;
-					return resolveShareLinks(
-						params.code,
-						ShareLinksType.SCREENSHOT_INVITE,
-					)
+					return host
+						.resolveShareLinks(params.code, ShareLinksType.SCREENSHOT_INVITE)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -578,7 +620,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								code,
 								ShareLinksType.SCREENSHOT_INVITE,
 							);
-							sendEventWithTarget(
+							host.sendEvent(
 								resolveLinkEvent.type,
 								resolveLinkEvent.context,
 								resolveLinkEvent.params,
@@ -601,16 +643,13 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							if (data.instanceId) {
 								launchLink += `&gameInstanceId=${data.instanceId}`;
 							}
-							// TODO: old, migrated code
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							window.Roblox.ProtocolHandlerClientInterface!.startGameWithDeepLinkUrl(
-								launchLink,
-								data.placeId,
-							);
+							host.startGameWithDeepLinkUrl(launchLink, data.placeId);
 							return true;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.ScreenshotInviteShareResolutionFailed);
+							host.fireCounter(
+								CounterEvents.ScreenshotInviteShareResolutionFailed,
+							);
 							return false;
 						});
 				}
@@ -619,7 +658,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			case ShareLinksType.SERVER: {
 				if (params.code) {
 					const { code } = params;
-					return resolveShareLinks(params.code, ShareLinksType.SERVER)
+					return host
+						.resolveShareLinks(params.code, ShareLinksType.SERVER)
 						.then((response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -635,7 +675,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								return false;
 							}
 
-							getPlaceIdFromUniverseId(data.universeId.toString())
+							host
+								.getPlaceIdFromUniverseId(data.universeId.toString())
 								.then((rootPlaceId: number) => {
 									if (!rootPlaceId) {
 										return false;
@@ -647,7 +688,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 										ShareLinksType.SERVER,
 									);
 
-									sendEventWithTarget(
+									host.sendEvent(
 										resolveLinkEvent.type,
 										resolveLinkEvent.context,
 										resolveLinkEvent.params,
@@ -661,7 +702,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return true;
 						})
 						.catch(() => {
-							fireEvent?.(CounterEvents.PrivateServerLinkResolutionFailed);
+							host.fireCounter(CounterEvents.PrivateServerLinkResolutionFailed);
 							return false;
 						});
 				}
@@ -674,10 +715,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 
 				const { code } = params;
 
-				return resolveShareLinks(
-					params.code,
-					ShareLinksType.EXPERIENCE_AFFILIATE,
-				)
+				return host
+					.resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_AFFILIATE)
 					.then((response) => {
 						// TODO: old, migrated code
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -693,7 +732,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 								code,
 								ShareLinksType.EXPERIENCE_AFFILIATE,
 							);
-							sendEventWithTarget(
+							host.sendEvent(
 								resolveLinkEvent.type,
 								resolveLinkEvent.context,
 								resolveLinkEvent.params,
@@ -715,7 +754,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return true;
 						}
 
-						return getPlaceIdFromUniverseId(data.universeId.toString())
+						return host
+							.getPlaceIdFromUniverseId(data.universeId.toString())
 							.then((rootPlaceId: number) => {
 								if (!rootPlaceId) {
 									return false;
@@ -726,7 +766,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 									code,
 									ShareLinksType.EXPERIENCE_AFFILIATE,
 								);
-								sendEventWithTarget(
+								host.sendEvent(
 									resolveLinkEvent.type,
 									resolveLinkEvent.context,
 									resolveLinkEvent.params,
@@ -748,7 +788,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							.catch(() => false);
 					})
 					.catch(() => {
-						fireEvent?.(CounterEvents.ExperienceDetailsResolutionFailed);
+						host.fireCounter(CounterEvents.ExperienceDetailsResolutionFailed);
 						return false;
 					});
 			}
@@ -759,7 +799,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 
 				const { code } = params;
 
-				return resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_DETAILS)
+				return host
+					.resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_DETAILS)
 					.then((response) => {
 						// TODO: old, migrated code
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -772,7 +813,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							return false;
 						}
 
-						return getPlaceIdFromUniverseId(data.universeId.toString())
+						return host
+							.getPlaceIdFromUniverseId(data.universeId.toString())
 							.then((rootPlaceId: number) => {
 								if (!rootPlaceId) {
 									return false;
@@ -783,7 +825,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 									code,
 									ShareLinksType.EXPERIENCE_DETAILS,
 								);
-								sendEventWithTarget(
+								host.sendEvent(
 									resolveLinkEvent.type,
 									resolveLinkEvent.context,
 									resolveLinkEvent.params,
@@ -795,7 +837,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							.catch(() => false);
 					})
 					.catch(() => {
-						fireEvent?.(CounterEvents.ExperienceDetailsResolutionFailed);
+						host.fireCounter(CounterEvents.ExperienceDetailsResolutionFailed);
 						return false;
 					});
 			}
@@ -811,7 +853,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						? ShareLinksType.AVATAR_ITEM_AFFILIATE
 						: ShareLinksType.AVATAR_ITEM_DETAILS;
 
-				return resolveShareLinks(params.code, linkType)
+				return host
+					.resolveShareLinks(params.code, linkType)
 					.then((response) => {
 						//
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -835,7 +878,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							linkType,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveLinkEvent.type,
 							resolveLinkEvent.context,
 							resolveLinkEvent.params,
@@ -845,7 +888,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						return true;
 					})
 					.catch(() => {
-						fireEvent?.(
+						host.fireCounter(
 							linkType === ShareLinksType.AVATAR_ITEM_AFFILIATE
 								? CounterEvents.AvatarItemAffiliateResolutionFailed
 								: CounterEvents.AvatarItemDetailsResolutionFailed,
@@ -860,7 +903,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 
 				const { code } = params;
 
-				return resolveShareLinks(params.code, ShareLinksType.CONTENT_POST)
+				return host
+					.resolveShareLinks(params.code, ShareLinksType.CONTENT_POST)
 					.then((response) => {
 						// TODO: old, migrated code
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -875,7 +919,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							ShareLinksType.CONTENT_POST,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveLinkEvent.type,
 							resolveLinkEvent.context,
 							resolveLinkEvent.params,
@@ -886,7 +930,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 						return true;
 					})
 					.catch(() => {
-						fireEvent?.(CounterEvents.ContentPostResolutionFailed);
+						host.fireCounter(CounterEvents.ContentPostResolutionFailed);
 						return false;
 					});
 			}
@@ -897,7 +941,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 
 				const { code } = params;
 
-				return resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_EVENT)
+				return host
+					.resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_EVENT)
 					.then((response) => {
 						// TODO: old, migrated code
 						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -916,7 +961,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							code,
 							ShareLinksType.EXPERIENCE_EVENT,
 						);
-						sendEventWithTarget(
+						host.sendEvent(
 							resolveLinkEvent.type,
 							resolveLinkEvent.context,
 							resolveLinkEvent.params,
@@ -928,16 +973,11 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 							launchLink,
 							data.joinData,
 						);
-						// TODO: old, migrated code
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						window.Roblox.ProtocolHandlerClientInterface!.startGameWithDeepLinkUrl(
-							launchLink,
-							data.placeId,
-						);
+						host.startGameWithDeepLinkUrl(launchLink, data.placeId);
 						return true;
 					})
 					.catch(() => {
-						fireEvent?.(CounterEvents.ExperienceEventResolutionFailed);
+						host.fireCounter(CounterEvents.ExperienceEventResolutionFailed);
 						return false;
 					});
 			}
@@ -947,7 +987,7 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 			}
 		}
 	} else if (navigateSubPath === PathPart.Chat && params.userId) {
-		startDesktopAndMobileWebChat({ userId: params.userId });
+		host.startChat(params.userId);
 		return Promise.resolve(true);
 	} else if (navigateSubPath === PathPart.ExternalWebUrl) {
 		// roblox://navigation/external_web_link?domain=zendesk&locale=ko&articleId=1234&type=policy_update
@@ -955,9 +995,10 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		if (params.domain === ExternalWebUrlDomains.Zendesk) {
 			// TODO: old, migrated code
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-			const { articleId, locale } = params as ZendeskDeepLinkParams;
-			zendeskUrl = getHelpDeskUrl(locale, articleId);
+			const { articleId, locale } = params as ZendeskParams;
+			zendeskUrl = host.getHelpDeskUrl(locale, articleId);
 			if (zendeskUrl) {
+				// eslint-disable-next-line no-restricted-properties -- opens the help center in a new tab
 				window.open(zendeskUrl, "_blank");
 			}
 		}
@@ -1007,14 +1048,12 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 	} else if (navigateSubPath === PathPart.Fae) {
 		// roblox://navigation/fae
 		// Navigate to fae upsell page
-		const { AccessManagementUpsellV2Service } = window.Roblox;
-		if (AccessManagementUpsellV2Service) {
-			return AccessManagementUpsellV2Service.startAccessManagementUpsell({
-				featureName: AmpFeatureName.Fae,
-				namespace: AmpNamespace.Fae,
-			})
-				.then(() => true)
-				.catch(() => false);
+		const upsell = host.startAccessManagementUpsell({
+			featureName: AmpFeatureName.Fae,
+			namespace: AmpNamespace.Fae,
+		});
+		if (upsell) {
+			return upsell.then(() => true).catch(() => false);
 		}
 		return Promise.resolve(false);
 	} else if (navigateSubPath === PathPart.CurrencyTransfer) {
@@ -1033,14 +1072,8 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		const isSendFlow =
 			direction === "send" && Boolean(userId) && Boolean(transferOrigination);
 		if (isReceiveFlow || isSendFlow) {
-			const deviceMeta = getDeviceMeta();
-			if (
-				deviceMeta?.isDesktop &&
-				window.Roblox.ProtocolHandlerClientInterface?.startDeepLinkFlow
-			) {
-				window.Roblox.ProtocolHandlerClientInterface.startDeepLinkFlow(
-					target.url,
-				);
+			const deviceMeta = host.getDeviceMeta();
+			if (deviceMeta?.isDesktop && host.startDeepLinkFlow(target.url)) {
 				return Promise.resolve(true);
 			}
 			urlTarget = target.url;
@@ -1060,22 +1093,141 @@ const deepLinkNavigate = (target: DeepLink): Promise<boolean> => {
 		urlTarget = target.url;
 	} else if (navigateSubPath === PathPart.PlusSubscribe) {
 		// roblox://navigation/plus_subscribe?surface=PlusReferralLandingSheet&referrer_id=123
-		const plusUrl = new URL(UrlPart.Plus, window.location.origin);
-		if (params.surface === "PlusReferralLandingSheet") {
-			plusUrl.searchParams.set("ctx", "plus_referral");
-		}
-		if (params.referrer_id) {
-			plusUrl.searchParams.set("referrerId", params.referrer_id);
-		}
-		urlTarget = `${plusUrl.pathname}${plusUrl.search}`;
+		const plusParams = UrlSearchParams.new([
+			...(params.surface === "PlusReferralLandingSheet"
+				? [["ctx", "plus_referral"] as const]
+				: []),
+			...(params.referrer_id
+				? [["referrerId", params.referrer_id] as const]
+				: []),
+		]);
+		const plusQuery = plusParams.toString();
+		urlTarget = plusQuery ? `${UrlPart.Plus}?${plusQuery}` : UrlPart.Plus;
 	}
 
 	if (urlTarget) {
 		window.location.href = urlTarget;
 	} else {
-		fireEvent?.(CounterEvents.NavigationFailed);
+		host.fireCounter(CounterEvents.NavigationFailed);
 	}
 	return Promise.resolve(Boolean(urlTarget));
 };
 
-export default deepLinkNavigate;
+const deepLinkGameJoin = (
+	host: DeepLinkHost,
+	target: DeepLink,
+): Promise<boolean> => {
+	const { params } = target;
+	if (!params.placeId) {
+		return Promise.resolve(false);
+	}
+
+	if (params.linkCode) {
+		window.location.href = `${UrlPart.Games}/${params.placeId}?privateServerLinkCode=${params.linkCode}`;
+	} else if (params.accessCode) {
+		window.location.href = `${UrlPart.GameStart}?placeId=${params.placeId}&accessCode=${params.accessCode}`;
+	} else if (params.launchData) {
+		const launchLink = `${UrlPart.ExperienceLauncher}placeId=${params.placeId}${
+			params.launchData ? `&launchData=${params.launchData}` : ""
+		}`;
+		// eslint-disable-next-line no-restricted-syntax -- NaN on a malformed placeId, as before
+		host.startGameWithDeepLinkUrl(launchLink, Number(params.placeId));
+	} else {
+		host.joinMultiplayerGame(parseFloat(params.placeId) ?? Number.NaN);
+	}
+
+	return Promise.resolve(true);
+};
+
+const deepLinkFollowUserToExperience = (target: DeepLink): Promise<boolean> => {
+	const { userId } = target.params;
+	if (userId) {
+		window.location.href = `/games/start?userId=${userId}`;
+	}
+	return Promise.resolve(Boolean(userId));
+};
+
+const deepLinkGroup = (target: DeepLink): Promise<boolean> => {
+	const { groupId } = target.params;
+	if (groupId) {
+		window.location.href = `/groups/${groupId}`;
+	}
+	return Promise.resolve(Boolean(groupId));
+};
+
+const pathRegex = /\/(\w+)/g; // matches: /(pathSegment)
+const paramRegex = /(\w+)=([^&=]+)/g; // matches: (param)=(value)
+
+const HYBRID_TARGET_KEY = "feature";
+const HYBRID_TARGET_VALUE = "DeepLink";
+const HYBRID_TARGET_PARAM_KEY = "deepLinkUrlPath";
+
+export const parseDeepLink = (deepLinkString: string): DeepLink => {
+	const path: PathPart[] = [];
+	const params: DeepLinkParams = {};
+	const url: string = deepLinkString;
+
+	let pathPart = pathRegex.exec(deepLinkString);
+	while (pathPart != null) {
+		// TODO: old, migrated code
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+		path.push(pathPart[1] as PathPart);
+		pathPart = pathRegex.exec(deepLinkString);
+	}
+
+	let paramPart = paramRegex.exec(deepLinkString);
+	while (paramPart != null) {
+		const [, key, value] = paramPart;
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		params[key!] = value!;
+		paramPart = paramRegex.exec(deepLinkString);
+	}
+
+	return {
+		path,
+		params,
+		url,
+	};
+};
+
+export type DeepLinkNavigator = {
+	navigateToDeepLink: (deepLinkUrl: string) => Promise<boolean>;
+};
+
+export const createDeepLinkNavigator = (
+	host: DeepLinkHost,
+): DeepLinkNavigator => {
+	const firstUriSegmentToHandler: Record<
+		string,
+		(target: DeepLink) => Promise<boolean>
+	> = {
+		[PathPart.Navigation]: (target) => deepLinkNavigate(host, target),
+		[PathPart.PlaceId]: (target) => deepLinkGameJoin(host, target),
+		[PathPart.UserId]: deepLinkFollowUserToExperience,
+		[PathPart.Group]: deepLinkGroup,
+	};
+
+	return {
+		navigateToDeepLink: (deepLinkUrl) => {
+			if (host.getDeviceMeta()?.isIosApp && host.navigateToHybridFeature) {
+				host.navigateToHybridFeature({
+					[HYBRID_TARGET_KEY]: HYBRID_TARGET_VALUE,
+					[HYBRID_TARGET_PARAM_KEY]: deepLinkUrl,
+				});
+				return Promise.resolve(true);
+			}
+			if (host.getDeviceMeta()?.isInApp) {
+				// use lua deeplinks map to resolve url if in universal app
+				// https://github.com/Roblox/lua-apps/blob/master/src/internal/LuaApp/Modules/LuaApp/DeepLinks/DeepLinkMap.lua
+				window.location.href = deepLinkUrl;
+				return Promise.resolve(true);
+			}
+			const target = parseDeepLink(deepLinkUrl);
+			// TODO: old, migrated code
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const path = target.path[0]!;
+			const handler = firstUriSegmentToHandler[path];
+			return handler ? handler(target) : Promise.resolve(false);
+		},
+	};
+};

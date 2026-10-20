@@ -47,6 +47,7 @@ export enum PathPart {
 	PlusUpsell = "plus_upsell",
 	PlusReferralDashboard = "plus_referral_dashboard",
 	PlusSubscribe = "plus_subscribe",
+	PlusWebview = "plus_webview",
 }
 
 export enum ItemType {
@@ -108,6 +109,7 @@ export const DeepLinkNavigationMap: Record<string, string> = {
 		"/my/account#!/privacy/VisibilityAndPrivateServers/Visibility",
 	[PathPart.Messages]: "/my/messages/#!/inbox",
 	[PathPart.BuyRobux]: "/upgrades/robux",
+	[PathPart.PlusWebview]: "/plus",
 };
 
 export const UrlPart = {

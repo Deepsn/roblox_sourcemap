@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention -- member names are public API */
 import ExperienceInviteStatus from "./enums/ExperienceInviteStatus";
 import FriendInviteStatus from "./enums/FriendInviteStatus";
 import PrivateServerLinkStatus from "./enums/PrivateServerLinkStatus";
@@ -110,6 +111,27 @@ type ExperienceEventData = {
 type MomentsData = {
 	postId: string;
 	postCreatorId: string;
+};
+
+export type ResolveShareLinksResponse = {
+	avatarItemDetailsData?: AvatarItemDetailsData;
+	contentPostData?: ContentPostData;
+	experienceInviteData?: ExperienceInviteData;
+	friendInviteData?: FriendInviteData;
+	notificationExperienceInviteData?: ExperienceInviteData;
+	profileLinkResolutionResponseData?: ProfileData;
+	experienceAffiliateData?: ExperienceAffiliateData;
+	screenshotInviteData?: ScreenshotInviteData;
+	privateServerInviteData?: PrivateServerLinkData;
+	experienceDetailsInviteData?: ExperienceDetailsData;
+	experienceEventData?: ExperienceEventData;
+};
+
+export type ResolveShareLinksV2Response = {
+	linkType: string;
+	targetId: string;
+	customData: string | null;
+	status: "Valid" | "Invalid" | "Expired";
 };
 
 export { ProfileShareFriendshipSourceType, ShareLinksType, ShareLinksTypeV2 };

@@ -1,20 +1,17 @@
 import { addExternal } from "@rbx/externals";
-import * as mode from "@rbx/core-scripts/color-mode";
+import * as colorMode from "@rbx/core-scripts/color-mode";
 import { initialize } from "@rbx/core-scripts/color-mode/internal";
+import { parseUserId } from "@rbx/www-common/user";
 
-addExternal(["Roblox", "core-scripts", "color-mode"], mode);
+addExternal(["Roblox", "core-scripts", "color-mode"], colorMode);
 
-const userId = (): number | null => {
-	const id = document.querySelector<HTMLMetaElement>('meta[name="user-data"]')
+const userId = () => {
+	const s = document.querySelector<HTMLMetaElement>('meta[name="user-data"]')
 		?.dataset.userid;
-	if (id == null) {
-		return null;
-	}
-	const userId = Number.parseInt(id, 10);
-	return Number.isNaN(userId) ? null : userId;
+	return s == null ? null : parseUserId(s);
 };
 
-const getDefaultMode = (): mode.Mode | undefined => {
+const getDefaultColorMode = () => {
 	const meta = document.querySelector<HTMLMetaElement>(
 		'meta[name="age-badge-control"]',
 	);
@@ -22,8 +19,8 @@ const getDefaultMode = (): mode.Mode | undefined => {
 };
 
 try {
-	const defaultMode = getDefaultMode();
-	initialize(userId() ?? -1, { defaultMode });
+	const defaultColorMode = getDefaultColorMode();
+	initialize(userId(), { defaultColorMode });
 } catch (e) {
 	console.error(e);
 }

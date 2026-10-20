@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention -- member names are public API */
 enum FriendInviteStatus {
 	VALID = "Valid",
 	EXPIRED = "Expired",
