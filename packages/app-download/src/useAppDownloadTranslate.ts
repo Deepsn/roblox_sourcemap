@@ -18,6 +18,26 @@ const toTranslationValues = (
 		),
 	);
 
+/** The parts of a `Translator` that take a runtime string key, so translators of any namespace fit. */
+type MergeableTranslator = {
+	has: (key: string) => boolean;
+	dynamic: (key: string, values?: TranslationValues) => string;
+};
+
+/**
+ * One legacy-style `translate` over several namespaces: the first translator that has the key
+ * wins, then the fallback string.
+ */
+export const mergeTranslators =
+	(translators: readonly MergeableTranslator[]): TranslateFunction =>
+	(key, parameters, fallbackString) => {
+		const values = toTranslationValues(parameters);
+		const translator = translators.find((t) => t.has(key));
+		return translator
+			? translator.dynamic(key, values)
+			: (fallbackString ?? "");
+	};
+
 /**
  * The merged `translate` app-download's components take, read from the nearest `use-intl` provider,
  * which must include `appDownloadNamespaces`. Feature.DownloadLanding wins over Common.VisitGame,
@@ -28,17 +48,8 @@ export const useAppDownloadTranslate = (): TranslateFunction => {
 	const tDownload = useTranslations(downloadLanding);
 	const tVisitGame = useTranslations(visitGame);
 
-	return useMemo<TranslateFunction>(
-		() => (key, parameters, fallbackString) => {
-			const values = toTranslationValues(parameters);
-			if (tDownload.has(key)) {
-				return tDownload(key, values);
-			}
-			if (tVisitGame.has(key)) {
-				return tVisitGame(key, values);
-			}
-			return fallbackString ?? "";
-		},
+	return useMemo(
+		() => mergeTranslators([tDownload, tVisitGame]),
 		[tDownload, tVisitGame],
 	);
 };

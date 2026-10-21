@@ -6,7 +6,8 @@ import angular from "angular";
 import { ValueOf } from "@rbx/core-types";
 import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import { useTranslations } from "@rbx/www-common/i18n";
-import localStorageService from "@rbx/core-scripts/local-storage";
+import { getItem, removeItem } from "@rbx/core-lib/local-storage";
+import "../constants/localStorageRegistry";
 import { Snackbar } from "@rbx/foundation-ui";
 import {
 	getUserCurrency,
@@ -202,7 +203,7 @@ export default function HeaderIconsGroup({
 
 			// Conditionally display account switched confirmation banner
 			try {
-				const accountSwitched = localStorageService.getLocalStorage(
+				const accountSwitched = getItem(
 					layoutConstants.accountSwitchConfirmationKeys.accountSwitchedFlag,
 				);
 
@@ -213,7 +214,7 @@ export default function HeaderIconsGroup({
 						{ accountName: user.name ?? "" },
 					);
 					setSnackbarMessage(accountSwitchedMessage);
-					localStorageService.removeLocalStorage(
+					removeItem(
 						layoutConstants.accountSwitchConfirmationKeys.accountSwitchedFlag,
 					);
 				}

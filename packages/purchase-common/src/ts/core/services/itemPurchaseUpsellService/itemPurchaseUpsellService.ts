@@ -1,15 +1,15 @@
 import {
 	Intl,
+	TranslationResourceProvider,
+} from "@rbx/legacy-webapp-types/Roblox";
+import type {
 	RobloxIntlInstance,
 	RobloxTranslationResource,
 	RobloxTranslationResourceProviderInstance,
-	TranslationResourceProvider,
 } from "@rbx/legacy-webapp-types/Roblox";
 import type { AxiosResponse } from "@rbx/core-scripts/http";
-import {
-	upsellUtil,
-	paymentFlowAnalyticsService,
-} from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import * as upsellUtil from "@rbx/core-scripts/util/upsell";
+import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
 import {
 	InsufficientFundsErrorObject,
 	ItemDetailElementDataset,

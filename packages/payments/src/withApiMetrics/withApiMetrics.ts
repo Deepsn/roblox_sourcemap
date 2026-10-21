@@ -1,4 +1,4 @@
-import { httpService } from "@rbx/core-scripts/legacy/core-utilities";
+import { get, post, delete as httpDelete } from "@rbx/core-scripts/http";
 import type {
 	AxiosError,
 	AxiosResponse,
@@ -86,11 +86,11 @@ export function createWithApiMetrics<C extends string = string>(
 
 		try {
 			const { data } = await (requestData.method === "GET"
-				? httpService.get<T>(
+				? get<T>(
 						{ url: requestData.url, fullError: true, ...requestData.config },
 						requestData.config?.params,
 					)
-				: httpService.post<T>(
+				: post<T>(
 						{ url: requestData.url, fullError: true, ...requestData.config },
 						requestData.data,
 					));
@@ -141,14 +141,11 @@ export function createWithApiMetricsV2<C extends string = string>(
 			};
 			let response: AxiosResponse<T>;
 			if (requestData.method === "GET") {
-				response = await httpService.get<T>(
-					urlConfig,
-					requestData.config?.params,
-				);
+				response = await get<T>(urlConfig, requestData.config?.params);
 			} else if (requestData.method === "POST") {
-				response = await httpService.post<T>(urlConfig, requestData.data);
+				response = await post<T>(urlConfig, requestData.data);
 			} else {
-				response = await httpService.delete<T>(urlConfig, requestData.data);
+				response = await httpDelete<T>(urlConfig, requestData.data);
 			}
 
 			const { data, headers } = response;

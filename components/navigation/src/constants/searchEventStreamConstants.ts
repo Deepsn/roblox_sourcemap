@@ -1,4 +1,4 @@
-import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
+import { generateRandomUuid as generateSessionInfo } from "@rbx/core-lib/uuid";
 import { eventTypes } from "@rbx/core-scripts/event-stream";
 import { ValueOf } from "@rbx/core-types";
 import { DefaultSearchType, SearchType } from "../util/searchUtil";
@@ -11,7 +11,6 @@ const actionTypes = {
 	close: "close",
 	cancel: "cancel",
 } as const;
-const { generateRandomUuid: generateSessionInfo } = uuidService;
 
 const contexts = {
 	searchAutocomplete: searchAutocompleteContext,
@@ -136,7 +135,7 @@ export default {
 				searchLandingPageSessionInfo,
 			},
 		] as const,
-	catalogSearch: (autocompleteFlag: number, previousPage: string) =>
+	catalogSearch: (autocompleteFlag: number, previousPage: string | undefined) =>
 		[
 			{
 				name: "catalogSearch",

@@ -587,6 +587,7 @@ Roblox.LangDynamic["Feature.Catalog"] = {
 	"Label.LicensingOfficial": "Official",
 	"Label.LicensingLicensed": "Licensed",
 	"Label.LicensedBy": "Licensed by",
+	"Label.EndsDate": "Ends {date}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

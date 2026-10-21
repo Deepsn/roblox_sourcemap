@@ -5,10 +5,11 @@ import {
 	targetTypes,
 } from "@rbx/core-scripts/event-stream";
 import layoutConstants from "../constants/layoutConstants";
-import links, { UniversalSearchLink } from "../constants/linkConstants";
-import { getIsTopSearchResultsEnabled } from "./topSearchResultsIxp";
-
-const { newUniversalSearchUrls, avatarSearchLink, topSearchLink } = links;
+import {
+	getAvatarAutocompleteSearchLinks,
+	getNewUniversalSearchLinks,
+	isInMobileSize,
+} from "./searchLinks";
 
 const isGuest = authenticatedUser() == null;
 
@@ -64,27 +65,6 @@ const subscribeToMessagesNotifications = (handleMessagesEvent: () => void) => {
 		);
 	};
 };
-
-const isInMobileSize = () => window.innerWidth < 601; // breakpoint for mobile size
-
-const getNewUniversalSearchLinks = (): UniversalSearchLink[] => {
-	const urls = [...newUniversalSearchUrls];
-	const relevantUrls = urls.filter(({ pageSort }) =>
-		pageSort.some((keyword) => window.location.pathname.includes(keyword)),
-	);
-	const unRelevantUrls = urls.filter(({ pageSort }) =>
-		pageSort.every((keyword) => !window.location.pathname.includes(keyword)),
-	);
-	const orderedUrls = [...relevantUrls, ...unRelevantUrls];
-	return getIsTopSearchResultsEnabled()
-		? [topSearchLink, ...orderedUrls]
-		: orderedUrls;
-};
-
-const getAvatarAutocompleteSearchLinks = () =>
-	avatarSearchLink.pageSort.some((keyword) =>
-		window.location.pathname.includes(keyword),
-	);
 
 export {
 	getAccountNotificationCount,

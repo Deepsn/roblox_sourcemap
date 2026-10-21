@@ -18,6 +18,9 @@ import {
 	TranslationProvider,
 } from "@rbx/core-scripts/react";
 import { createGameLauncher } from "@rbx/www-common/game-launch";
+import SharedDownloadDialog from "@rbx/app-download/DownloadDialog";
+import LaunchFailureDialog from "@rbx/app-download/LaunchFailureDialog";
+import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import { translations } from "../../../component.json";
 import GameLauncher from "../gameLauncher";
 import { getDeferredDeeplinkQueryParams } from "../../ts/deferredDeeplinks/deferredDeeplinkUtilities";
@@ -31,6 +34,7 @@ const ProtocolHandlerClientInterface = {
 	gameLocale: "",
 	protocolUrlSeparator: "+",
 	protocolDetectionEnabled: false,
+	isSharedGameLauncherEnabled: false,
 	avatarParamEnabled: true,
 	separateScriptParamsEnabled: false,
 	waitTimeBeforeFailure: 300,
@@ -67,8 +71,7 @@ function isStudioMode(launchMode) {
 	);
 }
 
-function getDialogContainer() {
-	const id = "react-dialog-container";
+function getDialogContainer(id = "react-dialog-container") {
 	let container = document.getElementById(id);
 	if (container) {
 		ReactDOM.unmountComponentAtNode(container);
@@ -95,6 +98,22 @@ function showLaunchFailureDialog() {
 		acceptText: controlsResources.get("Action.OK") || "OK",
 		showDecline: false,
 	});
+}
+
+// The shared launcher (behind is-www-common-game-launcher-enabled) shows the same dialog Next.js does.
+// Like Roblox.Dialog it gets its own node, so the install dialog stays underneath and that dialog's
+// unmount can't close this one.
+function showSharedLaunchFailureDialog() {
+	$.modal.close();
+
+	const container = getDialogContainer("react-launch-failure-dialog-container");
+	const unmount = () => ReactDOM.unmountComponentAtNode(container);
+	renderWithErrorBoundary(
+		<TranslationProviderSCC namespaces={translations}>
+			<LaunchFailureDialog unmount={unmount} />
+		</TranslationProviderSCC>,
+		container,
+	);
 }
 
 function cleanUpAndLogSuccess(gameLaunchParams) {
@@ -200,7 +219,7 @@ async function startGameFlow(gameLaunchParams) {
 
 function startGame(gameLaunchDefaultParams) {
 	const gameLaunchParams = { ...gameLaunchDefaultParams };
-	gameLaunchParams.launchTime = new Date().getTime();
+	gameLaunchParams.launchTime = Date.now();
 	gameLaunchParams.otherParams.browsertrackerid = Cookies.getBrowserTrackerId();
 
 	gameLaunchParams.otherParams.robloxLocale =
@@ -255,28 +274,44 @@ function startGameWithDeepLinkUrl(deepLinkUrl, placeId) {
 	setLocationHref(deepLinkUrl);
 }
 
+// The install dialog: `@rbx/app-download`'s on the shared launcher, the legacy one otherwise.
+function renderDownloadDialog(props) {
+	if (ProtocolHandlerClientInterface.isSharedGameLauncherEnabled) {
+		return (
+			<TranslationProviderSCC namespaces={translations}>
+				<QueryClientProvider client={queryClient}>
+					<SharedDownloadDialog {...props} />
+				</QueryClientProvider>
+			</TranslationProviderSCC>
+		);
+	}
+	return (
+		<TranslationProvider config={translations}>
+			<QueryClientProvider client={queryClient}>
+				<DownloadDialog {...props} />
+			</QueryClientProvider>
+		</TranslationProvider>
+	);
+}
+
 function startDeepLinkFlow(deepLinkUrl) {
 	const container = getDialogContainer();
 	const unmount = () => ReactDOM.unmountComponentAtNode(container);
 	renderWithErrorBoundary(
-		<TranslationProvider config={translations}>
-			<QueryClientProvider client={queryClient}>
-				<DownloadDialog
-					download={async () => {
-						$(GameLauncher).trigger(GameLauncher.beginInstallEvent, {
-							launchMethod: "Protocol",
-							params: {},
-						});
-						ProtocolHandlerClientInterface.isInstalling = true;
-						await startDownload();
-					}}
-					launchGame={async () => {
-						setLocationHref(deepLinkUrl);
-					}}
-					unmount={unmount}
-				/>
-			</QueryClientProvider>
-		</TranslationProvider>,
+		renderDownloadDialog({
+			download: async () => {
+				$(GameLauncher).trigger(GameLauncher.beginInstallEvent, {
+					launchMethod: "Protocol",
+					params: {},
+				});
+				ProtocolHandlerClientInterface.isInstalling = true;
+				await startDownload();
+			},
+			launchGame: async () => {
+				setLocationHref(deepLinkUrl);
+			},
+			unmount,
+		}),
 		container,
 	);
 	setLocationHref(deepLinkUrl);
@@ -286,7 +321,7 @@ function openDesktopUniversalApp() {
 	const DUALaunchParams = {};
 	const protocol = ProtocolHandlerClientInterface.protocolNameForClient;
 	DUALaunchParams.protocolName = protocol;
-	DUALaunchParams.launchTime = new Date().getTime();
+	DUALaunchParams.launchTime = Date.now();
 	DUALaunchParams.launchMode = launchModes.app;
 	DUALaunchParams.otherParams = {};
 	DUALaunchParams.otherParams.browsertrackerid = Cookies.getBrowserTrackerId();
@@ -591,50 +626,47 @@ function showDialog(
 	const unmount = () => ReactDOM.unmountComponentAtNode(container);
 	const studio = isStudioMode(gameLaunchParams?.launchMode);
 	renderWithErrorBoundary(
-		<TranslationProvider config={translations}>
-			<QueryClientProvider client={queryClient}>
-				<DownloadDialog
-					download={async () => {
-						if (gameLaunchParams.placeId) {
-							const refInfoRaw = window.localStorage.getItem("ref_info");
-							if (refInfoRaw != null) {
-								window.localStorage.removeItem("ref_info");
-								let refInfo = {};
-								try {
-									refInfo = JSON.parse(atob(refInfoRaw));
-								} catch {
-									// do nothing
-								}
-								// eslint-disable-next-line no-param-reassign
-								gameLaunchParams.referredByPlayerId =
-									refInfo[gameLaunchParams.placeId];
-							}
+		renderDownloadDialog({
+			download: async () => {
+				if (gameLaunchParams.placeId) {
+					const refInfoRaw = window.localStorage.getItem("ref_info");
+					if (refInfoRaw != null) {
+						window.localStorage.removeItem("ref_info");
+						let refInfo = {};
+						try {
+							refInfo = JSON.parse(atob(refInfoRaw));
+						} catch {
+							// do nothing
 						}
+						// eslint-disable-next-line no-param-reassign
+						gameLaunchParams.referredByPlayerId =
+							refInfo[gameLaunchParams.placeId];
+					}
+				}
 
-						// fire begin install event
-						$(GameLauncher).trigger(GameLauncher.beginInstallEvent, {
-							launchMethod: "Protocol",
-							params: gameLaunchParams,
-						});
-						ProtocolHandlerClientInterface.isInstalling = true;
-						if (studio) {
-							startStudioDownload();
-							unmount();
-						} else {
-							await startDownload();
-						}
-					}}
-					launchGame={async () => await launchGame()}
-					unmount={unmount}
-				/>
-			</QueryClientProvider>
-		</TranslationProvider>,
+				// fire begin install event
+				$(GameLauncher).trigger(GameLauncher.beginInstallEvent, {
+					launchMethod: "Protocol",
+					params: gameLaunchParams,
+				});
+				ProtocolHandlerClientInterface.isInstalling = true;
+				if (studio) {
+					startStudioDownload();
+					unmount();
+				} else {
+					await startDownload();
+				}
+			},
+			launchGame: async () => await launchGame(),
+			unmount,
+		}),
 		container,
 	);
 }
 
 // Play joins via the launcher Next.js uses; events re-fire on GameLauncher for gameLaunchLogger.
 function enableSharedGameLauncher() {
+	ProtocolHandlerClientInterface.isSharedGameLauncherEnabled = true;
 	const launcher = createGameLauncher(
 		createSharedGameLauncherHost({
 			state: ProtocolHandlerClientInterface,
@@ -646,7 +678,7 @@ function enableSharedGameLauncher() {
 			showDialog: (gameLaunchParams, launch) =>
 				ProtocolHandlerClientInterface.showDialog(gameLaunchParams, launch),
 			closeDialog: () => $.modal.close(),
-			showLaunchFailureDialog,
+			showLaunchFailureDialog: showSharedLaunchFailureDialog,
 			openProtocolUrl: setLocationHref,
 		}),
 	);

@@ -1,0 +1,109 @@
+import React, { ComponentType, ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+	HashRouter as LegacyHashRouter,
+	HashRouterProps,
+	MemoryRouter,
+} from "react-router-dom";
+import { RequestService } from "../../../common/request";
+import TwoStepVerification from "./containers/twoStepVerification";
+import {
+	ActionType,
+	OnChallengeCompletedCallback,
+	OnChallengeInvalidatedCallback,
+	OnModalChallengeAbandonedCallback,
+	RecoveryParameters,
+} from "./interface";
+import { EventService } from "./services/eventService";
+import { MetricsService } from "./services/metricsService";
+import { TwoStepVerificationContextProvider } from "./store/contextProvider";
+import { DelayParameters } from "./delay";
+
+// @types/react-router-dom 5.1.3 leaves `children` off HashRouterProps, which React 19's types need.
+const HashRouter = LegacyHashRouter as ComponentType<
+	HashRouterProps & { children: ReactNode }
+>;
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false,
+			refetchOnMount: false,
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
+		},
+	},
+});
+
+type Props = {
+	userId: string;
+	challengeId: string;
+	actionType: ActionType;
+	renderInline: boolean;
+	shouldModifyBrowserHistory: boolean;
+	shouldShowRememberDeviceCheckbox: boolean;
+	eventService: EventService;
+	metricsService: MetricsService;
+	requestService: RequestService;
+	onChallengeCompleted: OnChallengeCompletedCallback;
+	onChallengeInvalidated: OnChallengeInvalidatedCallback;
+	onModalChallengeAbandoned: OnModalChallengeAbandonedCallback | null;
+	delayParameters?: DelayParameters;
+	recoveryParameters?: RecoveryParameters;
+};
+
+export const App: React.FC<Props> = ({
+	userId,
+	challengeId,
+	actionType,
+	renderInline,
+	shouldModifyBrowserHistory,
+	shouldShowRememberDeviceCheckbox,
+	eventService,
+	metricsService,
+	requestService,
+	onChallengeCompleted,
+	onChallengeInvalidated,
+	onModalChallengeAbandoned,
+	delayParameters,
+	recoveryParameters,
+}: Props) => {
+	const ContextProviderElement = (
+		<TwoStepVerificationContextProvider
+			userId={userId}
+			challengeId={challengeId}
+			actionType={actionType}
+			renderInline={renderInline}
+			shouldShowRememberDeviceCheckbox={shouldShowRememberDeviceCheckbox}
+			eventService={eventService}
+			metricsService={metricsService}
+			requestService={requestService}
+			onChallengeCompleted={onChallengeCompleted}
+			onChallengeInvalidated={onChallengeInvalidated}
+			onModalChallengeAbandoned={onModalChallengeAbandoned}
+			delayParameters={delayParameters}
+			recoveryParameters={recoveryParameters}
+		>
+			<TwoStepVerification />
+		</TwoStepVerificationContextProvider>
+	);
+
+	const RouterElement = shouldModifyBrowserHistory ? (
+		<HashRouter hashType="noslash">{ContextProviderElement}</HashRouter>
+	) : (
+		// `MemoryRouter` maintains a path state just like a real router, but it
+		// does not sync this state to anything (e.g. the URL bar). Since it has
+		// the same API as `HashRouter`, we use it here to maintain media type
+		// state in a generic way (without requiring branching logic based on the
+		// `shouldModifyBrowserHistory` boolean).
+		<MemoryRouter>{ContextProviderElement}</MemoryRouter>
+	);
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			{RouterElement}
+		</QueryClientProvider>
+	);
+};
+
+export default App;

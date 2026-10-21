@@ -1,5 +1,4 @@
 import React from "react";
-import { PageNameProvider } from "@rbx/core-scripts/util/page-name";
 import { sendEvent } from "@rbx/core-scripts/event-stream";
 import {
 	getAutocompleteSearchType,
@@ -15,6 +14,7 @@ import {
 	SearchLink,
 } from "./SearchLink";
 import events from "../constants/searchEventStreamConstants";
+import { getNavCapability } from "../util/navCapabilities";
 
 export default function NewSearchLinks({
 	searchInput,
@@ -53,7 +53,7 @@ export default function NewSearchLinks({
 			sendEvent(
 				...events.catalogSearch(
 					isAutocomplete,
-					PageNameProvider.getInternalPageName(),
+					getNavCapability("getInternalPageName")?.(),
 				),
 			);
 		};

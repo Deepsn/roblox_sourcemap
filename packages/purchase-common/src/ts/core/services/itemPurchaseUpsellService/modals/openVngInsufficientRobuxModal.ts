@@ -1,9 +1,8 @@
-import {
-	Dialog,
+import type {
 	RobloxTranslationResource,
 	RobloxTranslationResourceProviderInstance,
 } from "@rbx/legacy-webapp-types/Roblox";
-import { paymentFlowAnalyticsService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
+import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
 import { escapeHtml } from "@rbx/core-scripts/format/string";
 import {
 	ItemDetailObject,
@@ -13,6 +12,7 @@ import { LANG_KEYS, UPSELL_COUNTER_NAMES } from "../constants/upsellConstants";
 import leaveRobloxToPurchaseWarning from "../utils/startItemUpsell/leaveRobloxToPurchaseWarning";
 import { redirectToVngShop } from "../utils/common/redirectionHelpers";
 import reportCounter from "../utils/common/reportCounter";
+import openDialog from "./openDialog";
 import formattingRobux from "../utils/common/formattingRobux";
 
 export default function openVngInsufficientRobuxModal(
@@ -56,7 +56,7 @@ export default function openVngInsufficientRobuxModal(
 			{},
 		) ||
 		`<div class='text-footer modal-message-block text-center'> You will be taken to our partner’s page to complete the purchase.</div>`;
-	Dialog.open({
+	openDialog({
 		titleText:
 			translationResource.get(LANG_KEYS.insufficientRobuxHeading, {}) ||
 			"Insufficient Robux",
@@ -118,7 +118,6 @@ export default function openVngInsufficientRobuxModal(
 		allowHtmlContentInFooter: true,
 		footerText: dialogFooterForVNG,
 		fieldValidationRequired: true,
-		dismissable: true,
 		xToCancel: true,
 	});
 }

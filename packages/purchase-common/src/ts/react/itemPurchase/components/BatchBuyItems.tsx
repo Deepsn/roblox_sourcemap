@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, ProgressCircle } from "@rbx/foundation-ui";
+import { Button, Icon, ProgressCircle } from "@rbx/foundation-ui";
 import { getUrlWithQueries } from "@rbx/core-scripts/util/url";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import * as httpService from "@rbx/core-scripts/http";
@@ -23,6 +23,15 @@ const { resources } = itemPurchaseConstants;
 
 const MultiItemPurchaseModal = createMultiItemPurchaseModal();
 const LeaveRobloxWarningModal = createLeaveRobloxWarningModal();
+
+function ButtonPrice({ price }: { price: number }) {
+	return (
+		<span className="inline-flex items-center gap-xsmall">
+			<Icon name="icon-regular-robux" size="Medium" />
+			<span>{formatNumber(price)}</span>
+		</span>
+	);
+}
 
 export type TButtonVariant = React.ComponentProps<typeof Button>["variant"];
 export type TButtonSize = React.ComponentProps<typeof Button>["size"];
@@ -161,12 +170,7 @@ export function BatchBuyItems({
 				isDisabled
 			>
 				{displayPriceOnButton ? (
-					<div className="purchase-price">
-						<span className="icon-robux-white-28x28" />
-						<span className="purchase-price-text text-robux-lg">
-							{formatNumber(price)}
-						</span>
-					</div>
+					<ButtonPrice price={price} />
 				) : (
 					<div>{translate(resources.buyAction)}</div>
 				)}
@@ -231,12 +235,7 @@ export function BatchBuyItems({
 	);
 	if (!purchasePending) {
 		innerButton = displayPriceOnButton ? (
-			<div className="purchase-price">
-				<span className="icon-robux-white-28x28" />
-				<span className="purchase-price-text text-robux-lg">
-					{formatNumber(price)}
-				</span>
-			</div>
+			<ButtonPrice price={price} />
 		) : (
 			<div>{translate(resources.buyAction)}</div>
 		);
