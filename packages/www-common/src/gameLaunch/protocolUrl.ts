@@ -10,9 +10,14 @@ export type PlaceLauncherRequest =
 	| "RequestPrivateGame"
 	| "RequestPlayTogetherGame";
 
+export type LaunchMode = "play" | "edit" | "asset" | "plugin";
+
+export const isStudioLaunchMode = (launchMode: LaunchMode): boolean =>
+	launchMode !== "play";
+
 export type GameLaunchParams = {
 	protocolName: string;
-	launchMode: "play";
+	launchMode: LaunchMode;
 	otherParams: Record<string, ParamValue>;
 	launchTime?: number;
 	placeId?: ParamValue;
@@ -61,15 +66,31 @@ export const buildPlaceLauncherUrl = (
 		),
 	})}`;
 
+// Studio launches add the signed-in user and the browser, unencoded as in the legacy URL.
+export type StudioUrlParams = {
+	userId: number | string | null;
+	browser: string;
+};
+
 export const buildProtocolUrl = (
 	params: GameLaunchParams,
 	authTicket?: string,
+	studio?: StudioUrlParams,
 ): string => {
 	const components = ["1", `launchmode:${params.launchMode}`];
 	if (authTicket) {
 		components.push(`gameinfo:${encodeURIComponent(authTicket)}`);
 	}
 	components.push(`launchtime:${String(params.launchTime)}`);
+	if (studio) {
+		if (studio.userId != null) {
+			components.push(
+				"distributorType:Global",
+				`userId:${String(studio.userId)}`,
+			);
+		}
+		components.push(`browser:${studio.browser}`);
+	}
 	Object.entries(params.otherParams).forEach(([name, value]) => {
 		components.push(
 			name === value ? name : `${name}:${encodeURIComponent(String(value))}`,

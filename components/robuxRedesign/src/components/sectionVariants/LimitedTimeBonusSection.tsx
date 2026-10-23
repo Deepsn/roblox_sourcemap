@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from "react";
 import classNames from "classnames";
 import { useResponsiveValue } from "@rbx/payments/hooks";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useFullKeyTranslations } from "@rbx/www-common/i18n";
 import { Button, Media } from "@rbx/foundation-ui";
 import { PriceTag } from "@rbx/payments/priceTag";
 import {
@@ -118,7 +118,7 @@ function BonusItemCard({
 	redirectUrl,
 	onPurchaseClick,
 }: BonusItemCardProps) {
-	const { translate } = useTranslation();
+	const { translateFullKey } = useFullKeyTranslations();
 	const metadata = item.displayableBonus.collectibleItemMetadata;
 
 	const bannerHeightClass =
@@ -127,7 +127,7 @@ function BonusItemCard({
 			: "min-height-[186px] medium:min-height-[204px]";
 
 	const itemName = metadata
-		? translate(metadata.translationKey) || "Bonus Item"
+		? translateFullKey(metadata.translationKey, undefined, "Bonus Item")
 		: (item.displayableBonus.gamePassMetadata?.gamePassDisplayName ?? "");
 
 	const bodyLayoutClass =
@@ -211,7 +211,7 @@ export function LimitedTimeBonusSection({
 }: LimitedTimeBonusSectionProps) {
 	const { purchaseProduct } = useContext(PurchaseContext);
 	const { redirect } = useContext(BuyRobuxPageContext);
-	const { translate } = useTranslation();
+	const { translateFullKey } = useFullKeyTranslations();
 
 	const cards = useMemo(() => {
 		const products = sectionBase.products ?? [];
@@ -268,8 +268,11 @@ export function LimitedTimeBonusSection({
 				data-testid="ltb-section-header-row"
 			>
 				<SectionHeader className="self-auto min-width-0 flex-1 medium:self-stretch medium:flex-none">
-					{translate(sectionBase.sectionHeaderTranslationKey) ||
-						"Limited-time avatar items"}
+					{translateFullKey(
+						sectionBase.sectionHeaderTranslationKey,
+						undefined,
+						"Limited-time avatar items",
+					)}
 				</SectionHeader>
 				{daysLeftResult.success && (
 					<ExpirationBadge daysLeft={daysLeftResult.value} />
@@ -277,7 +280,7 @@ export function LimitedTimeBonusSection({
 			</div>
 			{limitedTimeBonus.bodyTranslationKey && (
 				<SectionSubHeader>
-					{translate(limitedTimeBonus.bodyTranslationKey)}
+					{translateFullKey(limitedTimeBonus.bodyTranslationKey)}
 				</SectionSubHeader>
 			)}
 			<div className="self-stretch flex flex-col gap-xlarge medium:gap-xxlarge">

@@ -12,6 +12,12 @@ export type ApplePaySession = {
 	) => Promise<boolean | undefined>;
 };
 
+declare global {
+	interface Window {
+		ApplePaySession?: ApplePaySession;
+	}
+}
+
 export function useApplePayAvailabilityTracking(): boolean | undefined {
 	const [applePayAvailability, setApplePayAvailability] = useState<boolean>();
 

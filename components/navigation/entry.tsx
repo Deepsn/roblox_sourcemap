@@ -3,6 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import dataStores from "@rbx/core-scripts/data-store";
 import { registerReferrerLookup } from "@rbx/subscriptions-common";
 import ready from "@rbx/core-scripts/util/ready";
+import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import {
 	queryClient,
 	renderWithErrorBoundary,
@@ -17,6 +18,7 @@ import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import "./src/registerDotnetCapabilities";
 import "./src/registerDotnetLeftNav";
 import "./src/registerDotnetSearch";
+import "./src/registerDotnetSettings";
 import { ageBadgeControl } from "./src/util/ageBadgeUtil";
 import LeftNavigation from "./src/leftNav";
 import NavigationRightHeader from "./src/containers/NavigationRightHeader";
@@ -32,6 +34,7 @@ import AgeBadge from "./src/components/AgeBadge";
 import { TopNavErrorBoundary } from "./src/topNav/observability";
 import setupAuthInterceptor from "./src/services/authInterceptor";
 import { attemptPasskeyUpgrade } from "./src/util/conditionalPasskeyCreate";
+import { isAccountExperienceRevampEnabled } from "./src/util/accountExperienceUtils";
 import * as navigation from "./src";
 import { translations } from "./component.json";
 import { navNamespaces } from "./src/constants/translationNamespaces";
@@ -160,12 +163,17 @@ ready(() => {
 		});
 	}
 
-	if (document.getElementById(leftNavigationContainerId)) {
+	const user = authenticatedUser();
+	if (
+		document.getElementById(leftNavigationContainerId) &&
+		user?.isAuthenticated &&
+		!isAccountExperienceRevampEnabled()
+	) {
 		renderWithErrorBoundary(
 			<QueryClientProvider client={queryClient}>
 				<TranslationProviderSCC namespaces={navNamespaces}>
 					<TranslationProvider config={translations}>
-						<LeftNavigation />
+						<LeftNavigation user={user} />
 					</TranslationProvider>
 				</TranslationProviderSCC>
 			</QueryClientProvider>,

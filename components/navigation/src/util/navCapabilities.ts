@@ -1,5 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
+import type { ValueOf } from "@rbx/core-types";
 import type { AuthenticatedUser } from "@rbx/core-scripts/meta/user";
+import type layoutConstants from "../constants/layoutConstants";
 import type { TIntAuthComplianceResponse } from "../services/complianceService";
 import type { Variant } from "../leftNav/observability";
 import type {
@@ -10,6 +12,21 @@ import type {
 export type NavigationHeaderBehavior = {
 	shouldShowVng: boolean;
 	notificationsCanAccessStream: boolean;
+};
+
+export type UserCurrency = { robux: number };
+
+export type CreditBalanceForNavigation = {
+	creditDisplayConfig: ValueOf<
+		typeof layoutConstants.creditDisplayConfigVariants
+	> | null;
+	creditBalance: number | null;
+	currencyCode: string | null;
+};
+
+export type RobuxBadge = {
+	is_virtual_item_available: boolean;
+	active_virtual_item_start_time_seconds_utc: number;
 };
 
 export type PlusNavEntries = {
@@ -23,8 +40,15 @@ type NavCapabilities = {
 	getVngShopSignedRedirectionUrl: () => Promise<{
 		vngShopRedirectUrl?: string;
 	}>;
+	getUserCurrency: (userId: number) => Promise<UserCurrency>;
+	getCreditBalanceForNavigation: () => Promise<CreditBalanceForNavigation>;
+	getRobuxBadge: () => Promise<RobuxBadge>;
 	getIntAuthCompliancePolicy: () => Promise<TIntAuthComplianceResponse>;
 	useIsAccountSwitcherAvailableForBrowser: () => [boolean, boolean];
+	getStoredAccountSwitcherBlob: () => string;
+	syncAccountSwitcherBlobIfNeeded: () => Promise<void>;
+	openAccountSwitcher: () => void;
+	logoutUser: () => Promise<void>;
 	saveGameIntentFromCurrentUrl: () => void;
 	getFriendRequestCount: () => Promise<number>;
 	getMessageUnreadCount: () => Promise<number>;
@@ -35,7 +59,12 @@ type NavCapabilities = {
 	) => () => void;
 	useLiveUserNameForDisplay: (user: AuthenticatedUser) => string;
 	useHasVerifiedBadge: (user: AuthenticatedUser) => boolean;
-	AvatarHeadshot: ComponentType<{ userId: number; altName: string }>;
+	AvatarHeadshot: ComponentType<{
+		userId: number;
+		altName?: string;
+		containerClass?: string;
+	}>;
+	useIsPlusBadgeEnabled: () => boolean;
 	UncheckedBadge: ComponentType;
 	shouldShowUncheckedBadge: () => boolean;
 	useCommunitiesEntrypointTelemetry: () => {

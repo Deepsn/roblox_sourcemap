@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { HtmlTag, useTranslations } from "@rbx/www-common/i18n";
 import { getAbsoluteUrl } from "@rbx/core-scripts/util/url";
 import { Icon } from "@rbx/foundation-ui";
-import { translateHtml, type TranslateHtmlTag } from "@rbx/translation-utils";
 import { Section, SectionHeader } from "./sections/Section";
 import { isOnDesktop } from "../utils/platform";
 
@@ -14,7 +13,7 @@ const FAQ_BASE_KEYS = [
 const DESKTOP_FAQ_BASE_KEY = "Action.HowToRedeemGiftCard";
 
 export function FAQ() {
-	const { translate } = useTranslation();
+	const translate = useTranslations("Feature.BuyRobux");
 	const [openIds, setOpenIds] = useState<Set<string>>(() => new Set());
 	const [showDesktopFaq, setShowDesktopFaq] = useState(false);
 
@@ -40,11 +39,6 @@ export function FAQ() {
 		});
 	}, []);
 
-	const isMissingTranslation = (key: string, translation: string) => {
-		const normalized = translation.trim();
-		return !normalized || normalized === key;
-	};
-
 	return (
 		<Section>
 			<SectionHeader>{translate("Heading.FAQ")}</SectionHeader>
@@ -52,17 +46,14 @@ export function FAQ() {
 				{faqKeys.map((baseKey) => {
 					const questionKey = `${baseKey}Question`;
 					const answerKey = `${baseKey}Answer`;
-					const question = translate(questionKey);
-					const answerPlain = translate(answerKey);
+					const hasQuestionKey = translate.has(questionKey);
+					const hasAnswerKey = translate.has(answerKey);
 
-					if (
-						isMissingTranslation(questionKey, question) ||
-						isMissingTranslation(answerKey, answerPlain)
-					) {
+					if (!hasQuestionKey || !hasAnswerKey) {
 						return null;
 					}
 
-					let answerTags: TranslateHtmlTag[] | undefined;
+					let answerTags: HtmlTag[] = [];
 					if (baseKey === "Action.WhereAreMyRobux") {
 						answerTags = [
 							{
@@ -116,7 +107,7 @@ export function FAQ() {
 								}}
 							>
 								<span className="text-align-x-left text-title-medium">
-									{question}
+									{translate(questionKey)}
 								</span>
 								<Icon
 									name={
@@ -132,11 +123,11 @@ export function FAQ() {
 								<div
 									id={contentRegionId}
 									role="region"
-									aria-label={question}
+									aria-label={translate(questionKey)}
 									className="padding-bottom-medium text-body-medium content-default"
 									style={{ whiteSpace: "pre-wrap" }}
 								>
-									{translateHtml(translate, answerKey, answerTags)}
+									{translate.html(answerKey, answerTags)}
 								</div>
 							)}
 						</div>

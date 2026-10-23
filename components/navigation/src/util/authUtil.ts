@@ -24,6 +24,7 @@ import {
 	getLoginLinkUrl,
 	getSignupUrl,
 	isLoginLinkAvailable,
+	navigateToLoginWithRedirect,
 } from "./authLinkUtil";
 
 const { logoutEvent } = layoutConstants;
@@ -42,10 +43,6 @@ const logoutAndRedirect = () =>
 		// TODO: delete CrpytoKey in indexeddb when all users are signed out.
 		window.location.reload();
 	});
-
-const navigateToLoginWithRedirect = () => {
-	window.location.href = getLoginLinkUrl();
-};
 
 const logoutUser = async () => {
 	sendLogoutButtonClickEvent();

@@ -664,7 +664,7 @@ function showDialog(
 	);
 }
 
-// Play joins via the launcher Next.js uses; events re-fire on GameLauncher for gameLaunchLogger.
+// Play joins and Studio launches via the launcher Next.js uses; events re-fire on GameLauncher for gameLaunchLogger.
 function enableSharedGameLauncher() {
 	ProtocolHandlerClientInterface.isSharedGameLauncherEnabled = true;
 	const launcher = createGameLauncher(
@@ -689,6 +689,27 @@ function enableSharedGameLauncher() {
 		joinGameInstance: launcher.joinGameInstance,
 		joinPrivateGame: launcher.joinPrivateGame,
 		playTogetherGame: launcher.playTogetherGame,
+		openStudio: launcher.openStudio,
+		tryAssetInStudio: (assetId) => launcher.tryAssetInStudio({ assetId }),
+		openPluginInStudio: (pluginId) => launcher.openPluginInStudio({ pluginId }),
+		// allowUpload only fed the Edit.ashx script URL, which separateScriptParamsEnabled replaced.
+		editGameInStudio: (
+			placeId,
+			universeId,
+			_allowUpload,
+			startTeamTest,
+			instanceId,
+			annotationId,
+		) =>
+			launcher.editGameInStudio({
+				placeId,
+				universeId,
+				startTeamTest,
+				instanceId,
+				annotationId,
+			}),
+		startDeepLinkFlow: launcher.startDeepLinkFlow,
+		startGameWithDeepLinkUrl: launcher.startGameWithDeepLinkUrl,
 	});
 }
 

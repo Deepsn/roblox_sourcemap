@@ -1,8 +1,7 @@
 import { ReactNode, useCallback, useContext } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { ErrorBoundary } from "@sentry/react";
-import { useTranslation } from "@rbx/core-scripts/react";
-import { translateHtml } from "@rbx/translation-utils";
+import { useTranslations } from "@rbx/www-common/i18n";
 import { FirstTimePurchaseConsentModal } from "@rbx/payments/firstTimePurchaseConsent";
 import { getTriggerContext } from "../utils/getTriggerContext";
 import { ModalContext } from "../contexts/ModalContext";
@@ -19,6 +18,12 @@ import { trackCounter, trackCriticalError } from "../observability";
 import { publishMetric } from "../utils/publishMetric";
 import { SamsungPaymentMethods } from "../hooks/samsungPaymentMethods/useSamsungPaymentMethods";
 import { LoginRedirectErrorModal } from "../components/LoginRedirectErrorModal";
+import { getExternalLinkProps } from "../utils/openExternalBrowser";
+
+const SPENDING_LIMITS_FAQ_URL =
+	"https://en.help.roblox.com/hc/en-us/articles/4409558125460-Monthly-Spending-Limits-and-Notifications-FAQ";
+const TERMS_OF_USE_URL =
+	"https://en.help.roblox.com/hc/en-us/articles/115004647846-Roblox-Terms-of-Use";
 
 export const ModalContainer = ({
 	children,
@@ -31,7 +36,9 @@ export const ModalContainer = ({
 	quickPay: QuickPay;
 	samsungPaymentMethods: SamsungPaymentMethods;
 }) => {
-	const { translate } = useTranslation();
+	const translateVerifiedParentalControls = useTranslations(
+		"Feature.VerifiedParentalControls",
+	);
 	const { markConsentAcknowledged } = useContext(BuyRobuxPageContext);
 
 	const onError = useCallback((error: unknown) => {
@@ -67,9 +74,8 @@ export const ModalContainer = ({
 			)}
 			<LoginRedirectErrorModal />
 			<FirstTimePurchaseConsentModal
-				title={translate("Label.AskParentFirst")}
-				description={translateHtml(
-					translate,
+				title={translateVerifiedParentalControls("Label.AskParentFirst")}
+				description={translateVerifiedParentalControls.html(
 					"Description.ParentalApprovalRequired",
 					[
 						{
@@ -77,8 +83,7 @@ export const ModalContainer = ({
 							closing: "learnLinkEnd",
 							render: (linkContent) => (
 								<a
-									target="_blank"
-									href="https://en.help.roblox.com/hc/en-us/articles/4409558125460-Monthly-Spending-Limits-and-Notifications-FAQ"
+									{...getExternalLinkProps(SPENDING_LIMITS_FAQ_URL)}
 									className="color-content-default [text-decoration:underline] [text-underline-position:from-font]"
 									rel="noreferrer"
 								>
@@ -88,8 +93,7 @@ export const ModalContainer = ({
 						},
 					],
 				)}
-				confirmation={translateHtml(
-					translate,
+				confirmation={translateVerifiedParentalControls.html(
 					"Description.ParentalApprovalConfirmation",
 					[
 						{
@@ -97,8 +101,7 @@ export const ModalContainer = ({
 							closing: "termsLinkEnd",
 							render: (linkContent) => (
 								<a
-									target="_blank"
-									href="https://en.help.roblox.com/hc/en-us/articles/115004647846-Roblox-Terms-of-Use"
+									{...getExternalLinkProps(TERMS_OF_USE_URL)}
 									className="color-content-emphasis [text-decoration:underline] [text-underline-position:from-font]"
 									rel="noreferrer"
 								>
@@ -108,8 +111,8 @@ export const ModalContainer = ({
 						},
 					],
 				)}
-				continueLabel={translate("Action.Continue")}
-				cancelLabel={translate("Action.Cancel")}
+				continueLabel={translateVerifiedParentalControls("Action.Continue")}
+				cancelLabel={translateVerifiedParentalControls("Action.Cancel")}
 				isOpen={modals.firstTimePurchaseConsent.isOpen}
 				onConfirm={handleConsentConfirm}
 				onCancel={handleConsentCancel}

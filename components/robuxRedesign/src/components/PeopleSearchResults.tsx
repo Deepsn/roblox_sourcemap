@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import classNames from "classnames";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useTranslations } from "@rbx/www-common/i18n";
 import {
 	DisplayNameBadges,
 	PLUS_BADGE_ARIA_LABEL_KEY,
@@ -27,7 +27,8 @@ export function PeopleSearchResults({
 	onSelectUser,
 	hasSectionAbove = false,
 }: PeopleSearchResultsProps) {
-	const { translate } = useTranslation();
+	const translate = useTranslations("Feature.RobloxSubscription");
+	const translateBuyRobux = useTranslations("Feature.BuyRobux");
 	const plusBadgeAriaLabel = translate(PLUS_BADGE_ARIA_LABEL_KEY);
 	const thumbnails = useAvatarThumbnails(users);
 
@@ -46,7 +47,9 @@ export function PeopleSearchResults({
 		return null;
 	}
 
-	const heading = translate("Label.PeopleWithCount", { count: users.length });
+	const heading = translateBuyRobux("Label.PeopleWithCount", {
+		count: users.length,
+	});
 
 	return (
 		<div

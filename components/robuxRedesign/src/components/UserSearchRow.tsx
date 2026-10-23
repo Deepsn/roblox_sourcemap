@@ -1,8 +1,8 @@
 import type React from "react";
 import classNames from "classnames";
-import { useTranslation } from "@rbx/core-scripts/react";
 import { Avatar } from "@rbx/foundation-ui";
 import type { TFriend } from "@rbx/friends-common/types/friendsCarousel";
+import { useTranslations } from "@rbx/www-common/i18n";
 import {
 	DisplayNameBadges,
 	PLUS_BADGE_ARIA_LABEL,
@@ -93,7 +93,9 @@ export function InlineFriendRow({
 	thumbnailUrl,
 	onSelectUser,
 }: InlineFriendRowProps) {
-	const { translate } = useTranslation();
+	const translateRobloxSubscription = useTranslations(
+		"Feature.RobloxSubscription",
+	);
 	const showPlusBadge = useIsPlusBadgeEnabled() && friend.isRobloxPlus === true;
 	const badges = [
 		friend.hasVerifiedBadge ? <BlueCheckIcon key="verified" size={12} /> : null,
@@ -102,7 +104,7 @@ export function InlineFriendRow({
 				key="roblox-plus"
 				isRobloxPlus
 				size="Small"
-				plusBadgeAriaLabel={translate(
+				plusBadgeAriaLabel={translateRobloxSubscription(
 					PLUS_BADGE_ARIA_LABEL_KEY,
 					undefined,
 					PLUS_BADGE_ARIA_LABEL,

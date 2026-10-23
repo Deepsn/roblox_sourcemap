@@ -8,7 +8,7 @@ import {
 } from "react";
 import classNames from "classnames";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
-import pfas from "@rbx/core-scripts/payments-flow";
+import { paymentFlowAnalyticsService as pfas } from "@rbx/payments/payments-flow-analytics";
 import {
 	BillingPeriodSheet,
 	type BillingPeriodOption,
@@ -17,7 +17,7 @@ import {
 } from "@rbx/subscriptions-common";
 import { Icon, SheetRoot } from "@rbx/foundation-ui";
 
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useFullKeyTranslations, useTranslations } from "@rbx/www-common/i18n";
 import { usePlusBillingPeriodSelection } from "../../hooks/subscriptionV2/usePlusBillingPeriodSelection";
 import { useSubscriptionV2TrackingFields } from "../../hooks/subscriptionV2/useSubscriptionV2TrackingFields";
 import type { TrackSubscriptionV2SubscribeClickArgs } from "../../hooks/subscriptionV2/useSubscriptionV2Tracking";
@@ -53,7 +53,10 @@ export function SubscriptionV2({
 	sectionBase,
 	subscriptionV2,
 }: SubscriptionV2Props) {
-	const { translate } = useTranslation();
+	const translateRobloxSubscription = useTranslations(
+		"Feature.RobloxSubscription",
+	);
+	const { translateFullKey } = useFullKeyTranslations();
 	const { paymentSession, breakpoint, redirect } =
 		useContext(BuyRobuxPageContext);
 	const {
@@ -193,7 +196,7 @@ export function SubscriptionV2({
 		return null;
 	}
 
-	const learnMoreLabel = translate("Label.Learnmore");
+	const learnMoreLabel = translateRobloxSubscription("Label.Learnmore");
 
 	const hasMultipleTiers = products.length > 1;
 
@@ -209,7 +212,7 @@ export function SubscriptionV2({
 							name="icon-regular-roblox-plus"
 							size={breakpoint.isAboveInclusive("medium") ? "XLarge" : "Large"}
 						/>
-						{translate(sectionBase.sectionHeaderTranslationKey)}
+						{translateFullKey(sectionBase.sectionHeaderTranslationKey)}
 					</div>
 					{/* Mobile-only "Learn more" affordance. Desktop renders the same
               action as a wider button next to the subscribe CTA inside the

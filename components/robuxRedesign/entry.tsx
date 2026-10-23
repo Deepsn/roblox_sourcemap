@@ -5,9 +5,9 @@ import dataStores from "@rbx/core-scripts/data-store";
 import { registerReferrerLookup } from "@rbx/subscriptions-common";
 import { PaymentsTranslationProvider } from "@rbx/payments";
 import ready from "@rbx/core-scripts/util/ready";
-import { queryClient, useTranslation } from "@rbx/core-scripts/react";
-import pfas from "@rbx/core-scripts/payments-flow";
-import type { Namespace } from "@rbx/www-common/i18n";
+import { queryClient } from "@rbx/core-scripts/react";
+import { paymentFlowAnalyticsService as pfas } from "@rbx/payments/payments-flow-analytics";
+import { useTranslations, type Namespace } from "@rbx/www-common/i18n";
 import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import { ToastProvider } from "@rbx/payments/components";
 import { isPremiumUser } from "@rbx/core-scripts/meta/user";
@@ -22,7 +22,6 @@ import {
 	reportPageView,
 	ObsErrorBoundary,
 } from "./src/observability";
-import { reportInteractive } from "./src/utils/publishMetric";
 import { getBuyRobuxPageDataFromDOM } from "./src/utils/getBuyRobuxPageDataFromDOM";
 import { getEnhancedBuyRobuxPageData } from "./src/utils/getEnhancedBuyRobuxPageData";
 
@@ -34,7 +33,7 @@ registerReferrerLookup((referrerId) =>
 const namespaces = translations as unknown as readonly Namespace[];
 
 const ToastWrapper = ({ children }: { children: React.ReactNode }) => {
-	const { translate } = useTranslation();
+	const translate = useTranslations("CommonUI.Controls");
 	return (
 		<ToastProvider closeLabel={translate("Action.Close")}>
 			{children}
@@ -76,7 +75,6 @@ ready(() => {
 		urlProductId: urlParams.product_id,
 	});
 
-	reportInteractive();
 	reportPageView();
 
 	// Set the payment flow UUID before React mounts so no child effect fires

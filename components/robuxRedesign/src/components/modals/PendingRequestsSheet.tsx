@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useFormatter, useTranslations } from "@rbx/www-common/i18n";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import {
 	SheetContent,
@@ -14,14 +14,14 @@ import {
 	useReferrerHandle,
 	type SubscriptionReferral,
 } from "@rbx/subscriptions-common";
-import { PendingRequestRow } from "./PendingRequestRow";
-import { PendingTransfersSheet } from "./PendingTransfersSheet";
-import { PendingTransfer } from "../../types/buyRobuxPageData";
-import { navigateToDeepLink } from "../../utils/robuxTransfersDeepLinks";
 import {
 	buildPlusSubscribeDeepLink,
 	referralEventService,
 } from "@rbx/subscriptions-common";
+import { PendingRequestRow } from "./PendingRequestRow";
+import { PendingTransfersSheet } from "./PendingTransfersSheet";
+import { PendingTransfer } from "../../types/buyRobuxPageData";
+import { navigateToDeepLink } from "../../utils/robuxTransfersDeepLinks";
 
 function PendingTransfersRequestRow({
 	pendingTransfers,
@@ -30,7 +30,7 @@ function PendingTransfersRequestRow({
 	pendingTransfers: PendingTransfer[];
 	acceptTransfersTranslationKey: string;
 }) {
-	const { translate } = useTranslation();
+	const translate = useTranslations("Feature.BuyRobux");
 	const [isTransfersOpen, setIsTransfersOpen] = useState(false);
 
 	const robuxTotal = useMemo(
@@ -88,7 +88,8 @@ function PendingReferralRow({
 	referral: SubscriptionReferral;
 	shouldDeeplinkToReferral?: boolean;
 }) {
-	const { translate, intl } = useTranslation();
+	const translate = useTranslations("Feature.RobloxSubscription");
+	const format = useFormatter();
 	const { handle, isLoading } = useReferrerHandle(
 		String(referral.senderUserId),
 	);
@@ -96,8 +97,8 @@ function PendingReferralRow({
 
 	const reward = translate(
 		"Heading.ReferralRecipientEntry",
-		{ amount: intl.n(REFERRAL_REWARD_ROBUX) },
-		`Join Plus to get ${intl.n(REFERRAL_REWARD_ROBUX)} Robux`,
+		{ amount: format.number(REFERRAL_REWARD_ROBUX) },
+		`Join Plus to get ${format.number(REFERRAL_REWARD_ROBUX)} Robux`,
 	);
 
 	// The handle is the whole title, so there is nothing worth showing until the lookup settles.
@@ -166,7 +167,7 @@ export function PendingRequestsSheet({
 	pendingReferrals,
 	shouldDeeplinkToReferral,
 }: PendingRequestsSheetProps) {
-	const { translate } = useTranslation();
+	const translate = useTranslations("Feature.BuyRobux");
 
 	return (
 		<SheetContent

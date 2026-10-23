@@ -46,7 +46,10 @@ export default function NavigationRobux() {
 			return;
 		}
 
-		if (user == null) {
+		if (
+			user == null ||
+			getNavCapability("getVngShopSignedRedirectionUrl") == null
+		) {
 			return;
 		}
 

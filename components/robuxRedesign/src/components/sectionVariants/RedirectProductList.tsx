@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from "react";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useFullKeyTranslations } from "@rbx/www-common/i18n";
 import { SectionBase, SectionRedirect } from "../../types/buyRobuxPageData";
 import {
 	BaseSectionProps,
@@ -32,7 +32,7 @@ export function RedirectProductList({
 	sectionBase,
 	redirectOptions,
 }: ProductListProps) {
-	const { translate } = useTranslation();
+	const { translateFullKey } = useFullKeyTranslations();
 	const { purchaseProduct } = useContext(PurchaseContext);
 	const { atLeastOneProductHasBonusAmount, redirect } =
 		useContext(BuyRobuxPageContext);
@@ -66,7 +66,7 @@ export function RedirectProductList({
 					{/* A running bonus promotion supplies its own section header, which supersedes the
               redirect section's own title. */}
 					<SectionHeader>
-						{translate(
+						{translateFullKey(
 							atLeastOneProductHasBonusAmount
 								? sectionBase.sectionHeaderTranslationKey
 								: redirectOptions.titleTranslationKey,
@@ -76,7 +76,7 @@ export function RedirectProductList({
 				</div>
 				{redirectOptions.bodyTranslationKey && (
 					<SectionSubHeader>
-						{translate(redirectOptions.bodyTranslationKey)}
+						{translateFullKey(redirectOptions.bodyTranslationKey)}
 					</SectionSubHeader>
 				)}
 			</div>

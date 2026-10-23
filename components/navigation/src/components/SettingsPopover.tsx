@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@rbx/core-scripts/react";
 import { useTranslations } from "@rbx/www-common/i18n";
-import { AccountSwitcherService } from "@rbx/core-scripts/legacy/Roblox";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import {
 	Popover as FoundationPopover,
@@ -12,6 +9,7 @@ import {
 import SettingsIcon from "./SettingsIcon";
 import SettingsMenu from "./SettingsMenu";
 import { sendAccountSwitcherBlobPresentOnPageLoadEvent } from "../services/eventService";
+import { getNavCapability } from "../util/navCapabilities";
 import { popoverDismissGuard } from "../util/popoverDismissGuard";
 import { trackOpenToVisible } from "../topNav/observability";
 // disabling the metadata call since this is fully released.
@@ -34,16 +32,21 @@ export default function SettingsPopover({
 		// TODO: This code should be removed when we stop upgrading the blob
 		const syncAccountBlob = async () => {
 			try {
-				await AccountSwitcherService.syncAccountSwitcherBlobIfNeeded();
+				await getNavCapability("syncAccountSwitcherBlobIfNeeded")?.();
 			} catch (error) {
 				console.warn("account switching has issues", error);
 			}
 		};
 
 		setCrossDeviceLoginCodeValidationDisplayed(true);
-		sendAccountSwitcherBlobPresentOnPageLoadEvent(
-			!!AccountSwitcherService.getStoredAccountSwitcherBlob(),
+		const getStoredAccountSwitcherBlob = getNavCapability(
+			"getStoredAccountSwitcherBlob",
 		);
+		if (getStoredAccountSwitcherBlob) {
+			sendAccountSwitcherBlobPresentOnPageLoadEvent(
+				!!getStoredAccountSwitcherBlob(),
+			);
+		}
 		// eslint-disable-next-line no-void
 		void syncAccountBlob();
 	}, []);
@@ -58,14 +61,12 @@ export default function SettingsPopover({
 			: t("Label.sSettings");
 
 	const menu = (
-		<QueryClientProvider client={queryClient}>
-			<SettingsMenu
-				isCrossDeviceLoginCodeValidationDisplayed={
-					isCrossDeviceLoginCodeValidationDisplayed
-				}
-				accountNotificationCount={accountNotificationCount}
-			/>
-		</QueryClientProvider>
+		<SettingsMenu
+			isCrossDeviceLoginCodeValidationDisplayed={
+				isCrossDeviceLoginCodeValidationDisplayed
+			}
+			accountNotificationCount={accountNotificationCount}
+		/>
 	);
 
 	const trigger = (

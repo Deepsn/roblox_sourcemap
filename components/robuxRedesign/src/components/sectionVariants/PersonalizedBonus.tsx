@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo } from "react";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useFullKeyTranslations } from "@rbx/www-common/i18n";
 import {
 	Product,
 	SectionBase,
@@ -85,7 +85,7 @@ export function PersonalizedBonus({
 	const { purchaseProduct } = useContext(PurchaseContext);
 	const { redirect } = useContext(BuyRobuxPageContext);
 
-	const { translate } = useTranslation();
+	const { translateFullKey } = useFullKeyTranslations();
 
 	const clickHandler = useCallback(
 		(
@@ -116,11 +116,11 @@ export function PersonalizedBonus({
 		<Section {...getSectionTrackingProps(sectionBase)}>
 			<div>
 				<SectionHeader>
-					{translate(sectionBase.sectionHeaderTranslationKey)}
+					{translateFullKey(sectionBase.sectionHeaderTranslationKey)}
 				</SectionHeader>
 				{personalizedBonus.bodyTranslationKey && (
 					<SectionSubHeader>
-						{translate(personalizedBonus.bodyTranslationKey)}
+						{translateFullKey(personalizedBonus.bodyTranslationKey)}
 					</SectionSubHeader>
 				)}
 			</div>

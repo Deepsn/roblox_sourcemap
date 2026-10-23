@@ -51,6 +51,10 @@ export const getLoginLinkUrl = () => {
 	return `${loginUrl}?${composeQueryString({ returnUrl })}`;
 };
 
+export const navigateToLoginWithRedirect = () => {
+	window.location.href = getLoginLinkUrl();
+};
+
 export const isLoginLinkAvailable = () => {
 	const currentPath = window.location.pathname.toLowerCase();
 	return (
