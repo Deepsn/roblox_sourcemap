@@ -14,6 +14,7 @@ import {
 	type RemoteParentRequestApi,
 } from "../../services/remoteParentRequestApi";
 import { useOdpAnalytics } from "../../analytics/odpAnalytics";
+import { useVpcEntryAnalytics } from "../../analytics/vpcEntryAnalytics";
 import type { NodeComponent, NodeProps } from "../../types";
 
 const PARENT_CONSENT = "ParentConsent";
@@ -144,7 +145,11 @@ export const RemoteParentRequestNode: NodeComponent = ({
 	const startedRef = useRef(false);
 	const reportedRef = useRef(false);
 	const requestSentReportedRef = useRef(false);
+	const shownStepRef = useRef<Step>("loading");
+	const emailEnteredRef = useRef(false);
+	const errorCodeRef = useRef<string | undefined>(undefined);
 	const odpAnalytics = useOdpAnalytics(ctx);
+	const vpcEntryAnalytics = useVpcEntryAnalytics(ctx, requestType);
 
 	const consentName =
 		isChildSubjectToParentalControls === undefined
@@ -190,6 +195,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				setStep("confirmation");
 				return;
 			}
+			errorCodeRef.current = errorCode(error);
 			setErrorKey(errorTranslationKey(errorCode(error)));
 			setStep("error");
 		}
@@ -255,6 +261,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 				return;
 			}
 			setEmail("");
+			errorCodeRef.current = errorCode(error);
 			setErrorKey(errorTranslationKey(errorCode(error)));
 			setStep("error");
 		}
@@ -276,8 +283,23 @@ export const RemoteParentRequestNode: NodeComponent = ({
 		if (step === "confirmation" && !requestSentReportedRef.current) {
 			requestSentReportedRef.current = true;
 			odpAnalytics.remoteRequestSent();
+			vpcEntryAnalytics.remoteRequestSent();
 		}
-	}, [odpAnalytics, step]);
+	}, [odpAnalytics, step, vpcEntryAnalytics]);
+
+	useEffect(() => {
+		if (shownStepRef.current === step) {
+			return;
+		}
+		shownStepRef.current = step;
+		if (step === "email") {
+			emailEnteredRef.current = false;
+			vpcEntryAnalytics.remoteEmailShown();
+		} else if (step === "error") {
+			vpcEntryAnalytics.remoteRequestError(errorCodeRef.current);
+			errorCodeRef.current = undefined;
+		}
+	}, [step, vpcEntryAnalytics]);
 
 	if (step === "loading" || step === "sending") {
 		return (
@@ -315,6 +337,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 					size="Medium"
 					className="w-full"
 					onClick={() => {
+						vpcEntryAnalytics.remoteRequestOk();
 						reportOnce(SUCCESS);
 					}}
 				>
@@ -344,6 +367,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 						size="Medium"
 						className="w-full"
 						onClick={() => {
+							vpcEntryAnalytics.remoteRequestRetry();
 							if (action === PARENT_CONSENT) {
 								sendToLinkedParents().catch(() => {
 									setStep("error");
@@ -360,6 +384,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 						size="Medium"
 						className="w-full"
 						onClick={() => {
+							vpcEntryAnalytics.remoteRequestCancel();
 							reportOnce(CANCEL);
 						}}
 					>
@@ -410,6 +435,10 @@ export const RemoteParentRequestNode: NodeComponent = ({
 					isRequired
 					value={email}
 					onChange={(event) => {
+						if (!emailEnteredRef.current) {
+							emailEnteredRef.current = true;
+							vpcEntryAnalytics.remoteEmailEntered();
+						}
 						setEmail(event.target.value);
 					}}
 					error={emailError}
@@ -431,6 +460,7 @@ export const RemoteParentRequestNode: NodeComponent = ({
 					className="w-full"
 					isDisabled={email.length === 0 || emailError !== undefined}
 					onClick={() => {
+						vpcEntryAnalytics.remoteEmailSubmit();
 						submitEmail().catch(() => {
 							setStep("error");
 						});

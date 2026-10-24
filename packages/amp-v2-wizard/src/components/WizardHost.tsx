@@ -10,6 +10,10 @@ import { TranslationProvider } from "@rbx/core-scripts/react";
 import { ProgressCircle } from "@rbx/foundation-ui";
 
 import { useOdpAnalytics } from "../analytics/odpAnalytics";
+import { RemoteParentRequestNode } from "../analytics/odpAnalyticsConstants";
+import { useVpcEntryAnalytics } from "../analytics/vpcEntryAnalytics";
+import { trackCounter } from "../observability";
+import { WizardCounter } from "../observability/eventConstants";
 import { getTextScreenAnalytics } from "./nodes/TextScreenNode";
 import { defaultRegistry, getNodeComponent } from "../componentRegistry";
 import { usePresentedOverPage } from "../hooks/usePresentedOverPage";
@@ -19,6 +23,7 @@ import { Overlay } from "./Overlay";
 import {
 	WizardBackgroundedContext,
 	WizardLoadingContext,
+	WizardParentFacingContext,
 } from "./WizardLoadingContext";
 import type {
 	FlowApi,
@@ -74,13 +79,34 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		presentingError,
 		acknowledgeError,
 		eventContext,
+		analyticsStrings,
+		analyticsSessionId,
 	} = walker;
+	const requestType = currentNode?.details.requestType;
+	const vpcEntryAnalytics = useVpcEntryAnalytics(
+		{ analytics: eventContext, analyticsStrings, analyticsSessionId },
+		typeof requestType === "string" ? requestType : undefined,
+	);
 	// The X reports the same Cancel as a flow's own Cancel button, so the event that tells them apart
 	// has to be sent here, where the X is drawn.
 	const dismiss = useCallback(() => {
-		getTextScreenAnalytics(odpAnalytics, eventContext.node).close();
+		getTextScreenAnalytics(
+			odpAnalytics,
+			vpcEntryAnalytics,
+			eventContext.node,
+			currentNode?.details,
+		).close();
+		if (eventContext.node === RemoteParentRequestNode) {
+			vpcEntryAnalytics.remoteRequestClose();
+		}
 		report("Cancel");
-	}, [eventContext.node, odpAnalytics, report]);
+	}, [
+		currentNode?.details,
+		eventContext.node,
+		odpAnalytics,
+		report,
+		vpcEntryAnalytics,
+	]);
 	const Component = currentNode
 		? getNodeComponent(registry, currentNode.type)
 		: undefined;
@@ -94,6 +120,7 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 			!unrenderableReportedRef.current
 		) {
 			unrenderableReportedRef.current = true;
+			trackCounter(WizardCounter.UnrenderableNode);
 			// Reporting an outcome the node has no transition for drives the engine's error exit.
 			report("__unrenderable__");
 		}
@@ -105,9 +132,13 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 
 	if (presentingError) {
 		return (
-			<TranslationProvider config={["Feature.Parents", "CommonUI.Controls"]}>
-				<GenericErrorModal onClose={acknowledgeError} />
-			</TranslationProvider>
+			<WizardParentFacingContext.Provider
+				value={currentNode?.behavior?.parentFacing === true}
+			>
+				<TranslationProvider config={["Feature.Parents", "CommonUI.Controls"]}>
+					<GenericErrorModal onClose={acknowledgeError} />
+				</TranslationProvider>
+			</WizardParentFacingContext.Provider>
 		);
 	}
 
@@ -140,6 +171,7 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 	const Shown = page?.Component ?? Component;
 	const shownNode = page?.node ?? currentNode;
 	const isBusy = isLoading || page != null;
+	const isParentFacing = shownNode.behavior?.parentFacing === true;
 
 	// Keep the node mounted while a Continue is in flight, dimmed and non-interactive, under a spinner.
 	// Nodes that have a busy state of their own (i.e a loading spinner) render it instead.
@@ -184,11 +216,13 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 	// A node handing off to an overlay of its own gets no additional overlay.
 	if (Shown.ownsOverlay === true) {
 		return (
-			<WizardLoadingContext.Provider value={isBusy}>
-				<WizardBackgroundedContext.Provider value={page != null}>
-					{node}
-				</WizardBackgroundedContext.Provider>
-			</WizardLoadingContext.Provider>
+			<WizardParentFacingContext.Provider value={isParentFacing}>
+				<WizardLoadingContext.Provider value={isBusy}>
+					<WizardBackgroundedContext.Provider value={page != null}>
+						{node}
+					</WizardBackgroundedContext.Provider>
+				</WizardLoadingContext.Provider>
+			</WizardParentFacingContext.Provider>
 		);
 	}
 
@@ -200,6 +234,10 @@ export function WizardHost(props: WizardHostProps): JSX.Element | null {
 		currentNode.transitions.Cancel != null;
 
 	return (
-		<Overlay onClose={dismissesOnCancel ? dismiss : undefined}>{node}</Overlay>
+		<WizardParentFacingContext.Provider value={isParentFacing}>
+			<Overlay onClose={dismissesOnCancel ? dismiss : undefined}>
+				{node}
+			</Overlay>
+		</WizardParentFacingContext.Provider>
 	);
 }

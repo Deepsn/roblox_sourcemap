@@ -185,6 +185,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Action.NeedHelp": "Need help?",
 	"Heading.AccountSelectorSignInTitle": "Choose account to sign in",
 	"Action.UsePasskey": "Use passkey",
+	"Label.TroubleSigningIn": "Trouble signing in?",
 	"Action.EmailACode": "Email a code",
 	"Description.EmailCode": "Email a One-Time Code",
 	"Description.U13.GetOneTimeCodeHelp":
