@@ -1,14 +1,10 @@
 import React, { useCallback, useState } from "react";
 import {
-	TranslateFunction,
-	withTranslations,
-} from "@rbx/core-scripts/legacy/react-utilities";
-import {
 	navigateToPlaytestSettings,
 	navigateToUserProfile,
 } from "../utils/playButtonUtils";
 import UpsellModal from "../components/UpsellModal";
-import { translations } from "../constants/translations";
+import { usePlayButtonTranslate } from "./usePlayButtonTranslate";
 
 type TPlaytestUpsell = "settings" | "trustedFriends" | null;
 
@@ -32,10 +28,8 @@ const PlaytestUpsellModals = ({
 	activeUpsell,
 	closeUpsell,
 	creatorId,
-	translate,
-}: TPlaytestUpsellModalsProps & {
-	translate: TranslateFunction;
-}): React.JSX.Element => {
+}: TPlaytestUpsellModalsProps): React.JSX.Element => {
+	const translate = usePlayButtonTranslate();
 	const cancelText = translate("Action.Cancel") || "Cancel";
 	const okayText = translate("Action.OK") || "OK";
 	const closeText = translate("Action.Close") || "Close";
@@ -96,12 +90,6 @@ const PlaytestUpsellModals = ({
 	);
 };
 
-const TranslatedPlaytestUpsellModals =
-	withTranslations<TPlaytestUpsellModalsProps>(
-		PlaytestUpsellModals,
-		translations,
-	);
-
 export const usePlaytestUpsellFlow = ({
 	creatorId,
 }: TUsePlaytestUpsellFlowParams): TUsePlaytestUpsellFlowResult => {
@@ -123,7 +111,7 @@ export const usePlaytestUpsellFlow = ({
 		openUpdatePlaytestSettingsUpsell,
 		openTrustedFriendsPlaytestUpsell,
 		playtestUpsellModals: (
-			<TranslatedPlaytestUpsellModals
+			<PlaytestUpsellModals
 				activeUpsell={activeUpsell}
 				closeUpsell={closeUpsell}
 				creatorId={creatorId}

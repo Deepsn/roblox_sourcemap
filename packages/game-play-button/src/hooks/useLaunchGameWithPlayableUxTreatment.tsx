@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
 	PlayableUxTreatmentEnum,
 	TPlayableUxTreatmentData,
@@ -66,9 +67,7 @@ const useLaunchGameWithPlayableUxTreatment = (
 			// Launch game, and log a counter to understand how prevalant this case is.
 			doGameLaunch();
 
-			window.EventTracker?.fireEvent(
-				counterEvents.PlayableUxTreatmentPlayabilityStatusStillLoading,
-			);
+			fireEvent(counterEvents.PlayableUxTreatmentPlayabilityStatusStillLoading);
 			sendUnlockPlayIntent(
 				unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
 			);
@@ -91,9 +90,7 @@ const useLaunchGameWithPlayableUxTreatment = (
 			// Unsupported playableUxTreatment: log counter and proceed with game launch
 			doGameLaunch();
 
-			window.EventTracker?.fireEvent(
-				counterEvents.PlayableUxTreatmentUnknownTreatment,
-			);
+			fireEvent(counterEvents.PlayableUxTreatmentUnknownTreatment);
 			sendUnlockPlayIntent(
 				unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
 			);
@@ -104,9 +101,7 @@ const useLaunchGameWithPlayableUxTreatment = (
 			// Malformed treatment data: log counter and proceed with game launch
 			doGameLaunch();
 
-			window.EventTracker?.fireEvent(
-				counterEvents.PlayableUxTreatmentMalformedData,
-			);
+			fireEvent(counterEvents.PlayableUxTreatmentMalformedData);
 			sendUnlockPlayIntent(
 				unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
 			);

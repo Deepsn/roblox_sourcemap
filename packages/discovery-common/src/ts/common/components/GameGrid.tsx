@@ -43,6 +43,7 @@ export type TGameGridProps = {
 	page?: PageContext;
 	enableSponsoredFeedback?: boolean;
 	sponsoredUserCohort?: string;
+	enableReportExperience?: boolean;
 	enableReportAd?: boolean;
 	sponsoredFooterAdLabelText?: string;
 	sponsoredFooterAdLabelFirst?: boolean;
@@ -79,6 +80,7 @@ export const GameGrid = forwardRef<HTMLDivElement, TGameGridProps>(
 			page,
 			enableSponsoredFeedback,
 			sponsoredUserCohort,
+			enableReportExperience,
 			enableReportAd,
 			sponsoredFooterAdLabelText,
 			sponsoredFooterAdLabelFirst,
@@ -183,6 +185,7 @@ export const GameGrid = forwardRef<HTMLDivElement, TGameGridProps>(
 						page={page}
 						enableSponsoredFeedback={enableSponsoredFeedback}
 						sponsoredUserCohort={sponsoredUserCohort}
+						enableReportExperience={enableReportExperience}
 						enableReportAd={enableReportAd}
 						sponsoredFooterAdLabelText={sponsoredFooterAdLabelText}
 						sponsoredFooterAdLabelFirst={sponsoredFooterAdLabelFirst}

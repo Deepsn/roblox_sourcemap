@@ -471,7 +471,7 @@ function QuickPayModal({
 					</div>
 				</DialogBody>
 				<DialogFooter>
-					<div className="loading">
+					<div className="loading text-align-x-center">
 						{isLoading && (
 							<ProgressCircle
 								variant="Indeterminate"

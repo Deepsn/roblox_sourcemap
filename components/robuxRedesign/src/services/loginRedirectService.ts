@@ -1,8 +1,8 @@
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { getCurrentUser } from "@rbx/www-common/user";
+import ExperimentationService from "@rbx/experimentation";
 import { trackCounter } from "../observability";
 import { getIosMajorVersion } from "../utils/iosVersion";
-import { waitForExperimentationService } from "./experimentationService";
 
 export const DEFAULT_LOGIN_REDIRECT_PATHNAME = "/login-redirect";
 export const NEXTJS_LOGIN_REDIRECT_PATHNAME = "/login-redirect/v2";
@@ -47,8 +47,7 @@ export class LoginRedirectService {
 			};
 		}
 
-		const service = await waitForExperimentationService();
-		const res = await service.getAllValuesForLayer(
+		const res = await ExperimentationService.getAllValuesForLayer(
 			LOGIN_REDIRECT_PATHNAME_LAYER,
 		);
 		const variant = res[ExperimentParameterName];
@@ -74,14 +73,13 @@ export class LoginRedirectService {
 		return { pathname: DEFAULT_LOGIN_REDIRECT_PATHNAME, isInExperiment: false };
 	}
 
-	async logLayerExposure() {
+	logLayerExposure() {
 		if (!this.isExperimentAccessed) {
 			trackCounter("LoginRedirectLoggingExposureWithoutExperimentAccess");
 			return;
 		}
 		trackCounter("LoginRedirectExperimentExposed");
-		const service = await waitForExperimentationService();
-		service.logLayerExposure(LOGIN_REDIRECT_PATHNAME_LAYER);
+		ExperimentationService.logLayerExposure(LOGIN_REDIRECT_PATHNAME_LAYER);
 	}
 }
 

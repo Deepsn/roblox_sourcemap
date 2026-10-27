@@ -1,4 +1,3 @@
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
 import { useTranslation } from "@rbx/core-scripts/react";
 import {
 	Button,
@@ -7,6 +6,7 @@ import {
 	SheetContent,
 	SheetTitle,
 } from "@rbx/foundation-ui";
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
 import { usePaymentSession } from "@rbx/payments/services/paymentSession";
 import { getFreeTrialDisplay } from "@rbx/payments/services/subscriptions";
 import { translateHtml } from "@rbx/translation-utils";
@@ -33,7 +33,7 @@ export type RobloxSubscriptionSheetProps = {
 	/**
 	 * Starts an asset-based upsell flow, which stamps `item_type` and derives the
 	 * triggering context from the asset. Omit for surfaces that aren't selling an
-	 * asset and pass {@link RobloxSubscriptionSheetProps.triggeringContext} instead.
+	 * asset and pass {@link TriggeringContext} instead.
 	 */
 	assetType?: string;
 	/**
@@ -132,25 +132,29 @@ const RobloxSubscriptionSheet = ({
 		if (assetType) {
 			paymentFlowAnalyticsService.startRobloxPlusUpsellFlow({ assetType });
 		}
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			triggeringContext,
-			false,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
-			plusUpsellViewMessage,
-			paymentSessionId ? { paymentSessionId } : {},
-		);
+		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+			triggerContext: triggeringContext,
+			isMidPurchaseStep: false,
+			viewName:
+				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
+			purchaseEventType:
+				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
+			viewMessage: plusUpsellViewMessage,
+			eventMetadata: paymentSessionId ? { paymentSessionId } : {},
+		});
 	}, [paymentSessionId, assetType, triggeringContext, plusUpsellViewMessage]);
 
 	const sendEventAndTrackingOnClick = useCallback(() => {
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			triggeringContext,
-			false,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-			plusUpsellViewMessage,
-			paymentSessionId ? { paymentSessionId } : {},
-		);
+		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+			triggerContext: triggeringContext,
+			isMidPurchaseStep: false,
+			viewName:
+				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBLOX_PLUS_UPSELL_BANNER,
+			purchaseEventType:
+				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+			viewMessage: plusUpsellViewMessage,
+			eventMetadata: paymentSessionId ? { paymentSessionId } : {},
+		});
 		onSubscribeClick?.();
 	}, [
 		triggeringContext,

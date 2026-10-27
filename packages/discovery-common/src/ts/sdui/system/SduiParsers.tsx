@@ -216,6 +216,7 @@ export const parseCallback = (
 				sduiContext,
 			),
 		linkPath: parsedAction.linkPath,
+		openInNewTab: parsedAction.openInNewTab,
 	};
 };
 

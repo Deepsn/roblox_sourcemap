@@ -45,6 +45,10 @@ export const parseBooleanField = (
 	defaultValue: boolean,
 	pageContext: TSduiPageContext,
 ): boolean => {
+	if (input === undefined) {
+		return defaultValue;
+	}
+
 	if (typeof input === "boolean") {
 		return input;
 	}
@@ -140,6 +144,7 @@ export const filterInvalidEventParams = (
 
 type TPageSessionAnalyticsData = {
 	[SessionInfo.HomePageSessionInfo]?: string;
+	[SessionInfo.GameSearchSessionInfo]?: string;
 	[SessionInfo.DiscoverPageSessionInfo]?: string;
 	[SessionInfo.SpotlightPageSessionInfo]?: string;
 	[SessionInfo.PreAuthLandingPageSessionInfo]?: string;
@@ -149,6 +154,7 @@ export const getSessionInfoKey = (
 	pageContext: TSduiPageContext,
 ):
 	| SessionInfo.HomePageSessionInfo
+	| SessionInfo.GameSearchSessionInfo
 	| SessionInfo.DiscoverPageSessionInfo
 	| SessionInfo.SpotlightPageSessionInfo
 	| SessionInfo.PreAuthLandingPageSessionInfo
@@ -157,9 +163,11 @@ export const getSessionInfoKey = (
 	switch (currentPage) {
 		case PageContext.HomePage:
 			return SessionInfo.HomePageSessionInfo;
+		case PageContext.SearchPage:
+			return SessionInfo.GameSearchSessionInfo;
 		case PageContext.GamesPage:
-			return SessionInfo.DiscoverPageSessionInfo;
 		case PageContext.SongListPage:
+		case PageContext.SortDetailPageDiscover:
 			return SessionInfo.DiscoverPageSessionInfo;
 		case PageContext.SpotlightPage:
 			return SessionInfo.SpotlightPageSessionInfo;
@@ -208,7 +216,10 @@ export const getEventContext = (
 	switch (currentPage) {
 		case PageContext.HomePage:
 			return EventContext.Home;
+		case PageContext.SearchPage:
+			return EventContext.SearchPage;
 		case PageContext.GamesPage:
+		case PageContext.SortDetailPageDiscover:
 			return EventContext.Games;
 		case PageContext.SpotlightPage:
 			return EventContext.Spotlight;

@@ -1,6 +1,8 @@
 const deferredDeeplinkMacLayerName = "ExperienceDetailsPage.ClientDownload";
 const deferredDeeplinkWindowsLayerName =
 	"ExperienceDetailsPage.Windows.ClientDownload";
+const gameJoinDeeplinkLayerName = "Website.DownloadFunnel";
+const gameJoinDeeplinkEnabledKey = "IsGameJoinDeeplinkEnabled";
 
 const deferredDeeplinkDownloadInstallerContext = "EdpDownloadRobloxInstaller";
 const deferredDeeplinkCreateTokenEventName = "tokenAction";
@@ -24,6 +26,8 @@ const supportedDeferredDeeplinkPathPatterns =
 export {
 	deferredDeeplinkMacLayerName,
 	deferredDeeplinkWindowsLayerName,
+	gameJoinDeeplinkLayerName,
+	gameJoinDeeplinkEnabledKey,
 	deferredDeeplinkCreateTokenEventName,
 	deferredDeeplinkDownloadInstallerContext,
 	deferredDeeplinkCreateTokenAction,

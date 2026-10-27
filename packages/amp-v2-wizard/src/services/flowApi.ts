@@ -4,8 +4,6 @@
  * reconstruct position. Tests and the demo inject their own.
  */
 
-import { httpService } from "@rbx/core-scripts/legacy/core-utilities";
-
 import { CONTINUE_URL, ENTRYPOINT_URL } from "../constants/urls";
 import type {
 	FlowApi,
@@ -13,12 +11,13 @@ import type {
 	FlowEntrypointRequest,
 	FlowResponse,
 } from "../types";
+import transport from "./requestTransport";
 
 async function postForFragment(
 	url: string,
 	body: FlowEntrypointRequest | FlowContinueRequest,
 ): Promise<FlowResponse> {
-	const response = await httpService.post<FlowResponse>(
+	const response = await transport.post<FlowResponse>(
 		{ url, withCredentials: true },
 		body,
 	);

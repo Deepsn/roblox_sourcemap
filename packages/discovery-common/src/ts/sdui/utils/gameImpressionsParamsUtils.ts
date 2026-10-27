@@ -1,18 +1,16 @@
+import type { CollectionAnalyticsData } from "@rbx/sdui-core";
 import { mergeEventParamsWithAnalyticsData } from "../../common/utils/analyticsDataUtils";
 import {
 	EventStreamMetadata,
 	type TCarouselGameImpressions,
 } from "../../common/constants/eventStreamConstants";
-import type {
-	TGameImpressionsEventSponsoredAdData,
-	TGameImpressionsEventTileBadgeContextsData,
-	TGameImpressionsEventThumbnailIdData,
+import {
+	getAbsoluteRowImpressionsData,
+	type TGameImpressionsEventSponsoredAdData,
+	type TGameImpressionsEventTileBadgeContextsData,
+	type TGameImpressionsEventThumbnailIdData,
 } from "../../common/utils/parsingUtils";
-import type {
-	TAnalyticsData,
-	TCollectionAnalyticsData,
-	TSduiPageContext,
-} from "../system/SduiTypes";
+import type { TAnalyticsData, TSduiPageContext } from "../system/SduiTypes";
 import {
 	buildSessionAnalyticsData,
 	getSessionInfoKey,
@@ -82,10 +80,12 @@ const getSponsoredAdData = (
 export type TBuildGameImpressionParamsArgs = {
 	impressionIndexes: number[];
 	itemAnalyticsDatas: TItemAnalyticsDatas;
-	collectionAnalyticsData: TCollectionAnalyticsData;
+	collectionAnalyticsData: CollectionAnalyticsData;
 	pageContext: TSduiPageContext;
 	useGridTiles: boolean;
 	componentTypeFallback: string;
+	startRowNumber?: number;
+	itemCellIndexes?: readonly number[];
 };
 
 export type TGameImpressionParams = TCarouselGameImpressions &
@@ -103,11 +103,16 @@ export const buildGameImpressionParams = ({
 	pageContext,
 	useGridTiles,
 	componentTypeFallback,
+	startRowNumber,
+	itemCellIndexes,
 }: TBuildGameImpressionParamsArgs): TGameImpressionParams => {
 	const sessionInfoKey = getSessionInfoKey(pageContext) ?? "";
 	const pageSessionInfo = parseStringField(
 		collectionAnalyticsData[sessionInfoKey],
 		"",
+	);
+	const coordinateIndexes = impressionIndexes.map(
+		(index) => itemCellIndexes?.[index] ?? index,
 	);
 
 	const firstIndex = impressionIndexes[0];
@@ -137,6 +142,12 @@ export const buildGameImpressionParams = ({
 			parseStringField(itemAnalyticsDatas[index]?.navigationUniverseId, "0"),
 		),
 		[EventStreamMetadata.AbsPositions]: impressionIndexes,
+		...getAbsoluteRowImpressionsData(
+			startRowNumber,
+			collectionAnalyticsData.itemsPerRow,
+			collectionAnalyticsData.totalNumberOfItems,
+			coordinateIndexes,
+		),
 		[EventStreamMetadata.SortPos]:
 			// Decremented since server collectionPosition will be 1-indexed for Lua
 			collectionAnalyticsData.collectionPosition >= 0
@@ -150,6 +161,8 @@ export const buildGameImpressionParams = ({
 			-1,
 		),
 		[EventStreamMetadata.Page]: pageContext.pageName,
+		[EventStreamMetadata.NumberOfLoadedTiles]:
+			collectionAnalyticsData.totalNumberOfItems,
 		...buildSessionAnalyticsData(pageSessionInfo, pageContext),
 	};
 

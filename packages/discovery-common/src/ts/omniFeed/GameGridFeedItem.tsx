@@ -140,6 +140,9 @@ export const GameGridFeedItem = ({
 				sort.topicLayoutData?.enableSponsoredFeedback === "true"
 			}
 			sponsoredUserCohort={sort.topicLayoutData?.sponsoredUserCohort}
+			enableReportExperience={
+				sort.topicLayoutData?.enableReportExperience === "true"
+			}
 			enableReportAd={sort.topicLayoutData?.enableReportAd === "true"}
 			sponsoredFooterAdLabelText={
 				sort.topicLayoutData?.sponsoredFooterAdLabelText

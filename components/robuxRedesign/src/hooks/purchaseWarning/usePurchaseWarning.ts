@@ -1,8 +1,4 @@
-/* eslint-disable no-void */
 import { useCallback, useContext, useEffect, useState } from "react";
-// prettier-ignore
-// @ts-expect-error - Legacy Roblox module types
-import { EmailVerificationService } from "@rbx/core-scripts/legacy/Roblox";
 import { document } from "@rbx/core-lib/browser";
 import { isInApp, isOnDesktop } from "../../utils/platform";
 import { Product } from "../../types/buyRobuxPageData";
@@ -11,9 +7,8 @@ import {
 	PurchaseWarningAction,
 } from "../../services/purchaseWarningsService";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
-import { TrackingContext } from "../../contexts/TrackingContext";
 import { ModalContext } from "../../contexts/ModalContext";
-import { trackCounter, trackError } from "../../observability";
+import { trackCounter } from "../../observability";
 
 export const DATASET_ELEMENT_ID = "robux-container-base";
 
@@ -35,7 +30,6 @@ export function usePurchaseWarning(): {
 	const {
 		purchaseWarning: { openModal: openPurchaseWarningModal },
 	} = useContext(ModalContext);
-	const { trackPurchaseWarningShown } = useContext(TrackingContext);
 
 	const [isPurchaseWarningModalEnabled, setIsPurchaseWarningModalEnabled] =
 		useState<boolean>(false);
@@ -79,14 +73,16 @@ export function usePurchaseWarning(): {
 			}
 
 			const { action } = purchaseWarning;
-			if (
+			const showsScaryModal =
 				action === PurchaseWarningAction.U13PaymentModal ||
 				action === PurchaseWarningAction.U13MonthlyThreshold1Modal ||
-				action === PurchaseWarningAction.U13MonthlyThreshold2Modal ||
-				(action ===
+				action === PurchaseWarningAction.U13MonthlyThreshold2Modal;
+			const showsParentalConsentInApp =
+				action ===
 					PurchaseWarningAction.ParentalConsentWarningPaymentModal13To17 &&
-					isInApp)
-			) {
+				isInApp;
+
+			if (showsScaryModal || showsParentalConsentInApp) {
 				trackCounter("PurchaseWarningModalShown", { action });
 				openPurchaseWarningModal(action, () => {
 					continuePurchase(product, isSubscriptionProduct, purchaseUrl);
@@ -94,29 +90,9 @@ export function usePurchaseWarning(): {
 				return true;
 			}
 
-			if (action !== PurchaseWarningAction.RequireEmailVerification) {
-				return false;
-			}
-
-			trackPurchaseWarningShown(action);
-			// the EmailVerificationService call is not currently well typed,
-			// so wrap it in a try/catch for safety
-			try {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-				void EmailVerificationService.handleUserEmailVerificationRequiredByPurchaseWarning();
-			} catch (e) {
-				trackError("PurchaseWarningEmailVerificationException", null, e);
-			}
-
-			trackCounter("StoppedPurchaseWarning", { action });
-			return true;
+			return false;
 		},
-		[
-			isPurchaseWarningModalEnabled,
-			isSubscriber,
-			openPurchaseWarningModal,
-			trackPurchaseWarningShown,
-		],
+		[isPurchaseWarningModalEnabled, isSubscriber, openPurchaseWarningModal],
 	);
 
 	return {

@@ -1,4 +1,4 @@
-import { getAbsoluteUrl } from "@rbx/core-scripts/util/url";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import {
 	TSduiActionConfig,
 	TSduiParsedActionConfig,
@@ -10,9 +10,12 @@ const openMusicAssetParser = (
 	_analyticsContext: TAnalyticsContext,
 ): TSduiParsedActionConfig => {
 	const assetId = actionConfig.actionParams?.itemId as number | undefined;
+	const songDetailsUrl = getAbsoluteUrl(`/music/${assetId}`);
+	const openInNewTab = actionConfig.actionParams?.openInNewTab === true;
 
 	return {
-		linkPath: getAbsoluteUrl(`/music/${assetId}`),
+		linkPath: songDetailsUrl,
+		openInNewTab,
 	};
 };
 

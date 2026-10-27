@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TranslateFunction } from "react-utilities";
+import type { TranslateFunction } from "@rbx/core-scripts/react";
 import parentalRequestService from "../services/parentalRequestService";
 import useModal from "../../../hooks/useModal";
 import parentalRequestConstants from "../constants/parentalRequestConstants";
@@ -28,7 +28,7 @@ const ParentalRequestBroadcast = ({
 	) => void;
 	onHideCallback: () => void;
 	value: Record<string, unknown> | null;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const [errorMessage, setErrorMessage] = useState<string>(
 		parentalRequestConstants.translationKeys.gatherParentEmail.unknownError,
 	);

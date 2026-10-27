@@ -3,7 +3,7 @@
  * one targets that durable ODP.
  */
 
-import * as http from "@rbx/core-scripts/http";
+import transport from "./requestTransport";
 
 import { START_ODP_SESSION_URL } from "../constants/urls";
 
@@ -39,7 +39,7 @@ function serializeRequest(
 async function startOdpSession(
 	request: StartOdpSessionRequest,
 ): Promise<StartOdpSessionResponse> {
-	const response = await http.post<StartOdpSessionResponse>(
+	const response = await transport.post<StartOdpSessionResponse>(
 		{ url: START_ODP_SESSION_URL, withCredentials: true },
 		serializeRequest(request),
 	);

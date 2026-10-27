@@ -1,4 +1,5 @@
-import { Guac, LegallySensitiveContentService } from "Roblox";
+import { callBehaviour } from "@rbx/core-scripts/guac";
+import useLegallySensitiveContentAndActions from "../../../legallySensitiveContent/useLegallySensitiveContentAndActions";
 import {
 	startWizard,
 	type UseLegallySensitiveContent,
@@ -63,7 +64,7 @@ function buildExtraProps(
 const vpcV2Handoff: TVpcV2Handoff = {
 	isEnabled: (): Promise<boolean> => {
 		if (cachedPolicyRead === null) {
-			cachedPolicyRead = Guac.callBehaviour<TAppPolicy>("app-policy")
+			cachedPolicyRead = callBehaviour<TAppPolicy>("app-policy")
 				.then((policy) => policy?.UseAmpV2WizardForVpc === true)
 				.catch(() => false);
 		}
@@ -72,9 +73,7 @@ const vpcV2Handoff: TVpcV2Handoff = {
 
 	getExcludedRequestTypes: (): Promise<string[]> => {
 		if (cachedExcludedRequestTypesRead === null) {
-			cachedExcludedRequestTypesRead = Guac.callBehaviour<TAppPolicy>(
-				"app-policy",
-			)
+			cachedExcludedRequestTypesRead = callBehaviour<TAppPolicy>("app-policy")
 				.then((policy) => policy?.AmpV2VpcExcludedRequestTypes ?? [])
 				.catch(() => []);
 		}
@@ -101,7 +100,7 @@ const vpcV2Handoff: TVpcV2Handoff = {
 				remoteParentRequest: {
 					translate,
 					useLegallySensitiveContent:
-						LegallySensitiveContentService.useLegallySensitiveContentAndActions as UseLegallySensitiveContent,
+						useLegallySensitiveContentAndActions as UseLegallySensitiveContent,
 				},
 			},
 		}).then((result: unknown) => {

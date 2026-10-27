@@ -1,26 +1,42 @@
-import { GameLauncher } from "@rbx/core-scripts/legacy/Roblox";
 import environmentUrls from "@rbx/environment-urls";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import "@rbx/core-scripts/global";
 import {
 	JoinDataProperties,
-	launchGame as launchPlayGame,
 	buildPlayGameProperties,
 } from "@rbx/core-scripts/game";
-import { eventStreamService } from "@rbx/core-scripts/legacy/core-roblox-utilities";
-import * as urlService from "@rbx/core-scripts/util/url";
-import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
 import {
-	deviceMeta as DeviceMeta,
-	jsClientDeviceIdentifier,
-} from "@rbx/core-scripts/legacy/header-scripts";
+	eventTypes,
+	sendEvent,
+	sendEventWithTarget,
+	targetTypes,
+} from "@rbx/core-scripts/event-stream";
+import { composeQueryString } from "@rbx/core-scripts/util/url";
+import { generateRandomUuid } from "@rbx/core-lib/uuid";
+import { getDeviceMeta, isIos13Ipad } from "@rbx/core-scripts/meta/device";
+import { fireEvent } from "@rbx/www-common/event-tracker";
+import {
+	showAvatarVideoOptInOverlay,
+	showVoiceOptInOverlay,
+	startVerificationFlow as startIdentityVerificationFlow,
+} from "@rbx/www-common/identity-verification";
+import { isJoinAttemptIdEnabled, launchPlayGame } from "./gameLauncher";
 import playButtonConstants from "../constants/playButtonConstants";
+import { getStartAccessManagementUpsell } from "./accessManagementUpsell";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
 import {
 	TAppsFlyerReferralProperties,
+	TPrivatePlaytestInfo,
 	TPlayabilityStatus,
 	TPlayabilityStatusWithUnplayableError,
 	type TPlayButtonPageContext,
 } from "../types/playButtonTypes";
+
+export const PlaytestUnlockUpsellType = {
+	AgeVerification: "AgeVerification",
+	UpdatePlaytestSettings: "UpdatePlaytestSettings",
+	AddTrustedFriend: "AddTrustedFriend",
+} as const;
 
 const {
 	unlockPlayIntentConstants,
@@ -39,16 +55,14 @@ type TJoinAttemptProperties = {
 function getJoinAttemptProperties(
 	eventProperties: TEventProperties,
 ): TJoinAttemptProperties {
-	if (!GameLauncher?.isJoinAttemptIdEnabled()) {
+	if (!isJoinAttemptIdEnabled()) {
 		return {};
 	}
 
 	const { joinAttemptOrigin } = eventProperties;
 	let { joinAttemptId } = eventProperties;
 	joinAttemptId =
-		typeof joinAttemptId === "string"
-			? joinAttemptId
-			: uuidService.generateRandomUuid();
+		typeof joinAttemptId === "string" ? joinAttemptId : generateRandomUuid();
 	return { joinAttemptId, joinAttemptOrigin };
 }
 
@@ -66,11 +80,7 @@ function sendPlayGameClickedEvent(
 		...(actionType == null ? {} : { actionType }),
 	};
 
-	eventStreamService.sendEventWithTarget(
-		"playGameClicked",
-		"click",
-		mergedProperties,
-	);
+	sendEventWithTarget("playGameClicked", "click", mergedProperties);
 
 	return mergedProperties;
 }
@@ -81,7 +91,7 @@ function getEncodedUniversalLink(
 ): string {
 	let universalLink = `${environmentUrls.websiteUrl}/games/start?placeid=${placeId}`;
 
-	if (GameLauncher?.isJoinAttemptIdEnabled()) {
+	if (isJoinAttemptIdEnabled()) {
 		const { joinAttemptId, joinAttemptOrigin } =
 			getJoinAttemptProperties(eventProperties);
 
@@ -119,11 +129,11 @@ export const launchGame = (
 	appsFlyerReferralProperties: TAppsFlyerReferralProperties = {},
 	actionType?: string,
 ): void => {
-	const deviceMeta = DeviceMeta.getDeviceMeta();
+	const deviceMeta = getDeviceMeta();
 	if (
 		deviceMeta?.isIosDevice ||
 		deviceMeta?.isAndroidDevice ||
-		jsClientDeviceIdentifier.isIos13Ipad ||
+		isIos13Ipad() ||
 		deviceMeta?.isChromeOs
 	) {
 		const playGameClickedEventProperties = sendPlayGameClickedEvent(
@@ -137,7 +147,7 @@ export const launchGame = (
 			placeId,
 			playGameClickedEventProperties,
 		);
-		const afDeeplinkParams = urlService.composeQueryString({
+		const afDeeplinkParams = composeQueryString({
 			...defaultAfReferralProperties,
 			...appsFlyerReferralProperties,
 		});
@@ -185,11 +195,11 @@ export const launchLogin = (
 	placeId: string,
 	appsFlyerReferralProperties: TAppsFlyerReferralProperties = {},
 ): void => {
-	const deviceMeta = DeviceMeta.getDeviceMeta();
+	const deviceMeta = getDeviceMeta();
 	if (
 		deviceMeta?.isIosDevice ||
 		deviceMeta?.isAndroidDevice ||
-		jsClientDeviceIdentifier.isIos13Ipad ||
+		isIos13Ipad() ||
 		deviceMeta?.isChromeOs
 	) {
 		const playGameClickedEventProperties = sendPlayGameClickedEvent(
@@ -201,7 +211,7 @@ export const launchLogin = (
 			placeId,
 			playGameClickedEventProperties,
 		);
-		const afDeeplinkParams = urlService.composeQueryString({
+		const afDeeplinkParams = composeQueryString({
 			...defaultAfReferralProperties,
 			...appsFlyerReferralProperties,
 		});
@@ -217,11 +227,29 @@ export const launchLogin = (
 	}
 };
 
+// The global type declares this service as required, but it is only installed by the
+// IdVerification SCC and window.Roblox is absent in Next.js, so check it at runtime.
+type IdentityVerificationService =
+	Window["Roblox"]["IdentityVerificationService"];
+
+const getIdentityVerificationService = ():
+	| IdentityVerificationService
+	| undefined =>
+	(
+		window as {
+			Roblox?: { IdentityVerificationService?: IdentityVerificationService };
+		}
+	).Roblox?.IdentityVerificationService;
+
 export const startVerificationFlow = async (): Promise<[boolean, boolean]> => {
 	try {
+		const service = getIdentityVerificationService();
+		const flow = service
+			? service.startVerificationFlow()
+			: startIdentityVerificationFlow();
 		// TODO: old, migrated code
 		// eslint-disable-next-line @typescript-eslint/return-await
-		return window.Roblox.IdentityVerificationService.startVerificationFlow();
+		return flow;
 	} catch {
 		return [false, false];
 	}
@@ -232,12 +260,19 @@ export const startVoiceOptInOverlayFlow = async (
 	useVoiceUpsellV2Design: boolean,
 ): Promise<boolean> => {
 	try {
+		const service = getIdentityVerificationService();
+		const flow = service
+			? service.showVoiceOptInOverlay(
+					requireExplicitVoiceConsent,
+					useVoiceUpsellV2Design,
+				)
+			: showVoiceOptInOverlay(
+					requireExplicitVoiceConsent,
+					useVoiceUpsellV2Design,
+				);
 		// TODO: old, migrated code
 		// eslint-disable-next-line @typescript-eslint/return-await
-		return window.Roblox.IdentityVerificationService.showVoiceOptInOverlay(
-			requireExplicitVoiceConsent,
-			useVoiceUpsellV2Design,
-		);
+		return flow;
 	} catch {
 		return false;
 	}
@@ -248,12 +283,19 @@ export const startAvatarVideoOptInOverlayFlow = async (
 	useCameraU13Design: boolean,
 ): Promise<boolean> => {
 	try {
+		const service = getIdentityVerificationService();
+		const flow = service
+			? service.showAvatarVideoOptInOverlay(
+					requireExplicitCameraConsent,
+					useCameraU13Design,
+				)
+			: showAvatarVideoOptInOverlay(
+					requireExplicitCameraConsent,
+					useCameraU13Design,
+				);
 		// TODO: old, migrated code
 		// eslint-disable-next-line @typescript-eslint/return-await
-		return window.Roblox.IdentityVerificationService.showAvatarVideoOptInOverlay(
-			requireExplicitCameraConsent,
-			useCameraU13Design,
-		);
+		return flow;
 	} catch {
 		return false;
 	}
@@ -282,14 +324,9 @@ export const startAgeCheckAccessManagementUpsellFlow = async ({
 			},
 		};
 
-		return (
-			(await window.Roblox.AccessManagementUpsellV2Service?.startAccessManagementUpsell(
-				params,
-			)) ?? false
-		);
+		return (await getStartAccessManagementUpsell()?.(params)) ?? false;
 	} catch (e) {
-		const { fireEvent } = window.EventTracker ?? {};
-		fireEvent?.(counterEvents.PlayButtonUpsellAgeRestrictionVerificationError);
+		fireEvent(counterEvents.PlayButtonUpsellAgeRestrictionVerificationError);
 		// re-throw the error to allow clients to handle their specific requirements
 		// when an error happens
 		throw e;
@@ -301,25 +338,22 @@ export const handleShareLinkEventLogging = (
 	universeId: string,
 ): void => {
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-deprecated
-		const shareLinkSourceType =
-			window.Roblox.UrlParser?.getParameterValueByName(
-				"shareLinkSourceType",
-				false,
-			);
+		// The param name matches case-insensitively, like the legacy UrlParser lookup.
+		const shareLinkSourceType = [
+			...new URLSearchParams(window.location.search),
+		].find(([name]) => name.toLowerCase() === "sharelinksourcetype")?.[1];
 		if (shareLinkSourceType?.toLowerCase() !== "experiencedetails") {
 			return;
 		}
 
-		const { EventStream } = window.Roblox;
-		EventStream?.SendEventWithTarget(
+		sendEventWithTarget(
 			"shareLinkGameJoin",
 			"GamePlayButtonWeb",
 			{
 				placeId,
 				universeId,
 			},
-			EventStream.TargetTypes.WWW,
+			targetTypes.WWW,
 		);
 	} catch {
 		// ignore
@@ -376,14 +410,73 @@ export const sendUnlockPlayIntentEvent = (
 		pg: pageContext,
 	};
 
-	eventStreamService.sendEvent(
+	sendEvent(
 		{
 			name: unlockPlayIntentConstants.eventName,
 			type: unlockPlayIntentConstants.eventName,
-			context: eventStreamService.eventTypes.formInteraction,
+			context: eventTypes.formInteraction,
 		},
 		eventParams,
 	);
+};
+
+export const getPlaytestUnlockUpsellType = (
+	playabilityStatus: TPlayabilityStatus | undefined,
+):
+	| (typeof PlaytestUnlockUpsellType)[keyof typeof PlaytestUnlockUpsellType]
+	| undefined => {
+	if (
+		playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityUnverifiedSeventeenPlusUser ||
+		playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityAgeCheckRequired
+	) {
+		return PlaytestUnlockUpsellType.AgeVerification;
+	}
+
+	if (
+		playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityRequireParentApproval ||
+		playabilityStatus ===
+			PlayabilityStatus.ContextualPlayabilityPlaytestDisabled
+	) {
+		return PlaytestUnlockUpsellType.UpdatePlaytestSettings;
+	}
+
+	if (
+		playabilityStatus ===
+		PlayabilityStatus.ContextualPlayabilityTrustedFriendRequired
+	) {
+		return PlaytestUnlockUpsellType.AddTrustedFriend;
+	}
+
+	return undefined;
+};
+
+export const shouldUsePlaytestActionNeeded = (
+	playabilityStatus: TPlayabilityStatus | undefined,
+	privatePlaytestInfo: TPrivatePlaytestInfo | undefined | null,
+): privatePlaytestInfo is TPrivatePlaytestInfo => {
+	const isEligibleUnavailableStatus =
+		playabilityStatus !== undefined &&
+		playabilityStatus !== PlayabilityStatus.Playable &&
+		playabilityStatus !== PlayabilityStatus.GuestProhibited;
+	const requiresUpsell =
+		privatePlaytestInfo?.isPlayable === false &&
+		getPlaytestUnlockUpsellType(privatePlaytestInfo.playabilityStatus) !==
+			undefined;
+
+	return isEligibleUnavailableStatus && requiresUpsell;
+};
+
+export const navigateToPlaytestSettings = (): void => {
+	window.location.assign(
+		getAbsoluteUrl("/my/account#!/privacy/ContentRestrictions/PrivatePlaytest"),
+	);
+};
+
+export const navigateToUserProfile = (userId: number): void => {
+	window.location.assign(getAbsoluteUrl(`/users/${userId}/profile`));
 };
 
 export default {
@@ -394,5 +487,6 @@ export default {
 	startVoiceOptInOverlayFlow,
 	startAgeCheckAccessManagementUpsellFlow,
 	shouldShowUnplayableButton,
+	shouldUsePlaytestActionNeeded,
 	sendUnlockPlayIntentEvent,
 };

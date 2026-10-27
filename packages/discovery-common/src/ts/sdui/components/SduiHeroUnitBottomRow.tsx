@@ -44,7 +44,10 @@ const SduiHeroUnitBottomRow = ({
 			ctaButton={ctaButton}
 			labelText={labelText}
 			labelTextColor={tokens.Color.Extended.Gray.Gray_400}
-			labelTextFontStyle={tokens.Typography.BodySmall}
+			labelTextFontStyle={{
+				...tokens.Typography.BodySmall,
+				FontFamily: "inherit",
+			}}
 			rightLabelContent={rightLabelContent}
 			containerOverrides={containerOverrides}
 		/>

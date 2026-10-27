@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { Endpoints } from "@rbx/core-scripts/legacy/Roblox";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
 	TSettingResponse,
 	TAppsFlyerReferralProperties,
@@ -12,6 +13,7 @@ import {
 	startAgeCheckAccessManagementUpsellFlow,
 	sendUnlockPlayIntentEvent,
 } from "../utils/playButtonUtils";
+import { getStartAccessManagementUpsell } from "../utils/accessManagementUpsell";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
 import useGuacPlayButtonUI from "./useGuacPlayButtonUI";
@@ -93,7 +95,6 @@ const useContextualParentalControlsUpsell = (
 				);
 			};
 
-			const { fireEvent } = window.EventTracker ?? {};
 			if (
 				hasError ||
 				contentAgeRestriction === undefined ||
@@ -101,7 +102,7 @@ const useContextualParentalControlsUpsell = (
 			) {
 				launchGameFallback();
 
-				fireEvent?.(counterEvents.PlayButtonUpsellUnknownSettingOrAge);
+				fireEvent(counterEvents.PlayButtonUpsellUnknownSettingOrAge);
 
 				sendUnlockPlayIntent(
 					unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -114,7 +115,7 @@ const useContextualParentalControlsUpsell = (
 				// the game should be playable. show an error counter and fallback to game launch
 				launchGameFallback();
 
-				fireEvent?.(counterEvents.PlayButtonUpsellMinimalMaturityRating);
+				fireEvent(counterEvents.PlayButtonUpsellMinimalMaturityRating);
 
 				sendUnlockPlayIntent(
 					unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -140,7 +141,7 @@ const useContextualParentalControlsUpsell = (
 			if (!requestedSettingValue) {
 				launchGameFallback();
 
-				fireEvent?.(counterEvents.PlayButtonUpsellAgeNotInMapping);
+				fireEvent(counterEvents.PlayButtonUpsellAgeNotInMapping);
 
 				sendUnlockPlayIntent(
 					unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -159,20 +160,20 @@ const useContextualParentalControlsUpsell = (
 					case "SelfUpdateSetting": {
 						setIsSelfUpdateSettingModalOpen(true);
 
-						fireEvent?.(
-							counterEvents.PlayButtonUpsellSelfUpdateSettingTriggered,
-						);
+						fireEvent(counterEvents.PlayButtonUpsellSelfUpdateSettingTriggered);
 
 						sendUnlockPlayIntent(requirement);
 						break;
 					}
 					case "ParentalConsent": {
-						fireEvent?.(counterEvents.PlayButtonUpsellAskYourParentTriggered);
+						fireEvent(counterEvents.PlayButtonUpsellAskYourParentTriggered);
 
 						sendUnlockPlayIntent(requirement);
 
-						if (!window.Roblox.AccessManagementUpsellV2Service) {
-							fireEvent?.(counterEvents.PlayButtonUpsellParentalConsentError);
+						const startAccessManagementUpsell =
+							getStartAccessManagementUpsell();
+						if (!startAccessManagementUpsell) {
+							fireEvent(counterEvents.PlayButtonUpsellParentalConsentError);
 							break;
 						}
 
@@ -200,13 +201,11 @@ const useContextualParentalControlsUpsell = (
 											},
 										};
 
-							await window.Roblox.AccessManagementUpsellV2Service.startAccessManagementUpsell(
-								upsellParams,
-							);
+							await startAccessManagementUpsell(upsellParams);
 						} catch {
 							launchGameFallback();
 
-							fireEvent?.(counterEvents.PlayButtonUpsellParentalConsentError);
+							fireEvent(counterEvents.PlayButtonUpsellParentalConsentError);
 
 							sendUnlockPlayIntent(
 								unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -217,7 +216,7 @@ const useContextualParentalControlsUpsell = (
 					}
 					case "ContentAgeRestrictionVerification": {
 						try {
-							fireEvent?.(
+							fireEvent(
 								counterEvents.PlayButtonUpsellAgeRestrictionVerificationTriggered,
 							);
 
@@ -244,7 +243,7 @@ const useContextualParentalControlsUpsell = (
 					default: {
 						launchGameFallback();
 
-						fireEvent?.(counterEvents.PlayButtonUpsellUnknownRequirement);
+						fireEvent(counterEvents.PlayButtonUpsellUnknownRequirement);
 
 						sendUnlockPlayIntent(
 							unlockPlayIntentConstants.gameLaunchFallbackUpsellName,
@@ -254,9 +253,7 @@ const useContextualParentalControlsUpsell = (
 			} else {
 				setIsRestrictedUnplayableModalOpen(true);
 
-				fireEvent?.(
-					counterEvents.PlayButtonUpsellRestrictedUnplayableTriggered,
-				);
+				fireEvent(counterEvents.PlayButtonUpsellRestrictedUnplayableTriggered);
 
 				sendUnlockPlayIntent(
 					unlockPlayIntentConstants.restrictedUnplayableUpsellName,
@@ -275,7 +272,7 @@ const useContextualParentalControlsUpsell = (
 	}, []);
 
 	const navigateToAccountSettings = useCallback(() => {
-		const url = Endpoints.getAbsoluteUrl("/my/account#!/privacy");
+		const url = getAbsoluteUrl("/my/account#!/privacy");
 		if (typeof window !== "undefined") {
 			window.location.href = url;
 			setIsSelfUpdateSettingModalOpen(false);

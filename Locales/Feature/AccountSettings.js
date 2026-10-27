@@ -2789,6 +2789,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.ProfileVisibilityAbout":
 		"Who can see the About section on your profile",
 	"Heading.ProfileVisibility": "Profile visibility",
+	"Feature.AccountSettings.Heading.ContentPersonalization":
+		"Content Personalization",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

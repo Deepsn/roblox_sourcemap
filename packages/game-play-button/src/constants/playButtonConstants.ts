@@ -70,6 +70,7 @@ const playButtonTextTranslationMap = {
 	Unplayable: "PlayButtonText.Unavailable",
 	Buy: "PlayButtonText.Buy",
 	PlayDemo: "PlayButtonText.PlayDemo",
+	PlayOnWeb: "PlayButtonText.PlayOnWeb",
 };
 
 const counterEvents = {
@@ -131,6 +132,8 @@ const unlockPlayIntentConstants = {
 	fiatPurchaseUpsellName: "FiatPurchase",
 	reconfirmLaunchModalUpsellName: "ReconfirmLaunchModal",
 	experienceApprovalUpsellName: "ExperienceApproval",
+	updatePlaytestSettingsUpsellName: "UpdatePlaytestSettings",
+	trustedFriendRequiredUpsellName: "TrustedFriendRequired",
 };
 
 const playButtonUpsellContexts = {

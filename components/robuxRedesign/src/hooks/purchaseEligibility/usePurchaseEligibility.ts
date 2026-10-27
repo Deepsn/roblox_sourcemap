@@ -115,17 +115,23 @@ export function usePurchaseEligibility(): {
 	const startAccessManagementUpsellFlow =
 		useCallback(async (): Promise<void> => {
 			try {
-				await window?.Roblox.AccessManagementUpsellV2Service?.startAccessManagementUpsell(
-					{
-						ampRecourseData: {
-							enablePurchases: "Enabled",
+				const result =
+					await window?.Roblox.AccessManagementUpsellV2Service?.startAccessManagementUpsell(
+						{
+							ampRecourseData: {
+								enablePurchases: "Enabled",
+							},
+							featureName: "CanChangeSetting",
+							namespace: SETTING_CHANGE_AMP_NAMESPACE,
+							isAsyncCall: false,
+							usePrologue: true,
 						},
-						featureName: "CanChangeSetting",
-						namespace: SETTING_CHANGE_AMP_NAMESPACE,
-						isAsyncCall: false,
-						usePrologue: true,
-					},
-				);
+					);
+				if (typeof result === "boolean") {
+					trackCounter("AccessManagementUpsellResult", {
+						result: String(result),
+					});
+				}
 			} catch (e) {
 				trackError("AccessManagementUpsellException", null, e);
 			}

@@ -4,7 +4,10 @@ import {
 	targetTypes,
 } from "@rbx/core-scripts/event-stream";
 import { WithTranslationsProps } from "@rbx/core-scripts/react";
-import { BadgeSizes, VerifiedBadgeIconContainer } from "@rbx/roblox-badges";
+import VerifiedBadgeIcon, {
+	VERIFIED_BADGE_ARIA_LABEL,
+	VERIFIED_BADGE_ARIA_LABEL_KEY,
+} from "@rbx/www-common/components/verified-badge";
 import { FeatureGamePage } from "../constants/translationConstants";
 import "../../../css/common/_gameTiles.scss";
 
@@ -59,7 +62,14 @@ export const CreatorLabel = ({
 				{creatorName}
 			</a>
 			{isCreatorVerified && (
-				<VerifiedBadgeIconContainer size={BadgeSizes.CAPTIONHEADER} />
+				<VerifiedBadgeIcon
+					size="Medium"
+					titleText={translate(
+						VERIFIED_BADGE_ARIA_LABEL_KEY,
+						undefined,
+						VERIFIED_BADGE_ARIA_LABEL,
+					)}
+				/>
 			)}
 		</div>
 	);

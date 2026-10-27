@@ -63,10 +63,8 @@ export const observabilityRegistry = {
 				"UnexpectedPurchaseRedirectCall",
 				"PurchaseRedirectUrlEmpty",
 				"QuickPayUpsell",
-				"EmailVerificationComplete",
-				"EmailVerificationModalShown",
 			],
-			errors: ["EmailVerificationException", "ApplePayAvailabilityException"],
+			errors: ["ApplePayAvailabilityException"],
 		},
 		purchaseEligibility: {
 			counters: [
@@ -74,6 +72,7 @@ export const observabilityRegistry = {
 				"PurchaseEligibilityFailedToFetch",
 				"EconomicRestrictionModalShown",
 				"AccessManagementUpsellModalShown",
+				{ name: "AccessManagementUpsellResult", dimensions: ["result"] },
 				"PurchaseDisabledModalShownDisabledBySelf",
 				"PurchaseDisabledModalShownParentalConsent",
 			],
@@ -85,10 +84,7 @@ export const observabilityRegistry = {
 				{ name: "StoppedPurchaseWarning", dimensions: ["action"] },
 				"PurchaseWarningAcknowledged",
 			],
-			errors: [
-				"PurchaseWarningEmailVerificationException",
-				"PurchaseWarningAcknowledgeFailed",
-			],
+			errors: ["PurchaseWarningAcknowledgeFailed"],
 		},
 		firstTimePurchaseConsent: {
 			counters: ["FirstTimePurchaseConsentNotFetchedInTime"],

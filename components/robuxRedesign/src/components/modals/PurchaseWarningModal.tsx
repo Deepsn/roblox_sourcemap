@@ -44,7 +44,6 @@ export function PurchaseWarningModal() {
 					linebreak: lineBreak,
 				});
 			}
-			case PurchaseWarningAction.RequireEmailVerification:
 			case undefined:
 			default:
 				return null;

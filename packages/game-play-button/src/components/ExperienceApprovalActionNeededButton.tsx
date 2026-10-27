@@ -1,5 +1,7 @@
 import React, { useCallback } from "react";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import { sendUnlockPlayIntentEvent } from "../utils/playButtonUtils";
+import { getStartAccessManagementUpsell } from "../utils/accessManagementUpsell";
 import ActionNeededButton from "./ActionNeededButton";
 import playButtonConstants from "../constants/playButtonConstants";
 import { PlayabilityStatus } from "../constants/playabilityStatus";
@@ -24,8 +26,7 @@ const ExperienceApprovalActionNeededButton = ({
 			e.preventDefault();
 			e.stopPropagation();
 
-			const { fireEvent } = window.EventTracker ?? {};
-			fireEvent?.(counterEvents.PlayButtonUpsellExperienceApprovalTriggered);
+			fireEvent(counterEvents.PlayButtonUpsellExperienceApprovalTriggered);
 
 			sendUnlockPlayIntentEvent(
 				universeId,
@@ -34,24 +35,23 @@ const ExperienceApprovalActionNeededButton = ({
 				pageContext,
 			);
 
-			if (!window.Roblox.AccessManagementUpsellV2Service) {
-				fireEvent?.(counterEvents.PlayButtonUpsellExperienceApprovalError);
+			const startAccessManagementUpsell = getStartAccessManagementUpsell();
+			if (!startAccessManagementUpsell) {
+				fireEvent(counterEvents.PlayButtonUpsellExperienceApprovalError);
 				return;
 			}
 
-			window.Roblox.AccessManagementUpsellV2Service.startAccessManagementUpsell(
-				{
-					featureName: "CanApproveExperience",
-					namespace: ampNamespaces.accountManagement,
-					isAsyncCall: false,
-					usePrologue: true,
-					ampRecourseData: {
-						universeId,
-						experienceManagementAction: "Approve",
-					},
+			startAccessManagementUpsell({
+				featureName: "CanApproveExperience",
+				namespace: ampNamespaces.accountManagement,
+				isAsyncCall: false,
+				usePrologue: true,
+				ampRecourseData: {
+					universeId,
+					experienceManagementAction: "Approve",
 				},
-			).catch(() => {
-				fireEvent?.(counterEvents.PlayButtonUpsellExperienceApprovalError);
+			}).catch(() => {
+				fireEvent(counterEvents.PlayButtonUpsellExperienceApprovalError);
 			});
 		},
 		[universeId, pageContext],

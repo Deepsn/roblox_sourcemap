@@ -10,7 +10,6 @@ import {
 	isOnDesktop,
 	isSamsungGalaxyStoreApp,
 } from "../../utils/platform";
-import { useEmailVerification } from "../useEmailVerification";
 import { usePurchaseEligibility } from "../purchaseEligibility/usePurchaseEligibility";
 import { usePurchaseWarning } from "../purchaseWarning/usePurchaseWarning";
 import { QuickPay } from "../quickPay/useQuickPay";
@@ -54,7 +53,6 @@ export function usePurchase(
 
 	const { isStoppedByPurchaseWarning } = usePurchaseWarning();
 	const { isUserEligibleForPurchase } = usePurchaseEligibility();
-	const { isVerificationUpsellEnabled, verifyEmail } = useEmailVerification();
 
 	const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
 	const [productSectionType, setProductSectionType] = useState<
@@ -142,41 +140,6 @@ export function usePurchase(
 				return;
 			}
 
-			if (isVerificationUpsellEnabled) {
-				// the EmailVerificationService call is not currently well typed,
-				// so wrap it in a try/catch for safety!
-				let data: Record<string, unknown>;
-				try {
-					data = await verifyEmail(isSub)(() => {
-						void (async () => {
-							trackCounter("EmailVerificationComplete");
-							await purchaseProductPostVerificationUpsell(
-								product,
-								isBonus,
-								isSub,
-								url,
-							);
-						})();
-					});
-				} catch (e) {
-					trackError("EmailVerificationException", null, e);
-					return;
-				}
-
-				if (data.emailAddress) {
-					await purchaseProductPostVerificationUpsell(
-						product,
-						isBonus,
-						isSub,
-						url,
-					);
-					return;
-				}
-
-				trackCounter("EmailVerificationModalShown");
-				return;
-			}
-
 			await purchaseProductPostVerificationUpsell(product, isBonus, isSub, url);
 		},
 		[
@@ -184,8 +147,6 @@ export function usePurchase(
 			trackPurchase,
 			getPurchaseUrl,
 			isUserEligibleForPurchase,
-			isVerificationUpsellEnabled,
-			verifyEmail,
 			purchaseProductPostVerificationUpsell,
 		],
 	);
@@ -284,9 +245,11 @@ export function usePurchase(
 			const { product, isRedirect, isSubscription, isBonus, sectionType } =
 				purchaseOptions;
 			if (isRedirect) {
-				loginRedirectService.logLayerExposure().catch((error: unknown) => {
+				try {
+					loginRedirectService.logLayerExposure();
+				} catch (error: unknown) {
 					trackError("LoginRedirectLayerExposureError", null, error);
-				});
+				}
 				purchaseRedirectProduct(purchaseOptions);
 			} else {
 				void purchaseNonRedirectProduct(

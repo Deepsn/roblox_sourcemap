@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { WithTranslationsProps } from "react-utilities";
+import type { TranslateFunction } from "@rbx/core-scripts/react";
 import useParentEmailModal from "../hooks/useParentEmailModal";
 import RequestType from "../enums/RequestType";
 import { sendInitialUpsellPageLoadEvent } from "../../../accessManagement/constants/eventConstants";
@@ -16,7 +16,7 @@ const ParentEmailModal = ({
 	value,
 	source,
 }: {
-	translate: WithTranslationsProps["translate"];
+	translate: TranslateFunction;
 	consentType: RequestType;
 	successCallback: (
 		sessionId: string,
@@ -27,7 +27,7 @@ const ParentEmailModal = ({
 	isPrologueUsed: boolean;
 	value: Record<string, unknown> | null;
 	source?: string;
-}): JSX.Element => {
+}): React.JSX.Element => {
 	const featureName = useSelector(selectFeatureName)!;
 	const [parentEmailModal, parentEmailModalService] = useParentEmailModal(
 		translate,
