@@ -1,4 +1,4 @@
-import { ValueOf } from "@rbx/core-lib";
+import { ValueOf } from "@rbx/core-types";
 import * as device from "@rbx/core-scripts/meta/device";
 import {
 	eventTypes,

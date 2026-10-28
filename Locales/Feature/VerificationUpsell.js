@@ -240,6 +240,8 @@ Roblox.LangDynamic["Feature.VerificationUpsell"] = {
 	"Action.ContinueM2V1": "Continue without checking for now",
 	"Action.ContinueM2V2": "Continue with limited access",
 	AgeCheckUpsellBannerM2: "Get the full Roblox experience with an age check.",
+	"Label.PlayAndChatWithPeopleYourAge": "Play and chat with people your age",
+	"Label.AgeCheckOnlyTakesAMoment": "An age check only takes a moment.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
