@@ -93,7 +93,10 @@ export type DeepLinkHost = {
 	) => Promise<{ data: ResolveShareLinksV2Response }>;
 	getPlaceIdFromUniverseId: (universeId: string) => Promise<number>;
 	getUniverseIdFromPlaceId: (placeId: string) => Promise<number>;
-	launchGame: (properties: PlayGameProperties, event: LaunchGameEvent) => void;
+	launchGame: (
+		properties: PlayGameProperties,
+		event: LaunchGameEvent,
+	) => PromiseLike<void> | void;
 	joinMultiplayerGame: (placeId: number) => void;
 	startGameWithDeepLinkUrl: (deepLinkUrl: string, placeId: number) => void;
 	// Returns false when the page cannot start the flow, so the caller falls back to a redirect.
@@ -166,6 +169,29 @@ const buildRedirectUrlWithJoinData = (
 	return `${baseUrl}?${searchParams.toString()}`;
 };
 
+// A launch normally opens the client in well under a second; don't hold the share page longer.
+const LAUNCH_WAIT_TIMEOUT_MS = 5000;
+
+// Redirecting cancels a launch that hasn't opened the client yet, so wait for it. Still redirect
+// if the launch fails or hangs: the game page is the right place to land either way.
+const waitForLaunch = async (
+	launch: () => PromiseLike<void> | void,
+): Promise<void> => {
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	try {
+		await Promise.race([
+			launch(),
+			new Promise<void>((resolve) => {
+				timer = setTimeout(resolve, LAUNCH_WAIT_TIMEOUT_MS);
+			}),
+		]);
+	} catch {
+		// The launcher reports its own failures.
+	} finally {
+		clearTimeout(timer);
+	}
+};
+
 const deepLinkNavigate = (
 	host: DeepLinkHost,
 	target: DeepLink,
@@ -225,7 +251,7 @@ const deepLinkNavigate = (
 			const code = params.code || "";
 			return host
 				.resolveShareLinksV2(params.code)
-				.then((response) => {
+				.then(async (response) => {
 					if (response.data.linkType === "Referral") {
 						const referralStatus = response.data.status;
 						const referralEvent = buildResolveLinkEvent(
@@ -275,25 +301,27 @@ const deepLinkNavigate = (
 						response.data.linkType === "Experience" &&
 						response.data.targetId
 					) {
-						window.location.href = `${UrlPart.Games}/${response.data.targetId}`;
 						// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 						const launchData = response.data.customData || "{}";
-						host.launchGame(
-							buildPlayGameProperties(
-								response.data.targetId,
-								response.data.targetId,
-								undefined, // instanceId
-								undefined, // playerId
-								undefined, // privateServerLinkCode
-								undefined, // inviterId
-								{ launchData },
-							),
-							buildDeepLinkLaunchGameEvent(
-								response.data.targetId,
-								code,
-								response.data.status,
+						await waitForLaunch(() =>
+							host.launchGame(
+								buildPlayGameProperties(
+									response.data.targetId,
+									response.data.targetId,
+									undefined, // instanceId
+									undefined, // playerId
+									undefined, // privateServerLinkCode
+									undefined, // inviterId
+									{ launchData },
+								),
+								buildDeepLinkLaunchGameEvent(
+									response.data.targetId,
+									code,
+									response.data.status,
+								),
 							),
 						);
+						window.location.href = `${UrlPart.Games}/${response.data.targetId}`;
 					} else if (
 						(response.data.linkType === "StudioEdit" ||
 							response.data.linkType === "StudioTeamTest") &&
@@ -412,7 +440,7 @@ const deepLinkNavigate = (
 					const { code } = params;
 					return host
 						.resolveShareLinks(params.code, ShareLinksType.EXPERIENCE_INVITE)
-						.then((response) => {
+						.then(async (response) => {
 							// TODO: old, migrated code
 							// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 							const data = response?.data?.experienceInviteData;
@@ -434,23 +462,25 @@ const deepLinkNavigate = (
 								data.status === ExperienceInviteStatus.VALID &&
 								data.instanceId
 							) {
-								window.location.href = `${UrlPart.Games}/${data.placeId}`;
-								host.launchGame(
-									buildPlayGameProperties(
-										// @ts-expect-error TODO: old, migrated code
-										data.placeId,
-										data.placeId,
-										data.instanceId,
-										undefined, // playerId
-										undefined, // privateServerLinkCode
-										data.inviterId,
-									),
-									buildDeepLinkLaunchGameEvent(
-										data.placeId.toString(),
-										code,
-										data.status,
+								await waitForLaunch(() =>
+									host.launchGame(
+										buildPlayGameProperties(
+											// @ts-expect-error TODO: old, migrated code
+											data.placeId,
+											data.placeId,
+											data.instanceId,
+											undefined, // playerId
+											undefined, // privateServerLinkCode
+											data.inviterId,
+										),
+										buildDeepLinkLaunchGameEvent(
+											data.placeId.toString(),
+											code,
+											data.status,
+										),
 									),
 								);
+								window.location.href = `${UrlPart.Games}/${data.placeId}`;
 								return true;
 							}
 							if (

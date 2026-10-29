@@ -49,7 +49,6 @@ export const common = {
 	numberOfInGameNames: 1,
 	maxFacepileFriendCountValue: 99,
 	numberOfGameTilesPerLoad: 60,
-	numberOfGamePassesPerLoad: 50,
 	keyBoardEventCode: {
 		enter: "Enter",
 		escape: "Escape",

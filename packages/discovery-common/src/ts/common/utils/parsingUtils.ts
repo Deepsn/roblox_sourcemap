@@ -9,6 +9,7 @@ import {
 	parseQueryString as parseQueryStringCore,
 } from "@rbx/core-scripts/util/url";
 import Presence from "@rbx/presence";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
 	EventStreamMetadata,
 	SessionInfoType,
@@ -607,9 +608,7 @@ export const getSessionInfoTypeFromPageContext = (
 		case PageContext.PreAuthLandingPage:
 			return SessionInfoType.PreAuthLandingPageSessionInfo;
 		default:
-			window.EventTracker?.fireEvent(
-				common.NoMatchingSessionInfoTypeFoundCounterEvent,
-			);
+			fireEvent(common.NoMatchingSessionInfoTypeFoundCounterEvent);
 			return null;
 	}
 };

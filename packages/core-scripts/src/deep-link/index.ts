@@ -27,8 +27,24 @@ const launchStudio = ({
 	instanceId,
 	annotationId,
 }: StudioLinkData): void => {
+	if (!placeId || !universeId) {
+		return;
+	}
+	// The Next.js host registers the shared launcher; .NET pages use window.Roblox.GameLauncher.
+	const launcher = getGameLauncher();
+	if (launcher) {
+		// eslint-disable-next-line no-void, @rbx/promises/prefer-query-mutation -- the launcher host reports launch failures
+		void launcher.editGameInStudio({
+			placeId,
+			universeId,
+			startTeamTest,
+			instanceId,
+			annotationId,
+		});
+		return;
+	}
 	const { GameLauncher } = window.Roblox;
-	if (GameLauncher && placeId && universeId) {
+	if (GameLauncher) {
 		// checking of whether or not Team Create is actually enabled should be done in Studio if needed
 		// this is done to be consistent with how Studio share link errors should show up in Studio if possible
 		GameLauncher.editGameInStudio(
@@ -62,9 +78,7 @@ const { navigateToDeepLink } = createDeepLinkNavigator({
 	getPlaceIdFromUniverseId: (universeId) =>
 		getPlaceIdFromUniverseId(universeId),
 	getUniverseIdFromPlaceId: (placeId) => getUniverseIdFromPlaceId(placeId),
-	launchGame: (properties, event) => {
-		launchGame(properties, event);
-	},
+	launchGame: (properties, event) => launchGame(properties, event),
 	joinMultiplayerGame: (placeId) => {
 		// TODO: old, migrated code
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

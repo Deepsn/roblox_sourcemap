@@ -966,6 +966,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Remove this game from your child’s list of allowed games?",
 	"Description.ConversationalRequest.RevokeExperienceApproval":
 		"Your child won't be able to play it unless its content maturity rating is now considered right for their age.",
+	"Label.RobloxKids": "Roblox Kids",
+	"Label.RobloxSelect": "Roblox Select",
+	"Label.Roblox": "Roblox",
+	"Label.ContentTierWithAges": "{tierName} • Ages {minAge}-{maxAge}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

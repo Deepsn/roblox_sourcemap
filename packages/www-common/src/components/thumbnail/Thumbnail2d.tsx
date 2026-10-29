@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@rbx/foundation-ui";
+import { retryPendingThumbnail, THUMBNAIL_PENDING } from "./pendingPoll";
 import { resolveThumbnail } from "./thumbnailService";
 import { logMeasurement } from "./thumbnailMeasurement";
 import type {
@@ -11,12 +12,6 @@ import type {
 import "./thumbnailContainer.css";
 import "./thumbnailStatus.css";
 
-const MAX_PENDING_POLLS = 5;
-
-// useQuery only registers a failure on a throw, so a still-generating thumbnail throws this to drive
-// retry (the poll) — not a real error.
-const PENDING = new Error("thumbnail pending");
-
 // Status placeholder class (styled by thumbnailStatus.css); "" when the image is ready or loading.
 const statusClass = (
 	data: ResolvedThumbnail | undefined,
@@ -26,7 +21,8 @@ const statusClass = (
 	if (data?.state === "Blocked") return "icon-blocked";
 	if (data?.state === "InReview") return "icon-in-review";
 	if (data?.state === "Error") return "icon-broken";
-	if (isError) return error === PENDING ? "icon-pending" : "icon-broken";
+	if (isError)
+		return error === THUMBNAIL_PENDING ? "icon-pending" : "icon-broken";
 	return "";
 };
 
@@ -82,8 +78,7 @@ const Thumbnail2d = ({
 		// focus/mount/reconnect. Error and timed-out Pending results hold no data and still refetch.
 		staleTime: Infinity,
 		// Only the Pending poll retries here; transient transport failures are retried in http.post.
-		retry: (failureCount, err) =>
-			err === PENDING && failureCount < MAX_PENDING_POLLS,
+		retry: retryPendingThumbnail,
 		queryFn: async (): Promise<ResolvedThumbnail> => {
 			const resolved = await resolveThumbnail({
 				type,
@@ -98,7 +93,7 @@ const Thumbnail2d = ({
 			if (resolved.state === "Pending") {
 				pollCountRef.current += 1;
 				// eslint-disable-next-line no-restricted-syntax -- useQuery signals "retry" only via a throw
-				throw PENDING;
+				throw THUMBNAIL_PENDING;
 			}
 			return resolved;
 		},
@@ -148,7 +143,7 @@ const Thumbnail2d = ({
 						: { ThumbnailType: thumbnailType, Value: String(retries) },
 				);
 			}
-		} else if (isError && error === PENDING) {
+		} else if (isError && error === THUMBNAIL_PENDING) {
 			loggedRef.current = true;
 			logMeasurement("ThumbnailTimeoutWebapp", {
 				ThumbnailType: thumbnailType,

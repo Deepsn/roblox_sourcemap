@@ -1,3 +1,4 @@
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import { EventStreamMetadata } from "../../common/constants/eventStreamConstants";
 import { TGameData } from "../../common/types/bedev1Types";
 import {
@@ -321,9 +322,7 @@ export const joinExploreApiSorts = (
 				nextPageToken: newSort.nextPageToken,
 			};
 		}
-		window.EventTracker?.fireEvent(
-			sortDetailPage.mismatchedGamesSortMergeError,
-		);
+		fireEvent(sortDetailPage.mismatchedGamesSortMergeError);
 	}
 
 	if (isSongSortFromExploreApi(prevSort)) {
@@ -334,9 +333,7 @@ export const joinExploreApiSorts = (
 				nextPageToken: newSort.nextPageToken,
 			};
 		}
-		window.EventTracker?.fireEvent(
-			sortDetailPage.mismatchedSongsSortMergeError,
-		);
+		fireEvent(sortDetailPage.mismatchedSongsSortMergeError);
 	}
 
 	return {

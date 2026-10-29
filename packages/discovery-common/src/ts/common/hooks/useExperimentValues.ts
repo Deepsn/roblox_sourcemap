@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import ExperimentationService, {
 	type ExperimentationInputs,
 } from "@rbx/experimentation";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import configConstants from "../constants/configConstants";
 
 type UseExperimentValuesOptions = {
@@ -33,9 +34,7 @@ const useExperimentValues = <T extends Record<string, unknown>>(
 						)
 					: await ExperimentationService.getAllValuesForLayer(layerName);
 			} catch {
-				window.EventTracker?.fireEvent(
-					configConstants.common.FetchExperimentationLayerValuesError,
-				);
+				fireEvent(configConstants.common.FetchExperimentationLayerValuesError);
 				return {};
 			}
 		},

@@ -18,6 +18,7 @@ import {
 	parseMaybeStringNumberField,
 	parseStringField,
 } from "./analyticsParsingUtils";
+import { filterGameImpressionsToV2Schema } from "./gameImpressionsV2SchemaParams";
 import { buildSduiGameImpressionsAnalyticsData } from "./sduiGameImpressionsAnalyticsDataUtils";
 
 // Accepts both the V1 (`TItemAnalyticsData[]`) and V2 (`(ItemAnalyticsData | null)[]`)
@@ -95,6 +96,8 @@ export type TGameImpressionParams = TCarouselGameImpressions &
  * Builds the event-stream `gameImpressions` payload shared by the V1
  * (`sendGameImpressionsFromSdui`) and V2 (`sduiGameImpressionsHandler`) paths.
  *
+ * Output is filtered to `GameImpressionsV2Event` transport parameter names so
+ * broad SDUI analytics context does not leak unsupported fields.
  */
 export const buildGameImpressionParams = ({
 	impressionIndexes,
@@ -172,5 +175,9 @@ export const buildGameImpressionParams = ({
 		collectionAnalyticsData,
 	);
 
-	return mergeEventParamsWithAnalyticsData(knownParams, dynamicAnalyticsData);
+	const mergedParams = mergeEventParamsWithAnalyticsData(
+		knownParams,
+		dynamicAnalyticsData,
+	);
+	return filterGameImpressionsToV2Schema(mergedParams) as TGameImpressionParams;
 };

@@ -7,7 +7,10 @@ import {
 } from "@rbx/foundation-ui";
 import { Intl } from "@rbx/core-scripts/legacy/Roblox";
 import useAbuseSheetFlow from "../hooks/abuseSheetFlow/useAbuseSheetFlow";
-import { RawConfig } from "../hooks/abuseSheetFlow/types";
+import type {
+	RawConfig,
+	NodeRendererRegistry,
+} from "../hooks/abuseSheetFlow/types";
 import {
 	ArTranslationProvider,
 	useArTranslation,
@@ -77,6 +80,7 @@ type AbuseReportDialogWithConfigBaseProps = {
 	onCloseAutoFocus?: () => void;
 	loaders?: LoaderRegistry;
 	clientActions?: ClientActionRegistry;
+	nodeRenderers?: NodeRendererRegistry;
 };
 
 export type AbuseReportDialogWithConfigProps =
@@ -131,6 +135,7 @@ const AbuseReportDialogInner = ({
 	onCloseAutoFocus,
 	loaders,
 	clientActions,
+	nodeRenderers,
 }: {
 	open: boolean;
 	onClose: () => void;
@@ -140,6 +145,7 @@ const AbuseReportDialogInner = ({
 	onCloseAutoFocus?: () => void;
 	loaders?: LoaderRegistry;
 	clientActions?: ClientActionRegistry;
+	nodeRenderers?: NodeRendererRegistry;
 }): React.ReactElement => {
 	const {
 		currentPageElement,
@@ -156,6 +162,7 @@ const AbuseReportDialogInner = ({
 		abuseVector,
 		analyticsTargetId,
 		clientActions,
+		nodeRenderers,
 	});
 
 	const { translateToStringOnly } = useArTranslation();
@@ -183,6 +190,13 @@ const AbuseReportDialogInner = ({
 							mobilePortraitClassName="height-[90vh]"
 							largeScreenClassName="height-[calc(min(700px,50vh))] min-height-[500px]"
 							onCloseAutoFocus={onCloseAutoFocus}
+							onOpenAutoFocus={
+								disclosure?.openByDefault
+									? (event) => {
+											event.preventDefault();
+										}
+									: undefined
+							}
 						>
 							<SheetTitle
 								navigation={
@@ -374,6 +388,7 @@ export const AbuseReportDialogWithConfig = (
 		onCloseAutoFocus,
 		loaders,
 		clientActions,
+		nodeRenderers,
 	} = props;
 	const analyticsTargetId = getAnalyticsTargetId(props);
 
@@ -388,6 +403,7 @@ export const AbuseReportDialogWithConfig = (
 				onCloseAutoFocus={onCloseAutoFocus}
 				loaders={loaders}
 				clientActions={clientActions}
+				nodeRenderers={nodeRenderers}
 			/>
 		</ArTranslationProvider>
 	);

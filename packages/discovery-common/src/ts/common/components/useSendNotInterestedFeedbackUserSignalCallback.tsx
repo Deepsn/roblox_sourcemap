@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
 import { useSystemFeedback } from "@rbx/core-ui";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import bedev2Services from "../services/bedev2Services";
 import { usePageSession } from "../utils/PageSessionContext";
 import {
@@ -50,9 +51,7 @@ const useSendNotInterestedFeedbackUserSignalCallback = (
 
 			if (!topicId) {
 				onSignalFailure();
-				window.EventTracker?.fireEvent(
-					userSignal.ExplicitFeedbackMissingTopicIdCounterEvent,
-				);
+				fireEvent(userSignal.ExplicitFeedbackMissingTopicIdCounterEvent);
 				return;
 			}
 
@@ -94,9 +93,7 @@ const useSendNotInterestedFeedbackUserSignalCallback = (
 				)
 				.catch(() => {
 					onSignalFailure();
-					window.EventTracker?.fireEvent(
-						userSignal.ExplicitFeedbackUserSignalFailedCounterEvent,
-					);
+					fireEvent(userSignal.ExplicitFeedbackUserSignalFailedCounterEvent);
 				});
 		},
 		[universeId, page, topicId, isSponsored, pageSession, onSignalFailure],

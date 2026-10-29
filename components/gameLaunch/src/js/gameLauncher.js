@@ -26,6 +26,10 @@ function isJoinAttemptIdEnabled() {
 	return gameLauncher.gameLaunchInterface?.isJoinAttemptIdEnabled;
 }
 
+function isSharedGameLauncherEnabled() {
+	return Boolean(gameLauncher.gameLaunchInterface?.isSharedGameLauncherEnabled);
+}
+
 function generateGameLaunchParams(
 	originalParams,
 	joinAttemptId,
@@ -245,6 +249,7 @@ Object.assign(gameLauncher, {
 	setGameLaunchLogger,
 	tryAssetInStudio,
 	isJoinAttemptIdEnabled,
+	isSharedGameLauncherEnabled,
 
 	// EventNames
 	startClientAttemptedEvent,

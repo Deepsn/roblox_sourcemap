@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import { ampUpsellCounterEvents } from "../constants/ampUpsellConstants";
 import { logUpsellBannerEvent } from "../../homePageUpsellCard/services/upsellAnalyticsService";
 import { UpsellEventType } from "../../homePageUpsellCard/constants/upsellAnalyticsConstants";
@@ -27,9 +28,7 @@ const useAmpUpsellAction = ({
 		const accessManagementUpsellService =
 			window.Roblox.AccessManagementUpsellV2Service;
 		if (!accessManagementUpsellService) {
-			window.EventTracker?.fireEvent(
-				ampUpsellCounterEvents.AccessManagementServiceMissing,
-			);
+			fireEvent(ampUpsellCounterEvents.AccessManagementServiceMissing);
 			return;
 		}
 
@@ -46,9 +45,7 @@ const useAmpUpsellAction = ({
 				}
 			})
 			.catch(() => {
-				window.EventTracker?.fireEvent(
-					ampUpsellCounterEvents.StartUpsellFailed,
-				);
+				fireEvent(ampUpsellCounterEvents.StartUpsellFailed);
 			});
 
 		if (analyticsConfig) {

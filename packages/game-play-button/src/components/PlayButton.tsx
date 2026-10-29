@@ -422,6 +422,9 @@ export type TDefaultPlayButtonProps = {
 	appsFlyerReferralProperties?: TAppsFlyerReferralProperties;
 	disableLoadingState?: boolean;
 	buttonClassName?: string;
+	iconClassName?: string;
+	purchaseIconClassName?: string;
+	unplayableIconClassName?: string;
 	redirectPurchaseUrl?: ValidHttpUrl;
 	showDefaultPurchaseText?: boolean;
 	shouldShowVpcPlayButtonUpsells?: boolean;
@@ -450,6 +453,9 @@ export const DefaultPlayButton = ({
 	appsFlyerReferralProperties = EMPTY_OBJECT,
 	disableLoadingState,
 	buttonClassName,
+	iconClassName,
+	purchaseIconClassName,
+	unplayableIconClassName,
 	redirectPurchaseUrl,
 	showDefaultPurchaseText,
 	shouldShowVpcPlayButtonUpsells,
@@ -518,6 +524,7 @@ export const DefaultPlayButton = ({
 					appsFlyerReferralProperties={appsFlyerReferralProperties}
 					disableLoadingState={disableLoadingState}
 					buttonClassName={buttonClassName}
+					iconClassName={iconClassName}
 					pageContext={pageContext}
 				/>
 			);
@@ -544,6 +551,7 @@ export const DefaultPlayButton = ({
 					appsFlyerReferralProperties={appsFlyerReferralProperties}
 					disableLoadingState={disableLoadingState}
 					buttonClassName={buttonClassName}
+					iconClassName={iconClassName}
 					pageContext={pageContext}
 				/>
 			);
@@ -577,6 +585,7 @@ export const DefaultPlayButton = ({
 					<UnplayableButton
 						hideButtonText={hideButtonText}
 						buttonClassName={buttonClassName}
+						iconClassName={unplayableIconClassName}
 					/>
 				);
 				break;
@@ -589,6 +598,7 @@ export const DefaultPlayButton = ({
 					placeId={placeId}
 					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
+					iconClassName={purchaseIconClassName}
 					redirectPurchaseUrl={redirectPurchaseUrl}
 					playabilityStatus={playabilityStatus}
 					showDefaultPurchaseText={showDefaultPurchaseText}
@@ -606,6 +616,7 @@ export const DefaultPlayButton = ({
 				<UnplayableButton
 					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
+					iconClassName={unplayableIconClassName}
 				/>
 			);
 			break;
@@ -636,6 +647,7 @@ export const DefaultPlayButton = ({
 				<UnplayableButton
 					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
+					iconClassName={unplayableIconClassName}
 				/>
 			);
 			break;
@@ -659,6 +671,7 @@ export const DefaultPlayButton = ({
 				<UnplayableButton
 					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
+					iconClassName={unplayableIconClassName}
 				/>
 			);
 			break;
@@ -689,6 +702,7 @@ export const DefaultPlayButton = ({
 				<UnplayableButton
 					hideButtonText={hideButtonText}
 					buttonClassName={buttonClassName}
+					iconClassName={unplayableIconClassName}
 				/>
 			);
 			break;

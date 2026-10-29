@@ -18,6 +18,7 @@ import {
 	MenuSection,
 	MenuItem,
 } from "@rbx/foundation-ui";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
 	FeatureGameDetails,
 	FeaturePlacesList,
@@ -159,9 +160,7 @@ const GameTileOverflowMenu = ({
 			(!isSponsored || enableSponsoredFeedback) &&
 			!setIsHidden
 		) {
-			window.EventTracker?.fireEvent(
-				userSignal.ExplicitFeedbackDisabledDueToMissingSetter,
-			);
+			fireEvent(userSignal.ExplicitFeedbackDisabledDueToMissingSetter);
 			hasFiredExplicitFeedbackDisabledDueToMissingSetterEvent.current = true;
 		}
 	}, [
@@ -178,9 +177,7 @@ const GameTileOverflowMenu = ({
 			isSponsored &&
 			!encryptedAdTrackingData
 		) {
-			window.EventTracker?.fireEvent(
-				gameTile.ReportAdDisabledDueToMissingEncryptedAdTrackingData,
-			);
+			fireEvent(gameTile.ReportAdDisabledDueToMissingEncryptedAdTrackingData);
 			hasFiredReportAdDisabledDueToMissingEncryptedAdTrackingDataEvent.current = true;
 		}
 	}, [enableReportAd, isSponsored, encryptedAdTrackingData]);
@@ -296,9 +293,7 @@ const GameTileOverflowMenu = ({
 					});
 					break;
 				default:
-					window.EventTracker?.fireEvent(
-						gameTile.UnsupportedMenuItemCounterEvent,
-					);
+					fireEvent(gameTile.UnsupportedMenuItemCounterEvent);
 					break;
 			}
 		});

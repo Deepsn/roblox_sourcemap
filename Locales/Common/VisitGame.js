@@ -167,6 +167,8 @@ Roblox.LangDynamic["Common.VisitGame"] = {
 		"Now that it’s installed, {startLink}join the experience{endLink}.",
 	"Action.Close": "Close",
 	"Response.Dialog.RedirectInstruction": "On {link}, download the app.",
+	"Response.Dialog.WindowsFirstInstructionV2":
+		"Once downloaded, double-click the {startBold}{installerFileName}{endBold} file in your Downloads folder.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

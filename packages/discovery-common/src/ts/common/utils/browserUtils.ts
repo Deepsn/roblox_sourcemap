@@ -6,10 +6,7 @@ import {
 	getAbsoluteUrl,
 	getRelativeUrlWithQueries,
 } from "@rbx/core-scripts/util/url";
-import {
-	formatSeoName,
-	formatStableSeoName,
-} from "@rbx/core-scripts/format/string";
+import { formatStableSeoName } from "@rbx/core-scripts/format/string";
 import { url } from "../constants/browserConstants";
 import {
 	TSortDetailReferral,
@@ -28,22 +25,6 @@ export const buildGameDetailUrl = (
 		canonicalUrlPath ||
 		`${game.getRelativePath(placeId)}/${formatStableSeoName(placeName)}`;
 	return getUrlWithQueries(basePath, eventProperties);
-};
-
-export const buildAddGamePassUrl = (placeId: string): string => {
-	const parsedParams = {
-		selectedPlaceId: placeId,
-		Page: "game-passes",
-	};
-	const addGamePassUrl = getUrlWithQueries("/develop", parsedParams);
-	return addGamePassUrl;
-};
-
-export const buildGamePassDetailUrl = (
-	passId: string,
-	passName: string,
-): string => {
-	return getAbsoluteUrl(`/game-pass/${passId}/${formatSeoName(passName)}`);
 };
 
 export const buildReportAbuseRevampUrl = ({
@@ -138,7 +119,6 @@ export const isElementInWindow = <T extends HTMLElement>(
 export const getHttpReferrer = (): string => document.referrer;
 
 export default {
-	buildAddGamePassUrl,
 	buildReportAbuseRevampUrl,
 	buildSortDetailUrl,
 	buildSortDetailRelativeUrl,
