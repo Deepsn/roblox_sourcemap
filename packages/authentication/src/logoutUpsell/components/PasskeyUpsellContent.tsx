@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { assetUrl } from "@rbx/www-common/asset";
-import { useTheme } from "@rbx/core-scripts/react";
 import {
 	Button,
 	DialogBody,
 	DialogFooter,
 	DialogTitle,
+	useResolvedColorMode,
 } from "@rbx/foundation-ui";
 import passkeyIconLight from "@rbx/foundation-images/pictograms/passkey_light.svg";
 import passkeyIconDark from "@rbx/foundation-images/pictograms/passkey_dark.svg";
@@ -69,7 +69,7 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 	onPasskeyRegistered,
 	onAddEmail,
 }) => {
-	const theme = useTheme();
+	const colorMode = useResolvedColorMode();
 	const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
 
 	useEffect(() => {
@@ -102,7 +102,7 @@ const PasskeyUpsellContent: React.FC<PasskeyUpsellContentProps> = ({
 					<div className="flex items-center justify-center width-full overflow-hidden aspect-2-1">
 						<img
 							src={assetUrl(
-								theme === "dark" ? passkeyIconDark : passkeyIconLight,
+								colorMode === "dark" ? passkeyIconDark : passkeyIconLight,
 							)}
 							alt=""
 							aria-hidden="true"

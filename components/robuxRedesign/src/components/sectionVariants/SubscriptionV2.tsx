@@ -57,8 +57,7 @@ export function SubscriptionV2({
 		"Feature.RobloxSubscription",
 	);
 	const { translateFullKey } = useFullKeyTranslations();
-	const { paymentSession, breakpoint, redirect } =
-		useContext(BuyRobuxPageContext);
+	const { paymentSession, redirect } = useContext(BuyRobuxPageContext);
 	const {
 		trackSubscriptionV2Shown,
 		trackSubscriptionV2SubscribeClick,
@@ -208,9 +207,14 @@ export function SubscriptionV2({
 			<SectionHeader>
 				<div className="flex flex-row width-full justify-between items-center">
 					<div className="flex flex-row items-center gap-x-small medium:gap-x-medium">
+						{/* TODO: `size` is the base so server and client render the same icon.
+                The class grows it to XLarge from the medium breakpoint, which avoids a
+                Next.js hydration flicker. Foundation Icon should take a responsive size
+                so this override can go away. */}
 						<Icon
 							name="icon-regular-roblox-plus"
-							size={breakpoint.isAboveInclusive("medium") ? "XLarge" : "Large"}
+							size="Large"
+							className="medium:size-[var(--icon-size-xlarge)]"
 						/>
 						{translateFullKey(sectionBase.sectionHeaderTranslationKey)}
 					</div>

@@ -2,7 +2,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { getCurrentUser } from "@rbx/www-common/user";
 import { useTranslations } from "@rbx/www-common/i18n";
-import { RequirementType } from "@rbx/user-settings";
+import { RequirementType } from "@rbx/user-settings/enums/userSettingsEnums";
 import { useToast } from "@rbx/payments/components";
 import { startAccessManagementUpsell } from "@rbx/www-common/access-management-upsell";
 import {

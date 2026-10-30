@@ -5,7 +5,7 @@ import {
 	DialogFooter,
 	DialogTitle,
 } from "@rbx/foundation-ui";
-import { useTranslation } from "@rbx/core-scripts/react";
+import { useTranslations } from "@rbx/www-common/i18n";
 import { redactEmailAddress } from "@rbx/authentication-common/utils/emailRedaction";
 import {
 	getEmailSubmissionErrorKey,
@@ -40,13 +40,9 @@ import {
 export type VerifyEmailTranslations = {
 	title: string;
 	/**
-	 * Body copy with an ICU MessageFormat `{email}` placeholder, e.g.
-	 * "...we sent to {email}.". This component substitutes the redacted
-	 * address (e.g. `a*****@example.com`) via the `intl.f` interpolator from
-	 * `@rbx/core-scripts`'s `useTranslation`.
-	 *
-	 * If the backend ships a string that doesn't include the `{email}` token,
-	 * `intl.f` silently ignores the extra param.
+	 * Body copy with an `{email}` placeholder, e.g. "...we sent to {email}.".
+	 * This component puts the redacted address (e.g. `a*****@example.com`) in
+	 * place of the token. A string without the token renders as is.
 	 */
 	body: string;
 	/** Primary CTA, e.g. "Resend email". */
@@ -75,7 +71,7 @@ const VerifyEmailContent: React.FC<VerifyEmailContentProps> = ({
 	onContinueToSignOut,
 	onChangeEmail,
 }) => {
-	const { translate, intl } = useTranslation();
+	const translate = useTranslations("Feature.AccountSettings");
 	const [hasResent, setHasResent] = useState(false);
 	const [isResending, setIsResending] = useState(false);
 	const [resendErrorMessage, setResendErrorMessage] = useState<
@@ -83,7 +79,8 @@ const VerifyEmailContent: React.FC<VerifyEmailContentProps> = ({
 	>(undefined);
 
 	const redactedEmail = redactEmailAddress(email);
-	const body = intl.f(translations.body, { email: redactedEmail });
+	// The body comes from the prompts service, not the translation catalogue, so it is filled in here.
+	const body = translations.body.split("{email}").join(redactedEmail);
 
 	useEffect(() => {
 		sendVerifyEmailShown();
@@ -105,7 +102,7 @@ const VerifyEmailContent: React.FC<VerifyEmailContentProps> = ({
 				}
 				const key = getEmailSubmissionErrorKey(result.errorCode);
 				setResendErrorMessage(
-					translate(key, undefined, GENERIC_ERROR_FALLBACK),
+					translate.dynamic(key, undefined, GENERIC_ERROR_FALLBACK),
 				);
 			})
 			.catch(() => {

@@ -17,9 +17,7 @@ import {
 import { TrackingContainer } from "./containers/TrackingContainer";
 import { PurchasingContainer } from "./containers/PurchasingContainer";
 import { usePurchaseUrls } from "./hooks/purchase/usePurchaseUrls";
-import { useStyleOverrides } from "./hooks/useStyleOverrides";
 import { BuyRobuxPage } from "./components/BuyRobuxPage";
-import { useBreakpoint } from "./hooks/useBreakpoint";
 import useRedirect from "./hooks/useRedirect";
 import { isRedirectPlatformEligible } from "./utils/isRedirectPlatformEligible";
 import { withApiMetrics } from "./utils/publishMetric";
@@ -39,10 +37,7 @@ export type AppProps = {
 };
 
 export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
-	const breakpoint = useBreakpoint();
 	useBonusItem();
-
-	useStyleOverrides(urlParams.ctx);
 
 	const {
 		limitedTimeBonusItem,
@@ -102,7 +97,6 @@ export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 			bonusItemDisplayName,
 			bonusItemId,
 			bonusItemImageUrl,
-			breakpoint,
 			buyRobuxPageData,
 			getPurchaseUrl,
 			giftingAvatarImageUrl,
@@ -129,7 +123,6 @@ export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 			bonusItemBannerImageUrl,
 			bonusItemDisplayName,
 			bonusItemImageUrl,
-			breakpoint,
 			buyRobuxPageData,
 			getPurchaseUrl,
 			giftingAvatarImageUrl,

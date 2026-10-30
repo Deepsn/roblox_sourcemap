@@ -43,6 +43,7 @@ type NavCapabilities = {
 	getUserCurrency: (userId: number) => Promise<UserCurrency>;
 	getCreditBalanceForNavigation: () => Promise<CreditBalanceForNavigation>;
 	getRobuxBadge: () => Promise<RobuxBadge>;
+	isTopNavDownloadEnabled: () => Promise<boolean>;
 	getIntAuthCompliancePolicy: () => Promise<TIntAuthComplianceResponse>;
 	useIsAccountSwitcherAvailableForBrowser: () => [boolean, boolean];
 	getStoredAccountSwitcherBlob: () => string;
@@ -73,6 +74,7 @@ type NavCapabilities = {
 	};
 	usePlusNavEntries: (currentPath: string) => PlusNavEntries;
 	logLeftNavExposure: () => Promise<void>;
+	logTopNavDownloadExposure: () => Promise<void>;
 	trackOpenToVisible: (variant: Variant) => void;
 	getGamesAutocompleteSuggestions: (
 		search: string,
@@ -95,6 +97,14 @@ type NavCapabilities = {
 	GameIconThumbnail: ComponentType<{ universeId: number; onLoad: () => void }>;
 	isTopSearchResultsEnabled: () => boolean;
 	logTopSearchResultsExposureOnce: () => void;
+	getIsReactNotificationBellEnabled: () => boolean;
+	getIsReactNotificationStreamEnabled: () => boolean;
+	logNotificationStreamExposure: () => void;
+	getNotificationUnreadCount: () => Promise<number>;
+	clearNotificationUnread: () => Promise<void>;
+	NotificationStreamIcon: ComponentType;
+	NotificationStreamBase: ComponentType;
+	NotificationStreamShell: ComponentType;
 };
 
 let capabilities: Partial<NavCapabilities> = {};

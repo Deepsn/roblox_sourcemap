@@ -96,7 +96,6 @@ export default function HeaderIconsGroup({
 	return (
 		<ul className="[&>li]:relative navbar-right rbx-navbar-icon-group">
 			<AccountSwitchedSnackbar />
-			<DownloadAppNavItem />
 			<AgeBracketDisplay />
 			<UniverseSearchIcon toggleUniverseSearch={toggleUniverseSearch} />
 			{canAccessStream && notificationStream}
@@ -106,6 +105,7 @@ export default function HeaderIconsGroup({
 				isEligibleForVng={isEligibleForVng}
 			/>
 			<SettingsPopover accountNotificationCount={accountNotificationCount} />
+			<DownloadAppNavItem />
 		</ul>
 	);
 }

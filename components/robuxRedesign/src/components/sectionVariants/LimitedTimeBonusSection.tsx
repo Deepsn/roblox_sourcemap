@@ -1,6 +1,5 @@
 import { useCallback, useContext, useMemo } from "react";
 import classNames from "classnames";
-import { useResponsiveValue } from "@rbx/payments/hooks";
 import { useFullKeyTranslations } from "@rbx/www-common/i18n";
 import { Button, Media } from "@rbx/foundation-ui";
 import { PriceTag } from "@rbx/payments/priceTag";
@@ -48,6 +47,12 @@ type BonusItemCardProps = {
 	) => void;
 };
 
+// TODO: Make @rbx/foundation-ui Button Next.js SSR compatible so `size` can follow the
+// viewport and this override can go away. `size="Small"` is the base; from `small` (361px)
+// these classes match Medium, including the icon Button renders inside itself.
+const mediumFromSmallClassName =
+	"small:height-1000 small:padding-x-medium small:text-label-medium small:[&_.icon]:size-[var(--icon-size-medium)] small:[&>span]:gap-small";
+
 function RobuxTile({
 	product,
 	redirectUrl,
@@ -57,10 +62,6 @@ function RobuxTile({
 	redirectUrl?: string;
 	onPurchaseClick: BonusItemCardProps["onPurchaseClick"];
 }) {
-	const buttonSize = useResponsiveValue("Small" as const, {
-		small: "Medium" as const,
-	});
-
 	const redirectProps = redirectUrl
 		? {
 				as: "a" as const,
@@ -89,8 +90,11 @@ function RobuxTile({
 			</div>
 			<Button
 				variant={product.isCallToAction ? "Emphasis" : "Standard"}
-				size={buttonSize}
-				className="min-width-[90px] small:min-width-[120px] medium:min-width-[200px] text-label-medium shrink-0"
+				size="Small"
+				className={classNames(
+					"min-width-[90px] small:min-width-[120px] medium:min-width-[200px] text-label-medium shrink-0",
+					mediumFromSmallClassName,
+				)}
 				onClick={(
 					event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
 				) => {

@@ -2,11 +2,17 @@ import classNames from "classnames";
 import { useContext } from "react";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { Badge, Icon } from "@rbx/foundation-ui";
-import { useResponsiveValue } from "@rbx/payments/hooks";
 import { useFullKeyTranslations, useTranslations } from "@rbx/www-common/i18n";
 import { isInApp } from "../../utils/platform";
 import { isIconVariant } from "../../utils/iconVariants";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
+
+// Amount text floors: base, 361px, 400px, 1141px. Icon sizes are .robux-amount-icon and
+// .robux-amount-strike-icon in main.css; the size prop matches the base floor.
+const robuxTextClassName =
+	"text-title-large small:text-heading-small min-[400px]:text-heading-medium large:text-heading-large";
+const strikeThroughTextClassName =
+	"text-title-medium min-[400px]:text-title-large large:text-heading-small";
 
 const BadgeWrapper = ({ icon, label }: { icon?: string; label: string }) => {
 	const hasIcon = icon && isIconVariant(icon);
@@ -44,35 +50,6 @@ export function RobuxAmount({
 	const translatePremium = useTranslations("Feature.Premium");
 	const { translateFullKey } = useFullKeyTranslations();
 
-	const responsiveStyle = useResponsiveValue(
-		{
-			robuxIcon: "Small",
-			robuxTextSize: "text-title-large",
-			strikeThroughRobuxIcon: "XSmall",
-			strikeThroughRobuxTextSize: "text-title-medium",
-		} as const,
-		{
-			small: {
-				robuxIcon: "Medium",
-				robuxTextSize: "text-heading-small",
-				strikeThroughRobuxIcon: "Small",
-				strikeThroughRobuxTextSize: "text-title-medium",
-			} as const,
-			400: {
-				robuxIcon: "Large",
-				robuxTextSize: "text-heading-medium",
-				strikeThroughRobuxIcon: "Medium",
-				strikeThroughRobuxTextSize: "text-title-large",
-			} as const,
-			large: {
-				robuxIcon: "XLarge",
-				robuxTextSize: "text-heading-large",
-				strikeThroughRobuxIcon: "Large",
-				strikeThroughRobuxTextSize: "text-heading-small",
-			} as const,
-		},
-	);
-
 	const formattedBonusRobuxAmount = bonusRobuxAmount
 		? formatNumber(Number(bonusRobuxAmount))
 		: undefined;
@@ -95,9 +72,13 @@ export function RobuxAmount({
 					data-testid="robux-amount-column"
 				>
 					<div className="flex flex-row justify-start items-center gap-xsmall content-emphasis">
-						<Icon name="icon-filled-robux" size={responsiveStyle.robuxIcon} />
+						<Icon
+							name="icon-filled-robux"
+							size="Small"
+							className="robux-amount-icon"
+						/>
 						<span
-							className={responsiveStyle.robuxTextSize}
+							className={robuxTextClassName}
 							style={{ lineHeight: "var(--line-height-100)" }}
 						>
 							{formatNumber(Number(amount))}
@@ -109,9 +90,10 @@ export function RobuxAmount({
 							<div className="robux-amount-strike-through" />
 							<Icon
 								name="icon-filled-robux"
-								size={responsiveStyle.strikeThroughRobuxIcon}
+								size="XSmall"
+								className="robux-amount-strike-icon"
 							/>
-							<span className={responsiveStyle.strikeThroughRobuxTextSize}>
+							<span className={strikeThroughTextClassName}>
 								{formatNumber(Number(nonPromotionalAmount))}
 							</span>
 						</div>

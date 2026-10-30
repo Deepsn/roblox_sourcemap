@@ -15,8 +15,10 @@ import {
 } from "@rbx/core-scripts/util/current-browser";
 import { addExternal } from "@rbx/externals";
 import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
+import { trackDotnetAppShellCounter } from "@rbx/www-common/observability/app-shell/dotnet";
 import "./src/registerDotnetCapabilities";
 import "./src/registerDotnetLeftNav";
+import "./src/registerDotnetNotificationStream";
 import "./src/registerDotnetSearch";
 import "./src/registerDotnetSettings";
 import { ageBadgeControl } from "./src/util/ageBadgeUtil";
@@ -65,6 +67,14 @@ initNavClickEvents();
 
 // Setup HTTP interceptor to listen for 401 auth codes
 setupAuthInterceptor();
+
+// Every .NET page with the header loads this bundle. Count the page load and the nav load.
+trackDotnetAppShellCounter("ShellStart", {
+	auth_state: authenticatedUser()?.isAuthenticated
+		? "authenticated"
+		: "unauthenticated",
+});
+trackDotnetAppShellCounter("NavLoad", { outcome: "loaded" });
 
 // The anchor html elements lives in navigation.html
 // Mounting components seperatly to avoid hydrating

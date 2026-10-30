@@ -28,6 +28,8 @@ export const AddEmailOrigin = {
 	Passkey: "passkey",
 	/** Tapped "Change email" on the verify-email screen. */
 	ChangeEmail: "changeEmail",
+	/** Opened directly as the email-only logout upsell. */
+	EmailUpsell: "emailUpsell",
 } as const;
 
 export type AddEmailOriginName =
@@ -270,6 +272,13 @@ export const sendResendClick = (): void => {
 	send(schematizedEventTypes.authButtonClick, {
 		btn: Btn.resend,
 		state: LogoutUpsellScreen.VerifyEmail,
+	});
+};
+
+export const sendAddEmailSignOutClick = (): void => {
+	send(schematizedEventTypes.authButtonClick, {
+		btn: Btn.signOut,
+		state: LogoutUpsellScreen.AddEmail,
 	});
 };
 

@@ -5,7 +5,6 @@ import {
 	PaymentSession,
 	Product,
 } from "../types/buyRobuxPageData";
-import { BreakpointResult } from "../hooks/useBreakpoint";
 import { UseRedirectResult } from "../hooks/useRedirect";
 
 export type LimitedTimeBonusItemFields = {
@@ -30,7 +29,6 @@ export type BuyRobuxPageContextProps = {
 	bonusItemDisplayName: string | undefined;
 	bonusItemId: number | undefined;
 	bonusItemImageUrl: string;
-	breakpoint: BreakpointResult;
 	buyRobuxPageData: BuyRobuxPageData;
 	getPurchaseUrl: (product: Product, isSubscriptionProduct: boolean) => string;
 	giftingAvatarImageUrl: string;
@@ -66,10 +64,6 @@ export const BuyRobuxPageContext = createContext<BuyRobuxPageContextProps>({
 	bonusItemDisplayName: "",
 	bonusItemId: undefined,
 	bonusItemImageUrl: "",
-	breakpoint: {
-		isAboveInclusive: () => false,
-		value: "xsmall",
-	},
 	buyRobuxPageData: {
 		sections: [],
 	},
