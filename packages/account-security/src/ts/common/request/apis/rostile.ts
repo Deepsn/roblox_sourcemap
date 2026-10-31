@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as Rostile from "../types/rostile";
@@ -10,7 +10,7 @@ export const verifyPuzzle = async (
 	Result<Rostile.VerifyPuzzleReturnType, Rostile.RostileError | null>
 > =>
 	toResult(
-		http.post(Rostile.VERIFY_PUZZLE_CONFIG, {
+		transport.post(Rostile.VERIFY_PUZZLE_CONFIG, {
 			challengeId,
 			solution,
 		}),

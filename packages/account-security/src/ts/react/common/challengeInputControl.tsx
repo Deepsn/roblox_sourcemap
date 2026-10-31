@@ -64,6 +64,7 @@ const ChallengeInputControl: React.FC<Props> = ({
 			autoComplete={autoComplete}
 			maxLength={maxLength}
 			placeholder={placeholder}
+			aria-label={placeholder}
 			value={value}
 			isDisabled={disabled}
 			hasError={errorText !== null}

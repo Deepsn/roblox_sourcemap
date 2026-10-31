@@ -12,11 +12,15 @@ import {
 import { getConsentRequest as getConsentRequiredRequest } from "../../services/parentalControlsService";
 import { getEnablePurchasesSetting } from "../../services/userSettingsService";
 import { getTexasU18VPCOptimizationFlowPolicy } from "../../services/guacService";
-import { isInApp, isOnDesktop } from "../../utils/platform";
 import { SETTING_CHANGE_AMP_NAMESPACE } from "../../constants";
+import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 import { ModalContext } from "../../contexts/ModalContext";
 import { TrackingContext } from "../../contexts/TrackingContext";
 import { trackCounter, trackError } from "../../observability";
+import {
+	getIsNativePurchasePlatform,
+	getIsWebCheckoutPlatform,
+} from "../../utils/platform";
 
 function getViolationLabel(violation: UserPurchaseSettingFailureReason) {
 	switch (violation) {
@@ -59,6 +63,9 @@ export function usePurchaseEligibility(): {
 		purchaseDisabled: { openModal: openPurchaseDisabledModal },
 	} = useContext(ModalContext);
 	const { trackEconomicRestrictionErrorShown } = useContext(TrackingContext);
+	const { deviceMeta } = useContext(BuyRobuxPageContext);
+	const isNativePurchasePlatform = getIsNativePurchasePlatform(deviceMeta);
+	const isWebCheckoutPlatform = getIsWebCheckoutPlatform(deviceMeta);
 
 	const translatePremium = useTranslations("Feature.Premium");
 	const translateNotApproved = useTranslations("Feature.NotApproved");
@@ -138,7 +145,7 @@ export function usePurchaseEligibility(): {
 		// Only IOS/Android/UWP webview (native purchase) needs to respect this setting.
 		// If on Desktop (web or UA), or not in app, we ignore this vpc setting for this page.
 		// Desktop and not in app will be blocked at **payment method selection page**.
-		if (isOnDesktop || !isInApp) {
+		if (isWebCheckoutPlatform || !isNativePurchasePlatform) {
 			return true;
 		}
 
@@ -240,6 +247,8 @@ export function usePurchaseEligibility(): {
 		vpcOptimizationEnabled,
 		startAccessManagementUpsellFlow,
 		openPurchaseDisabledModal,
+		isNativePurchasePlatform,
+		isWebCheckoutPlatform,
 	]);
 
 	useEffect(() => {

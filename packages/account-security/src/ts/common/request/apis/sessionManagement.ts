@@ -1,5 +1,5 @@
-import * as http from "@rbx/core-scripts/http";
 import type { TSecureAuthIntent } from "@rbx/core-scripts/auth/crypto";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as SessionManagement from "../types/sessionManagement";
@@ -14,7 +14,7 @@ export const getSessions = async (
 	>
 > =>
 	toResult(
-		http.get(SessionManagement.GET_SESSIONS_CONFIG, {
+		transport.get(SessionManagement.GET_SESSIONS_CONFIG, {
 			nextCursor,
 			desiredLimit,
 		}),
@@ -30,7 +30,7 @@ export const logoutSession = async (
 	>
 > =>
 	toResult(
-		http.post(SessionManagement.LOGOUT_SESSION_CONFIG, { token }),
+		transport.post(SessionManagement.LOGOUT_SESSION_CONFIG, { token }),
 		SessionManagement.SessionManagementError,
 	);
 
@@ -43,7 +43,7 @@ export const logoutFromAllSessionsAndReauthenticate = async (
 	>
 > =>
 	toResult(
-		http.post(SessionManagement.LOGOUT_FROM_ALL_SESSIONS_CONFIG, {
+		transport.post(SessionManagement.LOGOUT_FROM_ALL_SESSIONS_CONFIG, {
 			secureAuthenticationIntent,
 		}),
 		SessionManagement.AuthError,

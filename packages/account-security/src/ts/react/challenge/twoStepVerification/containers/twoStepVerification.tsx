@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch, useHistory } from "react-router";
-import { Modal } from "react-style-guide";
+import { DialogBody, ProgressCircle } from "@rbx/foundation-ui";
+import ChallengeDialog from "../../../common/challengeDialog";
 import usePlatformSupportsPasskeyAndSecurityKey from "../../../common/hooks/usePlatformSupportsPasskeyAndSecurityKey";
 import useTwoStepVerificationContext from "../hooks/useTwoStepVerificationContext";
 import {
@@ -14,12 +15,12 @@ import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import { InlineChallengeFooter } from "../../../common/inlineChallengeFooter";
 import {
 	FooterButtonConfig,
-	FragmentModalFooter,
-} from "../../../common/modalFooter";
+	ChallengeDialogFooter,
+} from "../../../common/challengeDialogFooter";
 import {
-	FragmentModalHeader,
+	ChallengeDialogHeader,
 	HeaderButtonType,
-} from "../../../common/modalHeader";
+} from "../../../common/challengeDialogHeader";
 import { TIMEOUT_BEFORE_CALLBACK_MILLISECONDS } from "../app.config";
 import MediaTypeList from "../components/mediaTypeList";
 import SwitchMediaType from "../components/switchMediaType";
@@ -494,7 +495,7 @@ const TwoStepVerification: React.FC = () => {
 	 * Rendering Helpers
 	 */
 
-	const renderMediaTypeWithChildren = (children: React.ReactFragment) => {
+	const renderMediaTypeWithChildren = (children: React.ReactNode) => {
 		return (
 			<Switch>
 				<Route path={mediaTypeToPath(MediaType.Authenticator)}>
@@ -587,10 +588,10 @@ const TwoStepVerification: React.FC = () => {
 	};
 
 	const getPageContent = () => {
-		const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+		const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 		const FooterElement = renderInline
 			? InlineChallengeFooter
-			: FragmentModalFooter;
+			: ChallengeDialogFooter;
 
 		if (pageLoadError) {
 			return (
@@ -606,7 +607,13 @@ const TwoStepVerification: React.FC = () => {
 		if (!metadata) {
 			return (
 				<BodyElement>
-					<span className="spinner spinner-default spinner-no-margin modal-margin-bottom-large" />
+					<div className="flex justify-center modal-margin-bottom-large">
+						<ProgressCircle
+							variant="Indeterminate"
+							size="Small"
+							ariaLabel={resources.Label.TwoStepVerification}
+						/>
+					</div>
 				</BodyElement>
 			);
 		}
@@ -649,15 +656,12 @@ const TwoStepVerification: React.FC = () => {
 			{getPageContent()}
 		</InlineChallenge>
 	) : (
-		// The keyboard parameter prevents the modal from closing when the escape key is pressed
-		<Modal
-			className="modal-modern"
-			show={isModalVisible}
-			onHide={closeModal}
-			backdrop="static"
-			keyboard={false}
+		<ChallengeDialog
+			open={isModalVisible}
+			onClose={closeModal}
+			isKeyboardDismissible={false}
 		>
-			<FragmentModalHeader
+			<ChallengeDialogHeader
 				headerText={modalTitleText}
 				buttonType={HeaderButtonType.CLOSE}
 				buttonAction={closeModal}
@@ -665,7 +669,7 @@ const TwoStepVerification: React.FC = () => {
 				headerInfo={null}
 			/>
 			{getPageContent()}
-		</Modal>
+		</ChallengeDialog>
 	);
 };
 

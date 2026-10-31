@@ -1,6 +1,6 @@
 import React, {
 	createContext,
-	ReactChild,
+	ReactNode,
 	ReactElement,
 	useEffect,
 	useReducer,
@@ -60,7 +60,7 @@ type Props = {
 	onModalChallengeAbandoned: OnModalChallengeAbandonedCallback | null;
 	delayParameters?: DelayParameters;
 	recoveryParameters?: RecoveryParameters;
-	children: ReactChild;
+	children: ReactNode;
 };
 
 /**

@@ -1,0 +1,123 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef } from 'react';
+import type { TTailwindTextLabelClass } from '@rbx/foundation-tailwind/classes';
+import './ProgressBar.css';
+import './internal/Common.css';
+
+export const progressBarVariants = ['Determinate', 'Indeterminate'] as const;
+export type TProgressBarVariant = (typeof progressBarVariants)[number];
+
+export const progressBarValuesLocations = ['None', 'Top', 'Bottom', 'Sides'] as const;
+export type TProgressBarValuesLocation = (typeof progressBarValuesLocations)[number];
+
+export type TProgressBarProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'children' | 'aria-valuemin' | 'aria-valuemax' | 'aria-valuenow'
+> & {
+  /** The variant of the progress bar. */
+  variant?: TProgressBarVariant;
+  /** The progress value (0-100). Only applicable for 'Determinate' variant. */
+  value?: number;
+  /** The minimum value to display. Only applicable for 'Determinate' variant. */
+  minValue?: number;
+  /** The maximum value to display. Only applicable for 'Determinate' variant. */
+  maxValue?: number;
+  /** Where to display the min/max values. Only applicable for 'Determinate' variant. */
+  valuesLocation?: TProgressBarValuesLocation;
+  /** Accessible label for screen readers. */
+  ariaLabel: string;
+};
+
+const textClass: TTailwindTextLabelClass = 'text-label-medium';
+
+export const ProgressBar = React.forwardRef<HTMLDivElement, TProgressBarProps>(
+  (
+    {
+      className,
+      variant = 'Determinate',
+      value = 0,
+      minValue,
+      maxValue,
+      valuesLocation = 'None',
+      ariaLabel,
+      ...otherProps
+    },
+    ref
+  ) => {
+    const isDeterminate = variant === 'Determinate';
+    const clampedValue = Math.min(100, Math.max(0, value));
+    const showMinValue = isDeterminate && minValue !== undefined && valuesLocation !== 'None';
+    const showMaxValue = isDeterminate && maxValue !== undefined && valuesLocation !== 'None';
+    const showValuesOnSides = valuesLocation === 'Sides';
+    const showValuesOnTop = valuesLocation === 'Top';
+    const showValuesOnBottom = valuesLocation === 'Bottom';
+
+    const progressBarElement = (
+      <div
+        className={clsx(
+          'relative height-100 radius-circle bg-shift-200',
+          showValuesOnSides ? 'grow-1 shrink-1 min-width-0' : 'block width-full'
+        )}
+        style={showValuesOnSides ? { flexBasis: 0 } : undefined}>
+        {isDeterminate ? (
+          <div
+            className='absolute top-0 left-0 height-100 radius-circle transition-all duration-300 ease-out'
+            style={{
+              width: `${clampedValue}%`,
+              backgroundColor: 'var(--fui-future-alpha-color-system-progress)'
+            }}
+          />
+        ) : (
+          <div className='foundation-web-progress-bar-indeterminate absolute top-0 height-100 radius-circle' />
+        )}
+      </div>
+    );
+
+    const minValueElement = showMinValue && (
+      <span className={clsx('content-emphasis flex-shrink-0', textClass)} aria-hidden='true'>
+        {minValue}
+      </span>
+    );
+
+    const maxValueElement = showMaxValue && (
+      <span className={clsx('content-emphasis flex-shrink-0', textClass)} aria-hidden='true'>
+        {maxValue}
+      </span>
+    );
+
+    const valuesRow = (showMinValue || showMaxValue) && (
+      <div className='flex justify-between width-full gap-xsmall'>
+        {showMinValue ? minValueElement : <span />}
+        {showMaxValue ? maxValueElement : <span />}
+      </div>
+    );
+
+    return (
+      <div
+        ref={ref}
+        className={clsx('block width-full', className)}
+        role='progressbar'
+        aria-label={ariaLabel}
+        aria-valuemin={isDeterminate ? 0 : undefined}
+        aria-valuemax={isDeterminate ? 100 : undefined}
+        aria-valuenow={isDeterminate ? clampedValue : undefined}
+        {...otherProps}>
+        {showValuesOnSides ? (
+          <div className='flex items-center gap-small width-full'>
+            {minValueElement}
+            {progressBarElement}
+            {maxValueElement}
+          </div>
+        ) : (
+          <div className='flex flex-col gap-small width-full'>
+            {showValuesOnTop && valuesRow}
+            {progressBarElement}
+            {showValuesOnBottom && valuesRow}
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+
+ProgressBar.displayName = 'ProgressBar';

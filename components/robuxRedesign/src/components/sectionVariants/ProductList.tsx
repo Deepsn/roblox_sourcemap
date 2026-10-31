@@ -30,7 +30,8 @@ type ProductListProps = BaseSectionProps & {
 
 export function ProductList({ isPrimary, sectionBase }: ProductListProps) {
 	const { purchaseNonRedirectProduct } = useContext(PurchaseContext);
-	const { atLeastOneProductHasBonusAmount } = useContext(BuyRobuxPageContext);
+	const { atLeastOneProductHasBonusAmount, deviceMeta } =
+		useContext(BuyRobuxPageContext);
 
 	const { translateFullKey } = useFullKeyTranslations();
 	const bodyTranslationKey = sectionBase.productsList?.bodyTranslationKey;
@@ -48,7 +49,10 @@ export function ProductList({ isPrimary, sectionBase }: ProductListProps) {
 					opening: "termsLinkStart",
 					closing: "termsLinkEnd",
 					render: (children) => (
-						<a {...getExternalLinkProps("/info/terms")} className="text-link">
+						<a
+							{...getExternalLinkProps("/info/terms", deviceMeta)}
+							className="text-link"
+						>
 							{children}
 						</a>
 					),

@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as ProofOfSpace from "../types/proofOfSpace";
@@ -13,7 +13,7 @@ export const verifyPuzzle = async (
 	>
 > =>
 	toResult(
-		http.post(ProofOfSpace.VERIFY_PUZZLE_CONFIG, {
+		transport.post(ProofOfSpace.VERIFY_PUZZLE_CONFIG, {
 			challengeId,
 			solution,
 		}),

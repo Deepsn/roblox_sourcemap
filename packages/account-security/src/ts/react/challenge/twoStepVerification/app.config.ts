@@ -8,6 +8,7 @@ export const TIMEOUT_BEFORE_CALLBACK_MILLISECONDS = 100;
  */
 export const TRANSLATION_NAMESPACES = [
 	"Authentication.TwoStepVerification",
+	"CommonUI.Messages",
 ] as const;
 
 /**

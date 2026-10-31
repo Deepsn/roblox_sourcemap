@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect, useMemo } from "react";
 import { UrlSearchParams } from "@rbx/core-lib/url";
 import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
 import { getCurrentUser, userIdToNumber } from "@rbx/www-common/user";
+import { DeviceMeta } from "@rbx/www-common/device/types";
 import { PaymentSession } from "../types/buyRobuxPageData";
 import {
 	EXP_FLOW_QUERY_PARAM,
@@ -54,9 +55,11 @@ export type UseRedirectResult = {
 };
 
 export default function useRedirect({
+	deviceMeta,
 	paymentSession,
 	isEnabled,
 }: {
+	deviceMeta: DeviceMeta;
 	// Auth-only; hook short-circuits when undefined.
 	paymentSession: PaymentSession | undefined;
 	isEnabled: boolean;
@@ -86,7 +89,7 @@ export default function useRedirect({
 		refreshAuthTicket();
 
 		loginRedirectService
-			.getExperimentBasedPathname()
+			.getExperimentBasedPathname(deviceMeta)
 			.then(({ pathname: resolvedPathname, isInExperiment: inExperiment }) => {
 				setPathname(resolvedPathname);
 				setIsInExperiment(inExperiment);
@@ -94,7 +97,7 @@ export default function useRedirect({
 			.catch((err: unknown) => {
 				trackError("LoginRedirectExperimentFetchFailed", null, err);
 			});
-	}, [refreshAuthTicket, isEnabled, paymentSessionId]);
+	}, [deviceMeta, refreshAuthTicket, isEnabled, paymentSessionId]);
 
 	// Guard against unauth deref; useMemo runs every render.
 	const urlWithQueryParams: string = useMemo(() => {

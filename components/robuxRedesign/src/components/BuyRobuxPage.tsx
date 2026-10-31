@@ -13,12 +13,14 @@ import { Header } from "./Header";
 import { BuyRobuxPageContext } from "../contexts/BuyRobuxPageContext";
 import { Section } from "../types/buyRobuxPageData";
 import { trackCriticalError } from "../observability";
-import { isInApp } from "../utils/platform";
+import { getIsNativePurchasePlatform } from "../utils/platform";
 import { RedirectProductList } from "./sectionVariants/RedirectProductList";
 import { LimitedTimeBonusSection } from "./sectionVariants/LimitedTimeBonusSection";
 
 export function BuyRobuxPage() {
-	const { buyRobuxPageData } = useContext(BuyRobuxPageContext);
+	const { buyRobuxPageData, deviceMeta } = useContext(BuyRobuxPageContext);
+
+	const isNativePurchasePlatform = getIsNativePurchasePlatform(deviceMeta);
 
 	const transfersSection = useMemo(
 		() => buyRobuxPageData.sections.find((s) => s.transfers),
@@ -140,7 +142,7 @@ export function BuyRobuxPage() {
 				className={classNames(
 					"buy-robux-content padding-x-large small:padding-x-xlarge",
 					{
-						"is-in-app": isInApp,
+						"is-in-app": isNativePurchasePlatform,
 					},
 				)}
 			>

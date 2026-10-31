@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Modal } from "react-style-guide";
+import { DialogBody } from "@rbx/foundation-ui";
 import * as TwoStepVerification from "../../../../common/request/types/twoStepVerification";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
-import InputControl, { validateTrue } from "../../../common/inputControl";
+import ChallengeInputControl from "../../../common/challengeInputControl";
+import { validateTrue } from "../../../common/inputValidation";
 import RememberDeviceCheckBox from "../components/rememberDeviceCheckBox";
 import VerificationFooter, {
 	VerificationFooterButton,
@@ -131,7 +132,7 @@ const PasswordInput: React.FC<Props> = ({
 		action: verifyCode,
 	};
 
-	const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+	const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 	const lockIconClassName = renderInline
 		? "inline-challenge-protection-shield-icon"
 		: "modal-protection-shield-icon";
@@ -159,7 +160,7 @@ const PasswordInput: React.FC<Props> = ({
 						{resources.Label.EnterPassword} {maybeDelayedText ?? ""}
 					</p>
 
-					<InputControl
+					<ChallengeInputControl
 						id="two-step-verification-code-input"
 						inputType="password"
 						disabled={requestInFlight}
@@ -174,7 +175,6 @@ const PasswordInput: React.FC<Props> = ({
 						// Optional parameters:
 						autoComplete="off"
 						placeholder={resources.Label.PasswordPlaceholder}
-						hideFeedback
 						concealInput
 						autoFocus
 					/>

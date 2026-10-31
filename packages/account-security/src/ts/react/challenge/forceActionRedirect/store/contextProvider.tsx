@@ -1,6 +1,6 @@
 import React, {
 	createContext,
-	ReactChild,
+	ReactNode,
 	ReactElement,
 	useMemo,
 	useReducer,
@@ -45,7 +45,7 @@ type Props = {
 	onChallengeAbandoned: ForceActionRedirect.OnChallengeAbandonedCallback | null;
 	delayParameters?: DelayParameters;
 	bodyTranslationKey?: string;
-	children: ReactChild;
+	children: ReactNode;
 };
 
 /**

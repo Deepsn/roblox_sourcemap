@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { DialogBody, ProgressCircle } from "@rbx/foundation-ui";
+import ChallengeDialog from "../../../common/challengeDialog";
 import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
-import { Modal } from "react-style-guide";
 import {
 	AnswerPrompt,
 	AnswerPromptWithData,
@@ -17,12 +18,12 @@ import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import { InlineChallengeFooter } from "../../../common/inlineChallengeFooter";
 import {
 	FooterButtonConfig,
-	FragmentModalFooter,
-} from "../../../common/modalFooter";
+	ChallengeDialogFooter,
+} from "../../../common/challengeDialogFooter";
 import {
-	FragmentModalHeader,
+	ChallengeDialogHeader,
 	HeaderButtonType,
-} from "../../../common/modalHeader";
+} from "../../../common/challengeDialogHeader";
 import { SECURITY_NOTIFICATION_PATH } from "../app.config";
 import AnswerChoiceView from "../components/answerChoiceView";
 import {
@@ -347,7 +348,11 @@ const SecurityQuestions: React.FC = () => {
 	const positiveButton: FooterButtonConfig = {
 		// Show a spinner as the button content when a request is in flight.
 		content: requestInFlight ? (
-			<span className="spinner spinner-xs spinner-no-margin" />
+			<ProgressCircle
+				variant="Indeterminate"
+				size="Small"
+				ariaLabel={resources.Action.Confirm}
+			/>
 		) : (
 			resources.Action.Confirm
 		),
@@ -375,10 +380,10 @@ const SecurityQuestions: React.FC = () => {
 	 */
 
 	const getPageContent = () => {
-		const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+		const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 		const FooterElement = renderInline
 			? InlineChallengeFooter
-			: FragmentModalFooter;
+			: ChallengeDialogFooter;
 		const lockIconClassName = renderInline
 			? "inline-challenge-lock-icon"
 			: "modal-lock-icon";
@@ -398,7 +403,7 @@ const SecurityQuestions: React.FC = () => {
 				<React.Fragment>
 					<BodyElement>
 						<div className={lockIconClassName} />
-						<p className={`${marginBottomClassName} font-bold`}>
+						<p className={`${marginBottomClassName} text-title-large`}>
 							{resources.Description.YourPasswordHasBeenReset}
 						</p>
 						<p
@@ -406,7 +411,7 @@ const SecurityQuestions: React.FC = () => {
 							// eslint-disable-next-line react/no-danger
 							dangerouslySetInnerHTML={{
 								__html: resources.Description.RegainAccessGeneric(
-									`<span class="font-bold">${resources.Action.Continue}</span>`,
+									`<span class="text-title-large">${resources.Action.Continue}</span>`,
 								),
 							}}
 						/>
@@ -439,7 +444,13 @@ const SecurityQuestions: React.FC = () => {
 		) {
 			return (
 				<BodyElement>
-					<span className="spinner spinner-default spinner-no-margin modal-margin-bottom-large" />
+					<div className="flex justify-center modal-margin-bottom-large">
+						<ProgressCircle
+							variant="Indeterminate"
+							size="Small"
+							ariaLabel={resources.Header.PleaseConfirmYourIdentity}
+						/>
+					</div>
 				</BodyElement>
 			);
 		}
@@ -456,7 +467,7 @@ const SecurityQuestions: React.FC = () => {
 					<p className={marginBottomSmallClassName}>
 						{resources.Description.WhichGames}
 					</p>
-					<p className={`${marginBottomXLargeClassName} font-bold`}>
+					<p className={`${marginBottomXLargeClassName} text-title-large`}>
 						{answerPromptWithData.answerPrompt ===
 						AnswerPrompt.PICK_ALL_CORRECT_CHOICES
 							? resources.Action.SelectAllThatApply
@@ -470,12 +481,14 @@ const SecurityQuestions: React.FC = () => {
 							lastAnswerIncorrect
 								? marginBottomSmallClassName
 								: marginBottomXLargeClassName
-						} small`}
+						} text-body-small`}
 					>
 						{resources.Description.VerifyYourIdentity}
 					</p>
 					{lastAnswerIncorrect && (
-						<p className={`${marginBottomXLargeClassName} text-error`}>
+						<p
+							className={`${marginBottomXLargeClassName} text-body-small content-system-alert`}
+						>
 							{resources.Message.Error.AnswerIncorrect}{" "}
 							{resources.Action.PleaseTryAgain}
 						</p>
@@ -495,7 +508,9 @@ const SecurityQuestions: React.FC = () => {
 							</React.Fragment>
 						))}
 					</div>
-					<p className="text-error xsmall">{requestError}</p>
+					<p className="text-caption-small content-system-alert">
+						{requestError}
+					</p>
 				</BodyElement>
 				<FooterElement positiveButton={positiveButton} negativeButton={null} />
 			</React.Fragment>
@@ -511,13 +526,8 @@ const SecurityQuestions: React.FC = () => {
 			{getPageContent()}
 		</InlineChallenge>
 	) : (
-		<Modal
-			className="modal-modern"
-			show={isModalVisible}
-			onHide={closeModal}
-			backdrop="static"
-		>
-			<FragmentModalHeader
+		<ChallengeDialog open={isModalVisible} onClose={closeModal}>
+			<ChallengeDialogHeader
 				headerText={resources.Header.PleaseConfirmYourIdentity}
 				buttonType={
 					userWasForceReset ? HeaderButtonType.HIDDEN : HeaderButtonType.CLOSE
@@ -527,7 +537,7 @@ const SecurityQuestions: React.FC = () => {
 				headerInfo={null}
 			/>
 			{getPageContent()}
-		</Modal>
+		</ChallengeDialog>
 	);
 };
 

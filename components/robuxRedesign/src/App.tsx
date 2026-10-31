@@ -2,6 +2,7 @@ import { useMemo, useEffect } from "react";
 import { setItem } from "@rbx/core-lib/local-storage";
 import { getCurrentUser } from "@rbx/www-common/user";
 import { useFirstTimePurchaseConsent } from "@rbx/payments/firstTimePurchaseConsent";
+import { DeviceMeta } from "@rbx/www-common/device/types";
 import {
 	BuyRobuxPageContext,
 	BuyRobuxPageContextProps,
@@ -34,9 +35,14 @@ const persistPaymentSessionToLocalStorage = (
 export type AppProps = {
 	enhancedBuyRobuxPageData: EnhancedBuyRobuxPageData;
 	urlParams: BuyRobuxUrlParams;
+	deviceMeta: DeviceMeta;
 };
 
-export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
+export const App = ({
+	enhancedBuyRobuxPageData,
+	urlParams,
+	deviceMeta,
+}: AppProps) => {
 	useBonusItem();
 
 	const {
@@ -67,14 +73,15 @@ export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 		persistPaymentSessionToLocalStorage(paymentSession);
 	}, [paymentSession]);
 
-	const getPurchaseUrl = usePurchaseUrls(paymentSession);
+	const getPurchaseUrl = usePurchaseUrls(paymentSession, deviceMeta);
 	const robuxBalance = useRobuxBalance();
 	const { shouldShowFirstTimePurchaseConsent, markConsentAcknowledged } =
 		useFirstTimePurchaseConsent(getCurrentUser()?.id, withApiMetrics);
 	const redirect = useRedirect({
+		deviceMeta,
 		paymentSession,
 		isEnabled:
-			isRedirectPlatformEligible() &&
+			isRedirectPlatformEligible(deviceMeta) &&
 			buyRobuxPageData.sections.some(
 				(section) =>
 					section.redirect ??
@@ -92,6 +99,7 @@ export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 
 	const buyRobuxPageContextValue = useMemo(
 		(): BuyRobuxPageContextProps => ({
+			deviceMeta,
 			limitedTimeBonusItem,
 			bonusItemBannerImageUrl,
 			bonusItemDisplayName,
@@ -142,6 +150,7 @@ export const App = ({ enhancedBuyRobuxPageData, urlParams }: AppProps) => {
 			markConsentAcknowledged,
 			productBadgeSlotCount,
 			atLeastOneProductHasBonusAmount,
+			deviceMeta,
 		],
 	);
 

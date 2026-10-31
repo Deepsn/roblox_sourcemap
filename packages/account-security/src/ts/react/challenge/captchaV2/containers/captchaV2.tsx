@@ -6,8 +6,8 @@ import {
 	DialogTitle,
 	ProgressCircle,
 } from "@rbx/foundation-ui";
-import { HttpResponseCodes } from "@rbx/core-scripts/http";
 import { getItem, setItem } from "@rbx/core-lib/local-storage";
+import { HttpStatus } from "../../../../common/request/requestConfig";
 import { CaptchaV2BlockResponse } from "../../../../common/request/types/captchaV2";
 import {
 	CHALLENGE_ID_STORAGE_KEY,
@@ -23,7 +23,8 @@ import {
 	startCustomChallenge,
 } from "./sensor";
 import "../../../../../css/tailwind.css";
-import "../../../../../css/challenge/captchaV2/captchaV2.scss";
+import "../../../../../css/challenge/captchaV2/captchaV2.css";
+import "../../../../../css/common/challengeText.css";
 
 // Technical reason forwarded to the invalidation callback; never displayed.
 const INVALIDATION_ERROR_MESSAGE = "CaptchaV2 verification failed";
@@ -43,7 +44,6 @@ const CaptchaV2: FC = () => {
 	const {
 		state: {
 			challengeId,
-			mode,
 			renderInline,
 			resources,
 			requestService,
@@ -143,10 +143,7 @@ const CaptchaV2: FC = () => {
 	);
 	const verify = useCallback(
 		async (isRetry: boolean): Promise<void> => {
-			const result = await requestService.captchaV2.submitCaptcha(
-				challengeId,
-				mode,
-			);
+			const result = await requestService.captchaV2.submitCaptcha(challengeId);
 
 			if (!result.isError) {
 				// On a re-verify (isRetry) this is the backend's verdict on a solved
@@ -158,7 +155,7 @@ const CaptchaV2: FC = () => {
 				return;
 			}
 
-			if (result.errorStatusCode === HttpResponseCodes.forbidden) {
+			if (result.errorStatusCode === HttpStatus.forbidden) {
 				// A `403` can carry a block response which we render.
 				const block = requestService.captchaV2.parseBlockResponse(
 					result.errorRaw,
@@ -183,7 +180,7 @@ const CaptchaV2: FC = () => {
 				return;
 			}
 
-			if (result.errorStatusCode === HttpResponseCodes.notFound) {
+			if (result.errorStatusCode === HttpStatus.notFound) {
 				invalidate(ErrorCode.SESSION_NOT_FOUND);
 				return;
 			}
@@ -192,7 +189,6 @@ const CaptchaV2: FC = () => {
 		},
 		[
 			challengeId,
-			mode,
 			complete,
 			invalidate,
 			requestService.captchaV2,
@@ -326,7 +322,7 @@ const CaptchaV2: FC = () => {
           showing the message never grows the dialog. */}
 			<div style={{ minHeight: ERROR_SLOT_HEIGHT_PX }}>
 				{failed && (
-					<p className="text-body-small text-error">
+					<p className="text-body-small content-system-alert">
 						{resources.Content.TryAgain}
 					</p>
 				)}
@@ -360,7 +356,7 @@ const CaptchaV2: FC = () => {
 			hasCloseAffordance
 			closeLabel={resources.Label.Cancel}
 		>
-			<DialogContent>
+			<DialogContent className="challenge-text-base">
 				<DialogBody className="flex flex-col">
 					<DialogTitle className="text-heading-small padding-bottom-small">
 						{resources.Title.VerifyHuman}

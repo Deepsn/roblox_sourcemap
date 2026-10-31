@@ -1,8 +1,15 @@
 import React from "react";
-import { Modal } from "react-style-guide";
-import { FragmentModalHeader, HeaderButtonType } from "./modalHeader";
+import { DialogBody } from "@rbx/foundation-ui";
+import ChallengeDialog from "./challengeDialog";
+import {
+	ChallengeDialogHeader,
+	HeaderButtonType,
+} from "./challengeDialogHeader";
 import InlineChallengeBody from "./inlineChallengeBody";
-import { FooterButtonConfig, FragmentModalFooter } from "./modalFooter";
+import {
+	FooterButtonConfig,
+	ChallengeDialogFooter,
+} from "./challengeDialogFooter";
 import {
 	InlineChallengeFooter,
 	InlineFooterButtonConfig,
@@ -26,10 +33,10 @@ const getPageContent = (
 	continueButton: InlineFooterButtonConfig,
 	abandonButton: InlineFooterButtonConfig | null,
 ) => {
-	const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+	const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 	const FooterElement = renderInline
 		? InlineChallengeFooter
-		: FragmentModalFooter;
+		: ChallengeDialogFooter;
 	return (
 		<React.Fragment>
 			<BodyElement>
@@ -79,13 +86,11 @@ const QuitVerificationConfirmation: React.FC<Props> = ({
 					)}
 				</InlineChallenge>
 			) : (
-				<Modal
-					className="modal-modern"
-					show={isConfirmationModalVisible}
-					onHide={handleConfirmAbandon}
-					backdrop="static"
+				<ChallengeDialog
+					open={isConfirmationModalVisible}
+					onClose={handleConfirmAbandon}
 				>
-					<FragmentModalHeader
+					<ChallengeDialogHeader
 						headerText={abandonConfirmationTitle}
 						buttonType={HeaderButtonType.CLOSE}
 						buttonAction={handleConfirmAbandon}
@@ -98,7 +103,7 @@ const QuitVerificationConfirmation: React.FC<Props> = ({
 						continueButton,
 						abandonButton,
 					)}
-				</Modal>
+				</ChallengeDialog>
 			)}
 		</React.Fragment>
 	);

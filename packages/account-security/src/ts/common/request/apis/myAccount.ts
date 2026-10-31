@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as MyAccount from "../types/myAccount";
@@ -10,6 +10,6 @@ export const getMySettingsInfo = (): Promise<
 	>
 > =>
 	toResult(
-		http.get(MyAccount.GET_MY_SETTINGS_INFO_CONFIG, {}),
+		transport.get(MyAccount.GET_MY_SETTINGS_INFO_CONFIG, {}),
 		MyAccount.GetMySettingsInfoError,
 	);

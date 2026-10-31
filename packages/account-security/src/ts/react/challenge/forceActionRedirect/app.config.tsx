@@ -91,7 +91,7 @@ export const translationsParametersByKey = (
 		case "Denied.AutomatedTampering.Body": {
 			return {
 				linkStart: `<a href="https://en.help.roblox.com/hc/en-us/articles/204038784-General-Website-Issues" 
-          class="text-link"
+          class="content-emphasis hover:underline focus-visible:underline"
           target="_blank">`,
 				linkEnd: "</a>",
 			};
@@ -99,11 +99,11 @@ export const translationsParametersByKey = (
 		case "Denied.DeviceBlock.Body": {
 			return {
 				communityStandardsLinkStart: `<a href="https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards"
-          class="text-link"
+          class="content-emphasis hover:underline focus-visible:underline"
           target="_blank">`,
 				communityStandardsLinkEnd: "</a>",
 				appealLinkStart: `<a href="https://en.help.roblox.com/hc/en-us/articles/360000245263-Appeal-Your-Content-or-Account-Moderation?src=contact_us"
-        class="text-link"
+        class="content-emphasis hover:underline focus-visible:underline"
         target="_blank">`,
 				appealLinkEnd: "</a>",
 			};
@@ -111,11 +111,11 @@ export const translationsParametersByKey = (
 		case "Denied.DeviceBlockCredentialVariant.Body": {
 			return {
 				communityStandardsLinkStart: `<a href="https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards"
-          class="text-link"
+          class="content-emphasis hover:underline focus-visible:underline"
           target="_blank">`,
 				communityStandardsLinkEnd: "</a>",
 				appealLinkStart: `<a href="https://en.help.roblox.com/hc/en-us/articles/360000245263-Appeal-Your-Content-or-Account-Moderation?src=contact_us"
-        class="text-link"
+        class="content-emphasis hover:underline focus-visible:underline"
         target="_blank">`,
 				appealLinkEnd: "</a>",
 			};
@@ -138,7 +138,7 @@ export const translationsParametersByKey = (
 				return {
 					numberOfUnits: offset.numberOfUnits,
 					unitOfTime: offset.unitOfTime,
-					linkStart: `<a href="${sessionManagementLinkWithRedirect}" class="text-link">`,
+					linkStart: `<a href="${sessionManagementLinkWithRedirect}" class="content-emphasis hover:underline focus-visible:underline">`,
 					linkEnd: "</a>",
 				};
 			}
@@ -150,10 +150,10 @@ export const translationsParametersByKey = (
 		case "Denied.TryTrusted.Body": {
 			return {
 				securitySettingsLinkStart: `<a href="${ACCOUNT_SETTINGS_SECURITY_PATH}"
-          class="text-link"
+          class="content-emphasis hover:underline focus-visible:underline"
           target="_blank">`,
 				supportLinkStart: `<a href="/support"
-        class="text-link"
+        class="content-emphasis hover:underline focus-visible:underline"
         target="_blank">`,
 				linkEnd: "</a>",
 			};
@@ -161,7 +161,7 @@ export const translationsParametersByKey = (
 		case "ForcePasswordlessLogin.Help": {
 			return {
 				supportLinkStart: `<a href="/support"
-          class="text-link"
+          class="content-emphasis hover:underline focus-visible:underline"
           data-testid="force-passwordless-login-support"
           target="_blank"
           rel="noopener noreferrer">`,

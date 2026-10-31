@@ -1,8 +1,8 @@
 /* eslint-disable no-void */
 import { useCallback, useEffect, useState } from "react";
 import { toDataURL } from "qrcode";
-import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { window, navigator } from "@rbx/core-lib/browser";
+import { DeviceMeta } from "@rbx/www-common/device/types";
 import { trackCounter, trackError } from "../../observability";
 
 type RobuxGifting = {
@@ -11,7 +11,10 @@ type RobuxGifting = {
 	qrImgSrc: string;
 };
 
-export function useRobuxGifting(giftingUrl: string): RobuxGifting {
+export function useRobuxGifting(
+	giftingUrl: string,
+	deviceMeta: DeviceMeta,
+): RobuxGifting {
 	const [qrImgSrc, setQRImgSrc] = useState("");
 
 	useEffect(() => {
@@ -51,11 +54,10 @@ export function useRobuxGifting(giftingUrl: string): RobuxGifting {
 		}
 		const { DOMException } = window;
 
-		const deviceMeta = getDeviceMeta();
 		if (
-			deviceMeta?.isIosDevice ||
-			deviceMeta?.isAndroidDevice ||
-			deviceMeta?.isUniversalApp
+			deviceMeta.isIosDevice ||
+			deviceMeta.isAndroidDevice ||
+			deviceMeta.isUniversalApp
 		) {
 			trackCounter("RobuxGiftingShare", { method: "native" });
 			navigator.share({ url: giftingUrl }).catch((err: unknown) => {
@@ -70,7 +72,7 @@ export function useRobuxGifting(giftingUrl: string): RobuxGifting {
 
 		trackCounter("RobuxGiftingShare", { method: "mailto" });
 		window.location.href = `mailto:?body=${encodeURIComponent(giftingUrl)}`;
-	}, [giftingUrl]);
+	}, [deviceMeta, giftingUrl]);
 
 	return {
 		handleCopyUrl,

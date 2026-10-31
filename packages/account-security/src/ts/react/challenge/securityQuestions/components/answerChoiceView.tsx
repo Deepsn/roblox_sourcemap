@@ -50,7 +50,9 @@ const AnswerChoiceView: React.FC<Props> = ({
 					<div className="answer-choice-img-placeholder">{captionComputed}</div>
 				)}
 			</div>
-			<div className="answer-choice-caption xsmall">{captionComputed}</div>
+			<div className="answer-choice-caption text-caption-small">
+				{captionComputed}
+			</div>
 		</div>
 	);
 };

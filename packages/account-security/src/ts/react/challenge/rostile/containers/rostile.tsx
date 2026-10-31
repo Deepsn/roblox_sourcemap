@@ -1,16 +1,18 @@
 import { getItem, setItem } from "@rbx/core-lib/local-storage";
 import React, { useEffect, useState } from "react";
-import { Modal } from "react-style-guide";
+import { DialogBody } from "@rbx/foundation-ui";
 import {
 	RostileError,
 	Solution,
 } from "../../../../common/request/types/rostile";
+import ChallengeDialog from "../../../common/challengeDialog";
+import {
+	ChallengeDialogHeader,
+	HeaderButtonType,
+} from "../../../common/challengeDialogHeader";
 import InlineChallenge from "../../../common/inlineChallenge";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
-import {
-	FragmentModalHeader,
-	HeaderButtonType,
-} from "../../../common/modalHeader";
+import "../../../../../css/challenge/rostile/rostileDialog.css";
 import VisiblePuzzle from "../components/rostileVisiblePuzzle";
 import { challengeIdKey, modalCloseDelay } from "../constants/challengeConfig";
 import { mapRostileErrorToChallengeErrorCode } from "../constants/resources";
@@ -168,7 +170,7 @@ const Rostile: React.FC = () => {
 	 */
 
 	const getPageContent = () => {
-		const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+		const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 
 		switch (puzzleType) {
 			case PuzzleType.VISIBLE:
@@ -203,17 +205,16 @@ const Rostile: React.FC = () => {
 			{getPageContent()}
 		</InlineChallenge>
 	) : (
-		<Modal
-			className="modal-modern modal-modern-challenge-rostile"
-			show={isModalVisible}
-			onHide={
+		<ChallengeDialog
+			className="challenge-rostile-dialog"
+			open={isModalVisible}
+			onClose={
 				answerState === AnswerState.COMPLETED_ERROR
 					? closeModal
 					: closeModalAbandon
 			}
-			backdrop="static"
 		>
-			<FragmentModalHeader
+			<ChallengeDialogHeader
 				headerText={
 					answerState !== AnswerState.COMPLETED_ERROR
 						? resources.Description.VerificationHeader
@@ -229,7 +230,7 @@ const Rostile: React.FC = () => {
 				headerInfo={null}
 			/>
 			{getPageContent()}
-		</Modal>
+		</ChallengeDialog>
 	);
 };
 export default Rostile;

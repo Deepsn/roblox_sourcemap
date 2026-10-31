@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as Thumbnails from "../types/thumbnails";
@@ -15,7 +15,7 @@ export const getIconsForUniverseIds = (
 	>
 > =>
 	toResult(
-		http.get(Thumbnails.GET_ICONS_FOR_UNIVERSE_IDS_CONFIG, {
+		transport.get(Thumbnails.GET_ICONS_FOR_UNIVERSE_IDS_CONFIG, {
 			universeIds,
 			size,
 			format,

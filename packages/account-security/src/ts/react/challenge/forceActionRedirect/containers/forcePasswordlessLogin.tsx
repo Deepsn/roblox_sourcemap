@@ -1,14 +1,14 @@
 import React from "react";
-import { Modal } from "react-style-guide";
-import { Button } from "@rbx/foundation-ui";
+import { Button, DialogBody } from "@rbx/foundation-ui";
 import { TTailwindIconClass } from "@rbx/foundation-tailwind/classes";
 import { ForceActionRedirect } from "@rbx/generic-challenge-types";
+import ChallengeDialog from "../../../common/challengeDialog";
 import InlineChallenge from "../../../common/inlineChallenge";
 import InlineChallengeBody from "../../../common/inlineChallengeBody";
 import {
-	FragmentModalHeader,
+	ChallengeDialogHeader,
 	HeaderButtonType,
-} from "../../../common/modalHeader";
+} from "../../../common/challengeDialogHeader";
 import { translationsParametersByKey } from "../app.config";
 import useCloseModal from "../hooks/useCloseModal";
 import useForceActionRedirectContext from "../hooks/useForceActionRedirectContext";
@@ -87,7 +87,7 @@ const ForcePasswordlessLogin: React.FC<{
 		},
 	];
 
-	const BodyElement = renderInline ? InlineChallengeBody : Modal.Body;
+	const BodyElement = renderInline ? InlineChallengeBody : DialogBody;
 	const lockIconClassName = renderInline
 		? "inline-challenge-protection-shield-icon"
 		: "modal-protection-shield-icon";
@@ -138,7 +138,7 @@ const ForcePasswordlessLogin: React.FC<{
 			</div>
 			{hasError && (
 				<p
-					className="text-error"
+					className="text-body-small content-system-alert"
 					role="alert"
 					data-testid="force-passwordless-login-error"
 				>
@@ -146,7 +146,7 @@ const ForcePasswordlessLogin: React.FC<{
 				</p>
 			)}
 			<p
-				className={`text-footer ${marginBottomClassName}`}
+				className={`text-caption-small content-default ${marginBottomClassName}`}
 				data-testid="force-passwordless-login-help"
 				// eslint-disable-next-line react/no-danger
 				dangerouslySetInnerHTML={{
@@ -161,13 +161,8 @@ const ForcePasswordlessLogin: React.FC<{
 			{pageContent}
 		</InlineChallenge>
 	) : (
-		<Modal
-			className="modal-modern"
-			show={isModalVisible}
-			onHide={closeModal}
-			backdrop="static"
-		>
-			<FragmentModalHeader
+		<ChallengeDialog open={isModalVisible} onClose={closeModal}>
+			<ChallengeDialogHeader
 				headerText={resources.Header}
 				buttonType={HeaderButtonType.CLOSE}
 				buttonAction={closeModal}
@@ -175,7 +170,7 @@ const ForcePasswordlessLogin: React.FC<{
 				headerInfo={null}
 			/>
 			{pageContent}
-		</Modal>
+		</ChallengeDialog>
 	);
 };
 

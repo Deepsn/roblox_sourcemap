@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as Turnstile from "../types/turnstile";
@@ -17,7 +17,7 @@ export const getMetadata = (
 	>
 > =>
 	toResult(
-		http.get(Turnstile.GET_TURNSTILE_METADATA_CONFIG, {
+		transport.get(Turnstile.GET_TURNSTILE_METADATA_CONFIG, {
 			// eslint-disable-next-line camelcase
 			challenge_id: challengeId,
 		}),

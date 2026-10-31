@@ -23,13 +23,21 @@
 import { useMemo } from "react";
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useTranslations as useTranslationsUseIntl } from "use-intl";
-import { adaptTranslator, type Translator } from "./adaptor";
+import {
+	adaptFullKeyTranslator,
+	adaptTranslator,
+	type FullKeyTranslations,
+	type Translator,
+} from "./adaptor";
 import type { Namespace } from "./types";
 import { fromPeriodToColonDelimited } from "./util";
 
 /**
  * Translations for one namespace, keyed by the period-delimited names used in the localization
  * service (e.g. `useTranslations("Feature.Messages")` then `t("Heading.Message")`).
+ *
+ * `t(key, values, fallback)` returns `fallback` when `key` is absent from the messages loaded at
+ * runtime. Omit `fallback` to keep use-intl's missing-message behavior.
  */
 export const useTranslations = <N extends Namespace>(
 	namespace: N,
@@ -38,7 +46,24 @@ export const useTranslations = <N extends Namespace>(
 	return useMemo(() => adaptTranslator(t, namespace), [t, namespace]);
 };
 
-export { adaptTranslator, type Translator } from "./adaptor";
+/**
+ * Translates a full localization-service key that already includes its namespace, such as one
+ * supplied by the backend (`Feature.Messages.Heading.Message`). The namespace is the first two
+ * segments.
+ *
+ * `translateFullKey(key, values, fallback)` returns `fallback` when the key does not resolve. When
+ * `fallback` is omitted, the result is `""`.
+ */
+export const useFullKeyTranslations = (): FullKeyTranslations => {
+	const t = useTranslationsUseIntl();
+	return useMemo(() => ({ translateFullKey: adaptFullKeyTranslator(t) }), [t]);
+};
+
+export {
+	adaptTranslator,
+	type FullKeyTranslations,
+	type Translator,
+} from "./adaptor";
 export type { HtmlTag } from "./html";
 export type {
 	Messages,

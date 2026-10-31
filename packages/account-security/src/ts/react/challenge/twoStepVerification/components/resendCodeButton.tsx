@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ProgressCircle } from "@rbx/foundation-ui";
 import { TwoStepVerificationError } from "../../../../common/request/types/twoStepVerification";
 import {
 	mapTwoStepVerificationErrorToChallengeErrorCode,
@@ -89,9 +90,13 @@ const ResendCodeButton: React.FC<Props> = ({
 
 	if (requestInFlight) {
 		return (
-			<p className={className}>
-				<span className="spinner spinner-xs spinner-no-margin" />
-			</p>
+			<div className={`${className} flex justify-center`}>
+				<ProgressCircle
+					variant="Indeterminate"
+					size="Small"
+					ariaLabel={resources.Action.Resend}
+				/>
+			</div>
 		);
 	}
 
@@ -103,7 +108,7 @@ const ResendCodeButton: React.FC<Props> = ({
 		<p className={className}>
 			<button
 				type="button"
-				className={`${buttonLinkClassName} small focus-visible:outline-focus`}
+				className={`${buttonLinkClassName} text-title-small focus-visible:outline-focus`}
 				onClick={resendCode}
 				disabled={disabled || requestInFlight}
 			>

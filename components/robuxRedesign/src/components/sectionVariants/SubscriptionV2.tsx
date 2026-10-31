@@ -7,7 +7,6 @@ import {
 	useState,
 } from "react";
 import classNames from "classnames";
-import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { paymentFlowAnalyticsService as pfas } from "@rbx/payments/payments-flow-analytics";
 import {
 	BillingPeriodSheet,
@@ -57,16 +56,16 @@ export function SubscriptionV2({
 		"Feature.RobloxSubscription",
 	);
 	const { translateFullKey } = useFullKeyTranslations();
-	const { paymentSession, redirect } = useContext(BuyRobuxPageContext);
+	const { paymentSession, redirect, deviceMeta } =
+		useContext(BuyRobuxPageContext);
 	const {
 		trackSubscriptionV2Shown,
 		trackSubscriptionV2SubscribeClick,
 		trackSubscriptionV2LearnMoreClick,
 	} = useSubscriptionV2TrackingFields();
-	const deviceMeta = useMemo(() => getDeviceMeta(), []);
 	const [isLearnMoreSheetOpen, setIsLearnMoreSheetOpen] = useState(false);
 
-	const isInApp = Boolean(deviceMeta?.isInApp);
+	const { isInApp } = deviceMeta;
 
 	const handleLearnMoreSelect = useCallback(() => {
 		trackSubscriptionV2LearnMoreClick();
@@ -115,10 +114,10 @@ export function SubscriptionV2({
 		useState(false);
 	const billingPeriodAnalyticsContext = useMemo(
 		() => ({
-			triggeringContext: getTriggerContext(),
+			triggeringContext: getTriggerContext(deviceMeta),
 			viewName: pfas.ENUM_VIEW_NAME.ROBLOX_PLUS_BUY_ROBUX,
 		}),
-		[],
+		[deviceMeta],
 	);
 
 	const openBillingPeriodSheet = useCallback(() => {
@@ -159,7 +158,7 @@ export function SubscriptionV2({
 		[products],
 	);
 
-	const willRender = primaryProduct != null && deviceMeta != null;
+	const willRender = primaryProduct != null;
 
 	useEffect(() => {
 		if (!willRender) {
@@ -187,11 +186,6 @@ export function SubscriptionV2({
 
 	if (!primaryProduct) {
 		trackCounter("SubscriptionV2NoPrimaryProduct");
-		return null;
-	}
-
-	if (!deviceMeta) {
-		trackCounter("SubscriptionV2NoDeviceMeta");
 		return null;
 	}
 

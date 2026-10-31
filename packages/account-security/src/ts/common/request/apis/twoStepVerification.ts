@@ -1,5 +1,5 @@
 import { generateSecureAuthIntent as generateSecureAuthIntentV2 } from "@rbx/core-scripts/auth/saiV2";
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import {
 	ChallengeIdAndActionType,
 	UserId,
@@ -18,7 +18,7 @@ export const getMetadata = (
 	>
 > =>
 	toResult(
-		http.get(TwoStepVerification.GET_METADATA_CONFIG, context || {}),
+		transport.get(TwoStepVerification.GET_METADATA_CONFIG, context || {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -32,7 +32,7 @@ export const getUserConfiguration = (
 	>
 > =>
 	toResult(
-		http.get(
+		transport.get(
 			TwoStepVerification.GET_USER_CONFIGURATION_CONFIG(userId),
 			challengeParameters || {},
 		),
@@ -48,7 +48,7 @@ export const enableEmailTwoStepVerification = async (
 	>
 > => {
 	return toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.ENABLE_EMAIL_TWO_STEP_VERIFICATION_CONFIG(userId),
 			{
 				secureAuthenticationIntent: await generateSecureAuthIntentV2(),
@@ -68,7 +68,7 @@ export const sendEmailCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.SEND_EMAIL_CODE_CONFIG(userId),
 			challengeParameters,
 		),
@@ -85,7 +85,7 @@ export const verifyEmailCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_EMAIL_CODE_CONFIG(userId),
 			verificationParameters,
 		),
@@ -101,7 +101,7 @@ export const disableEmailTwoStepVerification = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.DISABLE_EMAIL_TWO_STEP_VERIFICATION_CONFIG(userId),
 			{},
 		),
@@ -117,7 +117,7 @@ export const enableAuthenticator = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.ENABLE_AUTHENTICATOR_CONFIG(userId), {}),
+		transport.post(TwoStepVerification.ENABLE_AUTHENTICATOR_CONFIG(userId), {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -132,11 +132,14 @@ export const enableVerifyAuthenticator = async (
 	>
 > => {
 	return toResult(
-		http.post(TwoStepVerification.ENABLE_VERIFY_AUTHENTICATOR_CONFIG(userId), {
-			setupToken,
-			code,
-			secureAuthenticationIntent: await generateSecureAuthIntentV2(),
-		}),
+		transport.post(
+			TwoStepVerification.ENABLE_VERIFY_AUTHENTICATOR_CONFIG(userId),
+			{
+				setupToken,
+				code,
+				secureAuthenticationIntent: await generateSecureAuthIntentV2(),
+			},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 };
@@ -151,7 +154,7 @@ export const verifyAuthenticatorCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_AUTHENTICATOR_CODE_CONFIG(userId),
 			verificationParameters,
 		),
@@ -167,7 +170,10 @@ export const disableAuthenticator = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.DISABLE_AUTHENTICATOR_CONFIG(userId), {}),
+		transport.post(
+			TwoStepVerification.DISABLE_AUTHENTICATOR_CONFIG(userId),
+			{},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -181,7 +187,7 @@ export const verifyRecoveryCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_RECOVERY_CODE_CONFIG(userId),
 			verificationParameters,
 		),
@@ -197,7 +203,7 @@ export const getRecoveryCodesStatus = (
 	>
 > =>
 	toResult(
-		http.get(TwoStepVerification.GET_RECOVERY_CODES_STATUS_CONFIG(userId)),
+		transport.get(TwoStepVerification.GET_RECOVERY_CODES_STATUS_CONFIG(userId)),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -210,7 +216,7 @@ export const clearRecoveryCodes = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.CLEAR_RECOVERY_CODES_CONFIG(userId), {}),
+		transport.post(TwoStepVerification.CLEAR_RECOVERY_CODES_CONFIG(userId), {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -223,7 +229,7 @@ export const generateRecoveryCodes = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.GENERATE_RECOVERY_CODES_CONFIG(userId), {
+		transport.post(TwoStepVerification.GENERATE_RECOVERY_CODES_CONFIG(userId), {
 			// TODO: Remove the 'password' default; this is a temporary workaround for an
 			// incomplete flagging job.
 			password: "password",
@@ -240,7 +246,7 @@ export const enableSmsTwoStepVerification = async (
 	>
 > => {
 	return toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.ENABLE_SMS_TWO_STEP_VERIFICATION_CONFIG(userId),
 			{
 				secureAuthenticationIntent: await generateSecureAuthIntentV2(),
@@ -260,7 +266,7 @@ export const sendSmsCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.SEND_SMS_CODE_CONFIG(userId),
 			challengeParameters,
 		),
@@ -277,7 +283,7 @@ export const verifySmsCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_SMS_CODE_CONFIG(userId),
 			verificationParameters,
 		),
@@ -293,7 +299,7 @@ export const disableSmsTwoStepVerification = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.DISABLE_SMS_TWO_STEP_VERIFICATION_CONFIG(userId),
 			{},
 		),
@@ -319,7 +325,7 @@ export const enableSecurityKey = (
 		};
 	};
 	return toResult(
-		http.post(TwoStepVerification.ENABLE_SECURITY_KEY_CONFIG(userId), {}),
+		transport.post(TwoStepVerification.ENABLE_SECURITY_KEY_CONFIG(userId), {}),
 		TwoStepVerification.TwoStepVerificationError,
 		additionalProcessingFunction,
 	);
@@ -337,12 +343,15 @@ export const enableVerifySecurityKey = async (
 	>
 > => {
 	return toResult(
-		http.post(TwoStepVerification.ENABLE_VERIFY_SECURITY_KEY_CONFIG(userId), {
-			sessionId,
-			credentialNickname,
-			attestationResponse,
-			secureAuthenticationIntent: await generateSecureAuthIntentV2(),
-		}),
+		transport.post(
+			TwoStepVerification.ENABLE_VERIFY_SECURITY_KEY_CONFIG(userId),
+			{
+				sessionId,
+				credentialNickname,
+				attestationResponse,
+				secureAuthenticationIntent: await generateSecureAuthIntentV2(),
+			},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 };
@@ -357,7 +366,7 @@ export const getSecurityKeyOptions = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.GET_SECURITY_KEY_OPTIONS_CONFIG(userId),
 			challengeParameters,
 		),
@@ -375,7 +384,7 @@ export const verifySecurityKeyCredential = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_SECURITY_KEY_CREDENTIAL_CONFIG(userId),
 			verificationParameters,
 		),
@@ -392,7 +401,7 @@ export const deleteSecurityKey = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.DELETE_SECURITY_KEY_CONFIG(userId), {
+		transport.post(TwoStepVerification.DELETE_SECURITY_KEY_CONFIG(userId), {
 			credentialIDs,
 		}),
 		TwoStepVerification.TwoStepVerificationError,
@@ -409,7 +418,7 @@ export const renameSecurityKey = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.RENAME_SECURITY_KEY_CONFIG(userId), {
+		transport.post(TwoStepVerification.RENAME_SECURITY_KEY_CONFIG(userId), {
 			credentialID,
 			newNickname,
 		}),
@@ -425,7 +434,7 @@ export const listSecurityKey = (
 	>
 > =>
 	toResult(
-		http.post(TwoStepVerification.LIST_SECURITY_KEY_CONFIG(userId), {}),
+		transport.post(TwoStepVerification.LIST_SECURITY_KEY_CONFIG(userId), {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -439,7 +448,7 @@ export const getPasskeyOptions = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.GET_PASSKEY_OPTIONS_CONFIG(userId),
 			challengeParameters,
 		),
@@ -457,7 +466,7 @@ export const verifyPasskeyCredential = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_PASSKEY_CREDENTIAL_CONFIG(userId),
 			verificationParameters,
 		),
@@ -468,7 +477,7 @@ export const getSpendFrictionStatus = (): Promise<
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.get(TwoStepVerification.GET_SPEND_FRICTION_STATUS_CONFIG, {}),
+		transport.get(TwoStepVerification.GET_SPEND_FRICTION_STATUS_CONFIG, {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -476,7 +485,7 @@ export const getTradeFrictionStatus = (): Promise<
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.get(TwoStepVerification.GET_TRADE_FRICTION_STATUS_CONFIG, {}),
+		transport.get(TwoStepVerification.GET_TRADE_FRICTION_STATUS_CONFIG, {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -484,7 +493,7 @@ export const getResaleFrictionStatus = (): Promise<
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.get(TwoStepVerification.GET_RESALE_FRICTION_STATUS_CONFIG, {}),
+		transport.get(TwoStepVerification.GET_RESALE_FRICTION_STATUS_CONFIG, {}),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -492,7 +501,10 @@ export const generateSpendFrictionChallenge = (): Promise<
 	Result<string, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(TwoStepVerification.GENERATE_SPEND_FRICTION_CHALLENGE_CONFIG, {}),
+		transport.post(
+			TwoStepVerification.GENERATE_SPEND_FRICTION_CHALLENGE_CONFIG,
+			{},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -500,7 +512,10 @@ export const generateTradeFrictionChallenge = (): Promise<
 	Result<string, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(TwoStepVerification.GENERATE_TRADE_FRICTION_CHALLENGE_CONFIG, {}),
+		transport.post(
+			TwoStepVerification.GENERATE_TRADE_FRICTION_CHALLENGE_CONFIG,
+			{},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -508,7 +523,7 @@ export const generateResaleFrictionChallenge = (): Promise<
 	Result<string, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.GENERATE_RESALE_FRICTION_CHALLENGE_CONFIG,
 			{},
 		),
@@ -522,7 +537,7 @@ export const redeemSpendFrictionChallenge = (
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(TwoStepVerification.REDEEM_SPEND_FRICTION_CHALLENGE_CONFIG, {
+		transport.post(TwoStepVerification.REDEEM_SPEND_FRICTION_CHALLENGE_CONFIG, {
 			challengeToken,
 			verificationToken,
 		}),
@@ -536,7 +551,7 @@ export const redeemTradeFrictionChallenge = (
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(TwoStepVerification.REDEEM_TRADE_FRICTION_CHALLENGE_CONFIG, {
+		transport.post(TwoStepVerification.REDEEM_TRADE_FRICTION_CHALLENGE_CONFIG, {
 			challengeToken,
 			verificationToken,
 		}),
@@ -550,10 +565,13 @@ export const redeemResaleFrictionChallenge = (
 	Result<boolean, TwoStepVerification.TwoStepVerificationError | null>
 > =>
 	toResult(
-		http.post(TwoStepVerification.REDEEM_RESALE_FRICTION_CHALLENGE_CONFIG, {
-			challengeToken,
-			verificationToken,
-		}),
+		transport.post(
+			TwoStepVerification.REDEEM_RESALE_FRICTION_CHALLENGE_CONFIG,
+			{
+				challengeToken,
+				verificationToken,
+			},
+		),
 		TwoStepVerification.TwoStepVerificationError,
 	);
 
@@ -567,7 +585,7 @@ export const retryCrossDevice = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.RETRY_CROSS_DEVICE_PROMPT_CONFIG(userId),
 			challengeParameters,
 		),
@@ -584,7 +602,7 @@ export const verifyCrossDevice = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_CROSS_DEVICE_PROMPT_CONFIG(userId),
 			challengeParameters,
 		),
@@ -601,7 +619,7 @@ export const retractCrossDevice = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.RETRACT_CROSS_DEVICE_PROMPT_CONFIG(userId),
 			challengeParameters,
 		),
@@ -618,7 +636,7 @@ export const verifyPasswordCode = (
 	>
 > =>
 	toResult(
-		http.post(
+		transport.post(
 			TwoStepVerification.VERIFY_PASSWORD_CONFIG(userId),
 			verificationParameters,
 		),

@@ -1,6 +1,4 @@
 import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";
 import { RequestServiceDefault } from "../../../common/request";
 import App from "./App";
 import {
@@ -11,6 +9,7 @@ import {
 import { RenderChallenge } from "./interface";
 import { EventServiceDefault } from "./services/eventService";
 import { MetricsServiceDefault } from "./services/metricsService";
+import { mountChallenge, unmountChallenge } from "../challengeMount";
 
 // Global instance since we do not need captcha parameters for instantiation.
 const requestServiceDefault = new RequestServiceDefault();
@@ -39,7 +38,7 @@ export const renderChallenge: RenderChallenge = async ({
 	const container = document.getElementById(containerId);
 	if (container !== null) {
 		// Remove any existing instances of the app.
-		unmountComponentAtNode(container);
+		unmountChallenge(container);
 
 		// Instantiate services externally to the app, which will offer future
 		// flexibility (e.g. for mocking).
@@ -71,26 +70,25 @@ export const renderChallenge: RenderChallenge = async ({
 		const captchaVersion = USE_LIGHTBOX_MODAL;
 
 		// Render the app on the selected element.
-		render(
-			<TranslationProviderSCC namespaces={TRANSLATION_NAMESPACES}>
-				<App
-					actionType={actionType}
-					appType={appType}
-					dataExchangeBlob={dataExchangeBlob}
-					unifiedCaptchaId={unifiedCaptchaId}
-					renderInline={renderInline}
-					requestService={requestServiceDefault}
-					metadataResponse={metadata.value}
-					eventService={eventService}
-					metricsService={metricsService}
-					captchaVersion={captchaVersion}
-					onChallengeDisplayed={onChallengeDisplayed}
-					onChallengeCompleted={onChallengeCompleted}
-					onChallengeInvalidated={onChallengeInvalidated}
-					onModalChallengeAbandoned={onModalChallengeAbandoned}
-				/>
-			</TranslationProviderSCC>,
+		mountChallenge(
 			container,
+			<App
+				actionType={actionType}
+				appType={appType}
+				dataExchangeBlob={dataExchangeBlob}
+				unifiedCaptchaId={unifiedCaptchaId}
+				renderInline={renderInline}
+				requestService={requestServiceDefault}
+				metadataResponse={metadata.value}
+				eventService={eventService}
+				metricsService={metricsService}
+				captchaVersion={captchaVersion}
+				onChallengeDisplayed={onChallengeDisplayed}
+				onChallengeCompleted={onChallengeCompleted}
+				onChallengeInvalidated={onChallengeInvalidated}
+				onModalChallengeAbandoned={onModalChallengeAbandoned}
+			/>,
+			TRANSLATION_NAMESPACES,
 		);
 		return true;
 	}

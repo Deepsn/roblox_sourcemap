@@ -34,7 +34,7 @@ export const ChallengeDialogFooter: React.FC<Props> = ({
 				<Button
 					variant="Standard"
 					size="Small"
-					className="grow basis-0 min-width-0 !text-label-large"
+					className="grow-1 basis-0 min-width-0 !text-label-large"
 					aria-label={negativeButton.label}
 					isDisabled={!negativeButton.enabled}
 					onClick={negativeButton.action}
@@ -45,7 +45,7 @@ export const ChallengeDialogFooter: React.FC<Props> = ({
 			<Button
 				variant="Emphasis"
 				size="Small"
-				className="grow basis-0 min-width-0 !text-label-large !bg-[var(--color-content-emphasis)] !content-[var(--color-surface-0)]"
+				className="grow-1 basis-0 min-width-0 !text-label-large !bg-[var(--color-content-emphasis)] !content-[var(--color-surface-0)]"
 				aria-label={positiveButton.label}
 				isDisabled={!positiveButton.enabled}
 				onClick={positiveButton.action}

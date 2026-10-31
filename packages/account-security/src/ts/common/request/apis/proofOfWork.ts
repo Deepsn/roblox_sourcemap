@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as ProofOfWork from "../types/proofOfWork";
@@ -9,7 +9,7 @@ export const getPuzzle = (
 	Result<ProofOfWork.GetPuzzleReturnType, ProofOfWork.ProofOfWorkError | null>
 > =>
 	toResult(
-		http.get(ProofOfWork.GET_PUZZLE_CONFIG, { sessionID }),
+		transport.get(ProofOfWork.GET_PUZZLE_CONFIG, { sessionID }),
 		ProofOfWork.ProofOfWorkError,
 	);
 
@@ -23,7 +23,7 @@ export const verifyPuzzle = async (
 	>
 > =>
 	toResult(
-		http.post(ProofOfWork.VERIFY_PUZZLE_CONFIG, {
+		transport.post(ProofOfWork.VERIFY_PUZZLE_CONFIG, {
 			sessionID,
 			solution,
 		}),

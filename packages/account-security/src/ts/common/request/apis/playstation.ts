@@ -1,4 +1,4 @@
-import * as http from "@rbx/core-scripts/http";
+import transport from "../requestTransport";
 import { Result } from "../../result";
 import { toResult } from "../common";
 import * as Playstation from "../types/playstation";
@@ -7,7 +7,7 @@ export const getPlaystationConnection = (): Promise<
 	Result<boolean, Playstation.PlaystationError | null>
 > =>
 	toResult(
-		http.get(Playstation.GET_PLAYSTATION_CONNECTION_CONFIG, {}),
+		transport.get(Playstation.GET_PLAYSTATION_CONNECTION_CONFIG, {}),
 		Playstation.PlaystationError,
 	);
 
@@ -18,6 +18,6 @@ export const disconnectPlaystation = (): Promise<
 	>
 > =>
 	toResult(
-		http.post(Playstation.DISCONNECT_PLAYSTATION_CONFIG, {}),
+		transport.post(Playstation.DISCONNECT_PLAYSTATION_CONFIG, {}),
 		Playstation.PlaystationError,
 	);

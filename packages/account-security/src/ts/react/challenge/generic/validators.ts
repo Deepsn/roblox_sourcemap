@@ -143,6 +143,9 @@ const CaptchaV2Validator = z
 		mode: z.string().optional() as unknown as z.ZodType<
 			CaptchaMode | undefined
 		>,
+		// Optional; carried from GCS as the canonical captcha ActionType enum name
+		// for telemetry only, so an unlisted value never fails parsing.
+		actionType: z.string().optional(),
 	})
 	.and(SharedChallengeMetadataValidator);
 

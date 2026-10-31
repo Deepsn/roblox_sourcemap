@@ -39,7 +39,8 @@ export const ModalContainer = ({
 	const translateVerifiedParentalControls = useTranslations(
 		"Feature.VerifiedParentalControls",
 	);
-	const { markConsentAcknowledged } = useContext(BuyRobuxPageContext);
+	const { markConsentAcknowledged, deviceMeta } =
+		useContext(BuyRobuxPageContext);
 
 	const onError = useCallback((error: unknown) => {
 		trackCriticalError("StripeReactCrash", null, error);
@@ -83,7 +84,7 @@ export const ModalContainer = ({
 							closing: "learnLinkEnd",
 							render: (linkContent) => (
 								<a
-									{...getExternalLinkProps(SPENDING_LIMITS_FAQ_URL)}
+									{...getExternalLinkProps(SPENDING_LIMITS_FAQ_URL, deviceMeta)}
 									className="color-content-default [text-decoration:underline] [text-underline-position:from-font]"
 									rel="noreferrer"
 								>
@@ -101,7 +102,7 @@ export const ModalContainer = ({
 							closing: "termsLinkEnd",
 							render: (linkContent) => (
 								<a
-									{...getExternalLinkProps(TERMS_OF_USE_URL)}
+									{...getExternalLinkProps(TERMS_OF_USE_URL, deviceMeta)}
 									className="color-content-emphasis [text-decoration:underline] [text-underline-position:from-font]"
 									rel="noreferrer"
 								>
@@ -117,7 +118,7 @@ export const ModalContainer = ({
 				onConfirm={handleConsentConfirm}
 				onCancel={handleConsentCancel}
 				publishMetric={publishMetric}
-				triggerContext={getTriggerContext()}
+				triggerContext={getTriggerContext(deviceMeta)}
 			/>
 		</ModalContext.Provider>
 	);

@@ -1,4 +1,6 @@
 import { createContext } from "react";
+import { DeviceMeta } from "@rbx/www-common/device/types";
+import { defaultDeviceMeta } from "@rbx/www-common/device/utils";
 import {
 	BuyRobuxPageData,
 	CollectibleItemMetadata,
@@ -50,6 +52,7 @@ export type BuyRobuxPageContextProps = {
 	markConsentAcknowledged: () => void;
 	productBadgeSlotCount: number;
 	atLeastOneProductHasBonusAmount: boolean;
+	deviceMeta: DeviceMeta;
 };
 
 export const BuyRobuxPageContext = createContext<BuyRobuxPageContextProps>({
@@ -88,4 +91,5 @@ export const BuyRobuxPageContext = createContext<BuyRobuxPageContextProps>({
 	markConsentAcknowledged: () => undefined,
 	productBadgeSlotCount: 0,
 	atLeastOneProductHasBonusAmount: false,
+	deviceMeta: defaultDeviceMeta,
 });

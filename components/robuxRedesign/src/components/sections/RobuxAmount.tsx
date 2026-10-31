@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { formatNumber } from "@rbx/core-scripts/format/number";
 import { Badge, Icon } from "@rbx/foundation-ui";
 import { useFullKeyTranslations, useTranslations } from "@rbx/www-common/i18n";
-import { isInApp } from "../../utils/platform";
+import { getIsNativePurchasePlatform } from "../../utils/platform";
 import { isIconVariant } from "../../utils/iconVariants";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 
@@ -46,7 +46,8 @@ export function RobuxAmount({
 	bonusRobuxTagIcon,
 	bonusRobuxTagTranslationKey,
 }: RobuxAmountProps) {
-	const { productBadgeSlotCount } = useContext(BuyRobuxPageContext);
+	const { productBadgeSlotCount, deviceMeta } = useContext(BuyRobuxPageContext);
+	const isNativePurchasePlatform = getIsNativePurchasePlatform(deviceMeta);
 	const translatePremium = useTranslations("Feature.Premium");
 	const { translateFullKey } = useFullKeyTranslations();
 
@@ -123,7 +124,7 @@ export function RobuxAmount({
 							// On non-large screens, only show for when in-app.
 							<div
 								className={classNames(
-									isInApp ? "block" : "hidden",
+									isNativePurchasePlatform ? "block" : "hidden",
 									"large:block",
 								)}
 								data-testid="bonus-pill"

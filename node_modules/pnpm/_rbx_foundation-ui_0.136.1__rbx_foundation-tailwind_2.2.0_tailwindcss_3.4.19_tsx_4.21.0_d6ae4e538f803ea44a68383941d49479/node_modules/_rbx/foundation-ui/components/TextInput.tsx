@@ -1,0 +1,267 @@
+import clsx from 'clsx';
+import React, { forwardRef, useMemo } from 'react';
+import type { CSSProperties } from 'react';
+import type {
+  TTailwindGapXClass,
+  TTailwindHeightClass,
+  TTailwindIconClass,
+  TTailwindPaddingXClass,
+  TTailwindRadiusClass,
+  TTailwindTextBodyClass,
+  TTailwindTextTitleClass
+} from '@rbx/foundation-tailwind/classes';
+import useId from '../utils/useId';
+import { Icon } from './Icon';
+import { LabelTooltip, TLabelTooltipConfig } from './internal/LabelTooltip';
+import { disabledOpacity } from '../utils/styles';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+import './internal/Common.css';
+import {
+  type TInputVariant,
+  INPUT_BACKGROUND_BY_VARIANT,
+  INPUT_STROKE_BY_VARIANT
+} from './internal/input-variants';
+
+export { INPUT_VARIANTS as textInputVariants } from './internal/input-variants';
+export type TTextInputVariant = TInputVariant;
+
+export const textInputSizes = ['XSmall', 'Small', 'Medium', 'Large'] as const;
+export type TTextInputSize = (typeof textInputSizes)[number];
+
+type TLeadingIconProps =
+  | { leadingIconName: TTailwindIconClass; leadingIconNode?: never }
+  | { leadingIconName?: never; leadingIconNode: React.ReactNode }
+  | { leadingIconName?: never; leadingIconNode?: never };
+
+type TTrailingIconProps =
+  | { trailingIconName: TTailwindIconClass; trailingIconNode?: never }
+  | { trailingIconName?: never; trailingIconNode: React.ReactNode }
+  | { trailingIconName?: never; trailingIconNode?: never };
+
+type TTextInputFoundationProps = {
+  size?: TTextInputSize;
+  variant?: TTextInputVariant;
+  label?: React.ReactNode;
+  /**
+   * Optional info-icon tooltip rendered beside the label. Set `title`, and
+   * optionally `description` and `position`.
+   */
+  labelTooltip?: TLabelTooltipConfig;
+  value?: string;
+  defaultValue?: string;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+  hasError?: boolean;
+  /** Error message to display. If provided, the input will be in an error state. Accepts rich content (e.g. links). */
+  error?: React.ReactNode;
+  /** Helper text to be displayed below the input field. Accepts rich content (e.g. links). */
+  helperText?: React.ReactNode;
+  inputContainerClassName?: string;
+  inputContainerClassStyle?: CSSProperties;
+} & TLeadingIconProps &
+  TTrailingIconProps;
+/**
+ * Since React.InputHTMLAttributes<HTMLInputElement> can have overlap with our custom props,
+ * we need to omit constraints on fields we define from the final props type.
+ */
+export type TTextInputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  keyof TTextInputFoundationProps | 'disabled'
+> &
+  TTextInputFoundationProps;
+
+const TEXT_INPUT_X_PADDING: Record<TTextInputSize, TTailwindPaddingXClass> = {
+  XSmall: 'padding-x-small',
+  Small: 'padding-x-medium',
+  Medium: 'padding-x-medium',
+  Large: 'padding-x-medium'
+};
+
+const INPUT_ICON_GAP: Record<TTextInputSize, TTailwindGapXClass> = {
+  XSmall: 'gap-x-xsmall',
+  Small: 'gap-x-small',
+  Medium: 'gap-x-small',
+  Large: 'gap-x-small'
+};
+
+const TEXT_INPUT_WRAPPER_HEIGHT: Record<TTextInputSize, TTailwindHeightClass> = {
+  XSmall: 'height-600',
+  Small: 'height-800',
+  Medium: 'height-1000',
+  Large: 'height-1200'
+};
+
+const TEXT_INPUT_WRAPPER_RADIUS: Record<TTextInputSize, TTailwindRadiusClass> = {
+  XSmall: 'radius-small',
+  Small: 'radius-medium',
+  Medium: 'radius-medium',
+  Large: 'radius-medium'
+};
+
+const LABEL_FONT_CLASS_BY_SIZE: Record<TTextInputSize, TTailwindTextTitleClass> = {
+  XSmall: 'text-title-small',
+  Small: 'text-title-small',
+  Medium: 'text-title-medium',
+  Large: 'text-title-large'
+};
+
+const TEXT_CLASSES_BY_SIZE: Record<
+  TTextInputSize,
+  [TTailwindTextBodyClass, `placeholder:${TTailwindTextBodyClass}`]
+> = {
+  XSmall: ['text-body-small', 'placeholder:text-body-small'],
+  Small: ['text-body-small', 'placeholder:text-body-small'],
+  Medium: ['text-body-medium', 'placeholder:text-body-medium'],
+  Large: ['text-body-large', 'placeholder:text-body-large']
+};
+
+const DEFAULT_SIZE = 'Large';
+
+export const TextInput = forwardRef<HTMLInputElement, TTextInputProps>(
+  (
+    {
+      label,
+      labelTooltip,
+      leadingIconName,
+      trailingIconName,
+      leadingIconNode,
+      trailingIconNode,
+      hasError,
+      error,
+      helperText,
+      size,
+      variant = 'Standard',
+      isRequired,
+      isDisabled,
+      className,
+      style,
+      inputContainerClassName,
+      inputContainerClassStyle,
+      id,
+      ...props
+    },
+    ref
+  ) => {
+    const autoId = useId();
+    const resolvedId = id || autoId;
+    const descriptionId = `${resolvedId}-description`;
+    const textInputSize = size ?? DEFAULT_SIZE;
+    const isError = hasError || Boolean(error);
+    const hintText = error || helperText;
+
+    const leadingIcon = useMemo(() => {
+      if (leadingIconName) {
+        return (
+          <Icon
+            name={leadingIconName}
+            size={textInputSize}
+            className='content-emphasis'
+            data-testid='text-input-leading-icon'
+          />
+        );
+      }
+
+      return leadingIconNode;
+    }, [leadingIconName, leadingIconNode, textInputSize]);
+
+    const trailingIcon = useMemo(() => {
+      if (trailingIconName) {
+        return (
+          <Icon
+            name={trailingIconName}
+            size={textInputSize}
+            className='content-emphasis'
+            data-testid='text-input-trailing-icon'
+          />
+        );
+      }
+
+      return trailingIconNode;
+    }, [textInputSize, trailingIconName, trailingIconNode]);
+
+    const labelNode = label ? (
+      <label
+        htmlFor={resolvedId}
+        className={clsx(LABEL_FONT_CLASS_BY_SIZE[textInputSize], 'content-emphasis')}>
+        {label}
+        {isRequired && (
+          <React.Fragment>
+            {' '}
+            <span className='content-default'>*</span>
+          </React.Fragment>
+        )}
+      </label>
+    ) : null;
+
+    return (
+      <div
+        data-testid='text-input-wrapper'
+        className={clsx(`flex width-full flex-col gap-small ${className}`, {
+          [disabledOpacity]: isDisabled
+        })}
+        style={style}>
+        {labelNode &&
+          (labelTooltip ? (
+            <div className='flex items-center gap-xsmall'>
+              {labelNode}
+              <LabelTooltip {...labelTooltip} />
+            </div>
+          ) : (
+            labelNode
+          ))}
+
+        {/* TODO: Figma uses an alpha token for stroke, which doesn't exist in our tailwind lib today */}
+        <div
+          data-testid='text-input-container'
+          className={clsx(
+            'foundation-web-input flex items-center width-full',
+            INPUT_STROKE_BY_VARIANT[variant],
+            INPUT_BACKGROUND_BY_VARIANT[variant],
+            inputContainerClassName,
+            TEXT_INPUT_WRAPPER_HEIGHT[textInputSize],
+            TEXT_INPUT_WRAPPER_RADIUS[textInputSize],
+            TEXT_INPUT_X_PADDING[textInputSize],
+            INPUT_ICON_GAP[textInputSize],
+            isError
+              ? 'stroke-system-alert focus-within:stroke-system-alert'
+              : 'stroke-contrast-alpha focus-within:stroke-system-emphasis'
+          )}
+          style={inputContainerClassStyle}>
+          {leadingIcon}
+          <input
+            type='text'
+            id={resolvedId}
+            ref={ref}
+            className={clsx(
+              'width-full padding-none bg-none stroke-none outline-none content-emphasis placeholder:content-muted',
+              TEXT_CLASSES_BY_SIZE[textInputSize]
+            )}
+            style={{
+              appearance: 'none'
+            }}
+            aria-invalid={isError}
+            aria-describedby={hintText ? descriptionId : undefined}
+            required={isRequired}
+            {...props}
+            disabled={isDisabled}
+          />
+          {trailingIcon}
+        </div>
+        {hintText && (
+          <span
+            id={descriptionId}
+            className={clsx('text-caption-small', {
+              'content-system-alert': isError,
+              'content-default': !isError
+            })}>
+            {hintText}
+          </span>
+        )}
+      </div>
+    );
+  }
+) as TForwardRefComponent<TTextInputProps>;
+
+TextInput.displayName = 'TextInput';
+
+export default TextInput;

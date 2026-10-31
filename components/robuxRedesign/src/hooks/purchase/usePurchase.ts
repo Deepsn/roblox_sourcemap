@@ -5,10 +5,8 @@ import { trackCounter, trackError } from "../../observability";
 import { TrackingContext } from "../../contexts/TrackingContext";
 import { Product } from "../../types/buyRobuxPageData";
 import {
-	isInApp,
-	isInUniversalApp,
-	isOnDesktop,
-	isSamsungGalaxyStoreApp,
+	getIsNativePurchasePlatform,
+	getIsWebCheckoutPlatform,
 } from "../../utils/platform";
 import { usePurchaseEligibility } from "../purchaseEligibility/usePurchaseEligibility";
 import { usePurchaseWarning } from "../purchaseWarning/usePurchaseWarning";
@@ -42,7 +40,10 @@ export function usePurchase(
 		upsellProduct,
 		redirect,
 		shouldShowFirstTimePurchaseConsent,
+		deviceMeta,
 	} = useContext(BuyRobuxPageContext);
+	const isNativePurchasePlatform = getIsNativePurchasePlatform(deviceMeta);
+	const isWebCheckoutPlatform = getIsWebCheckoutPlatform(deviceMeta);
 	const {
 		quickPay: { openModal: openQuickPayModal },
 		samsungPaymentMethods: { openModal: openSamsungPaymentMethodsModal },
@@ -75,13 +76,13 @@ export function usePurchase(
 				return;
 			}
 
-			if (isOnDesktop) {
+			if (isWebCheckoutPlatform) {
 				trackCounter("DesktopPurchaseRedirect");
 				window.location.href = url;
 				return;
 			}
 
-			if (!isInApp) {
+			if (!isNativePurchasePlatform) {
 				trackCounter("UnsupportedPlatform");
 				return;
 			}
@@ -89,7 +90,7 @@ export function usePurchase(
 			trackCounter("MobilePurchaseRedirect");
 			window.location.href = url;
 		},
-		[],
+		[isNativePurchasePlatform, isWebCheckoutPlatform],
 	);
 
 	const purchaseProductPostVerificationUpsell = useCallback(
@@ -201,14 +202,18 @@ export function usePurchase(
 			setIsSubscriptionProduct(isSub);
 			setIsBonusProduct(isBonus);
 
-			if (isSamsungGalaxyStoreApp) {
+			if (deviceMeta.isSamsungGalaxyStoreApp) {
 				openSamsungPaymentMethodsModal(product, isSub, isBonus);
 				return;
 			}
 
 			await purchaseProductPostSamsung(product, isSub, isBonus, sectionType);
 		},
-		[openSamsungPaymentMethodsModal, purchaseProductPostSamsung],
+		[
+			deviceMeta.isSamsungGalaxyStoreApp,
+			openSamsungPaymentMethodsModal,
+			purchaseProductPostSamsung,
+		],
 	);
 
 	const purchaseNonRedirectProduct = useCallback(
@@ -335,7 +340,7 @@ export function usePurchase(
 	useEffect(() => {
 		if (
 			!isQuickPay ||
-			!isInUniversalApp ||
+			!deviceMeta.isUniversalApp ||
 			!upsellProduct ||
 			!paymentProfiles.length
 		) {
@@ -346,6 +351,7 @@ export function usePurchase(
 		openQuickPayModal(upsellProduct);
 		void purchaseNonRedirectProduct(upsellProduct);
 	}, [
+		deviceMeta.isUniversalApp,
 		isQuickPay,
 		upsellProduct,
 		paymentProfiles,
