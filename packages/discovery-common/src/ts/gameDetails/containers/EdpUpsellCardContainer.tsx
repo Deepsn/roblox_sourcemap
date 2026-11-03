@@ -10,6 +10,7 @@ import {
 	UpsellUxTreatmentEnum,
 	TUpsellUxTreatmentData,
 } from "@rbx/game-play-button";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import UpsellBanner from "../../homePageUpsellCard/components/UpsellBanner";
 import {
 	UpsellComponent,
@@ -49,9 +50,7 @@ const EdpUpsellCardContainer = ({
 
 	const handleUpsellClick = () => {
 		if (!window.Roblox.AccessManagementUpsellV2Service) {
-			window.EventTracker?.fireEvent(
-				edpUpsellCounterEvents.AccessManagementServiceMissing,
-			);
+			fireEvent(edpUpsellCounterEvents.AccessManagementServiceMissing);
 			return;
 		}
 
@@ -69,16 +68,14 @@ const EdpUpsellCardContainer = ({
 							queryKey: [PLAYABILITY_QUERY_KEY, universeId],
 						})
 						.catch(() => {
-							window.EventTracker?.fireEvent(
+							fireEvent(
 								edpUpsellCounterEvents.InvalidatePlayabilityQueryFailed,
 							);
 						});
 				}
 			})
 			.catch((error) => {
-				window.EventTracker?.fireEvent(
-					edpUpsellCounterEvents.StartUpsellFailed,
-				);
+				fireEvent(edpUpsellCounterEvents.StartUpsellFailed);
 			});
 	};
 

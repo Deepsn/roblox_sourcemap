@@ -1,0 +1,46 @@
+export const PlayabilityStatus = {
+	UnplayableOtherReason: "UnplayableOtherReason",
+	Playable: "Playable",
+	GuestProhibited: "GuestProhibited",
+	GameUnapproved: "GameUnapproved",
+	IncorrectConfiguration: "IncorrectConfiguration",
+	UniverseRootPlaceIsPrivate: "UniverseRootPlaceIsPrivate",
+	InsufficientPermissionFriendsOnly: "InsufficientPermissionFriendsOnly",
+	InsufficientPermissionGroupOnly: "InsufficientPermissionGroupOnly",
+	InsufficientPermissionEditorsOnly: "InsufficientPermissionEditorsOnly",
+	InsufficientPermissionPlayTestersOnly:
+		"InsufficientPermissionPlayTestersOnly",
+	DeviceRestricted: "DeviceRestricted",
+	UnderReview: "UnderReview",
+	PurchaseRequired: "PurchaseRequired",
+	AccountRestricted: "AccountRestricted",
+	TemporarilyUnavailable: "TemporarilyUnavailable",
+	ComplianceBlocked: "ComplianceBlocked",
+	ContextualPlayabilityRegionalAvailability:
+		"ContextualPlayabilityRegionalAvailability",
+	ContextualPlayabilityRegionalCompliance:
+		"ContextualPlayabilityRegionalCompliance",
+	ContextualPlayabilityAgeRecommendationParentalControls:
+		"ContextualPlayabilityAgeRecommendationParentalControls",
+	ContextualPlayabilityAgeGated: "ContextualPlayabilityAgeGated",
+	PlaceHasNoPublishedVersion: "PlaceHasNoPublishedVersion",
+	ContextualPlayabilityUnverifiedSeventeenPlusUser:
+		"ContextualPlayabilityUnverifiedSeventeenPlusUser",
+	FiatPurchaseRequired: "FiatPurchaseRequired",
+	ContextualPlayabilityUnrated: "ContextualPlayabilityUnrated",
+	ContextualPlayabilityGeneral: "ContextualPlayabilityGeneral",
+	ContextualPlayabilityAgeGatedByDescriptor:
+		"ContextualPlayabilityAgeGatedByDescriptor",
+	ContextualPlayabilityExperienceBlockedParentalControls:
+		"ContextualPlayabilityExperienceBlockedParentalControls",
+	ContextualPlayabilityRequireParentApproval:
+		"ContextualPlayabilityRequireParentApproval",
+	ContextualPlayabilityCoreGated: "ContextualPlayabilityCoreGated",
+	ContextualPlayabilityAgeCheckRequired:
+		"ContextualPlayabilityAgeCheckRequired",
+	ContextualPlayabilityPlaytestDisabled:
+		"ContextualPlayabilityPlaytestDisabled",
+	ContextualPlayabilityTrustedFriendRequired:
+		"ContextualPlayabilityTrustedFriendRequired",
+	FiatPurchaseDeviceRestricted: "FiatPurchaseDeviceRestricted",
+} as const;

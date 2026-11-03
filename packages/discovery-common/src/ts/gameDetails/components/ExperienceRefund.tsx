@@ -2,6 +2,7 @@ import React from "react";
 import { getHelpDeskUrl } from "@rbx/core-scripts/util/url";
 import { Button, Link } from "@rbx/core-ui";
 import { TranslateFunction } from "@rbx/core-scripts/react";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
 	gameDetailsPage,
 	homePage,
@@ -69,9 +70,7 @@ const ExperienceRefund: React.FC<TExperienceRefundProps> = ({
 									if (rootPlaceId) {
 										sendRequestRefundEvent(rootPlaceId);
 									} else {
-										window.EventTracker?.fireEvent(
-											gameDetailsPage.requestRefundError,
-										);
+										fireEvent(gameDetailsPage.requestRefundError);
 									}
 								}}
 							>

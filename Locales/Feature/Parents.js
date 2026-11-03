@@ -682,8 +682,8 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Label.Contacts": "Contacts",
 	"Action.VerifyViaAgeEstimation": "Verify with camera",
 	"Description.RegionRequiresDifferentVerification":
-		"Your child's account is now in a region that requires a different form of parent verification",
-	"Heading.VerifyAgainToContinue": "Verify your age again to continue",
+		"Local laws require you to complete one more verification using an alternative method",
+	"Heading.VerifyAgainToContinue": "Verify again to continue",
 	"Title.RegionalRequirements": "Regional requirements",
 	"Description.RegionalRequirements":
 		"Different regions have different rules for verifying parents. The method you used before isn't accepted where your child's account is now registered.",
@@ -985,6 +985,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Label.RobloxSelect": "Roblox Select",
 	"Label.Roblox": "Roblox",
 	"Label.ContentTierWithAges": "{tierName} • Ages {minAge}-{maxAge}",
+	"Heading.ODPUpgradeEmailEntrySensitiveConsent":
+		"Create an account to manage this setting",
+	"Action.CreateAccount": "Create account",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

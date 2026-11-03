@@ -9,6 +9,7 @@ import { callBehaviour } from "@rbx/core-scripts/guac";
 import { TranslationResourceProvider } from "@rbx/core-scripts/intl/translation";
 import { ReviewCategoryType } from "../services/playerFeedbackService";
 import { getAbsoluteUrl } from "@rbx/core-scripts/util/url";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 
 const VotingPanelService = (function () {
 	// Policy variable tracking whether we can show the total upvote/downvote counts
@@ -96,7 +97,7 @@ const VotingPanelService = (function () {
 					response?.EnableAggregateLikesFavoritesCount ?? false;
 			})
 			.catch(() => {
-				window.EventTracker?.fireEvent("VotingPanelPolicyLoadFailure");
+				fireEvent("VotingPanelPolicyLoadFailure");
 
 				enableLikesCounts = false;
 			})

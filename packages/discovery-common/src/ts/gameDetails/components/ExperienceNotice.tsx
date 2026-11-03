@@ -1,5 +1,6 @@
 import React from "react";
 import { TranslateFunction } from "@rbx/core-scripts/react";
+import { fireEvent } from "@rbx/www-common/event-tracker";
 import { FeatureGameDetails } from "../../common/constants/translationConstants";
 import {
 	experienceNoticeCounterEvents,
@@ -26,9 +27,7 @@ const ExperienceNotice = ({
 		);
 	}
 
-	window.EventTracker?.fireEvent(
-		experienceNoticeCounterEvents.UnknownNoticeType,
-	);
+	fireEvent(experienceNoticeCounterEvents.UnknownNoticeType);
 	return <React.Fragment />;
 };
 

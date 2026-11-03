@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
-import { usePlayabilityStatus } from "@rbx/game-play-button";
+import {
+	isPrivatePlaytestAvailable,
+	usePlayabilityStatus,
+} from "@rbx/game-play-button";
 import {
 	currentBrowser,
 	Browser,
@@ -21,16 +24,21 @@ const onSupportedDevice =
 		deviceMeta.isAndroidDevice);
 
 export const usePlayOnWebEnabled = (universeId: string): boolean => {
-	const { playabilityStatus } = usePlayabilityStatus(universeId);
+	const { playabilityStatus, privatePlaytestInfo } =
+		usePlayabilityStatus(universeId);
 	const { ixpData, isLoading } = useExperimentValues(
 		layerNames.gameDetails,
 		defaultValues.gameDetails,
 	);
 	const eligibleForPlayOnWeb =
 		onSupportedBrowser && onSupportedDevice && playabilityStatus === "Playable";
+	// Playtest takes the secondary button slot ahead of Play on Web, so skip exposure when
+	// Play on Web wouldn't be shown.
+	const shouldLogExposure =
+		eligibleForPlayOnWeb && !isPrivatePlaytestAvailable(privatePlaytestInfo);
 	const hasLoggedExposure = useRef(false);
 	useEffect(() => {
-		if (eligibleForPlayOnWeb && !isLoading && !hasLoggedExposure.current) {
+		if (shouldLogExposure && !isLoading && !hasLoggedExposure.current) {
 			hasLoggedExposure.current = true;
 			try {
 				ExperimentationService.logLayerExposure(layerNames.gameDetails);
@@ -38,7 +46,7 @@ export const usePlayOnWebEnabled = (universeId: string): boolean => {
 				// Exposure logging is best-effort and must never block rendering.
 			}
 		}
-	}, [eligibleForPlayOnWeb, isLoading]);
+	}, [shouldLogExposure, isLoading]);
 
 	return eligibleForPlayOnWeb && ixpData.IsPlayOnWebEnabled;
 };

@@ -95,7 +95,8 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 		"Get more from your Robux—starting now",
 	"Description.Benefit.DiscountNextSubtitle":
 		"Double your discount and lock it in",
-	"Description.Benefit.RobuxTransfersSubtitle": "May need parental approval",
+	"Description.Benefit.RobuxTransfersSubtitle":
+		"Transfers may need parental approval",
 	"Description.Benefit.TradeResellItemsSubtitle":
 		"Build your collection of rare avatars",
 	"Description.Benefit.PublishItemsSubtitle":
@@ -384,6 +385,7 @@ Roblox.LangDynamic["Feature.RobloxSubscription"] = {
 	"Message.CancelPlanChangeFailed": "Something went wrong. Please try again.",
 	"Description.BillingInfoWithFreeTrialOfferV3":
 		"{boldTagStart}{trialPeriodType, select, Week {{trialPeriod, plural, one {{trialPeriod} week} other {{trialPeriod} weeks}}} Month {{trialPeriod, plural, one {{trialPeriod} month} other {{trialPeriod} months}}} Year {{trialPeriod, plural, one {{trialPeriod} year} other {{trialPeriod} years}}} other {{trialPeriod} {trialPeriodType}} } free{boldTagEnd}, then {price} per {periodType, select, Week {{periodCount, plural, one {week} other {{periodCount} weeks}}} Month {{periodCount, plural, one {month} other {{periodCount} months}}} Year {{periodCount, plural, one {year} other {{periodCount} years}}} other {{periodType}} }",
+	"Heading.PlusBenefits": "Plus benefits",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
