@@ -2795,6 +2795,15 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Heading.ProfileVisibility": "Profile visibility",
 	"Feature.AccountSettings.Heading.ContentPersonalization":
 		"Content Personalization",
+	"Label.AlwaysAsk": "Always ask",
+	"Heading.Approvals": "Approvals",
+	"Description.ParentSide.RobuxTransferApprovals":
+		"Choose when you want to approve your child's Robux transfers.",
+	"Description.RobuxTransferApproval.AlwaysAsk":
+		"I want to approve every transfer.",
+	"Label.AlwaysAllowForTrustedFriends": "Always allow for Trusted Friends",
+	"Description.RobuxTransferApproval.TrustedFriends":
+		"I want to allow transfers with trusted friends. You'll still be notified.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

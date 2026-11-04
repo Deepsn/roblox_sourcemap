@@ -61,6 +61,8 @@ ready(() => {
 		return;
 	}
 
+	pfas.setWebStack("dotnet");
+
 	reportPageLoad();
 
 	const isSubscriber = isPremiumUser();
