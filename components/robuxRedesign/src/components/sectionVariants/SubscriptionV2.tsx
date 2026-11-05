@@ -35,6 +35,7 @@ import { getSectionTrackingProps } from "../../hooks/useScrollTracking";
 import { BundleCarousel } from "../subscription/BundleCarousel";
 import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 import { getTriggerContext } from "../../utils/getTriggerContext";
+import { startNativePurchaseHandoffWatch } from "../../utils/nativePurchaseHandoff";
 import { partitionPlusBillingPeriods } from "../../utils/plusBillingPeriodOptions";
 
 type SubscriptionV2Props = BaseSectionProps & {
@@ -135,8 +136,11 @@ export function SubscriptionV2({
 				logExposure();
 			}
 			trackSubscriptionV2SubscribeClick(args);
+			if (!args.isRedirect) {
+				startNativePurchaseHandoffWatch(deviceMeta, true, args.productId);
+			}
 		},
-		[baseProductId, logExposure, trackSubscriptionV2SubscribeClick],
+		[baseProductId, deviceMeta, logExposure, trackSubscriptionV2SubscribeClick],
 	);
 
 	const handleBillingPeriodSubscribeClick = useCallback(
@@ -146,8 +150,9 @@ export function SubscriptionV2({
 				productId: option.productId,
 				isRedirect: "false",
 			});
+			startNativePurchaseHandoffWatch(deviceMeta, true, option.productId);
 		},
-		[],
+		[deviceMeta],
 	);
 
 	const isFreeTrial = useMemo(

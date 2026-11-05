@@ -1,6 +1,9 @@
 import { window } from "./browser";
 
-export type TVisibilityCallback = (visible: boolean) => void;
+export type TVisibilityCallback = (
+	visible: boolean,
+	observer: IntersectionObserver,
+) => void;
 
 export type TObserveVisibilityOptions = IntersectionObserverInit & {
 	element: Element;
@@ -26,12 +29,9 @@ export const observeVisibility = (
 
 	const { element, ...observerOptions } = options;
 	try {
-		const intersectionObserver = new Observer(
-			([entry]: IntersectionObserverEntry[]) => {
-				callback(entry?.isIntersecting ?? false);
-			},
-			observerOptions,
-		);
+		const intersectionObserver = new Observer(([entry], observer) => {
+			callback(entry?.isIntersecting ?? false, observer);
+		}, observerOptions);
 
 		intersectionObserver.observe(element);
 		return () => {
