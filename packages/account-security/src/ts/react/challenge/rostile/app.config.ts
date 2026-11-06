@@ -7,7 +7,7 @@ export const LOG_PREFIX = "Rostile" as const;
  */
 export const TRANSLATION_NAMESPACES = [
 	"Feature.RostileChallenge",
-	"CommonUI.Messages",
+	"CommonUI.Controls",
 ] as const;
 
 /**

@@ -11,7 +11,7 @@ export const PHONE_ROOT_ELEMENT_ID =
  */
 export const TRANSLATION_NAMESPACES = [
 	"Feature.PhoneVerificationChallenge",
-	"CommonUI.Messages",
+	"CommonUI.Controls",
 ] as const;
 
 export const VERIFICATION_UPSELL_TRASLATION_KEY = {

@@ -13,6 +13,7 @@ export const SECURITY_NOTIFICATION_PATH =
 export const TRANSLATION_NAMESPACES = [
 	"Feature.SecurityQuestions",
 	"CommonUI.Messages",
+	"CommonUI.Controls",
 ] as const;
 
 /**

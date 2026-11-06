@@ -9,7 +9,9 @@ const EVENT_CONSTANTS = {
 		authPageLoad: "authPageload",
 		authModalShown: "authModalShown",
 		authClientError: "authClientError",
+		authOperationTiming: "authOperationTiming",
 		usernameSuggestionShown: "usernameSuggestionShown",
+		passkeyRegistrationEvent: "passkeyRegistrationEvent",
 	},
 	eventName: {
 		loginOtherDevice: "loginOtherDevice",
@@ -57,6 +59,7 @@ const EVENT_CONSTANTS = {
 		platformAuthenticatorSupport: "platformAuthenticatorSupport",
 		passkeyLogin: "passkeyLogin",
 		silentPasskeyUpgradeWebLogin: "handleSilentPasskeyUpgradeWebLogin",
+		silentPasskeyUpgradeWebSignup: "handleSilentPasskeyUpgradeWebSignup",
 		silentPasskeyUpgradeWebLoginImmediate:
 			"handleSilentPasskeyUpgradeWebLoginImmediate",
 		silentPasskeyUpgradeWebLoginDelayed:
@@ -65,6 +68,11 @@ const EVENT_CONSTANTS = {
 			"handleSilentPasskeyUpgradeWebSignupDelayed",
 		hba: "hba",
 		resetPasswordPage: "resetPasswordPage",
+		kisaU14Signup: "kisaU14Signup",
+		platformRestrictedPage: "platformRestrictedPage",
+		passkeyRegistration: "passkeyRegistration",
+		addAuthMethodPage: "addAuthMethodPage",
+		passkeyCeremony: "passkeyCeremony",
 	},
 	verifiedParentalConsentContext: {
 		chargeback: {
@@ -132,6 +140,10 @@ const EVENT_CONSTANTS = {
 		hasAuthIntent: "hasAuthIntent",
 		tosCheckbox: "tosCheckbox",
 		exitSignupConfirmation: "exitSignupConfirmation",
+		// How the OS passkey prompt was raised; dismissal rates differ between them.
+		autoPrompt: "autoPrompt",
+		deliberateRetry: "deliberateRetry",
+		general: "general",
 	},
 	btn: {
 		cancel: "cancel",
@@ -179,6 +191,10 @@ const EVENT_CONSTANTS = {
 		skipPasskey: "skipPasskey",
 		exitSignupConfirmYes: "exitSignupConfirmYes",
 		exitSignupConfirmCancel: "exitSignupConfirmCancel",
+		logout: "logout",
+		passkey: "passkey",
+		password: "password",
+		back: "back",
 	},
 	input: {
 		redacted: "[Redacted]",
@@ -187,6 +203,20 @@ const EVENT_CONSTANTS = {
 		webVerifiedSignup: "WebVerifiedSignup",
 		signup: "signup",
 		login: "login",
+		// Signup V2 arm on the form pageload. No legacy value: that arm renders the
+		// pre-existing form, which emits no origin. Identify it via IXP exposure.
+		signUpV2Arm: {
+			passwordFirst: "passwordFirst",
+			passkeyFirst: "passkeyFirst",
+			foundationControl: "foundationControl",
+		},
+	},
+	// Signup V2 submit mode. Cannot go in `state`, which Control already uses for
+	// `hasAuthIntent` on the same ctx/btn pair.
+	ctype: {
+		passkeyCeremony: "passkeyCeremony",
+		password: "password",
+		autoPromptSuppressed: "autoPromptSuppressed",
 	},
 	text: {
 		finishCreatingYourAccount: "Create Your Roblox Account",
@@ -207,6 +237,13 @@ const EVENT_CONSTANTS = {
 		unfocused: "unfocused",
 		selected: "selected",
 		unselected: "unselected",
+		skipVPC: "skipVPC",
+		launchParentSignUpOtp: "launchParentSignUpOtp",
+		accountSwitcher: {
+			switchSuccess: "success",
+			invalidSession: "invalidSession",
+			requestFailed: "requestFailed",
+		},
 		passkeyUpselling: {
 			passkeyRegistrationSuccess: "passkeyRegistrationSuccess",
 			passkeyRegistrationFailure: "passkeyRegistrationFailure",
@@ -220,6 +257,53 @@ const EVENT_CONSTANTS = {
 			filteredByNoSilentUpgradeSupport: "filteredByNoSilentUpgradeSupport",
 			unclearedWebSessionFlag: "unclearedWebSessionFlag",
 		},
+		signUpV2: {
+			// Why the user reached AddAuthMethodPage.
+			addAuthMethodEntry: {
+				dismissed: "dismissed",
+				unsupported: "unsupported",
+				error: "error",
+				autoPromptSuppressed: "autoPromptSuppressed",
+			},
+			authMethodChosen: "authMethodChosen",
+			// Step reached when the page was hidden. The `abandoned:` prefix keeps
+			// these separable from real errors on the shared authClientError type.
+			abandoned: {
+				awaitingCeremony: "abandoned:awaitingCeremony",
+				awaitingChoice: "abandoned:awaitingChoice",
+				formIncomplete: "abandoned:formIncomplete",
+			},
+		},
+		// Mirrors `classifySignupError`'s outcome types verbatim so there is no
+		// second vocabulary to keep in sync.
+		signupError: {
+			captcha: "captcha",
+			field: "field",
+			identityVerification: "identityVerification",
+			general: "general",
+			ageRestriction: "ageRestriction",
+			accountSwitcher: "accountSwitcher",
+			passkeyRegistrationFailed: "passkeyRegistrationFailed",
+			abandonedChallenge: "abandonedChallenge",
+			unknown: "unknown",
+			// Rate limiting arrives as `unknown` carrying no error code, so the detail
+			// has to ride here to stay separable.
+			unknownTooManyAttempts: "unknown:tooManyAttempts",
+		},
+	},
+	passkeyRegistrationSource: {
+		signup: "signup",
+	},
+	// `state` values for the schematized PasskeyRegistrationEvent emitted from the
+	// signup surface. The `signupPreauth*` values mirror the outcomes of the
+	// pre-authenticated passkey ceremony (see `usePasskeyRegistration`)
+	passkeyRegistrationState: {
+		signupPreauthCredentialCreated: "SignupPreauthCredentialCreated",
+		signupPreauthDismissed: "SignupPreauthDismissed",
+		signupPreauthUnsupported: "SignupPreauthUnsupported",
+		signupPreauthError: "SignupPreauthError",
+		signupBindSuccess: "SignupBindSuccess",
+		signupBindFailed: "SignupBindFailed",
 	},
 } as const;
 
