@@ -2814,6 +2814,16 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.ApprovalRequestPending": "Request pending",
 	"Description.AskedParentsToChangeApprovalSetting":
 		"You asked your parents to change this setting.",
+	"Heading.TransferApprovals": "Transfer approvals",
+	"Label.ApprovalNeededForEveryone": "Approval needed for everyone",
+	"Label.NoApprovalNeededForTrustedFriends":
+		"No approval needed for trusted friends",
+	"Description.ParentApprovesEachTransfer":
+		"Your parent approves each transfer",
+	"Description.ParentApprovesEveryRobuxTransfer":
+		"Your parent approves every Robux transfer",
+	"Description.AskForParentPermission": "Ask for parent permission",
+	"Action.AskParent": "Ask parent",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

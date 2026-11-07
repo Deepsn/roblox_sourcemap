@@ -182,7 +182,10 @@ const loadThumbnailImage = (
 				headShape,
 				// Only include the param when enabled so the request omits it for the default case.
 				...(resolvedIncludeBackground ? { includeBackground: true } : {}),
-				...(includeProfileFrame ? { includeProfileFrame } : {}),
+				// includeProfileFrame is only supported for avatar headshots; omit it for other types.
+				...(thumbnailType === ThumbnailTypes.avatarHeadshot
+					? { includeProfileFrame }
+					: {}),
 			};
 
 			const customHandler = [

@@ -65,8 +65,8 @@ export const observabilityRegistry = {
 				"QuickPayUpsell",
 				"IosPurchaseRestartAlertShown",
 				{
-					name: "NativePurchaseHandoffMissed",
-					dimensions: ["appMinorVersion", "isSub"],
+					name: "NativePurchaseUiShownTime",
+					dimensions: ["bucket", "appMinorVersion", "isSub"],
 				},
 			],
 			errors: ["ApplePayAvailabilityException"],
