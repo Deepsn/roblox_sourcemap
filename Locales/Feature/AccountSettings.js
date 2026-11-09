@@ -2824,6 +2824,9 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Your parent approves every Robux transfer",
 	"Description.AskForParentPermission": "Ask for parent permission",
 	"Action.AskParent": "Ask parent",
+	"Label.SendRobuxToTrustedFriendsSetting":
+		"Send Robux to Trusted Friends setting",
+	"Heading.SendRobuxToTrustedFriends": "Send Robux to Trusted Friends",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&
