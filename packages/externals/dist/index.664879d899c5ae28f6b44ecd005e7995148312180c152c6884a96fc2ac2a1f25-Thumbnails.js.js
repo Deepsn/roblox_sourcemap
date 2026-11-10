@@ -15,7 +15,6 @@ var externals = {
 		"auth",
 		"hybridResponse",
 	],
-	"@rbx/core-scripts/auth/sai": ["Roblox", "core-scripts", "auth", "sai"],
 	"@rbx/core-scripts/auth/xsrfToken": [
 		"Roblox",
 		"core-scripts",

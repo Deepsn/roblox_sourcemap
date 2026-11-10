@@ -2827,6 +2827,11 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.SendRobuxToTrustedFriendsSetting":
 		"Send Robux to Trusted Friends setting",
 	"Heading.SendRobuxToTrustedFriends": "Send Robux to Trusted Friends",
+	"ScopeType.Marketplace": "your Marketplace content",
+	"ScopeType.MarketplaceItem": "your Marketplace items",
+	"ScopeType.MarketplaceItemAppeal": "your Marketplace item appeals",
+	"ScopeType.MarketplaceItemUploadFee":
+		"your Marketplace upload fees and Robux balance",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

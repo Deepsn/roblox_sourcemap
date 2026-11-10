@@ -1001,6 +1001,10 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Your child requested to allow transfers with trusted friends. You'll still be notified.",
 	"Description.RobuxTransferApprovalTrustedFriends":
 		"Allow transfers with trusted friends without asking. You'll still be notified.",
+	"Description.ConsentRequest.RobuxApproval.AlwaysAsk":
+		"Approve every transfer.",
+	"Description.ConsentRequest.RobuxApproval.TrustedFriends":
+		"Allow transfers with trusted friends without asking. You'll still be notified.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

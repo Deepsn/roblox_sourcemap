@@ -86,6 +86,9 @@ Roblox.LangDynamic["Authentication.AccountSwitch"] = {
 		"Continuing will sign you out of your other accounts.",
 	"Description.StaleSessionSignInAgain":
 		"You haven’t used this account here in a while. Sign in again.",
+	"Action.SignIn": "Sign in",
+	"Description.SomethingWentWrongSignInAgain":
+		"Something went wrong. Sign in again.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

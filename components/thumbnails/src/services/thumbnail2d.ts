@@ -1,14 +1,10 @@
 import { QueueItem } from "@rbx/core-scripts/util/batch-request";
+import { resolveIncludeBackground } from "@rbx/www-common/components/thumbnail/headshotBackground";
 import { defaultThumbnailRequester } from "../util/thumbnailRequester";
 import {
 	batchRequestHandler,
 	universeThumbnailHandler,
 } from "../util/thumbnailHandler";
-import {
-	isAvatarHeadshotBackgroundInTreatmentFromCache,
-	prefetchAvatarHeadshotBackgroundExperiment,
-	resolveAvatarHeadshotIncludeBackground,
-} from "../experimentation/avatarHeadshotBackgroundExperiment";
 import {
 	ThumbnailTypes,
 	ThumbnailStates,
@@ -155,19 +151,9 @@ const loadThumbnailImage = (
 		formatOverride = ThumbnailFormat.webp;
 	}
 
-	// Warm the treatment cache (single-flight) only when an AvatarHeadshot might
-	// rely on the experiment, so headshot-less pages issue no IXP request.
-	if (
-		thumbnailType === ThumbnailTypes.avatarHeadshot &&
-		includeBackground === undefined
-	) {
-		prefetchAvatarHeadshotBackgroundExperiment();
-	}
-
-	const resolvedIncludeBackground = resolveAvatarHeadshotIncludeBackground(
+	const resolvedIncludeBackground = resolveIncludeBackground(
 		thumbnailType,
 		includeBackground,
-		isAvatarHeadshotBackgroundInTreatmentFromCache(),
 	);
 
 	return resolveThumbnailFormat(formatOverride).then(
@@ -232,7 +218,8 @@ const loadThumbnailImage = (
 								token,
 								version,
 								headShape,
-								includeBackground,
+								// Key on what was requested, which is what Thumbnail2d peeks with.
+								resolvedIncludeBackground,
 								includeProfileFrame,
 							),
 							{ state: thumbnail.state, imageUrl: thumbnail.imageUrl },

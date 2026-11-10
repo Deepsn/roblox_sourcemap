@@ -8,6 +8,7 @@ import {
 } from "react";
 import ClassNames from "classnames";
 import PropTypes from "prop-types";
+import { resolveIncludeBackground } from "@rbx/www-common/components/thumbnail/headshotBackground";
 import { logMeasurement } from "../metrics";
 import * as thumbnailService from "../services/thumbnail2d";
 import { ThumbnailRequester } from "../util/thumbnailRequester";
@@ -17,10 +18,6 @@ import {
 	ThumbnailTypes,
 	ThumbnailAvatarHeadshotSize,
 } from "../constants/thumbnail2dConstant";
-import {
-	resolveAvatarHeadshotIncludeBackground,
-	useAvatarHeadshotBackgroundInTreatment,
-} from "../experimentation/avatarHeadshotBackgroundExperiment";
 import { ProfileFrameDefaultContext } from "../context/profileFrameDefaultContext";
 import Thumbnail from "../components/Thumbnail";
 
@@ -60,12 +57,9 @@ function Thumbnail2d({
 		type === ThumbnailTypes.avatarHeadshot
 			? ThumbnailAvatarHeadshotSize.size150
 			: sizeProp;
-	const avatarHeadshotBackgroundInTreatment =
-		useAvatarHeadshotBackgroundInTreatment(type);
-	const resolvedIncludeBackground = resolveAvatarHeadshotIncludeBackground(
+	const resolvedIncludeBackground = resolveIncludeBackground(
 		type,
 		includeBackground,
-		avatarHeadshotBackgroundInTreatment,
 	);
 	// When opted in, seed the first render from the resolved-URL cache so an already-loaded thumbnail
 	// (e.g. an avatar shown again after a chat screen change) shows immediately instead of flashing the
