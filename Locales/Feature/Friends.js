@@ -90,8 +90,10 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Action.AccountDeleted": "Account deleted",
 	"Label.MutualFriend":
 		"{mutualFriendsCount, plural, =0 {# mutual friends} =1 {# mutual friend} other {# mutual friends}}",
+	"Label.Friend": "Friend",
 	"Label.Follower": "Follower",
 	"Action.FriendRequestSent": "Friend Request Sent",
+	"Label.Frequent": "Played together",
 	"Label.ConnectWithFriends": "Connect With Friends",
 	"Label.AllowContactsAccess":
 		"Allow access to your contacts to connect with friends on Roblox!",

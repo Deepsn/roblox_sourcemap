@@ -58,6 +58,17 @@ const ignoredReportOnlyUrlMatchFuncs: ((url: URL) => boolean)[] = [
 	// browser extension to ignore
 	({ hostname }) => hostname.endsWith("studyquicks.com"),
 ];
+// patterns to ignore regardless of disposition
+// these come from web proxies or third parties, not our own pages
+const ignoredDocumentUrlPatterns = [
+	"/service/uv/",
+	"/uv/service/",
+	"/scramjet/",
+];
+const ignoredBlockedUrlMatchFuncs: ((url: URL) => boolean)[] = [
+	({ hostname }) => hostname.includes("opiumbull"),
+	({ hostname }) => hostname === "commonsensehealthcare.org",
+];
 const fireTelemetry = createFireTelemetryCounter("Web_ReportingObserver");
 export function initReportingObserver() {
 	if (initialized) {
@@ -73,7 +84,14 @@ export function initReportingObserver() {
 	const observer = new ReportingObserver(
 		(reports, _observer) => {
 			const coepBodies = reports
-				.filter((r) => r.type === "coep" && r.body !== null)
+				.filter(
+					(r) =>
+						r.type === "coep" &&
+						r.body !== null &&
+						!ignoredDocumentUrlPatterns.some((pattern) =>
+							r.url.includes(pattern),
+						),
+				)
 				.map((r) => {
 					try {
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -87,14 +105,18 @@ export function initReportingObserver() {
 						return false;
 					}
 
-					if (body.disposition === "enforce") {
-						return true;
-					}
-
 					let url: URL;
 					try {
 						url = new URL(body.blockedURL);
 					} catch {
+						return true;
+					}
+
+					if (ignoredBlockedUrlMatchFuncs.some((matchFunc) => matchFunc(url))) {
+						return false;
+					}
+
+					if (body.disposition === "enforce") {
 						return true;
 					}
 
