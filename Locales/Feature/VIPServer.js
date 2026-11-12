@@ -134,7 +134,7 @@ Roblox.LangDynamic["Feature.VIPServer"] = {
 	"Message.InvalidServerNameError":
 		"The name of the private server is either empty or too long.",
 	"Message.TooManyFreeServersOnGame":
-		"You can not have more free private servers on this experience.",
+		"You can not have more free private servers on this game.",
 	"Message.TooManyTotalActiveFreeServers":
 		"You cannot have more active free private servers. Please deactivate some other servers first.",
 	"Message.CreatorDisabledPrivateServersError":

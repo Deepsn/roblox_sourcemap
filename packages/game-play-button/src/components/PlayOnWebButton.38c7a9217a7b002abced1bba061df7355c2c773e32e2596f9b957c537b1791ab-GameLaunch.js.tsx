@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import { Button } from "@rbx/foundation-ui";
 import environmentUrls from "@rbx/environment-urls";
 import { WASM_HASH_PARAM } from "@rbx/wasm-hash";
@@ -9,6 +9,8 @@ import {
 	getJoindata,
 	sendPlayOnWebClickEvents,
 } from "../utils/playButtonUtils";
+import { firePlayOnWebClickCounter } from "../utils/playOnWebTelemetryCounters";
+import usePlayOnWebImpression from "../hooks/usePlayOnWebImpression";
 
 const { playButtonTextTranslationMap } = playButtonConstants;
 
@@ -27,11 +29,15 @@ const PlayOnWebButton = ({
 }: TPlayOnWebButtonProps): React.JSX.Element | null => {
 	const playOnWebUrl = `${environmentUrls.playWebsite}/games/start?placeId=${placeId}`;
 	const tExperienceDetails = useTranslations("Feature.ExperienceDetails");
+	const buttonRef = useRef<HTMLButtonElement>(null);
+	const isButtonRendered = Boolean(wasmJoinId);
+	usePlayOnWebImpression(buttonRef, universeId, isButtonRendered);
 
 	const handleClick = useCallback(
 		(e: React.MouseEvent) => {
 			e.preventDefault();
 			e.stopPropagation();
+			firePlayOnWebClickCounter();
 			const joinData = getJoindata(
 				eventProperties?.launchData != null
 					? String(eventProperties.launchData)
@@ -66,12 +72,13 @@ const PlayOnWebButton = ({
 		[placeId, universeId, eventProperties, playOnWebUrl, wasmJoinId],
 	);
 
-	if (!wasmJoinId) {
+	if (!isButtonRendered) {
 		return null;
 	}
 
 	return (
 		<Button
+			ref={buttonRef}
 			data-testid="play-on-web-button"
 			variant="Standard"
 			size="Large"

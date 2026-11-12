@@ -12,7 +12,6 @@ import {
 	withJoinAttemptId,
 	type GameLauncher,
 } from "@rbx/www-common/game-launch";
-import { getCurrentUser } from "@rbx/www-common/user";
 
 type EventStreamProperties = Parameters<typeof launchLegacyGame>[1];
 
@@ -23,13 +22,8 @@ export const isJoinAttemptIdEnabled = (): boolean =>
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- window.Roblox is absent on Next.js
 	(window.Roblox?.GameLauncher?.isJoinAttemptIdEnabled() ?? false);
 
-const redirectToLogin = () => {
-	const returnUrl = window.location.href;
-	window.location.href = `/login?${new URLSearchParams({ returnUrl }).toString()}`;
-};
-
 // Same events and launcher calls as @rbx/core-scripts/game launchGame with join attempt ids on.
-// Guests go to login instead of .NET's login dialog.
+// As on .NET, guests are stopped after the events: the launcher's host shows the sign-up dialog.
 const launchSharedGame = (
 	launcher: GameLauncher,
 	playGameProperties: PlayGameProperties,
@@ -47,10 +41,6 @@ const launchSharedGame = (
 		isEarlyTesting,
 	} = playGameProperties;
 	if (placeId == null) {
-		return undefined;
-	}
-	if (getCurrentUser() === undefined) {
-		redirectToLogin();
 		return undefined;
 	}
 

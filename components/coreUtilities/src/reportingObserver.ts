@@ -67,6 +67,8 @@ const ignoredDocumentUrlPatterns = [
 ];
 const ignoredBlockedUrlMatchFuncs: ((url: URL) => boolean)[] = [
 	({ hostname }) => hostname.includes("opiumbull"),
+	// web proxy worker loaders rewrite URLs as .../~/<blob>?$dest=worker&$io=<origin>
+	({ searchParams }) => searchParams.has("$io"),
 	({ hostname }) => hostname === "commonsensehealthcare.org",
 ];
 const fireTelemetry = createFireTelemetryCounter("Web_ReportingObserver");

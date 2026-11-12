@@ -134,6 +134,9 @@ Roblox.LangDynamic["Feature.Item"] = {
 	"Label.UseGamePass": "Use this Pass in:",
 	"Label.By2": "By",
 	"Label.DeleteItemUndercase": "Delete item",
+	"Label.DeleteThisItem": "Delete this item?",
+	"Label.DeleteFromInventoryPermanently":
+		"We'll remove it from your inventory permanently.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

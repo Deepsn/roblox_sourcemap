@@ -96,6 +96,7 @@ Roblox.LangDynamic["Feature.ExperienceDetails"] = {
 	"PlayOnWebModal.Action.Get": "Get",
 	"PlayOnWebModal.Label.CheckingYourDevice": "Checking your device...",
 	"PlayOnWebModal.Label.PlayInYourBrowser": "Play in your browser",
+	"PlayButtonText.PlayOnWebBetaNotice": "Play in browser is in beta",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

@@ -769,7 +769,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Header.EmailNotif.AllowIdVerification":
 		"Review your child’s request to use their ID for added safety",
 	"Description.EmailNotif.AllowIdVerification":
-		"Your child, {childUsername}, requests to use their ID for added safety on Roblox. To approve this request, you’ll need a Roblox account with parent privileges.",
+		"Your child, {childUsername}, requests to use their ID for added safety on Roblox.",
 	"Button.EmailNotif.AllowIdVerification": "View request",
 	"Heading.ConversationalRequest.RobuxTransferLimits":
 		"Set your child's Robux transfer limits",

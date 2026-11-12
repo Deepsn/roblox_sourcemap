@@ -183,6 +183,7 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Label.OrTryAnotherWay": "Or, try another way",
 	"Heading.SignIn": "Sign in",
 	"Action.NeedHelp": "Need help?",
+	"Action.EmailOtpWaitTime": "Resend code in {WaitTime}s",
 	"Heading.AccountSelectorSignInTitle": "Choose account to sign in",
 	"Action.UsePasskey": "Use passkey",
 	"Label.TroubleSigningIn": "Trouble signing in?",
@@ -233,6 +234,9 @@ Roblox.LangDynamic["Authentication.Login"] = {
 		"Passkeys are only available on mobile. Choose another way to sign in.",
 	"Label.EnterEmail": "Enter email",
 	"Action.SendCodeSentenceCase": "Send code",
+	"Description.VerificationCodeSentTo":
+		"If a Roblox account exists, you'll receive a verification code at {email}",
+	"Label.EnterCode": "Enter code",
 	"Header.ThisLinkExpired": "This link expired",
 	"Header.SwitchAccount": "Switch to correct account",
 	"Action.Switch": "Switch",
