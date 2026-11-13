@@ -1005,6 +1005,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 		"Approve every transfer.",
 	"Description.ConsentRequest.RobuxApproval.TrustedFriends":
 		"Allow transfers with trusted friends without asking. You'll still be notified.",
+	"Heading.ODPUpgradeIneligible": "Please try another way",
+	"Description.ODPUpgradeIneligible":
+		"Go to the parental controls page on your child’s account and select ‘Add parent.’",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

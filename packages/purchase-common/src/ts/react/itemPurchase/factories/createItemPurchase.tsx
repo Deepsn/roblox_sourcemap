@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { queryClient } from "@rbx/core-scripts/react";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from "@tanstack/react-query";
 import { Snackbar } from "@rbx/foundation-ui";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
-// TODO(Next): ItemPurchaseUpsellService is a window.Roblox global; swap to the local
-// itemPurchaseUpsellService, which itself needs its GUAC/barrel deps de-globaled first.
-import { ItemPurchaseUpsellService } from "@rbx/legacy-webapp-types/Roblox";
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
 import * as AccountIntegrityChallengeService from "@rbx/account-security/challenge/runtime";
-import { userId, isAuthenticated } from "@rbx/core-scripts/meta/user";
 import { generateRandomUuid } from "@rbx/core-lib/uuid";
 import { fireEvent } from "@rbx/www-common/event-tracker";
+import { userId, isAuthenticated } from "../../utils/currentUser";
 import { getMetaData } from "../util/itemPurchaseUtil";
 import getSubscriptionProductInfoForModal from "../../utils/getSubscriptionProductInfoForModal";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
@@ -31,13 +31,21 @@ import { SelfProvidedTranslate } from "../SelfProvidedTranslate";
 import {
 	purchasingNamespaces,
 	usePurchasingTranslate,
+	useUpsellTranslationProvider,
 	type PurchaseTranslate,
 } from "../useTranslate";
+import getItemPurchaseUpsellService, {
+	isNextJs,
+} from "../../../core/services/itemPurchaseUpsellService/getItemPurchaseUpsellService";
+import { UpsellModalHost } from "../../../core/services/itemPurchaseUpsellService/modals/upsellModalHost";
+import type { UpsellHostTranslations } from "../../../core/services/itemPurchaseUpsellService/itemPurchaseUpsellService";
 import type { DiscountInformation } from "../../components/discountInformation";
 import type {
 	DeveloperProductPurchaseErrorResponse,
 	DeveloperProductPurchaseResponse,
+	DeveloperProductRequestLocationType,
 	GamePassPurchaseResponse,
+	PurchaseSurface,
 	PrepareFiatSubscriptionPurchaseResponse,
 	PurchaseErrorDetails,
 	PurchaseErrorResponse,
@@ -46,6 +54,18 @@ import type {
 
 const { resources, errorTypeIds, errorStatusText, events, violationLabels } =
 	itemPurchaseConstants;
+
+// Same defaults as createMultiItemPurchaseModal's client and core-scripts' queryClient.
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false,
+			refetchOnMount: false,
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
+		},
+	},
+});
 
 type HandleErrorArgs = PurchaseErrorDetails & { onDecline?: () => void };
 
@@ -101,7 +121,7 @@ interface UpsellItemDetail {
 	discountInformation?: DiscountInformation | null;
 }
 
-// The global's declared signature lags the runtime (extra args, returns a promise).
+// The service's types describe the .NET DOM datasets (strings); ItemPurchase passes React props.
 interface ItemPurchaseUpsellServiceRuntime {
 	startItemUpsellProcess: (
 		errorObject: UpsellErrorObject,
@@ -114,7 +134,7 @@ interface ItemPurchaseUpsellServiceRuntime {
 		},
 		shouldShowUnifiedPurchaseModal?: boolean,
 	) => Promise<unknown>;
-	showExceedLargestInsufficientRobuxModal?: (
+	showExceedLargestInsufficientRobuxModal: (
 		shortfallPrice: number | undefined,
 		targetData: UpsellTargetData,
 		startOriginalFlowCallback: () => void,
@@ -122,10 +142,6 @@ interface ItemPurchaseUpsellServiceRuntime {
 		shouldShowUnifiedPurchaseModal: boolean,
 	) => void;
 }
-
-const upsellService = ItemPurchaseUpsellService as unknown as
-	| ItemPurchaseUpsellServiceRuntime
-	| undefined;
 
 type SnackbarIcon = React.ComponentProps<typeof Snackbar>["icon"];
 
@@ -160,6 +176,10 @@ export interface ItemPurchaseProps {
 	customProps?: Record<string, unknown>;
 	rentalOptionDays?: number | null;
 	saleLocationId?: number | null;
+	/** Developer product purchases only. Defaults to ExperienceDetailPage. */
+	requestLocationType?: DeveloperProductRequestLocationType;
+	/** Developer product purchases only. Sent as purchasePayload.surface. */
+	surface?: PurchaseSurface;
 	discountInformation?: DiscountInformation | null;
 	subscriptionTargetKey?: string | null;
 	subscriptionPaymentProvider?: string;
@@ -234,18 +254,27 @@ export default function createItemPurchase({
 		itemDetail: {},
 		startOriginalFlowCallback: () => null,
 	};
+	// Set while ItemPurchase renders, since that's where the page's translations are.
+	let upsellHostTranslations: UpsellHostTranslations | undefined;
+	const getUpsellService = () =>
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- see ItemPurchaseUpsellServiceRuntime
+		(upsellHostTranslations &&
+			getItemPurchaseUpsellService(upsellHostTranslations)) as
+			| ItemPurchaseUpsellServiceRuntime
+			| undefined;
 	const startOriginalFlowWhenNewFlowFailed = () => {
 		if (!itemUpsellProcessParams.itemDetail.buyButtonElementDataset) {
 			return;
 		}
-		paymentFlowAnalyticsService.startRobuxUpsellFlow(
-			itemUpsellProcessParams.itemDetail.buyButtonElementDataset.assetType,
-			!!itemUpsellProcessParams.itemDetail.buyButtonElementDataset.userassetId,
-			itemUpsellProcessParams.itemDetail.buyButtonElementDataset
-				.isPrivateServer,
-			itemUpsellProcessParams.itemDetail.buyButtonElementDataset.isPlace,
-			itemUpsellProcessParams.itemDetail.buyButtonElementDataset.productId?.toString(),
-		);
+		paymentFlowAnalyticsService.startRobuxUpsellFlow({
+			assetType:
+				itemUpsellProcessParams.itemDetail.buyButtonElementDataset.assetType,
+			isReseller:
+				!!itemUpsellProcessParams.itemDetail.buyButtonElementDataset
+					.userassetId,
+			itemId:
+				itemUpsellProcessParams.itemDetail.buyButtonElementDataset.productId?.toString(),
+		});
 		insufficientFundsModalService.open();
 	};
 	const insufficientFundsModalServiceWrapper =
@@ -255,7 +284,8 @@ export default function createItemPurchase({
 			shouldShowUnifiedPurchaseModal: boolean,
 		) =>
 		() => {
-			if (upsellService?.showExceedLargestInsufficientRobuxModal) {
+			const upsellService = getUpsellService();
+			if (upsellService) {
 				upsellService.showExceedLargestInsufficientRobuxModal(
 					shortfallPrice,
 					targetData,
@@ -268,6 +298,7 @@ export default function createItemPurchase({
 			}
 		};
 	const openInsufficientRobuxModal = () => {
+		const upsellService = getUpsellService();
 		if (
 			upsellService &&
 			itemUpsellProcessParams?.itemDetail?.expectedItemPrice
@@ -366,6 +397,8 @@ export default function createItemPurchase({
 		customProps = {},
 		rentalOptionDays = null,
 		saleLocationId = null,
+		requestLocationType,
+		surface,
 		discountInformation = null,
 		// for subscription purchase
 		subscriptionTargetKey = null,
@@ -383,6 +416,7 @@ export default function createItemPurchase({
 		// Some callers (BuyItem) omit assetType or pass a nullish price; forwarded to children unchanged.
 		const assetType = assetTypeProp as string;
 		const expectedPrice = expectedPriceProp as number;
+		upsellHostTranslations = { intlProvider: useUpsellTranslationProvider() };
 		const [loading, setLoading] = useState(false);
 		const [error, setError] = useState<{
 			title?: string;
@@ -597,6 +631,7 @@ export default function createItemPurchase({
 				saleLocationType: "Website",
 				saleLocationId,
 				idempotencyKey,
+				...(surface && { purchasePayload: { surface } }),
 			};
 			if (productId === null) {
 				handlePurchaseUnavailable();
@@ -604,9 +639,9 @@ export default function createItemPurchase({
 			}
 			setLoading(true);
 			itemPurchaseService
-				.purchaseDeveloperProduct(productId, request)
+				.purchaseDeveloperProduct(productId, request, requestLocationType)
 				.then((response) => {
-					const data = response.data;
+					const { data } = response;
 					if (
 						data.FailureReason !== undefined &&
 						data.ExpirationTimeInMinutes !== undefined
@@ -719,7 +754,7 @@ export default function createItemPurchase({
 			itemPurchaseService
 				.purchaseGamePass(productId, request)
 				.then((response) => {
-					const data = response.data;
+					const { data } = response;
 					if (
 						data.failureReason !== undefined &&
 						data.expirationTimeInMinutes !== undefined
@@ -1124,7 +1159,7 @@ export default function createItemPurchase({
 						idempotencyKey,
 					})
 					.then((response) => {
-						const data = response.data;
+						const { data } = response;
 						setLoading(false);
 						closeAll();
 						if (data.isSuccess) {
@@ -1181,7 +1216,7 @@ export default function createItemPurchase({
 					paymentProvider: provider,
 				})
 				.then((response) => {
-					const data = response.data;
+					const { data } = response;
 
 					if (data.invalidReason) {
 						setLoading(false);
@@ -1355,7 +1390,7 @@ export default function createItemPurchase({
 			);
 		}
 
-		if (robuxNeeded > 0 && upsellService) {
+		if (robuxNeeded > 0 && getUpsellService()) {
 			generateNewItemUpsellProcessParams(
 				robuxNeeded,
 				newPrice ?? expectedPrice,
@@ -1448,9 +1483,8 @@ export default function createItemPurchase({
 	// old `withTranslations` HOC always overwrote it, and several .NET consumers (gameStore GamePass,
 	// DeveloperProductCard, game-play-button RobuxPurchaseButton, DeveloperProductDetailsBuyButton)
 	// pass their own core-scripts translator scoped to their page's namespaces — forwarding it would
-	// resolve ItemPurchase's own strings against the wrong namespaces. The injected Next.js path has
-	// no callers yet; when the avatar->Next.js migration needs host injection it will add an
-	// explicitly named prop rather than reusing the ambiguous `translate`.
+	// resolve ItemPurchase's own strings against the wrong namespaces. Next.js hosts inject
+	// through `PurchaseTranslateProvider` instead.
 	const ItemPurchaseWithProvider = ({
 		translate: _callerTranslate,
 		...props
@@ -1459,7 +1493,13 @@ export default function createItemPurchase({
 			<SelfProvidedTranslate
 				namespaces={purchasingNamespaces}
 				useTranslate={usePurchasingTranslate}
-				render={(t) => <ItemPurchase {...props} translate={t} />}
+				render={(t) => (
+					<React.Fragment>
+						<ItemPurchase {...props} translate={t} />
+						{/* On Next.js the upsell modals render here, inside the page's translations. */}
+						{isNextJs && <UpsellModalHost />}
+					</React.Fragment>
+				)}
 			/>
 		</QueryClientProvider>
 	);
@@ -1480,3 +1520,6 @@ export default function createItemPurchase({
 		},
 	];
 }
+
+// Named for the @rbx/purchase-common/create-item-purchase external, which is window.RobloxItemPurchase.
+export { createItemPurchase };

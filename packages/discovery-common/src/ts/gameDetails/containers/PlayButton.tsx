@@ -31,7 +31,7 @@ import usePlaceIdOverride from "../../common/hooks/usePlaceIdOverride";
 import { PageContext } from "../../common/types/pageContext";
 import getExperienceAffiliateReferralUrlParams from "../../common/utils/getExperienceAffiliateReferralUrlParams";
 import { ExperienceNoticeType } from "../constants/experienceNoticeConstants";
-import { usePlayOnWebEnabled } from "../hooks/usePlayOnWebEnabled";
+import { usePlayOnWebVariant } from "../hooks/usePlayOnWebVariant";
 import usePlayButtonDownloadCtaExperiment from "../hooks/usePlayButtonDownloadCtaExperiment";
 import useGameDetailsForUniverseId from "../hooks/useGameDetailsForUniverseId";
 
@@ -53,7 +53,7 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 		privateServerLinkCode = "",
 		gameInstanceId = "",
 	} = metadataConstants.metadataData() || {};
-	const playOnWebEnabled = usePlayOnWebEnabled(universeId);
+	const playOnWebVariant = usePlayOnWebVariant(universeId);
 	const {
 		playabilityStatus,
 		refetchPlayabilityData,
@@ -240,7 +240,7 @@ function PlayButtonContents({ attributionId }: TPlayButtonProps): JSX.Element {
 				shouldShowVpcPlayButtonUpsells={shouldShowVpcPlayButtonUpsells}
 				playabilityStatusCtaOverrides={playabilityStatusCtaOverrides}
 				pageContext={EventContext.GameDetail}
-				playOnWebEnabled={playOnWebEnabled}
+				playOnWebVariant={playOnWebVariant}
 			/>
 			<ContextualMessage
 				playabilityStatus={playabilityStatus}

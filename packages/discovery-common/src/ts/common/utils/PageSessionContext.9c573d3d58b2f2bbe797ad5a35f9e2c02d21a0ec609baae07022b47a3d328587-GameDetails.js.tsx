@@ -1,0 +1,78 @@
+import React, {
+	createContext,
+	useCallback,
+	useContext,
+	useMemo,
+	useState,
+} from "react";
+import { window as browserWindow } from "@rbx/core-lib/browser";
+import { generateRandomUuid } from "@rbx/core-lib/uuid";
+import { SessionInfoType } from "../constants/eventStreamConstants";
+import { parseQueryString } from "./parsingUtils";
+
+type TPageSessionContext = {
+	sessionId: string;
+	rotateSessionId: () => string;
+};
+
+export const PageSessionContext = createContext<TPageSessionContext>({
+	sessionId: "",
+	rotateSessionId: () => "",
+});
+
+export const PageSessionProvider: React.FC = ({ children }) => {
+	const paramString = browserWindow?.location?.href?.split("?")[1];
+	const urlParams = paramString && parseQueryString(paramString);
+	const referredSession =
+		urlParams &&
+		(urlParams.discoverPageSessionInfo ||
+			urlParams.homePageSessionInfo ||
+			urlParams.spotlightPageSessionInfo ||
+			urlParams.preAuthLandingPageSessionInfo ||
+			urlParams[SessionInfoType.OmniSearchSessionInfo]);
+	const [session, setSession] = useState(
+		referredSession && typeof referredSession === "string"
+			? referredSession
+			: generateRandomUuid(),
+	);
+	const rotateSessionId = useCallback(() => {
+		const newId = generateRandomUuid();
+		setSession(newId);
+		return newId;
+	}, []);
+	const value = useMemo(() => {
+		return {
+			sessionId: session,
+			rotateSessionId,
+		};
+	}, [session, rotateSessionId]);
+	return (
+		<PageSessionContext.Provider value={value}>
+			{children}
+		</PageSessionContext.Provider>
+	);
+};
+
+type WithPageSession = <P>(WrappedComponent: React.FC<P>) => React.FC<P>;
+
+export const withPageSession: WithPageSession = <P,>(
+	Component: React.FC<P>,
+) => {
+	const WrappedComponent = (props: React.PropsWithChildren<P>) => {
+		return (
+			<PageSessionProvider>
+				<Component {...props} />
+			</PageSessionProvider>
+		);
+	};
+
+	return WrappedComponent;
+};
+
+export const usePageSession = (): string => {
+	return useContext(PageSessionContext).sessionId;
+};
+
+export const useRotatePageSession = (): (() => string) => {
+	return useContext(PageSessionContext).rotateSessionId;
+};

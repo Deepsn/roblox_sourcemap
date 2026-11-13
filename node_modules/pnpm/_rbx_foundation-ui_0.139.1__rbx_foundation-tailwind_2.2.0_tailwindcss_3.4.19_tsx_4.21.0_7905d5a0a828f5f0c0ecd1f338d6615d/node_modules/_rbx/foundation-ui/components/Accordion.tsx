@@ -1,0 +1,302 @@
+import clsx from 'clsx';
+import React, {
+  ComponentPropsWithRef,
+  createContext,
+  forwardRef,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState
+} from 'react';
+import type {
+  TTailwindMinHeightClass,
+  TTailwindPaddingYClass,
+  TTailwindSizeClass,
+  TTailwindTextTitleClass
+} from '@rbx/foundation-tailwind/classes';
+import { interactable, StateLayer } from './internal/StateLayer';
+import { disabledOpacity } from '../utils/styles';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+import useId from '../utils/useId';
+import './internal/Common.css';
+import './Accordion.css';
+
+export const accordionSizes = ['XSmall', 'Small', 'Medium', 'Large'] as const;
+export type TAccordionSize = (typeof accordionSizes)[number];
+
+export type TAccordionProps = {
+  children: ReactNode;
+  className?: string;
+  size?: TAccordionSize;
+  hasDivider?: boolean;
+  isContained?: boolean;
+  isDisabled?: boolean;
+};
+
+type TAccordionContextValue = {
+  size: TAccordionSize;
+  hasDivider: boolean;
+  isContained: boolean;
+  isDisabled: boolean;
+};
+
+const AccordionContext = createContext<TAccordionContextValue | null>(null);
+
+type TAccordionItemContextValue = {
+  isOpen: boolean;
+  setOpen: (open: boolean) => void;
+  isDisabled: boolean;
+  triggerId: string;
+  contentId: string;
+};
+
+const AccordionItemContext = createContext<TAccordionItemContextValue | null>(null);
+
+export type TAccordionItemProps = {
+  children: ReactNode;
+  className?: string;
+  isDisabled?: boolean;
+  defaultOpen?: boolean;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
+
+export type TAccordionItemTriggerProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export type TAccordionItemContentProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+const MIN_HEIGHT_CLASS_BY_SIZE: Record<TAccordionSize, TTailwindMinHeightClass> = {
+  XSmall: 'min-height-600',
+  Small: 'min-height-800',
+  Medium: 'min-height-1000',
+  Large: 'min-height-1200'
+};
+
+const PADDING_Y_CLASS_BY_SIZE: Record<TAccordionSize, TTailwindPaddingYClass> = {
+  XSmall: 'padding-y-xsmall',
+  Small: 'padding-y-xsmall',
+  Medium: 'padding-y-small',
+  Large: 'padding-y-small'
+};
+
+const TEXT_CLASS_BY_SIZE: Record<TAccordionSize, TTailwindTextTitleClass> = {
+  XSmall: 'text-title-small',
+  Small: 'text-title-small',
+  Medium: 'text-title-medium',
+  Large: 'text-title-large'
+};
+
+const CHEVRON_SIZE_CLASS_BY_SIZE: Record<TAccordionSize, TTailwindSizeClass> = {
+  XSmall: 'size-300',
+  Small: 'size-400',
+  Medium: 'size-500',
+  Large: 'size-600'
+};
+
+const AccordionComponent = (
+  {
+    children,
+    className,
+    size = 'Medium',
+    hasDivider = false,
+    isContained = false,
+    isDisabled = false
+  }: TAccordionProps,
+  ref: ComponentPropsWithRef<'div'>['ref']
+) => {
+  const contextValue = useMemo(
+    () => ({ size, hasDivider, isContained, isDisabled }),
+    [size, hasDivider, isContained, isDisabled]
+  );
+
+  return (
+    <AccordionContext.Provider value={contextValue}>
+      <div
+        ref={ref}
+        className={clsx(
+          'foundation-web-accordion',
+          'flex flex-col items-start width-full',
+          hasDivider &&
+            '[&>*:not(:last-child)]:[border-bottom:1px_solid_var(--color-stroke-default)]',
+          className
+        )}>
+        {children}
+      </div>
+    </AccordionContext.Provider>
+  );
+};
+
+export const Accordion = forwardRef(AccordionComponent) as TForwardRefComponent<TAccordionProps>;
+
+const AccordionItemComponent = (
+  {
+    children,
+    className,
+    isDisabled = false,
+    defaultOpen = false,
+    isOpen,
+    onOpenChange
+  }: TAccordionItemProps,
+  ref: ComponentPropsWithRef<'div'>['ref']
+) => {
+  const accordionCtx = useContext(AccordionContext);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+  const open = isOpen ?? uncontrolledOpen;
+  const id = useId('fui-a-');
+
+  if (!accordionCtx) {
+    throw new Error('AccordionItem must be used within Accordion');
+  }
+
+  const { isContained, isDisabled: accordionDisabled } = accordionCtx;
+
+  const setOpen = useCallback(
+    (nextOpen: boolean) => {
+      if (isDisabled || accordionDisabled) return;
+      if (isOpen === undefined) {
+        setUncontrolledOpen(nextOpen);
+      }
+      onOpenChange?.(nextOpen);
+    },
+    [isDisabled, accordionDisabled, isOpen, onOpenChange]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      isOpen: open,
+      setOpen,
+      isDisabled,
+      triggerId: `${id}-trigger`,
+      contentId: `${id}-content`
+    }),
+    [open, setOpen, isDisabled, id]
+  );
+
+  return (
+    <AccordionItemContext.Provider value={contextValue}>
+      <div
+        ref={ref}
+        data-contained={isContained}
+        data-state={open ? 'open' : 'closed'}
+        className={clsx('foundation-web-accordion-item', 'width-full', className)}>
+        {children}
+      </div>
+    </AccordionItemContext.Provider>
+  );
+};
+
+export const AccordionItem = forwardRef(
+  AccordionItemComponent
+) as TForwardRefComponent<TAccordionItemProps>;
+
+export const AccordionItemTrigger = ({ children, className }: TAccordionItemTriggerProps) => {
+  const accordionCtx = useContext(AccordionContext);
+  const itemCtx = useContext(AccordionItemContext);
+
+  if (!accordionCtx) {
+    throw new Error('AccordionItemTrigger must be used within Accordion');
+  }
+
+  if (!itemCtx) {
+    throw new Error('AccordionItemTrigger must be used within AccordionItem');
+  }
+
+  const { size, isContained, isDisabled: accordionDisabled } = accordionCtx;
+  const { isOpen, setOpen, isDisabled: itemDisabled } = itemCtx;
+  const isDisabled = accordionDisabled || itemDisabled;
+
+  return (
+    <button
+      id={itemCtx.triggerId}
+      type='button'
+      className={clsx(
+        interactable,
+        'relative flex items-center justify-between gap-small cursor-pointer content-default bg-none stroke-none width-full',
+        MIN_HEIGHT_CLASS_BY_SIZE[size],
+        PADDING_Y_CLASS_BY_SIZE[size],
+        isContained ? 'padding-x-medium' : 'padding-x-none',
+        isDisabled && [disabledOpacity, 'pointer-events-none'],
+        className
+      )}
+      aria-expanded={isOpen}
+      aria-controls={itemCtx.contentId}
+      onClick={e => {
+        e.preventDefault();
+        if (isDisabled) return;
+        setOpen(!isOpen);
+      }}>
+      <StateLayer />
+      <div className='flex items-center min-width-0 grow-1'>
+        <span className={clsx('text-align-x-left', TEXT_CLASS_BY_SIZE[size])}>{children}</span>
+      </div>
+      <span
+        className={clsx(
+          'foundation-web-accordion-chevron shrink-0',
+          CHEVRON_SIZE_CLASS_BY_SIZE[size],
+          'icon icon-regular-chevron-large-down',
+          'motion-safe:transition-transform duration-200'
+        )}
+        style={{
+          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+        }}
+      />
+    </button>
+  );
+};
+
+export const AccordionItemContent = ({ children, className }: TAccordionItemContentProps) => {
+  const accordionCtx = useContext(AccordionContext);
+  const itemCtx = useContext(AccordionItemContext);
+
+  if (!accordionCtx) {
+    throw new Error('AccordionItemContent must be used within Accordion');
+  }
+
+  if (!itemCtx) {
+    throw new Error('AccordionItemContent must be used within AccordionItem');
+  }
+
+  const { size } = accordionCtx;
+
+  // Collapsed content is hidden via CSS grid (not display/visibility), which would otherwise
+  // leave descendant interactive elements in the tab order. `inert` removes the collapsed
+  // subtree from both keyboard focus and the accessibility tree while preserving the
+  // open/close grid animation. It is spread as a passthrough attribute because `inert` is not
+  // part of @types/react@17's JSX typings. We use the string `'inert'` (the spec-canonical
+  // boolean-attribute value) because it is the only value that renders the attribute across all
+  // supported React versions without a warning: React 17 drops a boolean `true` on an unknown
+  // attribute, while React 19 drops (and warns on) an empty string. A non-empty string renders
+  // in both (React 17 keeps `inert="inert"`, React 19 normalizes to a bare `inert`), and the
+  // presence of the attribute is what makes the subtree inert in the browser.
+  const inertProps = (itemCtx.isOpen ? {} : { inert: 'inert' }) as Record<string, unknown>;
+
+  return (
+    <div
+      id={itemCtx.contentId}
+      role='region'
+      aria-labelledby={itemCtx.triggerId}
+      aria-hidden={!itemCtx.isOpen}
+      data-state={itemCtx.isOpen ? 'open' : 'closed'}
+      data-size={size.toLowerCase()}
+      {...inertProps}
+      className={clsx(
+        'foundation-web-accordion-content grid clip width-full motion-safe:transition-all duration-200 ease-standard-out'
+      )}>
+      <div
+        className={clsx(
+          'foundation-web-accordion-content-inner width-full min-height-0 clip padding-top-none padding-bottom-none motion-safe:transition-transform duration-200',
+          !itemCtx.isOpen && 'pointer-events-none',
+          className
+        )}>
+        {children}
+      </div>
+    </div>
+  );
+};

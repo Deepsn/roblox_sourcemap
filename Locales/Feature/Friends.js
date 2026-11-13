@@ -265,6 +265,7 @@ Roblox.LangDynamic["Feature.Friends"] = {
 	"Label.Followed": "Followed",
 	"Label.FriendIsPlayingExperience":
 		"{userName} is playing <b>{experienceName}</b>",
+	"Label.FriendOfUser": "Friend of {displayName}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

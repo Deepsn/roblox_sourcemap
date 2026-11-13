@@ -9,7 +9,7 @@ import {
 } from "../../common/types/bedev1Types";
 import {
 	getNumberFormat,
-	dateTimeFormatter,
+	getDateTimeFormatter,
 } from "../../common/utils/parsingUtils";
 import { gameDetailsPage } from "../../common/constants/configConstants";
 import { FeatureGameDetails } from "../../common/constants/translationConstants";
@@ -148,7 +148,9 @@ const GameDescriptionTable = ({
 						label: translate(FeatureGameDetails.LabelCreated),
 						value: (
 							<GameDescriptionTableValueText
-								valueText={dateTimeFormatter.getShortDate(gameDetails.created)}
+								valueText={getDateTimeFormatter().getShortDate(
+									gameDetails.created,
+								)}
 							/>
 						),
 					},
@@ -158,7 +160,7 @@ const GameDescriptionTable = ({
 			label: translate(FeatureGameDetails.LabelUpdated),
 			value: (
 				<GameDescriptionTableValueText
-					valueText={dateTimeFormatter.getShortDate(gameDetails.updated)}
+					valueText={getDateTimeFormatter().getShortDate(gameDetails.updated)}
 				/>
 			),
 		},

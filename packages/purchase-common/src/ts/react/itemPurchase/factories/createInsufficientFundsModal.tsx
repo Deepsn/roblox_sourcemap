@@ -1,6 +1,6 @@
 import React from "react";
 import { renderToString } from "react-dom/server";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
 import { assetUrl } from "@rbx/www-common/asset";
 import moneyStack from "../../../../images/moneystack.png";
 import itemPurchaseConstants from "../constants/itemPurchaseConstants";
@@ -65,14 +65,16 @@ function InsufficientFundsModalInner({
 			neutralButtonText={translate(resources.cancelAction)}
 			actionButtonText={translate(resources.buyRobuxAction)}
 			onAction={() => {
-				paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-						.WEB_CATALOG_ROBUX_UPSELL,
-					true,
-					paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-					paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.BUY_ROBUX,
-				);
+				paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+					triggerContext:
+						paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+							.WEB_CATALOG_ROBUX_UPSELL,
+					isMidPurchaseStep: true,
+					viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+					purchaseEventType:
+						paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+					viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.BUY_ROBUX,
+				});
 				if (onAccept) {
 					onAccept();
 				} else {
@@ -80,14 +82,16 @@ function InsufficientFundsModalInner({
 				}
 			}}
 			onNeutral={() => {
-				paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-						.WEB_CATALOG_ROBUX_UPSELL,
-					true,
-					paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-					paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
-				);
+				paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+					triggerContext:
+						paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+							.WEB_CATALOG_ROBUX_UPSELL,
+					isMidPurchaseStep: true,
+					viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+					purchaseEventType:
+						paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+					viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
+				});
 				onClose?.();
 			}}
 			actionButtonShow
