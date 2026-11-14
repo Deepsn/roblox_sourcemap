@@ -2876,6 +2876,15 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Personalize suggestions for people your child may know on the homepage and Add friends page.",
 	"Description.ParentSide.PersonalizedRecsMoments":
 		"Personalize recommendations on your child’s Moments feed.",
+	"Description.UpdateChildSettingParentFacingFromTo":
+		"Update {settingName} on your child’s account from {currentValue} to {proposedValue}",
+	"Label.SpendNotifications": "spending notifications",
+	"Description.ActivityUpdatesUpgradeUpsell":
+		"Create a parent account to receive a weekly email with your child's activity.",
+	"ScopeType.UniverseNotificationString":
+		"your experience notification strings",
+	"ScopeType.UniverseFollowing": "the experiences you follow",
+	"ScopeType.NotificationReport": "your notification reports",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

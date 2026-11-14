@@ -5,8 +5,8 @@ import {
 	supportLocalizedUrls,
 } from "@rbx/core-scripts/endpoints";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
-import type { RobloxTranslationResource } from "@rbx/legacy-webapp-types/Roblox";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
+import type { UpsellTranslationResource } from "../constants/serviceTypeDefinitions";
 import { ItemDetailElementDataset } from "../constants/serviceTypeDefinitions";
 import formattingRobux from "../utils/common/formattingRobux";
 import {
@@ -25,7 +25,7 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 	robuxShortfallPrice: number,
 	defaultThumbnailUrl: string,
 	itemDetail: ItemDetailElementDataset,
-	translationResource: RobloxTranslationResource,
+	translationResource: UpsellTranslationResource,
 	shouldShowUnifiedPurchaseModal = false,
 	thumbnail?: React.ReactNode,
 ): void {
@@ -62,29 +62,36 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 			},
 		);
 
-	paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-		paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-			.WEB_CATALOG_ROBUX_UPSELL,
-		true,
-		paymentFlowAnalyticsService.ENUM_VIEW_NAME
-			.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
-		paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
-	);
+	paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+		triggerContext:
+			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+				.WEB_CATALOG_ROBUX_UPSELL,
+		isMidPurchaseStep: true,
+		viewName:
+			paymentFlowAnalyticsService.ENUM_VIEW_NAME
+				.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
+		purchaseEventType:
+			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
+	});
 	reportCounter(
 		UPSELL_COUNTER_NAMES.UpsellExceedLargestShown,
 		itemDetail.assetType,
 	);
 
 	function onAccept() {
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-				.WEB_CATALOG_ROBUX_UPSELL,
-			true,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME
-				.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-			paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.GO_TO_ROBUX_STORE,
-		);
+		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+			triggerContext:
+				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+					.WEB_CATALOG_ROBUX_UPSELL,
+			isMidPurchaseStep: true,
+			viewName:
+				paymentFlowAnalyticsService.ENUM_VIEW_NAME
+					.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
+			purchaseEventType:
+				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+			viewMessage:
+				paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.GO_TO_ROBUX_STORE,
+		});
 		reportCounter(
 			UPSELL_COUNTER_NAMES.UpsellExceedLargestGoToRobuxStoreClicked,
 			itemDetail?.assetType,
@@ -97,15 +104,18 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 	}
 
 	function onCancel() {
-		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-				.WEB_CATALOG_ROBUX_UPSELL,
-			true,
-			paymentFlowAnalyticsService.ENUM_VIEW_NAME
-				.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
-			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-			paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
-		);
+		paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+			triggerContext:
+				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+					.WEB_CATALOG_ROBUX_UPSELL,
+			isMidPurchaseStep: true,
+			viewName:
+				paymentFlowAnalyticsService.ENUM_VIEW_NAME
+					.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
+			purchaseEventType:
+				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+			viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
+		});
 		reportCounter(UPSELL_COUNTER_NAMES.UpsellCancelled, itemDetail?.assetType);
 	}
 	if (shouldShowUnifiedPurchaseModal) {
@@ -131,15 +141,18 @@ export default function openInsufficientRobuxExceedLargestPackageModal(
 		acceptText: translationResource.get(LANG_KEYS.goToRobuxStoreAction, {}),
 		onAccept,
 		onDecline: () => {
-			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-					.WEB_CATALOG_ROBUX_UPSELL,
-				true,
-				paymentFlowAnalyticsService.ENUM_VIEW_NAME
-					.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
-				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-				paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
-			);
+			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+				triggerContext:
+					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+						.WEB_CATALOG_ROBUX_UPSELL,
+				isMidPurchaseStep: true,
+				viewName:
+					paymentFlowAnalyticsService.ENUM_VIEW_NAME
+						.ROBUX_UPSELL_EXCEED_LARGEST_PACKAGE,
+				purchaseEventType:
+					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+				viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
+			});
 			reportCounter(
 				UPSELL_COUNTER_NAMES.UpsellExceedLargestCancelled,
 				itemDetail?.assetType,

@@ -137,6 +137,7 @@ Roblox.LangDynamic["Feature.Item"] = {
 	"Label.DeleteThisItem": "Delete this item?",
 	"Label.DeleteFromInventoryPermanently":
 		"We'll remove it from your inventory permanently.",
+	"Message.ItemNotDeleted": "Item wasn't deleted",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

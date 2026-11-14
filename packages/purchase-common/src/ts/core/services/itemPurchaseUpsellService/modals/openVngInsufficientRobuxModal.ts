@@ -1,9 +1,9 @@
-import type {
-	RobloxTranslationResource,
-	RobloxTranslationResourceProviderInstance,
-} from "@rbx/legacy-webapp-types/Roblox";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
 import { escapeHtml } from "@rbx/core-scripts/format/string";
+import type {
+	UpsellTranslationProvider,
+	UpsellTranslationResource,
+} from "../constants/serviceTypeDefinitions";
 import {
 	ItemDetailObject,
 	ItemPurchaseAjaxDataObject,
@@ -18,8 +18,8 @@ import formattingRobux from "../utils/common/formattingRobux";
 export default function openVngInsufficientRobuxModal(
 	itemDetail: ItemDetailObject,
 	itemPurchaseAjaxData: ItemPurchaseAjaxDataObject,
-	translationResource: RobloxTranslationResource,
-	intlProvider: RobloxTranslationResourceProviderInstance,
+	translationResource: UpsellTranslationResource,
+	intlProvider: UpsellTranslationProvider,
 ) {
 	const robuxItemPrice = formattingRobux(itemDetail.expectedItemPrice);
 	const avatarPreview = `<div class='item-card-container item-preview'>
@@ -35,13 +35,15 @@ export default function openVngInsufficientRobuxModal(
 		UPSELL_COUNTER_NAMES.UpsellShown,
 		itemDetail.buyButtonElementDataset?.assetType,
 	);
-	paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-		paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-			.WEB_CATALOG_ROBUX_UPSELL,
-		true,
-		paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-		paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
-	);
+	paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+		triggerContext:
+			paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+				.WEB_CATALOG_ROBUX_UPSELL,
+		isMidPurchaseStep: true,
+		viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+		purchaseEventType:
+			paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.VIEW_SHOWN,
+	});
 
 	const dialogBodyForVNG =
 		avatarPreview +
@@ -64,14 +66,16 @@ export default function openVngInsufficientRobuxModal(
 		declineText: translationResource.get(LANG_KEYS.cancelAction, {}),
 		acceptText: translationResource.get(LANG_KEYS.buyRobux, {}) || "Buy Robux",
 		onAccept: () => {
-			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-					.WEB_CATALOG_ROBUX_UPSELL,
-				true,
-				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-				paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.BUY_ROBUX,
-			);
+			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+				triggerContext:
+					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+						.WEB_CATALOG_ROBUX_UPSELL,
+				isMidPurchaseStep: true,
+				viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+				purchaseEventType:
+					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+				viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.BUY_ROBUX,
+			});
 			leaveRobloxToPurchaseWarning(
 				redirectToVngShop,
 				intlProvider,
@@ -87,28 +91,32 @@ export default function openVngInsufficientRobuxModal(
 			return false;
 		},
 		onDecline: () => {
-			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-					.WEB_CATALOG_ROBUX_UPSELL,
-				true,
-				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-				paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
-			);
+			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+				triggerContext:
+					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+						.WEB_CATALOG_ROBUX_UPSELL,
+				isMidPurchaseStep: true,
+				viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+				purchaseEventType:
+					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+				viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
+			});
 			reportCounter(
 				UPSELL_COUNTER_NAMES.UpsellCancelled,
 				itemDetail.buyButtonElementDataset?.assetType,
 			);
 		},
 		onCancel: () => {
-			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent(
-				paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
-					.WEB_CATALOG_ROBUX_UPSELL,
-				true,
-				paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
-				paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
-				paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
-			);
+			paymentFlowAnalyticsService.sendUserPurchaseFlowEvent({
+				triggerContext:
+					paymentFlowAnalyticsService.ENUM_TRIGGERING_CONTEXT
+						.WEB_CATALOG_ROBUX_UPSELL,
+				isMidPurchaseStep: true,
+				viewName: paymentFlowAnalyticsService.ENUM_VIEW_NAME.ROBUX_UPSELL,
+				purchaseEventType:
+					paymentFlowAnalyticsService.ENUM_PURCHASE_EVENT_TYPE.USER_INPUT,
+				viewMessage: paymentFlowAnalyticsService.ENUM_VIEW_MESSAGE.CANCEL,
+			});
 			reportCounter(
 				UPSELL_COUNTER_NAMES.UpsellCancelled,
 				itemDetail.buyButtonElementDataset?.assetType,

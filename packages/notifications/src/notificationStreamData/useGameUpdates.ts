@@ -1,18 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { batchQuery } from "@rbx/core-lib/promise";
-import { httpService } from "core-utilities";
 import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import { StreamNotification } from "./notificationStreamApi";
-import { reportNotificationStreamError } from "./notificationStreamObservability";
+import { useReportQueryError } from "./useReportQueryError";
+import { streamGet } from "./streamTransport";
 import {
 	GameFollowing,
 	GameUpdateMetadata,
 	LatestGameUpdate,
 	PlaceDetail,
 	GAME_UPDATE_BATCH_SIZE,
-	GAME_UPDATE_INTERACTIONS,
-	GameUpdateInteraction,
-	gameUpdateInteractedUrlConfig,
 	PLACE_DETAIL_BATCH_SIZE,
 	gameFollowingsUrlConfig,
 	getLatestGameUpdatesUrlConfig,
@@ -30,39 +27,6 @@ export type GameUpdateModel = {
 	createdOn: number | null;
 	createdOnKey?: string;
 	isPlayable: boolean | null;
-};
-
-export const markGameUpdateInteracted = (
-	model: Pick<GameUpdateModel, "universeId" | "createdOnKey">,
-	interactionType: GameUpdateInteraction,
-): void => {
-	const userId = authenticatedUser()?.id;
-	if (!userId || !model.universeId) {
-		return;
-	}
-	httpService
-		.post(gameUpdateInteractedUrlConfig, {
-			universeId: model.universeId,
-			createdOnKey: model.createdOnKey,
-			interactionType,
-			currentUserId: userId,
-		})
-		.catch((error: unknown) =>
-			reportNotificationStreamError("gameUpdateInteracted", error),
-		);
-};
-
-const seenWrites = new Set<string>();
-
-export const markGameUpdateSeenOnce = (
-	model: Pick<GameUpdateModel, "universeId" | "createdOnKey">,
-): void => {
-	const key = `${model.universeId}:${model.createdOnKey ?? ""}`;
-	if (seenWrites.has(key)) {
-		return;
-	}
-	seenWrites.add(key);
-	markGameUpdateInteracted(model, GAME_UPDATE_INTERACTIONS.seen);
 };
 
 export const GAME_UPDATES_QUERY_KEY = "notification-stream-game-updates";
@@ -88,9 +52,9 @@ const fetchGameUpdate = batchQuery<
 >(
 	{ delay: 0, maxSize: GAME_UPDATE_BATCH_SIZE },
 	(universeIds) =>
-		httpService
-			.get<LatestGameUpdate[]>(getLatestGameUpdatesUrlConfig(universeIds))
-			.then(({ data }) => data ?? []),
+		streamGet<LatestGameUpdate[]>(
+			getLatestGameUpdatesUrlConfig(universeIds),
+		).then((data) => data ?? []),
 	(updates, universeId) =>
 		updates.find((update) => update.universeId === universeId),
 );
@@ -103,9 +67,9 @@ const fetchGameUpdates = async (
 };
 
 const fetchFollowedUniverseIds = async (userId: number): Promise<number[]> => {
-	const { data } = await httpService.get<
-		GameFollowing[] | { data: GameFollowing[] }
-	>(gameFollowingsUrlConfig(userId));
+	const data = await streamGet<GameFollowing[] | { data: GameFollowing[] }>(
+		gameFollowingsUrlConfig(userId),
+	);
 	const followings = Array.isArray(data) ? data : (data?.data ?? []);
 	return followings
 		.map((following) => following?.universeId)
@@ -119,9 +83,9 @@ const fetchPlaceDetail = batchQuery<
 >(
 	{ delay: 0, maxSize: PLACE_DETAIL_BATCH_SIZE },
 	(placeIds) =>
-		httpService
-			.get<PlaceDetail[]>(multiGetPlaceDetailsUrlConfig(placeIds))
-			.then(({ data }) => data ?? []),
+		streamGet<PlaceDetail[]>(multiGetPlaceDetailsUrlConfig(placeIds)).then(
+			(data) => data ?? [],
+		),
 	(details, placeId) => details.find((detail) => detail?.placeId === placeId),
 );
 
@@ -186,8 +150,8 @@ export const useGameUpdates = (
 			});
 			return models;
 		},
-		onError: (error) => reportNotificationStreamError("gameUpdates", error),
 	});
+	useReportQueryError("gameUpdates", query.error, query.errorUpdatedAt);
 
 	return {
 		models: query.data ?? new Map(),

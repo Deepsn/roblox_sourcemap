@@ -1,27 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
-import { httpService } from "core-utilities";
+import { streamGet } from "./streamTransport";
 import { StreamMetadata, streamMetadataUrlConfig } from "./gameUpdatesApi";
-import { reportNotificationStreamError } from "./notificationStreamObservability";
+import { useReportQueryError } from "./useReportQueryError";
 
 export const STREAM_METADATA_QUERY_KEY = ["notification-stream-metadata"];
 
 export const useStreamMetadata = (): {
 	canLaunchGameFromGameUpdate: boolean;
+	disconnectionDelayMs: number | undefined;
 } => {
 	const query = useQuery<StreamMetadata>({
 		queryKey: STREAM_METADATA_QUERY_KEY,
 		staleTime: Infinity,
 		queryFn: () =>
-			httpService
-				.get<StreamMetadata>(streamMetadataUrlConfig)
-				.then(({ data }) => data ?? {}),
-		onError: (error) => reportNotificationStreamError("streamMetadata", error),
+			streamGet<StreamMetadata>(streamMetadataUrlConfig).then(
+				(data) => data ?? {},
+			),
 	});
+	useReportQueryError("streamMetadata", query.error, query.errorUpdatedAt);
 
 	return {
 		canLaunchGameFromGameUpdate: Boolean(
 			query.data?.canLaunchGameFromGameUpdate,
 		),
+		disconnectionDelayMs:
+			query.data?.signalRDisconnectionResponseInMilliseconds,
 	};
 };
 

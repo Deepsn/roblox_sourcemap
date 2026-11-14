@@ -1,6 +1,6 @@
-import { eventStreamService } from "core-roblox-utilities";
-import { httpService } from "core-utilities";
-import { WithTranslationsProps } from "react-utilities";
+import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
+import { streamPost } from "../../notificationStreamData/streamTransport";
+import type { TranslateFunction } from "../context/NotificationsLocalization";
 import {
 	AbuseReportInputConfiguration,
 	ReportedTags,
@@ -11,8 +11,6 @@ import {
 	REPORTER_COMMENT_LIMIT,
 } from "./constants/abuseReportConstants";
 import url from "./constants/urlConstants";
-
-type TranslateFunction = WithTranslationsProps["translate"];
 
 const sendReport = async (
 	tags: ReportedTags,
@@ -25,8 +23,7 @@ const sendReport = async (
 			tags,
 		},
 	};
-	const result = await httpService.post(url.safetyEvent, data);
-	return result as SafetyEventResponse;
+	return streamPost<SafetyEventResponse["data"]>(url.safetyEvent, data);
 };
 
 const getReportConfiguration = (
@@ -94,11 +91,7 @@ const sendEventStreamEvent = (
 	eventType: string,
 	notificationParams: Record<string, string>,
 ): void => {
-	eventStreamService.sendEventWithTarget(
-		eventName,
-		eventType,
-		notificationParams,
-	);
+	sendEventWithTarget(eventName, eventType, notificationParams);
 };
 
 export { sendReport, getReportConfiguration, sendEventStreamEvent };

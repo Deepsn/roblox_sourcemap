@@ -1,7 +1,10 @@
-import { Guac } from "Roblox";
-import { httpService } from "core-utilities";
-import type { AxiosPromise } from "axios";
-import { eventStreamService } from "core-roblox-utilities";
+import { sendEventWithTarget } from "@rbx/core-scripts/event-stream";
+import { parseErrorCode } from "@rbx/core-scripts/http";
+import { getNotificationStreamHost } from "../../notificationStreamData/streamHost";
+import {
+	streamPost,
+	type StreamResponse,
+} from "../../notificationStreamData/streamTransport";
 import {
 	NotificationActionApiResponse,
 	ReportAbuseConfigResponse,
@@ -15,13 +18,13 @@ import {
 const updateNotificationAction = (
 	streamId: string,
 	actionId: string,
-): AxiosPromise<NotificationActionApiResponse> => {
+): Promise<StreamResponse<NotificationActionApiResponse>> => {
 	const urlConfig = {
 		retryable: true,
 		url: urlConstants.notificationActionUrl(streamId, actionId),
 		withCredentials: true,
 	};
-	return httpService.post<NotificationActionApiResponse>(urlConfig, {});
+	return streamPost<NotificationActionApiResponse>(urlConfig, {});
 };
 
 const reportNotification = (notificationId?: string): Promise<unknown> => {
@@ -31,21 +34,20 @@ const reportNotification = (notificationId?: string): Promise<unknown> => {
 	const body = {
 		notificationId,
 	};
-	return httpService
-		.post(urlConstants.reportNotificationUrl, body)
-		.catch((err) => {
-			const errorCode = httpService.parseErrorCode(
-				err,
-			) as NotificationErrorCodes;
+	return streamPost(urlConstants.reportNotificationUrl, body).catch(
+		(err: unknown) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- error codes are the api's numeric enum
+			const errorCode = parseErrorCode(err) as NotificationErrorCodes;
 			throw new Error(
 				reportNotificationErrorMessages[errorCode] ??
 					reportNotificationErrorMessages.default,
 			);
-		});
+		},
+	);
 };
 
 const getReportAbuseConfig = (): Promise<ReportAbuseConfigResponse> => {
-	return Guac.callBehaviour<ReportAbuseConfigResponse>("report-abuse-ui");
+	return getNotificationStreamHost().getReportAbuseConfig();
 };
 
 const sendEventStreamEvent = (
@@ -53,11 +55,7 @@ const sendEventStreamEvent = (
 	eventType: string,
 	notificationParams: Record<string, string>,
 ): void => {
-	eventStreamService.sendEventWithTarget(
-		eventName,
-		eventType,
-		notificationParams,
-	);
+	sendEventWithTarget(eventName, eventType, notificationParams);
 };
 
 export {

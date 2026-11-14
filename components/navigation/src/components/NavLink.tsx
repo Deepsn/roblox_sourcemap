@@ -1,5 +1,6 @@
 import { MouseEventHandler, ReactNode } from "react";
 import { Link as FoundationLink } from "@rbx/foundation-ui";
+import { useNavHref } from "../util/navHref";
 
 type Props = {
 	url?: string;
@@ -18,6 +19,7 @@ export default function NavLink({
 	onClick,
 	children,
 }: Props) {
+	const toNavHref = useNavHref();
 	const classes =
 		[className, cssClasses].filter(Boolean).join(" ") || undefined;
 
@@ -26,7 +28,7 @@ export default function NavLink({
 	// until that shell moves into React.
 	return (
 		<FoundationLink
-			href={url}
+			href={url == null ? undefined : toNavHref(url)}
 			id={id}
 			onClick={onClick}
 			className={classes}

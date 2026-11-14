@@ -1,5 +1,6 @@
 import {
 	useEffect,
+	useRef,
 	useState,
 	useMemo,
 	useCallback,
@@ -12,7 +13,9 @@ import { sendEvent } from "@rbx/core-scripts/event-stream";
 import { removeUrlLocale } from "@rbx/core-scripts/endpoints";
 import SearchInput from "../components/SearchInput";
 import layout from "../constants/layoutConstants";
-import linkConstants from "../constants/linkConstants";
+import linkConstants, {
+	type UniversalSearchLink,
+} from "../constants/linkConstants";
 import search from "../constants/searchConstants";
 import {
 	GamesAutocompleteSuggestionEntryType,
@@ -24,7 +27,9 @@ import {
 	getNewUniversalSearchLinks,
 	getAvatarAutocompleteSearchLinks,
 } from "../util/searchLinks";
-import { getNavCapability } from "../util/navCapabilities";
+import { getNavCapability, useNavCapability } from "../util/navCapabilities";
+import { useNavLocation } from "../util/navLocation";
+import { useNavUser } from "../util/navUser";
 import {
 	getAutocompleteSearchType,
 	getAvatarAutocompleteLanguageCode,
@@ -44,9 +49,14 @@ export default function UniversalSearch({
 }: {
 	isUniverseSearchShown?: boolean;
 }) {
-	const [searchInput, setSearchInput] = useState(
-		UrlSearchParams.parse(window.location.search).get("keyword") ?? "",
-	);
+	const { pathname, search: pageSearch } = useNavLocation();
+	const isAuthenticated = useNavUser() != null;
+	const isTopSearchResultsEnabled =
+		useNavCapability("isTopSearchResultsEnabled")?.() ?? false;
+	const keywordFromUrl = UrlSearchParams.parse(pageSearch).get("keyword") ?? "";
+	const [searchInput, setSearchInput] = useState(keywordFromUrl);
+	// The URL keyword is part of the first render, but the debounced value trails it by one effect.
+	const isKeywordFromUrlRef = useRef(keywordFromUrl !== "");
 
 	const debouncedSearchInput = useDebounce(searchInput, search.debounceTimeout);
 	const previousDebouncedSearchInput = usePrevious(debouncedSearchInput);
@@ -68,18 +78,36 @@ export default function UniversalSearch({
 		useState(false);
 	const { keyCodes } = layout;
 
-	const [universalSearchLinks, setUniversalSearchLinks] = useState(
-		getNewUniversalSearchLinks(),
+	const [universalSearchLinks, setUniversalSearchLinks] = useState<
+		UniversalSearchLink[]
+	>(() =>
+		getNewUniversalSearchLinks(
+			pathname,
+			isAuthenticated,
+			isTopSearchResultsEnabled,
+		),
 	);
+
+	useEffect(() => {
+		setUniversalSearchLinks(
+			getNewUniversalSearchLinks(
+				pathname,
+				isAuthenticated,
+				isTopSearchResultsEnabled,
+			),
+		);
+	}, [pathname, isAuthenticated, isTopSearchResultsEnabled]);
+
 	const gameSearchLinkIndex = universalSearchLinks.findIndex(
 		({ label }) => label === linkConstants.gameSearchLink.label,
 	);
-	const avatarShopSearchLinkIndex = getNewUniversalSearchLinks().findIndex(
+	const avatarShopSearchLinkIndex = universalSearchLinks.findIndex(
 		({ label }) => label === linkConstants.avatarSearchLink.label,
 	);
 	const userLanguageCode = getAvatarAutocompleteLanguageCode();
 
-	const showAvatarAutocompleteSuggestions = getAvatarAutocompleteSearchLinks();
+	const showAvatarAutocompleteSuggestions =
+		getAvatarAutocompleteSearchLinks(pathname);
 	const constructSearchSuggestions = (
 		additionalSuggestions:
 			| readonly TGamesAutocompleteSuggestionEntry[]
@@ -101,7 +129,9 @@ export default function UniversalSearch({
 				...universalSearchLinks.slice(avatarShopSearchLinkIndex + 1),
 			];
 		}
-		if (search.isSpecialTreatmentAutocompleteRestricted()) {
+		if (
+			search.isSpecialTreatmentAutocompleteRestricted(pathname, isAuthenticated)
+		) {
 			return universalSearchLinks;
 		}
 		const showGameSearchLink =
@@ -168,8 +198,14 @@ export default function UniversalSearch({
 
 	const searchSuggestionLength = searchSuggestions.length;
 	useEffect(() => {
-		// prevents sending a search event when the component is just being mounted
-		if (!isInitialCall) {
+		// prevents sending a search event when the component is just being mounted, including the
+		// keyword it reads from the URL after mount
+		const isKeywordFromUrl =
+			isKeywordFromUrlRef.current && debouncedSearchInput !== "";
+		if (isKeywordFromUrl) {
+			isKeywordFromUrlRef.current = false;
+		}
+		if (!isInitialCall && !isKeywordFromUrl) {
 			sendEvent(
 				...events.search(
 					searchInput,
@@ -305,7 +341,9 @@ export default function UniversalSearch({
 		(newSearchInput: string = searchInput) => {
 			setSearchInput(newSearchInput);
 			// Link order depends on the current page, which can change without remounting the header
-			setUniversalSearchLinks(getNewUniversalSearchLinks());
+			setUniversalSearchLinks(
+				getNewUniversalSearchLinks(undefined, isAuthenticated),
+			);
 
 			// If the search input is trimmed, send a search text trim event
 			if (newSearchInput.length < searchInput.length) {
@@ -342,7 +380,13 @@ export default function UniversalSearch({
 			// SLP menu will be shown for empty input and autocomplete menu shown for non-empty input
 			setIsMenuOpen(true);
 		},
-		[autocompleteSessionInfo, showSearchLandingPage, isMenuHover, searchInput],
+		[
+			autocompleteSessionInfo,
+			showSearchLandingPage,
+			isMenuHover,
+			searchInput,
+			isAuthenticated,
+		],
 	);
 
 	const closeMenu = () => {

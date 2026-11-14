@@ -14,6 +14,7 @@ import type {
 	ResolveAppDownloadOptions,
 } from "./resolveAppDownload";
 import { useAppDownloadTranslate } from "./useAppDownloadTranslate";
+import "./InstallDialog.css";
 
 type ButtonVariant = ComponentProps<typeof Button>["variant"];
 type ButtonSize = ComponentProps<typeof Button>["size"];

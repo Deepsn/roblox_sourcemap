@@ -963,7 +963,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Response.ODPBirthdayNotAllowed":
 		"This date can't be used for your child's account. Try another date.",
 	"Description.VPCRequestSpendNotifications":
-		"Notifications will be sent to the parent who has created their Roblox parent account. If you enable high spend alerts, you will receive an email if your child spends $100, $250, and/or $500 USD or local currency equivalent in a given month, and thereafter for every ten transactions.",
+		"Notifications will be sent to all parent accounts with emails.",
 	"Heading.ODPUpgradeAlreadyCompleted": "Alert",
 	"Description.ODPUpgradeAlreadyCompleted":
 		"Email can no longer be changed after a Roblox parent account has been linked to this PIN",
@@ -976,11 +976,17 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.VPCRequestDoNotDisturbTimeWindow":
 		"Your child only gets notifications outside of the Do not disturb hours you set.",
 	"Heading.ConversationalRequest.SpendNotifications":
-		"Update notifications about your child's spending?",
+		"How often would you like to receive notifications about your child's spending?",
 	"Heading.ConversationalRequest.RevokeExperienceApproval":
 		"Remove this game from your child’s list of allowed games?",
 	"Description.ConversationalRequest.RevokeExperienceApproval":
 		"Your child won't be able to play it unless its content maturity rating is now considered right for their age.",
+	"Description.VPCRequestSpendNotificationsAllTransactions":
+		"We'll notify you of every spending transaction on your child's account.",
+	"Description.VPCRequestSpendNotificationsHighSpendAlerts":
+		"We'll email you when your child spends $100, $250, or $500 USD (or local currency equivalent) in a month, then for every 10 transactions after that.",
+	"Description.VPCRequestSpendNotificationsNone":
+		"You may still get notifications from a payment processor or for recurring subscriptions.",
 	"Action.EditBirthday": "Edit",
 	"Heading.ReviewChildBirthday":
 		"Review your child’s birthday before approving their request",
@@ -1008,6 +1014,11 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ODPUpgradeIneligible": "Please try another way",
 	"Description.ODPUpgradeIneligible":
 		"Go to the parental controls page on your child’s account and select ‘Add parent.’",
+	"Heading.ParentalControlsSurvey": "Share your feedback with us",
+	"Description.ParentalControlsSurvey":
+		"Answer 2 questions about how useful these controls were for you today.",
+	"Action.ParentalControlsSurvey.StartSharing": "Start sharing",
+	"Action.Close": "Close",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

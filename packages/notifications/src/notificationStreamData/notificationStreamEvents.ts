@@ -35,7 +35,10 @@ export const streamContexts = {
 	inApp: "inApp",
 } as const;
 
-type EventProperties = Record<string, string | number | boolean | undefined>;
+type EventProperties = Record<
+	string,
+	string | number | boolean | undefined | string[]
+>;
 
 const eventStreamMetaData = (): EventProperties => ({
 	userId: authenticatedUser()?.id ?? undefined,
@@ -56,8 +59,6 @@ export const sendStreamEvent = (
 		// Logging must never break the stream.
 	}
 };
-
-const joinIds = (ids: string[]): string => ids.join(",");
 
 export const sendOpenContent = (unreadCount: number, inApp = false): void =>
 	sendStreamEvent(
@@ -142,7 +143,7 @@ export const sendBundleCreated = (
 			bundleKey,
 			bundleId,
 			totalNotifications: notificationIds.length,
-			notificationIds: joinIds(notificationIds),
+			notificationIds,
 		},
 	);
 
@@ -150,8 +151,9 @@ export const sendCardClick = (
 	eventName: string,
 	notification: { id: string; notificationSourceType?: string },
 	extra: EventProperties = {},
+	context: string = streamContexts.click,
 ): void =>
-	sendStreamEvent(eventName, streamContexts.click, {
+	sendStreamEvent(eventName, context, {
 		notificationType: notification.notificationSourceType,
 		notificationId: notification.id,
 		sendrVersion: 0,

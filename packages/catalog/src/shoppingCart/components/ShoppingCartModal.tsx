@@ -66,6 +66,7 @@ import type {
 } from "../hooks/useMarketplaceOffers";
 import type { CartPricingItemRequest } from "../../catalog/services/marketplaceSalesOffersService";
 import EmbeddableText from "../../catalog/components/EmbeddableText";
+import OfferExpirationBadge from "./OfferExpirationBadge";
 import {
 	trackShoppingCartRemoveClick,
 	trackShoppingCartCloseClick,
@@ -988,7 +989,12 @@ function ShoppingCartModalFooter({
 								className="checkbox-label"
 								htmlFor={`shopping-cart-offer-${offer.offerId}`}
 							>
-								<EmbeddableText text={offer.localizedText} />
+								<span className="marketplace-offer-selection-content">
+									<EmbeddableText text={offer.localizedText} />
+									<OfferExpirationBadge
+										expirationTimeUtc={offer.expirationTimeUtc}
+									/>
+								</span>
 							</label>
 						</div>
 					))}

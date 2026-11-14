@@ -19,12 +19,18 @@ import {
 	DialogFooter,
 	DialogTitle,
 	Button,
-	Badge,
+	StatusIndicator,
 } from "@rbx/foundation-ui";
 import { assetUrl } from "@rbx/www-common/asset";
 import VerifiedBadgeIcon from "@rbx/www-common/components/verified-badge";
 import EntrypointExposure from "@rbx/community-telemetry/EntrypointExposure";
-import { getNavCapability, type PlusNavEntries } from "../util/navCapabilities";
+import {
+	getNavCapability,
+	type PlusNavEntries,
+	useNavCapability,
+} from "../util/navCapabilities";
+import { useNavLocation } from "../util/navLocation";
+import { useNavHref } from "../util/navHref";
 import {
 	StateLayer,
 	blackbirdPathRegex,
@@ -80,10 +86,10 @@ const ProfileNavItem = ({
 	verifiedBadgeLabel: string;
 	isPlusSubscriber: boolean;
 }) => {
-	const AvatarHeadshot = getNavCapability("AvatarHeadshot");
-	const UncheckedBadge = getNavCapability("UncheckedBadge");
+	const AvatarHeadshot = useNavCapability("AvatarHeadshot");
+	const UncheckedBadge = useNavCapability("UncheckedBadge");
 	const showUncheckedBadge =
-		getNavCapability("shouldShowUncheckedBadge")?.() ?? false;
+		useNavCapability("shouldShowUncheckedBadge")?.() ?? false;
 	return (
 		<li>
 			<a
@@ -99,7 +105,7 @@ const ProfileNavItem = ({
 					</span>
 				</span>
 				<span className="flex flex-col gap-xsmall min-width-0 large:flex-row large:align-items-center">
-					<span className="flex gap-xsmall min-width-0 align-items-center">
+					<span className="flex gap-xsmall min-width-0 items-center">
 						<span className="text-truncate-end text-no-wrap">
 							{displayName}
 						</span>
@@ -138,7 +144,10 @@ const NavItem = ({
 	onExpose?: () => void;
 	onActivate?: () => void;
 }) => {
-	const href = path instanceof URL ? path.href : getAbsoluteUrl(path);
+	const toNavHref = useNavHref();
+	const href = toNavHref(
+		path instanceof URL ? path.href : getAbsoluteUrl(path),
+	);
 	const anchor = (
 		<a
 			href={href}
@@ -156,7 +165,7 @@ const NavItem = ({
 			<span className="min-width-0 text-truncate-end text-no-wrap">{text}</span>
 			{notification && (
 				<span className="fill basis-auto padding-x-small flex justify-end items-center">
-					<Badge label={notification} variant="Contrast" />
+					<StatusIndicator value={notification} variant="Numeric" />
 				</span>
 			)}
 		</a>
@@ -175,7 +184,7 @@ const NavItem = ({
 const CommunitiesNavItem = ({ currentPath }: { currentPath: string }) => {
 	const t = useTranslations("CommonUI.Features");
 	const telemetry = (
-		getNavCapability("useCommunitiesEntrypointTelemetry") ??
+		useNavCapability("useCommunitiesEntrypointTelemetry") ??
 		useNoCommunitiesTelemetry
 	)();
 	// Don't count the entry point when already inside communities.
@@ -310,18 +319,21 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const id = user.id!;
 	const liveNameForDisplay = (
-		getNavCapability("useLiveUserNameForDisplay") ?? useDisplayName
+		useNavCapability("useLiveUserNameForDisplay") ?? useDisplayName
 	)(user);
 	const hasVerifiedBadge = (
-		getNavCapability("useHasVerifiedBadge") ?? useVerifiedBadge
+		useNavCapability("useHasVerifiedBadge") ?? useVerifiedBadge
 	)(user);
-	const [currentPath, setCurrentPath] = useState(
-		new URL(window.location.href).pathname,
-	);
+	const { pathname } = useNavLocation();
+	const [currentPath, setCurrentPath] = useState(pathname);
 
-	// Observe route changes
+	// .NET changes the URL without remounting. Next updates `pathname` from the request instead.
 	useEffect(() => {
-		let oldPath = new URL(window.location.href).pathname;
+		setCurrentPath(pathname);
+	}, [pathname]);
+
+	useEffect(() => {
+		let oldPath = pathname;
 		const observer = new MutationObserver(() => {
 			const newPath = new URL(window.location.href).pathname;
 			if (oldPath !== newPath) {
@@ -338,24 +350,24 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 		return () => {
 			observer.disconnect();
 		};
-	}, []);
+	}, [pathname]);
 
 	const t = useTranslations("CommonUI.Features");
 	const tBadges = useTranslations("Feature.ProfileBadges");
 
 	const { isPlusSubscriber, topEntries, upsellEntry } = (
-		getNavCapability("usePlusNavEntries") ?? useNoPlusNavEntries
+		useNavCapability("usePlusNavEntries") ?? useNoPlusNavEntries
 	)(currentPath);
 
 	const friendRequestCount = useCount(
 		["friend-request-count"],
-		getNavCapability("getFriendRequestCount"),
+		useNavCapability("getFriendRequestCount"),
 	);
 	useRealTimeInvalidation("FriendshipNotifications", "friend-request-count");
 
 	const messageUnreadCount = useCount(
 		["message-unread-count"],
-		getNavCapability("getMessageUnreadCount"),
+		useNavCapability("getMessageUnreadCount"),
 	);
 	useRealTimeInvalidation(
 		"Roblox.Messages.CountChanged",
@@ -364,7 +376,7 @@ export default function LeftNavigation({ user }: { user: AuthenticatedUser }) {
 
 	const tradeInboundCount = useCount(
 		["trade-inbound-count"],
-		getNavCapability("getTradeInboundCount"),
+		useNavCapability("getTradeInboundCount"),
 	);
 
 	return (

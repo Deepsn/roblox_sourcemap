@@ -4,6 +4,7 @@ import React, {
 	useState,
 	FC,
 	useCallback,
+	type ReactNode,
 } from "react";
 import {
 	NotificationTemplateProps,
@@ -26,7 +27,7 @@ export const useSelectedNotification = (): SelectedNotificationState => {
 };
 
 export const useSelectedNotificationProvider = (): {
-	SelectedNotificationProvider: FC;
+	SelectedNotificationProvider: FC<{ children?: ReactNode }>;
 	selectedNotification: SelectedNotificationState;
 	setSelectedNotification: (newState: SelectedNotificationState) => void;
 } => {
@@ -37,7 +38,7 @@ export const useSelectedNotificationProvider = (): {
 		});
 
 	const providerComponent = useCallback(
-		({ children }) => (
+		({ children }: { children?: ReactNode }) => (
 			<SelectedNotificationContext.Provider value={selectedNotification}>
 				{children}
 			</SelectedNotificationContext.Provider>

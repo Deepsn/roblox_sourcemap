@@ -3,7 +3,7 @@ import {
 	useQueryClient,
 	InfiniteData,
 } from "@tanstack/react-query";
-import { httpService } from "core-utilities";
+import { streamPost } from "./streamTransport";
 import {
 	StreamNotificationPage,
 	markInteractedUrlConfig,
@@ -18,7 +18,7 @@ export const useMarkInteracted = (): ReturnType<
 
 	return useMutation<unknown, unknown, string>({
 		mutationFn: (eventId: string) =>
-			httpService.post(markInteractedUrlConfig, { eventId }),
+			streamPost(markInteractedUrlConfig, { eventId }),
 		onMutate: (eventId: string) => {
 			queryClient.setQueryData<InfiniteData<StreamNotificationPage>>(
 				GET_RECENT_QUERY_KEY,

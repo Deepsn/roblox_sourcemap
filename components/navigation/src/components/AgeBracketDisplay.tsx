@@ -1,8 +1,8 @@
 import {
-	authenticatedUser,
 	isBlackbirdUser,
 	type AuthenticatedUser,
 } from "@rbx/core-scripts/meta/user";
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
 import { useTranslations } from "@rbx/www-common/i18n";
 
 import VerifiedBadgeIcon from "@rbx/www-common/components/verified-badge";
@@ -11,8 +11,8 @@ import {
 	PLUS_BADGE_ARIA_LABEL,
 	PLUS_BADGE_ARIA_LABEL_KEY,
 } from "@rbx/identity-badges/constants";
-import links from "../constants/linkConstants";
-import { getNavCapability } from "../util/navCapabilities";
+import { useNavCapability } from "../util/navCapabilities";
+import { useNavUser } from "../util/navUser";
 import Link from "./NavLink";
 
 const useDisplayName = (user: AuthenticatedUser) => user.displayName ?? "";
@@ -22,15 +22,15 @@ const usePlusBadgeDisabled = () => false;
 function AgeBracketDisplayContent({ user }: { user: AuthenticatedUser }) {
 	const tBadges = useTranslations("Feature.ProfileBadges");
 	const tSubscription = useTranslations("Feature.RobloxSubscription");
-	const AvatarHeadshot = getNavCapability("AvatarHeadshot");
+	const AvatarHeadshot = useNavCapability("AvatarHeadshot");
 	const nameForDisplay = (
-		getNavCapability("useLiveUserNameForDisplay") ?? useDisplayName
+		useNavCapability("useLiveUserNameForDisplay") ?? useDisplayName
 	)(user);
 	const hasVerifiedBadge = (
-		getNavCapability("useHasVerifiedBadge") ?? useVerifiedBadge
+		useNavCapability("useHasVerifiedBadge") ?? useVerifiedBadge
 	)(user);
 	const isPlusBadgeEnabled = (
-		getNavCapability("useIsPlusBadgeEnabled") ?? usePlusBadgeDisabled
+		useNavCapability("useIsPlusBadgeEnabled") ?? usePlusBadgeDisabled
 	)();
 
 	const badgeToRender = hasVerifiedBadge ? (
@@ -49,7 +49,7 @@ function AgeBracketDisplayContent({ user }: { user: AuthenticatedUser }) {
 		<li className="age-bracket-label text-header">
 			<Link
 				className="text-link dynamic-overflow-container"
-				url={links.scrollListItems.profile.url}
+				url={getAbsoluteUrl(`/users/${user.id}/profile`)}
 			>
 				<span className="avatar avatar-headshot-xs">
 					{AvatarHeadshot ? (
@@ -83,6 +83,6 @@ function AgeBracketDisplayContent({ user }: { user: AuthenticatedUser }) {
 }
 
 export default function AgeBracketDisplay() {
-	const user = authenticatedUser();
+	const user = useNavUser();
 	return user == null ? null : <AgeBracketDisplayContent user={user} />;
 }

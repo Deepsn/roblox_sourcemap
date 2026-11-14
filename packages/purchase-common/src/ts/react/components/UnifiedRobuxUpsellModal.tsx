@@ -12,6 +12,7 @@ import UnifiedPurchaseHeading from "./UnifiedPurchaseHeading";
 import UnifiedProductDetails from "./UnifiedProductDetails";
 import DiscountPriceDetail from "./DiscountPriceDetail";
 import EmbeddableText from "./EmbeddableText";
+import OfferExpirationBadge from "./OfferExpirationBadge";
 import RobuxUpsellPackageDetails from "../itemPurchase/components/RobuxUpsellPackageDetails";
 import { LANG_KEYS } from "../../core/services/itemPurchaseUpsellService/constants/upsellConstants";
 import useTermsOfUseText from "../hooks/useTermsOfUseText";
@@ -191,6 +192,7 @@ const UnifiedRobuxUpsellModalInner: React.FC<
 					/>
 					{offerSelections.map((offer) => {
 						const offerLabelId = `upsell-offer-label-${offer.offerId}`;
+						const offerExpirationId = `upsell-offer-expiration-${offer.offerId}`;
 
 						return (
 							// eslint-disable-next-line jsx-a11y/label-has-associated-control -- Checkbox is a custom control associated via htmlFor + aria-labelledby
@@ -201,7 +203,7 @@ const UnifiedRobuxUpsellModalInner: React.FC<
 							>
 								<Checkbox
 									id={`upsell-offer-checkbox-${offer.offerId}`}
-									aria-labelledby={offerLabelId}
+									aria-labelledby={`${offerLabelId} ${offerExpirationId}`}
 									placement="Start"
 									size="Small"
 									isChecked={offer.selected}
@@ -211,11 +213,18 @@ const UnifiedRobuxUpsellModalInner: React.FC<
 									isDisabled={isPricingLoading || packageLoading}
 									data-testid={`upsell-promo-checkbox-${offer.offerId}`}
 								/>
-								<EmbeddableText
-									id={offerLabelId}
-									text={offer.localizedText}
-									className="text-body-medium content-default"
-								/>
+								<span className="flex flex-row items-center wrap gap-x-small gap-y-xsmall">
+									<EmbeddableText
+										id={offerLabelId}
+										text={offer.localizedText}
+										className="text-body-medium content-default"
+									/>
+									<OfferExpirationBadge
+										id={offerExpirationId}
+										expirationTimeUtc={offer.expirationTimeUtc}
+										translate={translate}
+									/>
+								</span>
 							</label>
 						);
 					})}

@@ -1,23 +1,20 @@
-import {
-	Intl,
-	TranslationResourceProvider,
-} from "@rbx/legacy-webapp-types/Roblox";
-import type {
-	RobloxIntlInstance,
-	RobloxTranslationResource,
-	RobloxTranslationResourceProviderInstance,
-} from "@rbx/legacy-webapp-types/Roblox";
+import International from "@rbx/core-scripts/intl";
+import { TranslationResourceProvider } from "@rbx/core-scripts/intl/translation";
+import { getLocaleFromDocument } from "@rbx/www-common/intl";
 import type { AxiosResponse } from "@rbx/core-scripts/http";
 import * as upsellUtil from "@rbx/core-scripts/util/upsell";
-import paymentFlowAnalyticsService from "@rbx/core-scripts/payments-flow";
-import {
+import { paymentFlowAnalyticsService } from "@rbx/payments/payments-flow-analytics";
+import type {
 	InsufficientFundsErrorObject,
 	ItemDetailElementDataset,
 	ItemDetailObject,
 	ItemPurchaseAjaxDataObject,
 	ItemPurchaseObject,
+	UpsellIntl,
 	UpsellProduct,
 	UpsellServiceState,
+	UpsellTranslationProvider,
+	UpsellTranslationResource,
 } from "./constants/serviceTypeDefinitions";
 import {
 	GAME_PASS_STORE_TAB_ON_GAME_PAGE_HTML_ELEMENT_ID,
@@ -50,12 +47,17 @@ import openInsufficientRobuxExceedLargestPackageModal from "./modals/openInsuffi
 import getShouldShowVng from "./api/universalAppConfiguration";
 import openVngInsufficientRobuxModal from "./modals/openVngInsufficientRobuxModal";
 
+/** Translations from the host page. Without them the service reads `window.Roblox.Lang` (.NET). */
+export type UpsellHostTranslations = {
+	intlProvider: UpsellTranslationProvider;
+};
+
 export default class ItemPurchaseUpsellService {
-	private readonly intl: RobloxIntlInstance;
+	private readonly intl: UpsellIntl;
 
-	private readonly intlProvider: RobloxTranslationResourceProviderInstance;
+	private readonly intlProvider: UpsellTranslationProvider;
 
-	private readonly translationResource: RobloxTranslationResource;
+	private readonly translationResource: UpsellTranslationResource;
 
 	private readonly loadingOverlay: LoadingOverlay;
 
@@ -65,9 +67,14 @@ export default class ItemPurchaseUpsellService {
 		timeoutHandle: null,
 	};
 
-	constructor() {
-		this.intl = new Intl();
-		this.intlProvider = new TranslationResourceProvider(this.intl);
+	constructor(hostTranslations?: UpsellHostTranslations) {
+		// The locale meta tag Intl reads is .NET-only; a host page has the locale on <html lang>.
+		const intl = new International(
+			hostTranslations ? getLocaleFromDocument() : undefined,
+		);
+		this.intl = intl;
+		this.intlProvider =
+			hostTranslations?.intlProvider ?? new TranslationResourceProvider(intl);
 		this.translationResource = this.intlProvider.getTranslationResource(
 			PURCHASE_DIALOG_NAMESPACE,
 		);
@@ -104,13 +111,11 @@ export default class ItemPurchaseUpsellService {
 			try {
 				const shouldShowVng: boolean = await getShouldShowVng();
 				if (shouldShowVng) {
-					paymentFlowAnalyticsService.startRobuxUpsellFlow(
-						itemDetail.buyButtonElementDataset?.assetType ?? "",
-						!!itemDetail.buyButtonElementDataset?.userassetId,
-						itemDetail.buyButtonElementDataset?.isPrivateServer ?? false,
-						itemDetail.buyButtonElementDataset?.isPlace ?? false,
-						itemDetail.buyButtonElementDataset?.productId,
-					);
+					paymentFlowAnalyticsService.startRobuxUpsellFlow({
+						assetType: itemDetail.buyButtonElementDataset?.assetType ?? "",
+						isReseller: !!itemDetail.buyButtonElementDataset?.userassetId,
+						itemId: itemDetail.buyButtonElementDataset?.productId,
+					});
 					itemPurchaseAjaxData.thumbnailImageUrl = PreProcessThumbnailUrl(
 						itemPurchaseAjaxData,
 						itemDetail.buyButtonElementDataset,
@@ -127,13 +132,11 @@ export default class ItemPurchaseUpsellService {
 				const upsellProductResponse: AxiosResponse<UpsellProduct> =
 					await fetchAvailableUpsellProduct(itemPurchaseAjaxData, itemDetail);
 				if (upsellProductResponse.status === 200) {
-					paymentFlowAnalyticsService.startRobuxUpsellFlow(
-						itemDetail.buyButtonElementDataset?.assetType ?? "",
-						!!itemDetail.buyButtonElementDataset?.userassetId,
-						itemDetail.buyButtonElementDataset?.isPrivateServer ?? false,
-						itemDetail.buyButtonElementDataset?.isPlace ?? false,
-						itemDetail.buyButtonElementDataset?.productId,
-					);
+					paymentFlowAnalyticsService.startRobuxUpsellFlow({
+						assetType: itemDetail.buyButtonElementDataset?.assetType ?? "",
+						isReseller: !!itemDetail.buyButtonElementDataset?.userassetId,
+						itemId: itemDetail.buyButtonElementDataset?.productId,
+					});
 					itemPurchaseAjaxData.thumbnailImageUrl = PreProcessThumbnailUrl(
 						itemPurchaseAjaxData,
 						itemDetail.buyButtonElementDataset,
@@ -201,13 +204,11 @@ export default class ItemPurchaseUpsellService {
 			return;
 		}
 		try {
-			paymentFlowAnalyticsService.startRobuxUpsellFlow(
-				itemDetailDataset?.assetType ?? "",
-				!!itemDetailDataset?.userassetId,
-				itemDetailDataset?.isPrivateServer ?? false,
-				itemDetailDataset?.isPlace ?? false,
-				itemDetailDataset?.productId,
-			);
+			paymentFlowAnalyticsService.startRobuxUpsellFlow({
+				assetType: itemDetailDataset?.assetType ?? "",
+				isReseller: !!itemDetailDataset?.userassetId,
+				itemId: itemDetailDataset?.productId,
+			});
 			openInsufficientRobuxExceedLargestPackageModal(
 				robuxShortfallPrice,
 				itemPurchaseAjaxData.imageurl,

@@ -1,18 +1,19 @@
 import React from "react";
 import { getRelativeTimeMaxDays } from "../../utils/relativeTime";
 import { Notification } from "@rbx/foundation-ui";
-import {
-	Thumbnail2d,
-	ThumbnailTypes,
-	ThumbnailFormat,
-	DefaultThumbnailSize,
-} from "roblox-thumbnails";
 import { useNotificationLocalization } from "../../sendrNotificationStream/context/NotificationsLocalization";
 import {
 	buildGroupMembershipDescription,
 	groupHref,
 } from "../../notificationStreamCards/groupMembership/groupMembershipDescription";
 import { GroupMembershipNotificationData } from "../../notificationStreamCards/groupMembership/types";
+import { getNotificationStreamHost } from "../../notificationStreamData/streamHost";
+import {
+	sendStreamEvent,
+	streamContexts,
+	streamEvents,
+} from "../../notificationStreamData/notificationStreamEvents";
+import type { JSX } from "react";
 
 export type GroupShellCardProps = {
 	notificationData: GroupMembershipNotificationData;
@@ -22,6 +23,7 @@ export const GroupShellCard = ({
 	notificationData,
 }: GroupShellCardProps): JSX.Element => {
 	const translate = useNotificationLocalization();
+	const { Thumbnail } = getNotificationStreamHost();
 	const firstGroup = notificationData.metadataCollection?.[0];
 
 	const timestamp = notificationData.eventDate
@@ -32,7 +34,14 @@ export const GroupShellCard = ({
 		// 48px box; the thumbnail container has no intrinsic size outside the legacy container.
 		<a
 			href={groupHref(firstGroup.AccepterGroupId)}
-			onClick={(e) => e.stopPropagation()}
+			onClick={(e) => {
+				e.stopPropagation();
+				sendStreamEvent(streamEvents.goToGroupPage, streamContexts.click, {
+					sendrVersion: 0,
+					notificationType: notificationData.notificationSourceType,
+					notificationId: notificationData.id,
+				});
+			}}
 			style={{
 				position: "relative",
 				display: "block",
@@ -43,10 +52,8 @@ export const GroupShellCard = ({
 				overflow: "hidden",
 			}}
 		>
-			<Thumbnail2d
-				type={ThumbnailTypes.groupIcon}
-				size={DefaultThumbnailSize}
-				format={ThumbnailFormat.webp}
+			<Thumbnail
+				type="groupIcon"
 				targetId={firstGroup.AccepterGroupId}
 				containerClass="notification-icon"
 			/>
@@ -56,7 +63,7 @@ export const GroupShellCard = ({
 	return (
 		<Notification
 			// Override the navbar <li>'s inherited text-align:center (Navigation.css).
-			style={{ textAlign: "left" }}
+			style={{ textAlign: "start" }}
 			media={media}
 			// No headline on this card type; foundation collapses the title row only when the prop is falsy,
 			// and it is not optional, so absence has to be stated.

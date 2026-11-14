@@ -54,6 +54,7 @@ const parseItemDetails = (
 		item.isPurchasable = data.lowestPrice !== undefined;
 		item.isMarketPlaceEnabled =
 			data.saleLocationType === "ShopAndAllExperiences" ||
+			data.saleLocationType === "ShopAndExperiencesById" ||
 			data.saleLocationType === "ShopOnly";
 	}
 

@@ -9,16 +9,12 @@ import {
 	PopoverTrigger,
 	PopoverContent,
 } from "@rbx/foundation-ui";
-import {
-	Thumbnail2d,
-	ThumbnailTypes,
-	ThumbnailFormat,
-	DefaultThumbnailSize,
-} from "roblox-thumbnails";
 import { useNotificationLocalization } from "../../sendrNotificationStream/context/NotificationsLocalization";
 import { getRelativeTimeMaxDays } from "../../utils/relativeTime";
+import { getNotificationStreamHost } from "../../notificationStreamData/streamHost";
 import { GameUpdateHandlers, GameUpdateViewModel } from "./types";
 import "./gameUpdateNotification.css";
+import type { JSX } from "react";
 
 // Substituted for {gameOne}/{gameTwo} so the translated aggregated string can be split and
 // the game names swapped for bold React nodes (Angular uses ng-bind-html; avoids escaping raw HTML).
@@ -110,6 +106,7 @@ const GameUpdateThumbnail = ({
 	if (viewModel.universeId == null) {
 		return null;
 	}
+	const { Thumbnail } = getNotificationStreamHost();
 	return (
 		<a
 			title={viewModel.fullGameName ?? viewModel.gameName}
@@ -132,10 +129,8 @@ const GameUpdateThumbnail = ({
 				onClick();
 			}}
 		>
-			<Thumbnail2d
-				type={ThumbnailTypes.gameIcon}
-				size={DefaultThumbnailSize}
-				format={ThumbnailFormat.webp}
+			<Thumbnail
+				type="gameIcon"
 				targetId={viewModel.universeId}
 				containerClass="notification-icon"
 			/>
@@ -160,7 +155,7 @@ export const GameUpdateNotification = ({
 		? getRelativeTimeMaxDays(new Date(viewModel.eventDate), new Date())
 		: undefined;
 	// Override the navbar <li>'s inherited text-align:center (Navigation.css).
-	const cardStyle: React.CSSProperties = { textAlign: "left" };
+	const cardStyle: React.CSSProperties = { textAlign: "start" };
 
 	const markReadAndGo = (): void => {
 		setRead(true);
