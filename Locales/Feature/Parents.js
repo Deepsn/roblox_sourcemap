@@ -963,7 +963,7 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Response.ODPBirthdayNotAllowed":
 		"This date can't be used for your child's account. Try another date.",
 	"Description.VPCRequestSpendNotifications":
-		"Notifications will be sent to all parent accounts with emails.",
+		"Notifications will be sent to all linked parent accounts with emails.",
 	"Heading.ODPUpgradeAlreadyCompleted": "Alert",
 	"Description.ODPUpgradeAlreadyCompleted":
 		"Email can no longer be changed after a Roblox parent account has been linked to this PIN",
@@ -998,7 +998,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Label.Roblox": "Roblox",
 	"Label.ContentTierWithAges": "{tierName} • Ages {minAge}-{maxAge}",
 	"Heading.ODPUpgradeEmailEntrySensitiveConsent":
-		"Create an account to manage this setting",
+		"Create a parent account to manage this setting",
+	"Description.ODPUpgradeEmailEntrySensitiveConsentNoName":
+		"You'll be able to manage your child's settings and receive emails about their activity.",
 	"Action.CreateAccount": "Create account",
 	"Description.RobuxTransferApprovalAlwaysAsk": "Approve every transfer.",
 	"Heading.ConversationalRequest.RobuxTransferApprovalMode":
