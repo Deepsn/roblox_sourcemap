@@ -30,6 +30,7 @@ import {
 import { BlueCheckIcon } from "../BlueCheckIcon";
 import { ExpirationBadge } from "../ExpirationBadge";
 import { resolveLimitedTimeBonusDaysLeft } from "../../utils/resolveLimitedTimeBonusDaysLeft";
+import { PersonalizedRecommendationsMenu } from "../PersonalizedRecommendationsMenu";
 
 type LimitedTimeBonusSectionProps = BaseSectionProps & {
 	sectionBase: SectionBase;
@@ -41,6 +42,7 @@ type BonusItemCardProps = {
 	products: Product[];
 	totalCards: number;
 	redirectUrl?: string;
+	showPersonalizedRecommendationsMenu?: boolean;
 	onPurchaseClick: (
 		product: Product,
 		event: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
@@ -120,6 +122,7 @@ function BonusItemCard({
 	products,
 	totalCards,
 	redirectUrl,
+	showPersonalizedRecommendationsMenu,
 	onPurchaseClick,
 }: BonusItemCardProps) {
 	const { translateFullKey } = useFullKeyTranslations();
@@ -189,6 +192,14 @@ function BonusItemCard({
 						)}
 					</div>
 				</div>
+				{showPersonalizedRecommendationsMenu && (
+					<div
+						className="absolute z-20"
+						style={{ top: "16px", insetInlineEnd: "16px" }}
+					>
+						<PersonalizedRecommendationsMenu surfaceKey="Web_BuyRobux_BonusItem" />
+					</div>
+				)}
 			</div>
 
 			<div
@@ -298,6 +309,9 @@ export function LimitedTimeBonusSection({
 							limitedTimeBonus.isRedirect && redirect?.url
 								? redirect.url
 								: undefined
+						}
+						showPersonalizedRecommendationsMenu={
+							sectionBase.showPersonalizedRecommendationsMenu
 						}
 						onPurchaseClick={handlePurchaseClick}
 					/>

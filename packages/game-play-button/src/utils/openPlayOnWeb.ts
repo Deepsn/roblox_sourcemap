@@ -14,6 +14,8 @@ export type TOpenPlayOnWebParams = {
 	wasmJoinId?: string;
 	// The page's join data, if it was read before the page removed it from the URL.
 	joinData?: JoinDataProperties;
+	// The playGameClicked event context, for a click from somewhere other than the Play on Web button.
+	eventContext?: string;
 };
 
 /**
@@ -33,6 +35,7 @@ export const openPlayOnWeb = ({
 			? String(eventProperties.launchData)
 			: undefined,
 	),
+	eventContext,
 }: TOpenPlayOnWebParams): void => {
 	firePlayOnWebClickCounter();
 	const { joinAttemptId, joinAttemptOrigin } = sendPlayOnWebClickEvents(
@@ -40,6 +43,7 @@ export const openPlayOnWeb = ({
 		universeId,
 		eventProperties,
 		joinData,
+		eventContext,
 	);
 
 	const url = new URL(

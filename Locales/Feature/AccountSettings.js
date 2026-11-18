@@ -2851,8 +2851,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Who can see your previous usernames",
 	"Description.ProfileVisibilityAbout": "Who can see your bio",
 	"Heading.ProfileVisibility": "Profile visibility",
-	"Heading.PrivacyRequestAndAccountDeletion":
-		"Account data, deactivation, & deletion",
+	"Heading.PrivacyRequestAndAccountDeletion": "Account data & deletion",
 	"Feature.AccountSettings.Heading.ContentPersonalization":
 		"Content Personalization",
 	"Label.AlwaysAsk": "Always ask",
@@ -2921,6 +2920,13 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Requests for {childAccount} will be delivered to your verified email, {recipientEmail}.",
 	"Description.ParentSide.PrivacyRequestsAddYourEmail":
 		"Add and verify an email before making requests for {childAccount}.",
+	"Label.MomentsUsageDailyLimit": "Moments limit",
+	"Description.ParentSide.MomentsUsage":
+		"Set a daily limit on the time your child spends in the Moments tab.",
+	"Description.RequestMomentsUsageLimitUpdate":
+		"To change your Moments time limit, you need parent permission.",
+	"Label.MomentsUsageSetting": "Moments time limit",
+	"Heading.MomentsUsageSetting": "Moments time limit",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

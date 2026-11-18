@@ -8,12 +8,17 @@ import {
 	getIsNativePurchasePlatform,
 	getIsWebCheckoutPlatform,
 } from "../../utils/platform";
+import { PersonalizedRecommendationsMenu } from "../PersonalizedRecommendationsMenu";
 
 type BannerProps = {
 	metadata: GamePassMetadata;
+	showPersonalizedRecommendationsMenu?: boolean;
 };
 
-export function GamePassBonusBanner({ metadata }: BannerProps) {
+export function GamePassBonusBanner({
+	metadata,
+	showPersonalizedRecommendationsMenu,
+}: BannerProps) {
 	const translate = useTranslations("Feature.PersonalizedBonus");
 	const { bonusItemBannerImageUrl, bonusItemImageUrl, deviceMeta } =
 		useContext(BuyRobuxPageContext);
@@ -112,6 +117,12 @@ export function GamePassBonusBanner({ metadata }: BannerProps) {
 					</div>
 				</div>
 			</div>
+			{showPersonalizedRecommendationsMenu && (
+				<PersonalizedRecommendationsMenu
+					surfaceKey="Web_BuyRobux_BonusItem"
+					className="shrink-0 relative z-10 margin-x-large"
+				/>
+			)}
 		</div>
 	);
 }

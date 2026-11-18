@@ -6,7 +6,10 @@ import {
 	openPlayOnWeb,
 	PlayOnWebVariant,
 	useWasmJoinId,
+	wasmRedirectDialogClickEventContext,
 } from "@rbx/game-play-button";
+import { EventStreamMetadata } from "../../common/constants/eventStreamConstants";
+import { PageContext } from "../../common/types/pageContext";
 import metadataConstants from "../constants/metadataConstants";
 import { usePlayOnWebVariant } from "../hooks/usePlayOnWebVariant";
 import DesktopWasmRedirect from "./DesktopWasmRedirect";
@@ -41,9 +44,14 @@ const WasmRedirectFlow = (): React.JSX.Element | null => {
 		isIos13Ipad() ||
 		isChromeOs
 	);
+	const eventProperties = {
+		[EventStreamMetadata.PlaceId]: placeId,
+		[EventStreamMetadata.UniverseId]: universeId,
+		[EventStreamMetadata.PlayContext]: PageContext.GameDetailPage,
+	};
 	// OneButton and TwoButton both offer Play on Web on the EDP.
 	const playOnWebEnabled =
-		usePlayOnWebVariant(universeId) !== PlayOnWebVariant.None;
+		usePlayOnWebVariant(universeId).playOnWebVariant !== PlayOnWebVariant.None;
 	const { wasmJoinId } = useWasmJoinId();
 	// Opens the WASM link, once Play on Web is enabled and the user's join id is known.
 	const playOnWeb =
@@ -55,8 +63,10 @@ const WasmRedirectFlow = (): React.JSX.Element | null => {
 						universeId,
 						privateServerLinkCode,
 						gameInstanceId,
+						eventProperties,
 						wasmJoinId,
 						joinData,
+						eventContext: wasmRedirectDialogClickEventContext,
 					})
 			: undefined;
 

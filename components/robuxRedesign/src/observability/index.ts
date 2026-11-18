@@ -3,7 +3,7 @@ import type { MakeObservabilityTypes } from "@rbx/observability-framework/types"
 import { createTrackers } from "@rbx/observability-framework/trackers";
 import { createPageLifecycle } from "@rbx/observability-framework/page-lifecycle";
 import { createObsErrorBoundary } from "@rbx/observability-framework/react";
-import { captureException } from "@rbx/payments/error";
+import { captureObservabilityException as captureException } from "@rbx/core-scripts/sentry/observability";
 import { createWithApiMetricsV2 } from "@rbx/payments/withApiMetrics";
 import { createFireTelemetryCounter } from "@rbx/web-telemetry/v2/fire";
 
@@ -66,7 +66,7 @@ export const observabilityRegistry = {
 				"IosPurchaseRestartAlertShown",
 				{
 					name: "NativePurchaseUiShownTime",
-					dimensions: ["bucket", "appMinorVersion", "isSub"],
+					dimensions: ["bucket", "tapCount", "appMinorVersion", "isSub"],
 				},
 			],
 			errors: ["ApplePayAvailabilityException"],
@@ -332,7 +332,11 @@ export const publishMetric = createFireTelemetryCounter(
 
 export const { trackCounter, trackError, trackCriticalError } = createTrackers(
 	observabilityRegistry,
-	{ publish: publishMetric, captureException },
+	{
+		publish: publishMetric,
+		captureException,
+		featureName: observabilityRegistry.featureName,
+	},
 );
 
 /**
@@ -346,11 +350,10 @@ export const withApiEventsV2 = createWithApiMetricsV2<ApiCall>(
 	captureException,
 );
 
-export const { reportPageLoad, reportPageView } = createPageLifecycle({
-	publishCounter: publishMetric,
-});
+export const { reportPageLoad, reportPageView, reportNoRoot } =
+	createPageLifecycle(observabilityRegistry, { publishCounter: publishMetric });
 
-export const ObsErrorBoundary = createObsErrorBoundary({
+export const ObsErrorBoundary = createObsErrorBoundary(observabilityRegistry, {
 	publish: publishMetric,
 	captureException,
 	featureName: observabilityRegistry.featureName,

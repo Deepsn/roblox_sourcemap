@@ -148,6 +148,10 @@ Roblox.LangDynamic["Feature.GameDetails"] = {
 	"CommunitySection.Member": "Member",
 	"Action.RemoveFromFavorites": "Remove from Favorites",
 	"Message.RemovedFromFavorites": "Removed from Favorites",
+	"Label.OfficialBadge": "Official",
+	"Label.LicensedBadge": "Licensed",
+	"Tooltip.LicensedBadge": "Approved by the brand",
+	"Tooltip.OfficialBadge": "Made by the brand",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

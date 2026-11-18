@@ -87,7 +87,7 @@ export function useTracking(): Tracking {
 			viewMessage?: ViewMessage,
 			eventMetadata?: Record<string, string>,
 		) => {
-			pfas.sendUserPurchaseFlowEvent({
+			pfas.sendUserPurchaseFlowEventViaFetch({
 				triggerContext: getTriggerContext(
 					deviceMeta,
 					viewName === PREMIUM_PURCHASE,
@@ -107,7 +107,7 @@ export function useTracking(): Tracking {
 
 	const trackStatus = useCallback(
 		(viewName: ViewName, status: PurchaseStatus, viewMessage?: string) => {
-			pfas.sendUserPurchaseStatusEvent({
+			pfas.sendUserPurchaseStatusEventViaFetch({
 				triggerContext: getTriggerContext(
 					deviceMeta,
 					viewName === PREMIUM_PURCHASE,
@@ -121,16 +121,14 @@ export function useTracking(): Tracking {
 	);
 
 	useEffect(() => {
-		if (robuxBalance !== undefined && applePayAvailability !== undefined) {
-			trackFlow(PRODUCT_PURCHASE, VIEW_SHOWN);
-		}
-	}, [
-		robuxBalance,
-		applePayAvailability,
-		trackFlow,
-		PRODUCT_PURCHASE,
-		VIEW_SHOWN,
-	]);
+		pfas.sendUserPurchaseFlowEventViaFetch({
+			triggerContext: getTriggerContext(deviceMeta, false),
+			isMidPurchaseStep: true,
+			viewName: PRODUCT_PURCHASE,
+			purchaseEventType: VIEW_SHOWN,
+			eventMetadata: contextMetadata,
+		});
+	}, [contextMetadata, deviceMeta, PRODUCT_PURCHASE, VIEW_SHOWN]);
 
 	useEffect(() => {
 		if (

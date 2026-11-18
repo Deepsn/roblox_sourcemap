@@ -36,7 +36,7 @@ const ExperienceEventTileActionButton = ({
 					"joinEvent",
 				)}
 			>
-				<span className="icon-common-play" />
+				<span className="icon icon-filled-play-large size-700" />
 			</button>
 		);
 	}

@@ -80,14 +80,23 @@ export const isLoginLinkAvailable = (
 	);
 };
 
-export const getIsVNGLandingRedirectEnabled = async () => {
+// Null when the lookup can't be made or fails, so callers can tell "unknown" from "not VNG".
+export const tryGetIsVNGLandingRedirectEnabled = async (): Promise<
+	boolean | null
+> => {
 	const getIntAuthCompliancePolicy = getNavCapability(
 		"getIntAuthCompliancePolicy",
 	);
+	if (getIntAuthCompliancePolicy == null) {
+		return null;
+	}
 	try {
-		const intAuth = await getIntAuthCompliancePolicy?.();
-		return intAuth?.isVNGComplianceEnabled ?? false;
+		const intAuth = await getIntAuthCompliancePolicy();
+		return intAuth.isVNGComplianceEnabled ?? false;
 	} catch {
-		return false;
+		return null;
 	}
 };
+
+export const getIsVNGLandingRedirectEnabled = async (): Promise<boolean> =>
+	(await tryGetIsVNGLandingRedirectEnabled()) ?? false;

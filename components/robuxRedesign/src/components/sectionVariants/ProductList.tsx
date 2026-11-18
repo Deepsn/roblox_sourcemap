@@ -23,6 +23,7 @@ import { BuyRobuxPageContext } from "../../contexts/BuyRobuxPageContext";
 import { ExpirationBadge } from "../ExpirationBadge";
 import { resolveLimitedTimeBonusDaysLeft } from "../../utils/resolveLimitedTimeBonusDaysLeft";
 import { getExternalLinkProps } from "../../utils/openExternalBrowser";
+import { PersonalizedRecommendationsMenu } from "../PersonalizedRecommendationsMenu";
 
 type ProductListProps = BaseSectionProps & {
 	sectionBase: RobuxPageSection;
@@ -79,7 +80,12 @@ export function ProductList({ isPrimary, sectionBase }: ProductListProps) {
 					<SectionHeader>
 						{translateFullKey(sectionBase.sectionHeaderTranslationKey)}
 					</SectionHeader>
-					{daysLeft.success && <ExpirationBadge daysLeft={daysLeft.value} />}
+					<div className="flex flex-row items-center gap-small">
+						{daysLeft.success && <ExpirationBadge daysLeft={daysLeft.value} />}
+						{sectionBase.showPersonalizedRecommendationsMenu && (
+							<PersonalizedRecommendationsMenu surfaceKey="Web_BuyRobux_Packages" />
+						)}
+					</div>
 				</div>
 				{bodyTranslationKey && (
 					<SectionSubHeader
