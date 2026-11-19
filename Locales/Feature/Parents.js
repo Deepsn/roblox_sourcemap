@@ -1006,13 +1006,13 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Heading.ConversationalRequest.RobuxTransferApprovalMode":
 		"Would you like to allow transfers with Trusted Friends?",
 	"Description.ConversationalRequest.RobuxTransferApprovalMode":
-		"Your child requested to allow transfers with trusted friends. You'll still be notified.",
+		"Your child requested to allow transfers for trusted friends",
 	"Description.RobuxTransferApprovalTrustedFriends":
 		"Allow transfers with trusted friends without asking. You'll still be notified.",
 	"Description.ConsentRequest.RobuxApproval.AlwaysAsk":
 		"Approve every transfer.",
 	"Description.ConsentRequest.RobuxApproval.TrustedFriends":
-		"Allow transfers with trusted friends without asking. You'll still be notified.",
+		"Allow transfers to trusted friends without asking. We'll notify every parent who has an email on their account.",
 	"Heading.ODPUpgradeIneligible": "Please try another way",
 	"Description.ODPUpgradeIneligible":
 		"Go to the parental controls page on your child’s account and select ‘Add parent.’",
@@ -1029,14 +1029,14 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Description.PendingODPUpgradeReminderParent":
 		"To change this setting, continue from the email we sent to {email}.",
 	"Email.MomentsUsageLimit.Control":
-		"To ensure age-appropriate use, we have established a default time limit of 30 minutes per day for viewing Moments. You can adjust or customize this daily limit at any time from your {aTagWithHref}{parentalControlsLink}{hrefEnd}Parental Controls dashboard{htmlCloseAHref}.",
+		"To ensure age-appropriate use, we have established a default time limit of 30 minutes per day for Moments. You can adjust this daily limit at any time from your {aTagWithHref}{parentalControlsLink}{hrefEnd}Parental Controls dashboard{htmlCloseAHref}.",
 	"Heading.PendingODPUpgradeReminderChild": "Ask your parent for help",
 	"Email.MomentsUsageLimit.Closing": "Thank you,{lineBreak}The Roblox Team",
 	"Email.MomentsUsageLimit.Subject":
-		"Daily Time Limits for Moments Gameplay Preview Videos",
+		"Daily time limits for Moments gameplay videos",
 	"Action.PendingODPUpgradeReminderEditEmail": "Edit email",
 	"Email.MomentsUsageLimit.Intro":
-		"To help you manage your child's experience, Roblox is introducing new parental controls for Moments, a surface where users can discover new games by watching short gameplay preview videos uploaded by developers in our catalog for kids and young teens.",
+		"To help you manage your child's experience, Roblox is introducing new parental controls for Moments, a feature where players can discover new games by watching short gameplay videos uploaded by developers for kids and young teens.",
 	"Description.VPCRequestMomentsUsageLimit": "Moments time limit",
 	"Heading.PendingODPUpgradeReminderParent":
 		"Finish creating your parent account",

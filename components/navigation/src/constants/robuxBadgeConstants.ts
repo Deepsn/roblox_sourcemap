@@ -1,5 +1,0 @@
-export default {
-	VIRTUAL_ITEM: "VIRTUAL_ITEM",
-	UPDATE: "UPDATE",
-	BONUS_ROBUX_2026_10: "BONUS_ROBUX_2026_10",
-} as const;

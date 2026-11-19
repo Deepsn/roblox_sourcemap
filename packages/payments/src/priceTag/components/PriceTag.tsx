@@ -107,7 +107,7 @@ function PriceTag({
 		tagClassName,
 	});
 	return (
-		<div className="inline-flex items-center gap-xsmall">
+		<div className="d-flex-inline gap-1 justify-content-start align-items-center">
 			{isNegative && <span className={className}>{MINUS_SIGN}</span>}
 			<span className={className}>{formattedAmount}</span>
 		</div>

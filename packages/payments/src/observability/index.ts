@@ -94,7 +94,7 @@ export const withApiEventsV2 = createWithApiMetricsV2<ApiCall>(
 	captureException,
 );
 
-export const ObsErrorBoundary = createObsErrorBoundary(observabilityRegistry, {
+export const ObsErrorBoundary = createObsErrorBoundary({
 	publish: publishMetric,
 	captureException,
 	featureName: observabilityRegistry.featureName,
