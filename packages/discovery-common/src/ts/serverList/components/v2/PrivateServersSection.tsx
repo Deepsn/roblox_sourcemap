@@ -248,6 +248,14 @@ const PrivateServersSection = ({
 							playerCountStatus={statusText}
 							thumbnailTargetId={server.owner?.id ?? null}
 							thumbnailType={ThumbnailTypes.avatarHeadshot}
+							thumbnailLink={
+								server.owner
+									? {
+											href: urlConstants.getUserProfileUrl(server.owner.id),
+											ariaLabel: server.owner.displayName,
+										}
+									: undefined
+							}
 							onJoinClick={getJoinScript(
 								placeId,
 								{

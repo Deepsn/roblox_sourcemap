@@ -2,13 +2,14 @@ import {
 	jsClientDeviceIdentifier,
 	authenticatedUser,
 } from "@rbx/core-scripts/legacy/header-scripts";
-import { uuidService } from "@rbx/core-scripts/legacy/core-utilities";
 import {
 	sendEventWithTarget,
 	targetTypes,
 } from "@rbx/core-scripts/event-stream";
 import { getDeviceMeta } from "@rbx/core-scripts/meta/device";
 import { getUrlWithQueries } from "@rbx/core-scripts/util/url";
+import { generateRandomUuid } from "@rbx/core-lib/uuid";
+import { start, endSuccess } from "@rbx/www-common/event-tracker";
 
 import attributionUtils, {
 	AttributionType,
@@ -53,9 +54,9 @@ export const getJoinScript = (
 	telemetry?: ServerListJoinTelemetry,
 ): (() => void) => {
 	const startTime = performance.now();
-	window.EventTracker?.start(PrivateServerEventType.PRIVATE_SERVER_JOIN);
+	start(PrivateServerEventType.PRIVATE_SERVER_JOIN);
 	const joinAttemptId = window.Roblox.GameLauncher?.isJoinAttemptIdEnabled()
-		? uuidService.generateRandomUuid()
+		? generateRandomUuid()
 		: undefined;
 	const gamePlayIntentContext = `${serverListType}ServerListJoin`;
 	const commonEventParams = {
@@ -120,9 +121,7 @@ export const getJoinScript = (
 					PrivateServerEventContext.GAME_TAB,
 					String(performance.now() - startTime),
 				);
-				window.EventTracker?.endSuccess(
-					PrivateServerEventType.PRIVATE_SERVER_JOIN,
-				);
+				endSuccess(PrivateServerEventType.PRIVATE_SERVER_JOIN);
 				const friendPlayer = players.find(
 					(player) => player.id !== null && player.id !== authenticatedUser.id,
 				);
@@ -144,9 +143,7 @@ export const getJoinScript = (
 					PrivateServerEventContext.GAME_TAB,
 					String(performance.now() - startTime),
 				);
-				window.EventTracker?.endSuccess(
-					PrivateServerEventType.PRIVATE_SERVER_JOIN,
-				);
+				endSuccess(PrivateServerEventType.PRIVATE_SERVER_JOIN);
 				window.Roblox.GameLauncher?.joinPrivateGame(
 					placeId,
 					accessCode,
@@ -165,9 +162,7 @@ export const getJoinScript = (
 					PrivateServerEventContext.GAME_TAB,
 					String(performance.now() - startTime),
 				);
-				window.EventTracker?.endSuccess(
-					PrivateServerEventType.PRIVATE_SERVER_JOIN,
-				);
+				endSuccess(PrivateServerEventType.PRIVATE_SERVER_JOIN);
 				window.Roblox.GameLauncher?.joinGameInstance(
 					placeId,
 					instanceId,

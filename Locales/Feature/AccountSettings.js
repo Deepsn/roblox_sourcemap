@@ -2927,6 +2927,10 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"To change your Moments time limit, you need parent permission.",
 	"Label.MomentsUsageSetting": "Moments time limit",
 	"Heading.MomentsUsageSetting": "Moments time limit",
+	"Description.PrivacyRequestsParentEmail":
+		"Privacy request emails will be sent to this verified parental recovery email.",
+	"Description.PrivacyRequestsAddParentEmail":
+		"Add and verify a parent or guardian’s email before making a privacy request.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

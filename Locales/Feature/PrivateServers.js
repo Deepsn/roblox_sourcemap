@@ -92,6 +92,8 @@ Roblox.LangDynamic["Feature.PrivateServers"] = {
 	"Label.StatusFilterAll": "All",
 	"Label.StatusFilterActive": "Active",
 	"Label.StatusFilterInactive": "Inactive",
+	"Label.PerMonthAbbv": "{price}/mo",
+	"Label.ExpiresOnDate": "Expires {date}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

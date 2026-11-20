@@ -5,6 +5,7 @@ import {
 	getJoindata,
 	openPlayOnWeb,
 	PlayOnWebVariant,
+	usePlayabilityStatus,
 	useWasmJoinId,
 	wasmRedirectDialogClickEventContext,
 } from "@rbx/game-play-button";
@@ -53,10 +54,15 @@ const WasmRedirectFlow = (): React.JSX.Element | null => {
 	// Unlike the EDP's Play button, waits for the device check, which probes when nothing is stored.
 	const deviceCheck = useDeviceCheck();
 	// OneButton and TwoButton both offer Play on Web on the EDP.
-	const playOnWebEnabled =
-		usePlayOnWebVariant(universeId, true, deviceCheck === DeviceCheck.Eligible)
-			.playOnWebVariant !== PlayOnWebVariant.None;
-	const { wasmJoinId } = useWasmJoinId();
+	const { playOnWebVariant, isLoading: isVariantLoading } = usePlayOnWebVariant(
+		universeId,
+		true,
+		deviceCheck === DeviceCheck.Eligible,
+	);
+	const playOnWebEnabled = playOnWebVariant !== PlayOnWebVariant.None;
+	const { wasmJoinId, isLoading: isJoinIdLoading } = useWasmJoinId();
+	// The variant's isLoading only covers the IXP layer, so playability is checked here too.
+	const { playabilityStatus } = usePlayabilityStatus(universeId);
 	// Opens the WASM link, once Play on Web is enabled and the user's join id is known.
 	const playOnWeb =
 		playOnWebEnabled && wasmJoinId != null
@@ -73,6 +79,12 @@ const WasmRedirectFlow = (): React.JSX.Element | null => {
 						eventContext: wasmRedirectDialogClickEventContext,
 					})
 			: undefined;
+	// Play on Web can still become available while any of these is loading. A device that fails the
+	// check doesn't wait for the rest, so a stalled request can't keep it checking.
+	const isCheckingPlayOnWeb =
+		deviceCheck === DeviceCheck.Checking ||
+		(deviceCheck === DeviceCheck.Eligible &&
+			(isVariantLoading || playabilityStatus === undefined || isJoinIdLoading));
 
 	if (isDesktop) {
 		return (
@@ -91,7 +103,7 @@ const WasmRedirectFlow = (): React.JSX.Element | null => {
 	return (
 		<MobileWasmRedirect
 			playOnWeb={playOnWeb}
-			isCheckingDevice={deviceCheck === DeviceCheck.Checking}
+			isCheckingPlayOnWeb={isCheckingPlayOnWeb}
 		/>
 	);
 };
