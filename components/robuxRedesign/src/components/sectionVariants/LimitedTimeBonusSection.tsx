@@ -31,6 +31,12 @@ import { BlueCheckIcon } from "../BlueCheckIcon";
 import { ExpirationBadge } from "../ExpirationBadge";
 import { resolveLimitedTimeBonusDaysLeft } from "../../utils/resolveLimitedTimeBonusDaysLeft";
 import { PersonalizedRecommendationsMenu } from "../PersonalizedRecommendationsMenu";
+import {
+	earlyClickRedirectHref,
+	isEarlyClickRedirectSection,
+	robuxProductEarlyClickKey,
+	useEarlyClickRedirectRow,
+} from "../../modules/earlyClick";
 
 type LimitedTimeBonusSectionProps = BaseSectionProps & {
 	sectionBase: SectionBase;
@@ -58,16 +64,31 @@ const mediumFromSmallClassName =
 function RobuxTile({
 	product,
 	redirectUrl,
+	cardKey,
 	onPurchaseClick,
 }: {
 	product: Product;
 	redirectUrl?: string;
+	/** Keeps the same package on two bonus cards from sharing one held tap. */
+	cardKey: string;
 	onPurchaseClick: BonusItemCardProps["onPurchaseClick"];
 }) {
-	const redirectProps = redirectUrl
+	// `redirectUrl` is "" while a redirect section waits for its auth ticket and undefined for a
+	// non-redirect section.
+	const isRedirectRow = redirectUrl !== undefined;
+	const hasRedirectUrl = Boolean(redirectUrl);
+	const { rowProps: earlyClickRowProps, linkProps } = useEarlyClickRedirectRow(
+		robuxProductEarlyClickKey(product.productId, `limitedTimeBonus:${cardKey}`),
+		{ isRedirect: isRedirectRow, hasUrl: hasRedirectUrl },
+	);
+
+	const redirectProps = isRedirectRow
 		? {
 				as: "a" as const,
-				href: `${redirectUrl}&ap=${product.productId}`,
+				href: earlyClickRedirectHref(
+					`${redirectUrl}&ap=${product.productId}`,
+					hasRedirectUrl,
+				),
 				rel: "noreferrer",
 				role: "button" as const,
 				target: "_blank",
@@ -78,6 +99,7 @@ function RobuxTile({
 		<div
 			className="self-stretch flex flex-row justify-between items-center gap-small"
 			{...getRobuxProductTrackingProps(product.productId)}
+			{...earlyClickRowProps}
 		>
 			<div className="min-width-0 flex-1">
 				<RobuxAmount
@@ -103,6 +125,7 @@ function RobuxTile({
 					onPurchaseClick(product, event);
 				}}
 				{...redirectProps}
+				{...linkProps}
 				icon={
 					redirectUrl ? "icon-regular-arrow-up-right-from-square" : undefined
 				}
@@ -211,6 +234,7 @@ function BonusItemCard({
 						key={product.productId}
 						product={product}
 						redirectUrl={redirectUrl}
+						cardKey={item.robuxProductIds.join("-")}
 						onPurchaseClick={onPurchaseClick}
 					/>
 				))}
@@ -251,6 +275,10 @@ export function LimitedTimeBonusSection({
 		}, []);
 	}, [limitedTimeBonus.limitedTimeBonuses, sectionBase.products]);
 
+	const isRedirectSection = isEarlyClickRedirectSection(
+		limitedTimeBonus.isRedirect,
+		redirect,
+	);
 	const handlePurchaseClick = useCallback(
 		(
 			product: Product,
@@ -259,13 +287,13 @@ export function LimitedTimeBonusSection({
 			purchaseProduct({
 				product,
 				event,
-				isRedirect: Boolean(limitedTimeBonus.isRedirect && redirect?.url),
+				isRedirect: isRedirectSection,
 				isSubscription: false,
 				isBonus: true,
 				sectionType: BuyRobuxPageSectionType.LimitedTimeBonus,
 			});
 		},
-		[purchaseProduct, limitedTimeBonus.isRedirect, redirect],
+		[purchaseProduct, isRedirectSection],
 	);
 
 	if (cards.length === 0) {
@@ -305,11 +333,7 @@ export function LimitedTimeBonusSection({
 						item={item}
 						products={products}
 						totalCards={cards.length}
-						redirectUrl={
-							limitedTimeBonus.isRedirect && redirect?.url
-								? redirect.url
-								: undefined
-						}
+						redirectUrl={isRedirectSection ? redirect?.url : undefined}
 						showPersonalizedRecommendationsMenu={
 							sectionBase.showPersonalizedRecommendationsMenu
 						}

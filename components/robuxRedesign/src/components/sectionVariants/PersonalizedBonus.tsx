@@ -25,6 +25,10 @@ import { GamePassBonusBanner } from "../bonusBannerVariants/GamePassBonusBanner"
 import { CollectibleItemBonusBanner } from "../bonusBannerVariants/CollectibleItemBonusBanner";
 import { trackCounter } from "../../observability";
 import { getSectionTrackingProps } from "../../hooks/useScrollTracking";
+import {
+	EarlyClickScope,
+	isEarlyClickRedirectSection,
+} from "../../modules/earlyClick";
 
 const productTypeToValueMap: Record<string, string> = {
 	PRODUCT_TYPE_COLLECTIBLE_ITEM: "PRODUCT_TYPE_COLLECTIBLE_ITEM",
@@ -105,6 +109,14 @@ export function PersonalizedBonus({
 
 	const { translateFullKey } = useFullKeyTranslations();
 
+	// Depend on the primitives, not the `redirect` object: useRedirect returns a new object every
+	// render, and a new row component type remounts every row (dropping a tap in progress).
+	const isRedirectSection = isEarlyClickRedirectSection(
+		personalizedBonus.isRedirect,
+		redirect,
+	);
+	const redirectUrl = redirect?.url ?? "";
+
 	const clickHandler = useCallback(
 		(
 			product: Product,
@@ -113,21 +125,21 @@ export function PersonalizedBonus({
 			purchaseProduct({
 				product,
 				event,
-				isRedirect: Boolean(personalizedBonus.isRedirect && redirect?.url),
+				isRedirect: isRedirectSection,
 				isSubscription: false,
 				isBonus: true,
 				sectionType: BuyRobuxPageSectionType.PersonalizedBonus,
 			});
 		},
-		[purchaseProduct, personalizedBonus.isRedirect, redirect],
+		[purchaseProduct, isRedirectSection],
 	);
 
 	const ProductItemComponent = useMemo(
 		() =>
-			personalizedBonus.isRedirect && redirect?.url
-				? withRedirectProductItem(redirect.url)
+			isRedirectSection
+				? withRedirectProductItem(redirectUrl)
 				: ProductItemDefault,
-		[personalizedBonus.isRedirect, redirect?.url],
+		[isRedirectSection, redirectUrl],
 	);
 
 	return (
@@ -153,11 +165,13 @@ export function PersonalizedBonus({
 					/>
 				}
 			>
-				<SectionBodyProductList
-					onProductClick={clickHandler}
-					products={sectionBase.products ?? []}
-					OverrideProductItemComponent={ProductItemComponent}
-				/>
+				<EarlyClickScope scope="personalizedBonus">
+					<SectionBodyProductList
+						onProductClick={clickHandler}
+						products={sectionBase.products ?? []}
+						OverrideProductItemComponent={ProductItemComponent}
+					/>
+				</EarlyClickScope>
 			</SectionBody>
 		</Section>
 	);

@@ -2814,7 +2814,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Label.Subscriptions.NextChargeAndDelivery": "Next payment:",
 	"Heading.Tab.PersonalizedRecommendations": "Personalized recommendations",
 	"Description.PersonalizedRecommendations":
-		"Choose between general and personalized recommendations below. Roblox personalizes recommendations based on what you play and enjoy. {linkStart}Learn more{linkEnd}",
+		"Choose between general and personalized recommendations below. Roblox personalizes recommendations based on what you play and enjoy. {linkStart}Learn more{linkEnd}\n\nRecommendations will update when you reload the web page or close and reopen the app.",
 	"Label.PersonalizedRecommendationsGameSearch": "Game search",
 	"Label.PersonalizedRecommendationsRobuxRecs": "Robux recommendations",
 	"Description.PersonalizedRecommendationsGameSearch":
@@ -2830,7 +2830,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Personalize game recommendations on the homepage and game details pages.",
 	"Label.PersonalizedRecommendationsPeopleYouMayKnow": "People You May Know",
 	"Description.PersonalizedRecommendationsPeopleYouMayKnow":
-		"Personalize suggestions for people you may know on the homepage and Add friends page.",
+		"Personalize suggestions for people you may know on the homepage, Add friends page and profile.",
 	"Label.PersonalizedRecommendationsGameItemRecs": "Game items recommendations",
 	"Description.PersonalizedRecommendationsGameItemRecs":
 		"Personalize recommendations for game items while in-game, on the game details page store, or on the Buy Robux page.",
@@ -2892,7 +2892,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"ScopeType.MarketplaceItemUploadFee":
 		"your Marketplace upload fees and Robux balance",
 	"Description.ParentSide.PersonalizedRecs":
-		"Choose between general and personalized recommendations below. Roblox makes recommendations based on what your child plays and enjoys. {linkStart}Learn more{linkEnd}",
+		"Choose between general and personalized recommendations below. Roblox makes recommendations based on what your child plays and enjoys. {linkStart}Learn more{linkEnd}\n\nRecommendations will update when your child reloads the web page or closes and reopens the app.",
 	"Description.ParentSide.PersonalizedRecsGameSearch":
 		"Personalize results when your child searches for games.",
 	"Description.ParentSide.PersonalizedRecsUserSearch":
@@ -2902,7 +2902,7 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 	"Description.ParentSide.PersonalizedRecsGameRecs":
 		"Personalize game recommendations on your child’s homepage and game details pages.",
 	"Description.ParentSide.PersonalizedRecsPeopleYouMayKnow":
-		"Personalize suggestions for people your child may know on the homepage and Add friends page.",
+		"Personalize suggestions for people your child may know on the homepage, Add friends page and profile.",
 	"Description.ParentSide.PersonalizedRecsMoments":
 		"Personalize recommendations on your child’s Moments feed.",
 	"Description.UpdateChildSettingParentFacingFromTo":

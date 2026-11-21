@@ -69,6 +69,7 @@ Roblox.LangDynamic["CommonUI.Messages"] = {
 	"Heading.LeaveRoblox": "Leaving Roblox",
 	"Action.ContinueToPayment": "Continue to Payment",
 	"Response.PleaseTryAgainLater": "Please try again later.",
+	"Message.SsoProviderLinked": "You can now sign in with {provider}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

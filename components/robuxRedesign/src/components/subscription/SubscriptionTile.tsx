@@ -1,11 +1,18 @@
-import { type FC, useMemo } from "react";
+import { type FC, useContext, useMemo } from "react";
 import classNames from "classnames";
 import { useFormatter, useTranslations } from "@rbx/www-common/i18n";
 import { Button } from "@rbx/foundation-ui";
 import { SubscriptionButton } from "@rbx/subscriptions-common";
 import type { DeviceMeta } from "@rbx/www-common/device/types";
 import { window } from "@rbx/core-lib/browser";
+import { ModalContext } from "../../contexts/ModalContext";
 import { getSubscriptionProductTrackingProps } from "../../hooks/useScrollTracking";
+import { trackCounter } from "../../observability";
+import {
+	earlyClickRedirectHref,
+	subscriptionEarlyClickKey,
+	useEarlyClickRedirectRow,
+} from "../../modules/earlyClick";
 
 import type { SectionSubscriptionV2Product } from "../../types/buyRobuxPageData";
 import type { TrackSubscriptionV2SubscribeClickArgs } from "../../hooks/subscriptionV2/useSubscriptionV2Tracking";
@@ -27,12 +34,18 @@ function deriveTileTitle(robuxAllowance: number): string {
 	return "Roblox Plus";
 }
 
+type RedirectLinkProps = ReturnType<
+	typeof useEarlyClickRedirectRow
+>["linkProps"];
+
 const RedirectButton: FC<{
-	href: string;
+	/** Undefined on Next.js until the auth ticket exists. .NET keeps `""`. */
+	href: string | undefined;
+	linkProps: RedirectLinkProps;
 	onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 	isEmphasized: boolean;
 	children: React.ReactNode;
-}> = ({ href, onClick, isEmphasized, children }) => {
+}> = ({ href, linkProps, onClick, isEmphasized, children }) => {
 	return (
 		<Button
 			as="a"
@@ -45,6 +58,7 @@ const RedirectButton: FC<{
 			size="Medium"
 			target="_blank"
 			variant={isEmphasized ? "Emphasis" : "Standard"}
+			{...linkProps}
 		>
 			{children}
 		</Button>
@@ -74,13 +88,16 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 }) => {
 	const translate = useTranslations("Feature.RobloxSubscription");
 	const formatter = useFormatter();
+	const {
+		redirectError: { openModal: openRedirectErrorModal },
+	} = useContext(ModalContext);
 
 	// Takes global redirect url and modifies for subscription bundle.
 	// - Overrides ctx to subscription
 	// - Appends type and id
 	const redirectHref = useMemo(() => {
 		if (window === undefined || !redirect?.url) {
-			return "";
+			return undefined;
 		}
 		const url = new URL(redirect.url, window.location.origin);
 		url.searchParams.set("ctx", "subscription");
@@ -88,6 +105,22 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 		url.searchParams.set("id", product.subscriptionProductId);
 		return `${url.pathname}${url.search}`;
 	}, [redirect?.url, product.subscriptionProductId]);
+
+	// The marker goes on this tile: SubscriptionButton comes from another package and cannot carry
+	// attributes.
+	const isRedirect = Boolean(product.isRedirect);
+	const hasRedirectUrl = Boolean(redirectHref);
+	const {
+		isAwaitingUrl,
+		linkProps,
+		rowProps: earlyClickRowProps,
+	} = useEarlyClickRedirectRow(
+		subscriptionEarlyClickKey(product.subscriptionProductId),
+		{
+			isRedirect,
+			hasUrl: hasRedirectUrl,
+		},
+	);
 
 	const apiProductType =
 		SECTION_PRODUCT_TYPE_TO_API[product.subscriptionProductType];
@@ -100,7 +133,6 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 
 	const offers = Array.isArray(product.offers) ? product.offers : [];
 	const hasFreeTrial = offers.some((o) => o.freeTrial);
-	const isRedirect = Boolean(product.isRedirect);
 
 	const price = formatter.number(getMoneyAmount(product.price), {
 		style: "currency",
@@ -135,6 +167,7 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 				product.subscriptionProductId,
 				product.subscriptionProductType,
 			)}
+			{...earlyClickRowProps}
 		>
 			<div className="flex flex-row items-center justify-between gap-large">
 				<h3 className="text-label-large content-emphasis text-truncate-end">
@@ -159,8 +192,18 @@ export const SubscriptionTile: FC<SubscriptionTileProps> = ({
 
 			{isRedirect ? (
 				<RedirectButton
-					href={redirectHref}
+					href={earlyClickRedirectHref(redirectHref ?? "", hasRedirectUrl)}
+					linkProps={linkProps}
 					onClick={(event) => {
+						// No URL means nothing to open, so the click is not a subscribe click. Same as the
+						// Robux rows (`usePurchase.purchaseRedirectProduct`): retry the ticket and say so.
+						if (isAwaitingUrl) {
+							event.preventDefault();
+							trackCounter("PurchaseRedirectUrlEmpty");
+							redirect?.refreshAuthTicket();
+							openRedirectErrorModal();
+							return;
+						}
 						stampRedirectStartTsOnClick(event);
 						onSubscribeClick?.({
 							isFreeTrial: false,
