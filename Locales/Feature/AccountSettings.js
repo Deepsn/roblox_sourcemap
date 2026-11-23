@@ -2931,6 +2931,8 @@ Roblox.LangDynamic["Feature.AccountSettings"] = {
 		"Privacy request emails will be sent to this verified parental recovery email.",
 	"Description.PrivacyRequestsAddParentEmail":
 		"Add and verify a parent or guardian’s email before making a privacy request.",
+	"Description.MonthlySpendLimitNotificationUpgradeUpsell":
+		"Create a parent account to receive notifications about your child’s spending.",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

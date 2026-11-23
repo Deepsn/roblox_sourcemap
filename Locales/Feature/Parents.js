@@ -998,9 +998,9 @@ Roblox.LangDynamic["Feature.Parents"] = {
 	"Label.Roblox": "Roblox",
 	"Label.ContentTierWithAges": "{tierName} • Ages {minAge}-{maxAge}",
 	"Heading.ODPUpgradeEmailEntrySensitiveConsent":
-		"Create a parent account to manage this setting",
+		"Create an account to manage this setting",
 	"Description.ODPUpgradeEmailEntrySensitiveConsentNoName":
-		"You'll be able to manage your child's settings and receive emails about their activity.",
+		"You'll also get emails about your child's activities and can manage more settings.",
 	"Action.CreateAccount": "Create account",
 	"Description.RobuxTransferApprovalAlwaysAsk": "Approve every transfer.",
 	"Heading.ConversationalRequest.RobuxTransferApprovalMode":
