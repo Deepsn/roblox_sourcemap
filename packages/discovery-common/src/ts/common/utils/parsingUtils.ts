@@ -3,11 +3,13 @@ import {
 	abbreviateNumber,
 	formatNumber,
 } from "@rbx/core-scripts/format/number";
+import { window as browserWindow } from "@rbx/core-lib/browser";
 import {
 	composeQueryString as composeQueryStringCore,
-	getQueryParam,
+	getQueryParam as getQueryParamCore,
 	parseQueryString as parseQueryStringCore,
-} from "@rbx/core-scripts/util/url";
+	type ParsedQuery,
+} from "@rbx/core-scripts/util/query-string";
 import Presence from "@rbx/presence";
 import { fireEvent } from "@rbx/www-common/event-tracker";
 import {
@@ -28,7 +30,14 @@ import { getGameLayoutData } from "../hooks/useGetGameLayoutData";
 
 export const GAME_STATS_PLACEHOLDER_STRING = "--";
 
-export const dateTimeFormatter = new Intl().getDateTimeFormatter();
+let dateTimeFormatter: ReturnType<Intl["getDateTimeFormatter"]> | undefined;
+
+export const getDateTimeFormatter = (): ReturnType<
+	Intl["getDateTimeFormatter"]
+> => {
+	dateTimeFormatter ??= new Intl().getDateTimeFormatter();
+	return dateTimeFormatter;
+};
 
 /**
  * Type guard function to check whether a component type is a wide tile component type.
@@ -548,11 +557,17 @@ export const splitArray = <T>(input: T[], maxSize: number): T[][] => {
 		.map((_, index) => input.slice(index * maxSize, (index + 1) * maxSize));
 };
 
-export const parseQueryString = parseQueryStringCore;
+// `@rbx/core-scripts/util/query-string` takes the search string; default to the page's (empty on the
+// server), like `@rbx/core-scripts/util/url`.
+const getSearchString = (): string => browserWindow?.location.search ?? "";
+
+export const parseQueryString = (
+	searchString: string = getSearchString(),
+): ParsedQuery => parseQueryStringCore(searchString);
 export const getNumberFormat = formatNumber;
 
 export const getQueryParamIfString = (key: string): string | undefined => {
-	const queryParam = getQueryParam(key);
+	const queryParam = getQueryParamCore(key, getSearchString());
 
 	if (queryParam && typeof queryParam === "string") {
 		return queryParam;
@@ -620,7 +635,7 @@ export default {
 	getVotePercentage,
 	getPlayerCount,
 	getNumberFormat,
-	dateTimeFormatter,
+	getDateTimeFormatter,
 	parseQueryString,
 	composeQueryString,
 	getSponsoredAdImpressionsData,

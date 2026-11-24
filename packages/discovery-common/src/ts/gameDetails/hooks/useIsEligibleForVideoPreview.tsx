@@ -3,6 +3,7 @@ import { authenticatedUser } from "@rbx/core-scripts/meta/user";
 import { useIsEligibleForVideoPreview as useIsEligibleForVideoPreviewHook } from "@rbx/sdui-client/hooks/useIsEligibleForVideoPreview";
 import useExperimentValues from "../../common/hooks/useExperimentValues";
 import experimentConstants from "../../common/constants/experimentConstants";
+import isUnauthenticatedSupportedCrawler from "../utils/isUnauthenticatedSupportedCrawler";
 
 const { layerNames, defaultValues } = experimentConstants;
 
@@ -30,7 +31,11 @@ const useIsEligibleForVideoPreview = (
 		isEligibleForVideoPreview,
 		isLoadingEligibility,
 		isBrowserSupported,
-	} = useIsEligibleForVideoPreviewHook(universeId);
+	} = useIsEligibleForVideoPreviewHook(
+		universeId,
+		true,
+		isUnauthenticatedSupportedCrawler(),
+	);
 	const isAuthenticated = Boolean(authenticatedUser()?.isAuthenticated);
 
 	const { ixpData, isLoading } = useExperimentValues(

@@ -9,8 +9,8 @@ import "@rbx/core-scripts/global";
 import {
 	SearchLandingPageOmniFeed,
 	searchLandingService,
-} from "@rbx/discovery-common";
-import "@rbx/discovery-common/searchLandingPage.scss";
+} from "@rbx/discovery-common/search-landing";
+import "@rbx/discovery-common/searchLandingPage.css";
 import { gamePlayButtonNamespaces } from "@rbx/game-play-button";
 import type { Namespace } from "@rbx/www-common/i18n";
 import { TranslationProviderSCC } from "@rbx/www-common/i18n/scc";

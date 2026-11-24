@@ -1,4 +1,7 @@
-import { TPlayabilityStatusWithUnplayableError } from "../types/playButtonTypes";
+import {
+	TPlayabilityStatusWithUnplayableError,
+	TPlayButtonActionTypes,
+} from "../types/playButtonTypes";
 import { PlayabilityStatus } from "./playabilityStatus";
 
 // NOTE: This does not override the true event name since it is set in:
@@ -38,6 +41,10 @@ const playButtonErrorStatusTranslationMap: Record<
 		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.InsufficientPermissionGroupOnly]:
 		"UnplayableError.CreatorHasntMadeAvailable",
+	[PlayabilityStatus.InsufficientPermissionEditorsOnly]:
+		"UnplayableError.UnplayableOther",
+	[PlayabilityStatus.InsufficientPermissionPlayTestersOnly]:
+		"UnplayableError.UnplayableOther",
 	[PlayabilityStatus.DeviceRestricted]:
 		"UnplayableError.DeviceRestrictedDefault",
 	[PlayabilityStatus.FiatPurchaseDeviceRestricted]:
@@ -57,6 +64,8 @@ const playButtonErrorStatusTranslationMap: Record<
 		"UnplayableError.CreatorHasntMadeAvailable",
 	[PlayabilityStatus.ContextualPlayabilityUnrated]:
 		"UnplayableError.ContextualPlayabilityUnrated",
+	[PlayabilityStatus.ContextualPlayabilityGeneral]:
+		"UnplayableError.UnplayableOther",
 	[PlayabilityStatus.ContextualPlayabilityAgeGatedByDescriptor]:
 		"UnplayableError.ContextualPlayabilityAgeGatedByDescriptor",
 	[PlayabilityStatus.ContextualPlayabilityExperienceBlockedParentalControls]:
@@ -71,6 +80,8 @@ const playButtonTextTranslationMap = {
 	Buy: "PlayButtonText.Buy",
 	PlayDemo: "PlayButtonText.PlayDemo",
 	PlayOnWeb: "PlayButtonText.PlayOnWeb",
+	PlayOnWebBetaNotice: "PlayButtonText.PlayOnWebBetaNotice",
+	Playtest: "PlayButtonText.Playtest",
 };
 
 const counterEvents = {
@@ -108,11 +119,17 @@ const counterEvents = {
 	PlayableUxTreatmentUnknownTreatment: "PlayableUxTreatmentUnknownTreatment",
 	PlayableUxTreatmentPlayabilityStatusStillLoading:
 		"PlayableUxTreatmentPlayabilityStatusStillLoading",
+	MobileWebSignupLayerReadFailed: "MobileWebSignupLayerReadFailed",
+	MobileWebSignupExposureLogFailed: "MobileWebSignupExposureLogFailed",
 };
 
 const avatarChatUpsellLayer = "Voice.AvatarChat.Upsell";
 const avatarChatUpsellLayerU13 = "Voice.AvatarChat.U13Upsell";
 const playButtonLayer = "Website.PlayButton";
+// Must match the website's MobileWebSignupForWasmLayerName setting, which reads the same parameter
+// to decide whether /CreateAccount serves the sign-up form or the download page.
+const mobileWebSignupLayer = "Website.LandingPage";
+const mobileWebSignupParameter = "IsDownloadPageHidden";
 
 const ageCheckUpsellFeatureName = "TriggerAgeCheckUpsellIncludingVPC";
 const ageCheckUpsellNamespace = "core_content/CoreContent";
@@ -150,6 +167,12 @@ const defaultAfReferralProperties = {
 	is_retargeting: "false",
 };
 
+export const demoPlayActionType: TPlayButtonActionTypes = "DemoPlayButtonClick";
+export const playOnWebActionType: TPlayButtonActionTypes =
+	"PlayOnWebButtonClick";
+export const playGameClickedEventContext = "click";
+export const wasmRedirectDialogClickEventContext = "wasmRedirectDialogClick";
+
 export default {
 	playButtonErrorStatusTranslationMap,
 	playButtonTextTranslationMap,
@@ -158,6 +181,8 @@ export default {
 	avatarChatUpsellLayer,
 	avatarChatUpsellLayerU13,
 	playButtonLayer,
+	mobileWebSignupLayer,
+	mobileWebSignupParameter,
 	unlockPlayIntentConstants,
 	FeatureExperienceDetails,
 	defaultAfReferralProperties,

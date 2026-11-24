@@ -1,0 +1,43 @@
+import {
+	useMutation,
+	useQueryClient,
+	InfiniteData,
+} from "@tanstack/react-query";
+import { streamPost } from "./streamTransport";
+import {
+	StreamNotificationPage,
+	markInteractedUrlConfig,
+} from "./notificationStreamApi";
+import { GET_RECENT_QUERY_KEY } from "./useGetRecentNotifications";
+import { reportNotificationStreamError } from "./notificationStreamObservability";
+
+export const useMarkInteracted = (): ReturnType<
+	typeof useMutation<unknown, unknown, string>
+> => {
+	const queryClient = useQueryClient();
+
+	return useMutation<unknown, unknown, string>({
+		mutationFn: (eventId: string) =>
+			streamPost(markInteractedUrlConfig, { eventId }),
+		onMutate: (eventId: string) => {
+			queryClient.setQueryData<InfiniteData<StreamNotificationPage>>(
+				GET_RECENT_QUERY_KEY,
+				(prev) =>
+					prev
+						? {
+								...prev,
+								pages: prev.pages.map((page) => ({
+									...page,
+									notifications: page.notifications.map((n) =>
+										n.id === eventId ? { ...n, isInteracted: true } : n,
+									),
+								})),
+							}
+						: prev,
+			);
+		},
+		onError: (error) => reportNotificationStreamError("markInteracted", error),
+	});
+};
+
+export default useMarkInteracted;

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "@rbx/core-ui";
 import { homePage } from "../constants/configConstants";
 
 type Props = {
@@ -88,7 +87,7 @@ const GameCarouselSubtitle: React.FC<Props> = ({
 				const suffix = subtitle.slice(endIdx + linkEndDelimiter.length);
 
 				return (
-					<Link url={subtitleLink} onClick={handleSeeAllLinkClick}>
+					<a href={subtitleLink} onClick={handleSeeAllLinkClick}>
 						{prefix}
 						<span className="link-text">{linkText}</span>
 						{suffix}
@@ -97,7 +96,7 @@ const GameCarouselSubtitle: React.FC<Props> = ({
 						) : (
 							<span className="icon-chevron-right" />
 						)}
-					</Link>
+					</a>
 				);
 			}
 		}

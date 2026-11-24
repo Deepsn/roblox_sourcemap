@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { window as browserWindow } from "@rbx/core-lib/browser";
 import { generateRandomUuid } from "@rbx/core-lib/uuid";
+import { SessionInfoType } from "../constants/eventStreamConstants";
 import { parseQueryString } from "./parsingUtils";
 
 type TPageSessionContext = {
@@ -27,7 +28,8 @@ export const PageSessionProvider: React.FC = ({ children }) => {
 		(urlParams.discoverPageSessionInfo ||
 			urlParams.homePageSessionInfo ||
 			urlParams.spotlightPageSessionInfo ||
-			urlParams.preAuthLandingPageSessionInfo);
+			urlParams.preAuthLandingPageSessionInfo ||
+			urlParams[SessionInfoType.OmniSearchSessionInfo]);
 	const [session, setSession] = useState(
 		referredSession && typeof referredSession === "string"
 			? referredSession

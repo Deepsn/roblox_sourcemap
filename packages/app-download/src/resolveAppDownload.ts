@@ -101,7 +101,7 @@ export const resolveAppDownload = ({
 
 export const onAppDownloadClick = (
 	download: ResolvedAppDownload,
-	_options?: AppDownloadClickOptions,
+	options?: AppDownloadClickOptions,
 ) => {
-	sendPrimaryAppDownloadClickEvent(download.link.name);
+	sendPrimaryAppDownloadClickEvent(download.link.name, options?.source);
 };

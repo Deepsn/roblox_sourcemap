@@ -1,23 +1,16 @@
 import React, { useCallback } from "react";
 import { type TAppsFlyerReferralProperties } from "../types/playButtonTypes";
-import playButtonConstants from "../constants/playButtonConstants";
+import playButtonConstants, {
+	demoPlayActionType,
+} from "../constants/playButtonConstants";
 import {
+	getJoindata,
 	handleShareLinkEventLogging,
 	launchGame,
 } from "../utils/playButtonUtils";
 import { usePlayButtonTranslate } from "../hooks/usePlayButtonTranslate";
 
 const { playButtonTextTranslationMap } = playButtonConstants;
-
-// Mirror the join data PlayButton's doGameLaunch resolves, so demo launches honor
-// the same launchData/eventId deep-link params.
-const getJoinData = (launchDataFromProps?: string) => {
-	const params = new URLSearchParams(window.location.search);
-	return {
-		launchData: params.get("launchData") ?? launchDataFromProps,
-		eventId: params.get("eventId") ?? undefined,
-	};
-};
 
 export type TDemoButtonProps = {
 	universeId: string;
@@ -44,7 +37,7 @@ export const DemoButton = ({
 			e.preventDefault();
 			e.stopPropagation();
 			handleShareLinkEventLogging(placeId, universeId);
-			const joinData = getJoinData(
+			const joinData = getJoindata(
 				eventProperties?.launchData != null
 					? String(eventProperties.launchData)
 					: undefined,
@@ -57,7 +50,7 @@ export const DemoButton = ({
 				eventProperties,
 				joinData,
 				appsFlyerReferralProperties,
-				"DemoPlayButtonClick",
+				demoPlayActionType,
 			);
 		},
 		[

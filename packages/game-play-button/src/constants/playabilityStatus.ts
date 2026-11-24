@@ -7,6 +7,9 @@ export const PlayabilityStatus = {
 	UniverseRootPlaceIsPrivate: "UniverseRootPlaceIsPrivate",
 	InsufficientPermissionFriendsOnly: "InsufficientPermissionFriendsOnly",
 	InsufficientPermissionGroupOnly: "InsufficientPermissionGroupOnly",
+	InsufficientPermissionEditorsOnly: "InsufficientPermissionEditorsOnly",
+	InsufficientPermissionPlayTestersOnly:
+		"InsufficientPermissionPlayTestersOnly",
 	DeviceRestricted: "DeviceRestricted",
 	UnderReview: "UnderReview",
 	PurchaseRequired: "PurchaseRequired",
@@ -25,6 +28,7 @@ export const PlayabilityStatus = {
 		"ContextualPlayabilityUnverifiedSeventeenPlusUser",
 	FiatPurchaseRequired: "FiatPurchaseRequired",
 	ContextualPlayabilityUnrated: "ContextualPlayabilityUnrated",
+	ContextualPlayabilityGeneral: "ContextualPlayabilityGeneral",
 	ContextualPlayabilityAgeGatedByDescriptor:
 		"ContextualPlayabilityAgeGatedByDescriptor",
 	ContextualPlayabilityExperienceBlockedParentalControls:

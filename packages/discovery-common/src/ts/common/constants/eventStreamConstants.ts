@@ -171,6 +171,7 @@ export enum EventStreamMetadata {
 	MenuItem = "menuItem",
 	AvailableMenuItems = "availableMenuItems",
 	HiddenReason = "hiddenReason",
+	IsDirectAction = "isDirectAction",
 }
 
 export enum EventType {
@@ -197,6 +198,8 @@ export enum EventType {
 export enum SessionInfoType {
 	HomePageSessionInfo = "homePageSessionInfo",
 	GameSearchSessionInfo = "gameSearchSessionInfo",
+	OmniSearchSessionInfo = "omniSearchSessionInfo",
+	SearchUuid = "searchUuid",
 	DiscoverPageSessionInfo = "discoverPageSessionInfo",
 	SearchLandingPageSessionInfo = "searchLandingPageSessionInfo",
 	SpotlightPageSessionInfo = "spotlightPageSessionInfo",
@@ -509,6 +512,7 @@ export type TGameTileOverflowMenuAction =
 			[EventStreamMetadata.ActionType]: GameTileOverflowMenuActionType;
 			[EventStreamMetadata.MenuItem]?: GameTileOverflowMenuItems;
 			[EventStreamMetadata.AvailableMenuItems]?: string[];
+			[EventStreamMetadata.IsDirectAction]?: boolean;
 			[SessionInfoType.HomePageSessionInfo]?: string;
 	  }
 	| {};
@@ -810,11 +814,14 @@ export default {
 			[EventStreamMetadata.InteractionUuid]: generateRandomUuid(),
 		}),
 	],
-	[EventType.SafetyResourceBanner]: (params: TSafetyResourceBanner): TEvent => [
+	[EventType.SafetyResourceBanner]: (
+		params: TSafetyResourceBanner,
+		context: string,
+	): TEvent => [
 		{
 			name: EventType.SafetyResourceBanner,
 			type: EventType.SafetyResourceBanner,
-			context: formInteraction,
+			context,
 		},
 		Object.fromEntries(
 			Object.entries(params).filter(([, value]) => value !== undefined),

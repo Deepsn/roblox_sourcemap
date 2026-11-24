@@ -20,21 +20,16 @@ const CARDS_PER_ROW_MAX = 6;
 const ROWS_PER_PAGE = 2;
 const CARD_BREAK_POINTS = [0, 0, 0, 0, 544, 768, 992]; // Min screen width in pixels that allows [index] number of cards in one row
 
-const DeveloperProductsContainer = ({
-	translate,
-}: WithTranslationsProps): JSX.Element => {
+const DeveloperProductsContainer = ({ translate }: WithTranslationsProps) => {
 	const { universeId = "" } = metadataConstants.metadataData() || {};
 
 	const [developerProducts, setDeveloperProducts] = useState<
 		TDeveloperProduct[] | undefined
 	>(undefined);
-	const [pendingDeveloperProducts, setPendingDeveloperProducts] = useState<
-		Map<number, number> | undefined
-	>(undefined);
 
 	const [loadingProducts, setLoadingProducts] = useState(true);
 
-	const authenticatedUserId: number = authenticatedUser()?.id ?? 0;
+	const isAuthenticated = Boolean(authenticatedUser()?.id);
 
 	// For pagination component logic
 	const [currentPage, setCurrentPage] = useState(1);
@@ -80,18 +75,6 @@ const DeveloperProductsContainer = ({
 		};
 	}, [developerProducts]);
 
-	useEffect(() => {
-		if (gameDetails?.rootPlaceId && authenticatedUserId) {
-			developerProductServices
-				.getPendingDeveloperProducts(
-					gameDetails.rootPlaceId,
-					authenticatedUserId,
-				)
-				.then((data) => setPendingDeveloperProducts(data))
-				.catch(() => setPendingDeveloperProducts(new Map<number, number>()));
-		}
-	}, [gameDetails?.rootPlaceId, authenticatedUserId]);
-
 	const loadAllDeveloperProducts = async () => {
 		const loadedDeveloperProducts: TDeveloperProduct[] = [];
 		let cursor = "";
@@ -123,21 +106,11 @@ const DeveloperProductsContainer = ({
 	}, [loadingProducts, universeId]);
 
 	const developerProductsSorted = useMemo(() => {
-		if (
-			loadingProducts ||
-			developerProducts === undefined ||
-			pendingDeveloperProducts === undefined
-		) {
+		if (loadingProducts || developerProducts === undefined) {
 			return undefined;
 		}
-		const withPending = developerProducts
-			.filter((product) => pendingDeveloperProducts.has(product.productId))
-			.sort(sortDeveloperProductFn);
-		const withoutPending = developerProducts
-			.filter((product) => !pendingDeveloperProducts.has(product.productId))
-			.sort(sortDeveloperProductFn);
-		return withPending.concat(withoutPending);
-	}, [developerProducts, pendingDeveloperProducts, loadingProducts]);
+		return developerProducts.toSorted(sortDeveloperProductFn);
+	}, [developerProducts, loadingProducts]);
 
 	const pageProducts = useMemo(
 		() =>
@@ -163,12 +136,12 @@ const DeveloperProductsContainer = ({
 	 *   }
 	 */
 	if (
+		!isAuthenticated ||
 		loadingProducts ||
 		pageProducts === undefined ||
 		developerProductsSorted === undefined ||
 		developerProducts === undefined ||
 		gameDetails === undefined ||
-		pendingDeveloperProducts === undefined ||
 		developerProducts.length === 0
 	) {
 		return <React.Fragment />;
@@ -183,7 +156,6 @@ const DeveloperProductsContainer = ({
 				translate={translate}
 				developerProducts={pageProducts}
 				gameDetails={gameDetails}
-				pendingDeveloperProducts={pendingDeveloperProducts}
 				resultsPerPage={resultsPerPage}
 				currentPage={currentPage}
 				onChangePage={setCurrentPage}

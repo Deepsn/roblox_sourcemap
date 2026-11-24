@@ -7,6 +7,7 @@ import {
 import browserIdentifier from "./browserIdentifier";
 
 import {
+	appDownloadBannerSource,
 	appDownloadType,
 	installInstructionStrings,
 	pageName,
@@ -98,5 +99,14 @@ export const sendPrimaryAppDownloadClickEvent = (
 		field: `${appName}DownloadLink`,
 		aType: "click",
 		...(source ? { source } : {}),
+	});
+};
+
+/** The app download banner's own events. Its Get clicks report through `onAppDownloadClick`. */
+export const sendAppDownloadBannerEvent = (aType: "shown" | "dismissed") => {
+	sendEventWithTarget(eventTypes.formInteraction, pageName, {
+		field: appDownloadBannerSource,
+		aType,
+		source: appDownloadBannerSource,
 	});
 };

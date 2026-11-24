@@ -1,0 +1,188 @@
+import clsx from 'clsx';
+import React, { ComponentPropsWithRef, ReactNode, forwardRef } from 'react';
+import { TForwardRefComponent } from './types/TForwardRefComponent';
+
+export const cardVariants = ['Standard', 'Emphasis'] as const;
+export type TCardVariant = (typeof cardVariants)[number];
+
+export const cardDensities = ['Comfortable', 'Default', 'Compact'] as const;
+export type TCardDensity = (typeof cardDensities)[number];
+
+export type TCardProps = Omit<ComponentPropsWithRef<'div'>, 'children' | 'title'> & {
+  /** Optional heading that identifies the card. */
+  title?: ReactNode;
+  /** Optional supporting copy below the heading. */
+  description?: ReactNode;
+  /** Optional contextual copy above the heading. */
+  eyebrow?: ReactNode;
+  /** Optional content displayed before the heading, such as an Icon. */
+  leading?: ReactNode;
+  /** Optional content displayed after the heading, such as a Badge. */
+  badge?: ReactNode;
+  /** Main card content displayed below the heading group. */
+  children?: ReactNode;
+  /** Actions or other content aligned to the card's trailing edge. */
+  trailing?: ReactNode;
+  /** Media displayed flush with the card's right edge. */
+  mediaRight?: ReactNode;
+  /** Media displayed flush with the card's bottom edge. */
+  mediaBottom?: ReactNode;
+  /** Base visual treatment for the card. */
+  variant?: TCardVariant;
+  /** Controls the card's internal padding and content spacing. @default Comfortable */
+  density?: TCardDensity;
+};
+
+const PADDING_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'padding-xlarge',
+  Default: 'padding-large',
+  Compact: 'padding-medium'
+};
+
+const CONTENT_GAP_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'gap-large',
+  Default: 'gap-large',
+  Compact: 'gap-medium'
+};
+
+const TITLE_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'text-heading-medium',
+  Default: 'text-heading-medium',
+  Compact: 'text-heading-small'
+};
+
+const RADIUS_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'radius-large',
+  Default: 'radius-large',
+  Compact: 'radius-medium'
+};
+
+const HEADING_MAX_WIDTH_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'max-width-[480px]',
+  Default: 'max-width-[320px]',
+  Compact: 'max-width-[280px]'
+};
+
+const MEDIA_RIGHT_MIN_HEIGHT_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'min-height-[calc(var(--size-2700)*2)]',
+  Default: 'min-height-[calc(var(--size-2600)*2)]',
+  Compact: 'min-height-[calc(var(--size-2300)*2)]'
+};
+
+const TITLE_CONTENT_GAP_BY_DENSITY: Record<TCardDensity, string> = {
+  Comfortable: 'gap-small',
+  Default: 'gap-small',
+  Compact: 'gap-[var(--size-150)]'
+};
+
+const CardComponent = (
+  {
+    title,
+    description,
+    eyebrow,
+    leading,
+    badge,
+    children,
+    trailing,
+    mediaRight,
+    mediaBottom,
+    variant = 'Standard',
+    density = 'Comfortable',
+    className,
+    ...rest
+  }: TCardProps,
+  ref: ComponentPropsWithRef<'div'>['ref']
+) => {
+  const paddingClass = PADDING_BY_DENSITY[density];
+  const hasTitleRow = leading || title !== undefined || badge;
+  const hasHeadingContent = eyebrow || hasTitleRow || description;
+
+  return (
+    <div
+      ref={ref}
+      className={clsx(
+        'foundation-web-card relative flex flex-col width-full clip text-align-x-start',
+        RADIUS_BY_DENSITY[density],
+        variant === 'Standard' ? 'bg-none stroke-standard stroke-default' : 'bg-shift-200',
+        className
+      )}
+      {...rest}>
+      <div
+        className={clsx(
+          mediaRight ? 'grid [grid-template-columns:minmax(0,1fr)_auto]' : 'flex',
+          'width-full min-width-0'
+        )}>
+        <div
+          className={clsx(
+            'flex flex-col fill min-width-0',
+            CONTENT_GAP_BY_DENSITY[density],
+            paddingClass
+          )}>
+          {hasHeadingContent && (
+            <div
+              className={clsx('flex flex-col min-width-0', HEADING_MAX_WIDTH_BY_DENSITY[density])}>
+              {eyebrow && <div className='text-body-medium content-default'>{eyebrow}</div>}
+              {hasTitleRow && (
+                <div className='flex items-center gap-small min-width-0 padding-y-xxsmall'>
+                  {(leading || title !== undefined) && (
+                    <div
+                      className={clsx(
+                        'flex items-center min-width-0',
+                        TITLE_CONTENT_GAP_BY_DENSITY[density]
+                      )}>
+                      {leading && <div className='flex items-center shrink-0'>{leading}</div>}
+                      {title !== undefined && (
+                        <div
+                          className={clsx(
+                            'content-emphasis min-width-0 text-truncate-split',
+                            TITLE_BY_DENSITY[density]
+                          )}>
+                          {title}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {badge && <div className='flex items-center shrink-0'>{badge}</div>}
+                </div>
+              )}
+              {description && (
+                <div className='text-body-medium content-default text-truncate-split padding-bottom-xxsmall'>
+                  {description}
+                </div>
+              )}
+            </div>
+          )}
+          {children && <div className='flex flex-col min-width-0'>{children}</div>}
+        </div>
+        {mediaRight && (
+          <div
+            className={clsx(
+              'foundation-web-card-media-right relative self-stretch aspect-4-5',
+              MEDIA_RIGHT_MIN_HEIGHT_BY_DENSITY[density]
+            )}>
+            <div className='absolute inset-[0px] flex'>{mediaRight}</div>
+          </div>
+        )}
+        {trailing && (
+          <div
+            className={clsx(
+              'absolute top-[0px] right-[0px] flex items-start shrink-0',
+              paddingClass
+            )}>
+            {trailing}
+          </div>
+        )}
+      </div>
+      {mediaBottom && <div className='flex width-full'>{mediaBottom}</div>}
+    </div>
+  );
+};
+
+/**
+ * Card groups related content and optional actions or media into a contained surface.
+ * It is intentionally non-interactive; place interactive controls in its slots rather than
+ * making the whole surface clickable.
+ */
+export const Card = forwardRef(CardComponent) as TForwardRefComponent<TCardProps>;
+
+Card.displayName = 'Card';

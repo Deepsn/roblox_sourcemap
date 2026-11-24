@@ -1,0 +1,553 @@
+import {
+	useEffect,
+	useRef,
+	useState,
+	useMemo,
+	useCallback,
+	KeyboardEventHandler,
+	FormEventHandler,
+} from "react";
+import { usePrevious, useDebounce } from "@rbx/core-scripts/react";
+import { UrlSearchParams } from "@rbx/core-lib/url";
+import { sendEvent } from "@rbx/core-scripts/event-stream";
+import { removeUrlLocale } from "@rbx/core-scripts/endpoints";
+import SearchInput from "../components/SearchInput";
+import layout from "../constants/layoutConstants";
+import linkConstants, {
+	type UniversalSearchLink,
+} from "../constants/linkConstants";
+import search from "../constants/searchConstants";
+import {
+	GamesAutocompleteSuggestionEntryType,
+	TAvatarAutocompleteSuggestionEntry,
+	TGamesAutocompleteSuggestionEntry,
+} from "../services/searchTypes";
+import events from "../constants/searchEventStreamConstants";
+import {
+	getNewUniversalSearchLinks,
+	getAvatarAutocompleteSearchLinks,
+} from "../util/searchLinks";
+import { getNavCapability, useNavCapability } from "../util/navCapabilities";
+import { useNavLocation } from "../util/navLocation";
+import { useNavUser } from "../util/navUser";
+import {
+	getAutocompleteSearchType,
+	getAvatarAutocompleteLanguageCode,
+	getDefaultSearchType,
+	getSuggestionUrl,
+	serializeSuggestions,
+} from "../util/searchUtil";
+
+const noSuggestions = () =>
+	Promise.reject(new Error("search suggestions are not registered"));
+const isSearchRequestCancelled = (error: unknown) =>
+	getNavCapability("isSearchRequestCancelled")?.(error) ?? false;
+const getInternalPageName = () => getNavCapability("getInternalPageName")?.();
+
+export default function UniversalSearch({
+	isUniverseSearchShown = true,
+}: {
+	isUniverseSearchShown?: boolean;
+}) {
+	const { pathname, search: pageSearch } = useNavLocation();
+	const isAuthenticated = useNavUser() != null;
+	const isTopSearchResultsEnabled =
+		useNavCapability("isTopSearchResultsEnabled")?.() ?? false;
+	const keywordFromUrl = UrlSearchParams.parse(pageSearch).get("keyword") ?? "";
+	const [searchInput, setSearchInput] = useState(keywordFromUrl);
+	// The URL keyword is part of the first render, but the debounced value trails it by one effect.
+	const isKeywordFromUrlRef = useRef(keywordFromUrl !== "");
+
+	const debouncedSearchInput = useDebounce(searchInput, search.debounceTimeout);
+	const previousDebouncedSearchInput = usePrevious(debouncedSearchInput);
+	const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<
+		| TAvatarAutocompleteSuggestionEntry[]
+		| TGamesAutocompleteSuggestionEntry[]
+		| null
+	>(null);
+	const [autocompleteSessionInfo, setAutocompleteSessionInfo] = useState(
+		events.generateSessionInfo(),
+	);
+	const [searchLandingPageSessionInfo, setSearchLandingPageSessionInfo] =
+		useState(events.generateSessionInfo());
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isInitialCall, setIsInitialCall] = useState(true);
+	const [isMenuHover, setIsMenuHover] = useState(false);
+	const [indexOfSelectedOption, setSelectedListOptions] = useState(0);
+	const [useAvatarAutocompletFallbackUrl, setUseAvatarAutocompletFallbackUrl] =
+		useState(false);
+	const { keyCodes } = layout;
+
+	const [universalSearchLinks, setUniversalSearchLinks] = useState<
+		UniversalSearchLink[]
+	>(() =>
+		getNewUniversalSearchLinks(
+			pathname,
+			isAuthenticated,
+			isTopSearchResultsEnabled,
+		),
+	);
+
+	useEffect(() => {
+		setUniversalSearchLinks(
+			getNewUniversalSearchLinks(
+				pathname,
+				isAuthenticated,
+				isTopSearchResultsEnabled,
+			),
+		);
+	}, [pathname, isAuthenticated, isTopSearchResultsEnabled]);
+
+	const gameSearchLinkIndex = universalSearchLinks.findIndex(
+		({ label }) => label === linkConstants.gameSearchLink.label,
+	);
+	const avatarShopSearchLinkIndex = universalSearchLinks.findIndex(
+		({ label }) => label === linkConstants.avatarSearchLink.label,
+	);
+	const userLanguageCode = getAvatarAutocompleteLanguageCode();
+
+	const showAvatarAutocompleteSuggestions =
+		getAvatarAutocompleteSearchLinks(pathname);
+	const constructSearchSuggestions = (
+		additionalSuggestions:
+			| readonly TGamesAutocompleteSuggestionEntry[]
+			| readonly TAvatarAutocompleteSuggestionEntry[]
+			| null,
+	) => {
+		if (additionalSuggestions == null) {
+			return universalSearchLinks;
+		}
+		if (showAvatarAutocompleteSuggestions) {
+			const avatarSplicedSuggestions = additionalSuggestions.filter(
+				(suggestion) =>
+					"Query" in suggestion ||
+					suggestion.searchQuery !== debouncedSearchInput.toLowerCase(),
+			);
+			return [
+				...universalSearchLinks.slice(0, avatarShopSearchLinkIndex + 1),
+				...avatarSplicedSuggestions,
+				...universalSearchLinks.slice(avatarShopSearchLinkIndex + 1),
+			];
+		}
+		if (
+			search.isSpecialTreatmentAutocompleteRestricted(pathname, isAuthenticated)
+		) {
+			return universalSearchLinks;
+		}
+		const showGameSearchLink =
+			additionalSuggestions.findIndex(
+				(suggestion) =>
+					"searchQuery" in suggestion &&
+					suggestion.searchQuery === debouncedSearchInput.toLowerCase() &&
+					suggestion.type ===
+						GamesAutocompleteSuggestionEntryType.GameSuggestion,
+			) === -1;
+		const splicedSuggestions = additionalSuggestions
+			.filter(
+				(suggestion) =>
+					("searchQuery" in suggestion &&
+						suggestion.searchQuery !== debouncedSearchInput.toLowerCase()) ||
+					("type" in suggestion &&
+						suggestion.type ===
+							GamesAutocompleteSuggestionEntryType.GameSuggestion),
+			)
+			.slice(0, 3);
+
+		return [
+			...universalSearchLinks.slice(
+				0,
+				showGameSearchLink ? gameSearchLinkIndex + 1 : gameSearchLinkIndex,
+			),
+			...splicedSuggestions,
+			...universalSearchLinks.slice(gameSearchLinkIndex + 1),
+		];
+	};
+
+	const searchSuggestions = useMemo(
+		() => constructSearchSuggestions(autocompleteSuggestions),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[autocompleteSuggestions, universalSearchLinks],
+	);
+
+	const isSearchInputEmpty = searchInput.length === 0;
+
+	useEffect(() => {
+		if (isMenuOpen && !isSearchInputEmpty) {
+			getNavCapability("logTopSearchResultsExposureOnce")?.();
+		}
+	}, [isMenuOpen, isSearchInputEmpty]);
+
+	const processAvatarShopAutocompleteSuggestions = (
+		avatarShopSuggestions: readonly TAvatarAutocompleteSuggestionEntry[],
+		query: string,
+	) => {
+		let suggestionCount = 0;
+		const cleanedSuggestions: TAvatarAutocompleteSuggestionEntry[] = [];
+		avatarShopSuggestions.forEach((suggestion) => {
+			if (
+				suggestionCount < search.avatarAutocompleteSuggestionLimit &&
+				suggestion.Query !== query
+			) {
+				cleanedSuggestions.push(suggestion);
+				suggestionCount += 1;
+			}
+		});
+
+		return cleanedSuggestions;
+	};
+
+	const searchSuggestionLength = searchSuggestions.length;
+	useEffect(() => {
+		// prevents sending a search event when the component is just being mounted, including the
+		// keyword it reads from the URL after mount
+		const isKeywordFromUrl =
+			isKeywordFromUrlRef.current && debouncedSearchInput !== "";
+		if (isKeywordFromUrl) {
+			isKeywordFromUrlRef.current = false;
+		}
+		if (!isInitialCall && !isKeywordFromUrl) {
+			sendEvent(
+				...events.search(
+					searchInput,
+					events.contexts.searchAutocomplete,
+					events.actionTypes.submit,
+					autocompleteSessionInfo,
+				),
+			);
+		}
+		setIsInitialCall(false);
+
+		const getAutocompleteSuggestion = async () => {
+			if (
+				debouncedSearchInput !== "" &&
+				debouncedSearchInput.length <= search.debouncedSearchInputMaxLength
+			) {
+				setAutocompleteSuggestions(null);
+				const start = Date.now();
+
+				if (showAvatarAutocompleteSuggestions) {
+					try {
+						const end = Date.now();
+						const data = await (
+							getNavCapability("getAvatarAutocompleteSuggestions") ??
+							noSuggestions
+						)(
+							debouncedSearchInput,
+							userLanguageCode,
+							search.avatarAutocompleteQueryPaddingAmount,
+							previousDebouncedSearchInput ?? "",
+							useAvatarAutocompletFallbackUrl,
+						);
+						const constructedSuggestions =
+							processAvatarShopAutocompleteSuggestions(
+								data.Data,
+								debouncedSearchInput,
+							);
+						sendEvent(
+							...events.searchAutocomplete(
+								debouncedSearchInput,
+								previousDebouncedSearchInput,
+								false,
+								serializeSuggestions(
+									constructedSuggestions,
+									debouncedSearchInput,
+								),
+								data.Args.Algo,
+								end - start,
+								search.debounceTimeout,
+								"",
+								getInternalPageName(),
+								previousDebouncedSearchInput !== "",
+							),
+						);
+						setAutocompleteSuggestions(constructedSuggestions);
+					} catch (error) {
+						if (!isSearchRequestCancelled(error)) {
+							setAutocompleteSuggestions([]);
+						}
+						setUseAvatarAutocompletFallbackUrl(true);
+					}
+				} else {
+					try {
+						const data = await (
+							getNavCapability("getGamesAutocompleteSuggestions") ??
+							noSuggestions
+						)(debouncedSearchInput);
+						const end = Date.now();
+						const seenSuggestions = constructSearchSuggestions(data.entries);
+						sendEvent(
+							...events.searchAutocomplete(
+								debouncedSearchInput,
+								previousDebouncedSearchInput,
+								false,
+								serializeSuggestions(seenSuggestions, debouncedSearchInput),
+								data.algorithmName,
+								end - start,
+								search.debounceTimeout,
+								autocompleteSessionInfo,
+								getInternalPageName(),
+								false,
+							),
+						);
+						setAutocompleteSuggestions(data.entries);
+					} catch (error) {
+						if (!isSearchRequestCancelled(error)) {
+							setAutocompleteSuggestions([]);
+						}
+					}
+				}
+			}
+		};
+
+		getAutocompleteSuggestion();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [debouncedSearchInput]);
+
+	const resetAutocompleteSessionInfo = () => {
+		setAutocompleteSessionInfo(events.generateSessionInfo());
+	};
+
+	const resetSearchLandingPageSessionInfo = () => {
+		const newSearchLandingSessionInfo = events.generateSessionInfo();
+		setSearchLandingPageSessionInfo(newSearchLandingSessionInfo);
+		getNavCapability("searchLanding")?.updateSessionInfo(
+			newSearchLandingSessionInfo,
+		);
+	};
+
+	const resetSessionInfo = () => {
+		resetAutocompleteSessionInfo();
+		resetSearchLandingPageSessionInfo();
+	};
+
+	const showSearchLandingPage = useCallback(() => {
+		const newSearchLandingSessionInfo = events.generateSessionInfo();
+		getNavCapability("searchLanding")?.show(newSearchLandingSessionInfo);
+		sendEvent(
+			...events.search(
+				undefined,
+				events.contexts.searchLandingPage,
+				events.actionTypes.open,
+				undefined,
+				newSearchLandingSessionInfo,
+			),
+		);
+		setSearchLandingPageSessionInfo(newSearchLandingSessionInfo);
+	}, []);
+
+	// If the search input is not provided, its a search open from clicking the search bar
+	// not from a user typing or hitting clear search ("")
+	const handleSearchOpenOrInputChange = useCallback(
+		(newSearchInput: string = searchInput) => {
+			setSearchInput(newSearchInput);
+			// Link order depends on the current page, which can change without remounting the header
+			setUniversalSearchLinks(
+				getNewUniversalSearchLinks(undefined, isAuthenticated),
+			);
+
+			// If the search input is trimmed, send a search text trim event
+			if (newSearchInput.length < searchInput.length) {
+				sendEvent(
+					...events.searchTextTrim(
+						searchInput,
+						newSearchInput,
+						undefined,
+						autocompleteSessionInfo,
+					),
+				);
+			}
+
+			if (newSearchInput.length === 0) {
+				// If search input is empty, show the SLP
+				showSearchLandingPage();
+				// Log a new autocomplete session anytime the search input is empty
+				const newAutocompleteSessionInfo = events.generateSessionInfo();
+				sendEvent(
+					...events.search(
+						newSearchInput,
+						events.contexts.searchAutocomplete,
+						events.actionTypes.open,
+						newAutocompleteSessionInfo,
+					),
+				);
+				setAutocompleteSessionInfo(newAutocompleteSessionInfo);
+				// Reset any previously selected autocomplete suggestions
+				setSelectedListOptions(0);
+			}
+
+			if (isMenuHover) return;
+
+			// SLP menu will be shown for empty input and autocomplete menu shown for non-empty input
+			setIsMenuOpen(true);
+		},
+		[
+			autocompleteSessionInfo,
+			showSearchLandingPage,
+			isMenuHover,
+			searchInput,
+			isAuthenticated,
+		],
+	);
+
+	const closeMenu = () => {
+		if (!isMenuOpen) {
+			return;
+		}
+
+		if (searchInput.length === 0) {
+			sendEvent(
+				...events.search(
+					null,
+					events.contexts.searchLandingPage,
+					events.actionTypes.cancel,
+					undefined,
+					searchLandingPageSessionInfo,
+				),
+			);
+		} else {
+			sendEvent(
+				...events.search(
+					searchInput,
+					events.contexts.searchAutocomplete,
+					events.actionTypes.close,
+					autocompleteSessionInfo,
+				),
+			);
+		}
+
+		setIsMenuOpen(false);
+	};
+
+	const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+	};
+
+	const onKeyDown: KeyboardEventHandler = (e) => {
+		let currentCursor = indexOfSelectedOption;
+		if (
+			isMenuOpen &&
+			(e.keyCode === keyCodes.arrowUp ||
+				e.keyCode === keyCodes.arrowDown ||
+				e.keyCode === keyCodes.tab)
+		) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			if (e.keyCode === keyCodes.arrowUp) {
+				currentCursor -= 1;
+			} else {
+				currentCursor += 1;
+			}
+
+			currentCursor %= searchSuggestionLength;
+			if (currentCursor < 0) {
+				currentCursor = searchSuggestionLength + currentCursor;
+			}
+			setSelectedListOptions(currentCursor);
+		}
+	};
+
+	const onKeyUp: KeyboardEventHandler<HTMLInputElement> = (e) => {
+		if (e.keyCode === keyCodes.enter) {
+			e.stopPropagation();
+			e.preventDefault();
+			// Prevent form submits on enter when SLP is visible / nothing is typed
+			if (searchInput.length === 0) return;
+
+			const suggestion = searchSuggestions[indexOfSelectedOption];
+			if (suggestion == null) return;
+
+			if ("searchQuery" in suggestion) {
+				sendEvent(
+					...events.searchSuggestionClicked(
+						debouncedSearchInput,
+						undefined,
+						indexOfSelectedOption,
+						suggestion.searchQuery,
+						getAutocompleteSearchType(suggestion),
+						serializeSuggestions(searchSuggestions, searchInput),
+						autocompleteSessionInfo,
+					),
+				);
+				sendEvent(...events.catalogSearch(1, getInternalPageName()));
+			} else if ("label" in suggestion || "isTopSearchResult" in suggestion) {
+				sendEvent(
+					...events.searchSuggestionClicked(
+						debouncedSearchInput,
+						undefined,
+						indexOfSelectedOption,
+						debouncedSearchInput,
+						getDefaultSearchType(suggestion),
+						serializeSuggestions(searchSuggestions, searchInput),
+						autocompleteSessionInfo,
+					),
+				);
+				sendEvent(...events.catalogSearch(0, getInternalPageName()));
+			}
+			resetAutocompleteSessionInfo();
+			const suggestionUrl = getSuggestionUrl(suggestion, e);
+			if (suggestionUrl) {
+				let redirectUrl = suggestionUrl;
+				if (
+					"label" in suggestion &&
+					suggestion.label === "Label.CreatorStore"
+				) {
+					if (e.currentTarget.value) {
+						redirectUrl += encodeURIComponent(e.currentTarget.value);
+					}
+				}
+
+				if (document.getElementById("routing")) {
+					const url = new URL(redirectUrl);
+					if (
+						url.origin === window.location.origin &&
+						removeUrlLocale(url.pathname).toLowerCase() === "/catalog"
+					) {
+						const customEvent = new CustomEvent("externalNavigation", {
+							detail: { url: redirectUrl },
+						});
+						window.dispatchEvent(customEvent);
+						// close auto completes and unfocus the input
+						setIsMenuOpen(false);
+						document.getElementById("navbar-search-input")?.blur();
+						return;
+					}
+				}
+
+				window.location.href = redirectUrl;
+			}
+		}
+	};
+
+	const setSearchMenuClose = () => {
+		setIsMenuOpen(false);
+	};
+
+	useEffect(() => {
+		window.addEventListener("setSearchMenuClose", setSearchMenuClose);
+		return () => {
+			window.removeEventListener("setSearchMenuClose", setSearchMenuClose);
+		};
+	}, [isMenuOpen]);
+
+	return (
+		<SearchInput
+			{...{
+				searchInput,
+				handleSearchOpenOrInputChange,
+				closeMenu,
+				setIsMenuHover,
+				isMenuOpen,
+				indexOfSelectedOption,
+				onSubmit,
+				onKeyDown,
+				onKeyUp,
+				isUniverseSearchShown,
+				searchSuggestions,
+				autocompleteSessionInfo,
+				resetSessionInfo,
+			}}
+		/>
+	);
+}

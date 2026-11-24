@@ -1,0 +1,207 @@
+import { getAbsoluteUrl } from "@rbx/core-scripts/endpoints";
+import environmentUrls from "@rbx/environment-urls";
+import { authenticatedUser } from "@rbx/core-scripts/meta/user";
+import { TIconProps } from "@rbx/foundation-ui";
+import { getDevelopUrl } from "../util/developUtil";
+
+type BaseUniversalSearchLink = {
+	url: string;
+	pageSort: string[];
+	foundationIcon: TIconProps["name"];
+};
+
+export type UniversalSearchLink =
+	| (BaseUniversalSearchLink & { label: string; isTopSearchResult?: never })
+	// The Top search result only shows the keyword and does not have a label
+	| (BaseUniversalSearchLink & { label?: never; isTopSearchResult: true });
+
+const gameSearchLink = {
+	url: getAbsoluteUrl("/discover/?keyword="),
+	label: "Label.Games",
+	pageSort: ["home", "games", "discover"],
+	foundationIcon: "icon-regular-circle-play",
+} satisfies UniversalSearchLink;
+
+// Shares Games' pageSort so it sorts directly ahead of Games
+const topSearchLink = {
+	url: getAbsoluteUrl("/discover/?searchType=top&keyword="),
+	pageSort: gameSearchLink.pageSort,
+	foundationIcon: "icon-regular-magnifying-glass",
+	isTopSearchResult: true,
+} satisfies UniversalSearchLink;
+
+const avatarSearchLink = {
+	url: getAbsoluteUrl("/catalog?CatalogContext=1&keyword="),
+	label: "Heading.Marketplace",
+	pageSort: ["catalog", "inventory", "bundles", "my/avatar", "trades"],
+	foundationIcon: "icon-regular-shopping-basket",
+} satisfies UniversalSearchLink;
+
+const playersSearchLink = {
+	url: getAbsoluteUrl("/search/users?keyword="),
+	label: "Label.Players",
+	pageSort: ["users"],
+	foundationIcon: "icon-regular-person",
+} satisfies UniversalSearchLink;
+
+const miscSearchLink: UniversalSearchLink[] = [
+	playersSearchLink,
+	avatarSearchLink,
+	{
+		url: getAbsoluteUrl("/search/communities?keyword="),
+		label: "Label.sGroups",
+		pageSort: ["groups"],
+		foundationIcon: "icon-regular-three-people",
+	},
+	{
+		url: `${getDevelopUrl()}store/models?keyword=`,
+		label: "Label.CreatorStore",
+		pageSort: ["develop"],
+		// Deviation: no foundation bookshelf glyph, so this follows the row's label.
+		foundationIcon: "icon-regular-building-store",
+	},
+];
+
+export default {
+	scrollListItems: {
+		home: {
+			url: getAbsoluteUrl("/home"),
+			idSelector: "nav-home",
+			iconClass: "icon-nav-home",
+			name: "home",
+			labelTranslationKey: "Label.sHome",
+		},
+		profile: {
+			url: getAbsoluteUrl(`/users/${authenticatedUser()?.id}/profile`),
+			idSelector: "nav-profile",
+			iconClass: "icon-nav-profile",
+			name: "profile",
+			labelTranslationKey: "Label.sProfile",
+		},
+		messages: {
+			url: getAbsoluteUrl("/my/messages/#!/inbox"),
+			urlForNotification: getAbsoluteUrl("/my/messages/#!/inbox"),
+			idSelector: "nav-message",
+			iconClass: "icon-nav-message",
+			name: "messages",
+			labelTranslationKey: "Label.sMessages",
+		},
+		friends: {
+			url: getAbsoluteUrl("/users/friends"),
+			urlForNotification: getAbsoluteUrl("/users/friends#!/friend-requests"),
+			idSelector: "nav-friends",
+			iconClass: "icon-nav-friends",
+			name: "friends",
+			labelTranslationKey: "Label.Connect",
+		},
+		avatar: {
+			url: getAbsoluteUrl("/my/avatar"),
+			idSelector: "nav-character",
+			iconClass: "icon-nav-charactercustomizer",
+			name: "avatar",
+			labelTranslationKey: "Label.sAvatar",
+		},
+		inventory: {
+			url: getAbsoluteUrl(`/users/${authenticatedUser()?.id}/inventory`),
+			idSelector: "nav-inventory",
+			iconClass: "icon-nav-inventory",
+			name: "inventory",
+			labelTranslationKey: "Label.sInventory",
+		},
+		trade: {
+			url: getAbsoluteUrl("/trades"),
+			urlForNotification: getAbsoluteUrl("/trades"),
+			idSelector: "nav-trade",
+			iconClass: "icon-nav-trade",
+			name: "trade",
+			labelTranslationKey: "Label.sTrade",
+		},
+		groups: {
+			url: getAbsoluteUrl("/my/communities"),
+			idSelector: "nav-group",
+			iconClass: "icon-nav-group",
+			name: "groups",
+			labelTranslationKey: "Label.sGroups",
+		},
+		blog: {
+			url: getAbsoluteUrl("https://blog.roblox.com"),
+			idSelector: "nav-blog",
+			iconClass: "icon-nav-blog",
+			name: "newsroom",
+			labelTranslationKey: "Label.Newsroom",
+			blankTarget: true,
+		},
+		shop: {
+			isModal: true,
+			idSelector: "nav-shop",
+			iconClass: "icon-nav-shop",
+			name: "shop",
+			labelTranslationKey: "Label.OfficialStore",
+		},
+		giftcards: {
+			url: getAbsoluteUrl("/giftcards-us"),
+			idSelector: "nav-giftcards",
+			iconClass: "icon-nav-giftcards",
+			name: "giftcards",
+			labelTranslationKey: "Label.GiftCards",
+		},
+	},
+	gameSearchLink,
+	topSearchLink,
+	avatarSearchLink,
+	playersSearchLink,
+	miscSearchLink,
+	newUniversalSearchUrls: [
+		gameSearchLink,
+		...miscSearchLink,
+	] satisfies UniversalSearchLink[],
+	settingsUrl: {
+		settings: {
+			url: getAbsoluteUrl("/my/account"),
+			label: "Label.sSettings",
+			namespace: "CommonUI.Features",
+		},
+		quickLogin: {
+			url: getAbsoluteUrl("/home"),
+			label: "Label.sQuickLogin",
+			namespace: "Common.AlertsAndOptions",
+		},
+		safetySupport: {
+			url: getAbsoluteUrl("/help-safety"),
+			label: "Label.HelpAndSafety",
+			namespace: "CommonUI.Features",
+		},
+		switchAccountKey: {
+			url: getAbsoluteUrl("/home"),
+			label: "Label.sSwitchAccount",
+			namespace: "Common.AlertsAndOptions",
+		},
+		logout: {
+			url: `${environmentUrls.authApi}/v2/logout`,
+			label: "Label.sLogout",
+			namespace: "Common.AlertsAndOptions",
+		},
+	},
+	buyRobuxUrl: {
+		myTransactions: {
+			url: getAbsoluteUrl("/transactions"),
+			label: "Label.MyMoney",
+		},
+		buyRobux: {
+			url: getAbsoluteUrl("/upgrades/robux?ctx=navpopover"),
+			label: "Label.sBuyRobux",
+			name: "Label.sRobux",
+		},
+		buyRobuxOnVng: {
+			url: environmentUrls.vngGamesShopUrl, // fallback URL
+			label: "Label.sBuyRobux",
+			cacheKey: "isEligibleForVng",
+		},
+	},
+	userDataUrl: getAbsoluteUrl("/navigation/userData"),
+	quickLoginUrl: getAbsoluteUrl("/crossdevicelogin/ConfirmCode"),
+	redeemUrl: {
+		url: getAbsoluteUrl("/redeem"),
+		label: "Heading.RedeemRobloxCodes",
+	},
+} as const;

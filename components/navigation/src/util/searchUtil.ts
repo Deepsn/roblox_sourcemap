@@ -1,0 +1,126 @@
+import { KeyboardEvent } from "react";
+import links, { UniversalSearchLink } from "../constants/linkConstants";
+import searchConstants from "../constants/searchConstants";
+import {
+	GamesAutocompleteSuggestionEntryType,
+	TAvatarAutocompleteSuggestionEntry,
+	TGamesAutocompleteSuggestionEntry,
+} from "../services/searchTypes";
+import { getNavCapability } from "./navCapabilities";
+
+export type Suggestion =
+	| TGamesAutocompleteSuggestionEntry
+	| TAvatarAutocompleteSuggestionEntry
+	| UniversalSearchLink;
+
+export type SearchType = "avatar" | "keyword" | "game";
+
+export type DefaultSearchType =
+	| "defaultPlayers"
+	| "defaultShops"
+	| "defaultGroups"
+	| "defaultLibrary"
+	| "defaultGames"
+	| "defaultTopSearch";
+
+export const getAutocompleteSearchType = (
+	suggestion:
+		| TGamesAutocompleteSuggestionEntry
+		| TAvatarAutocompleteSuggestionEntry,
+): SearchType => {
+	if ("Query" in suggestion) {
+		return "avatar";
+	} else {
+		switch (suggestion.type) {
+			case GamesAutocompleteSuggestionEntryType.QuerySuggestion: {
+				return "keyword";
+			}
+			case GamesAutocompleteSuggestionEntryType.GameSuggestion: {
+				return "game";
+			}
+			case GamesAutocompleteSuggestionEntryType.TrendingQuerySuggestion: {
+				throw Error(
+					`Unrecognized autocomplete suggestion, ${JSON.stringify(suggestion)}`,
+				);
+			}
+		}
+	}
+};
+
+export const getDefaultSearchType = (
+	suggestion: UniversalSearchLink,
+): DefaultSearchType => {
+	if (suggestion.isTopSearchResult) {
+		return "defaultTopSearch";
+	}
+	switch (suggestion.label) {
+		case "Label.Players": {
+			return "defaultPlayers";
+		}
+		case "Heading.Marketplace":
+		case "Label.AvatarShop":
+		case "Label.sCatalog": {
+			return "defaultShops";
+		}
+		case "Label.sGroups": {
+			return "defaultGroups";
+		}
+		case "Label.CreatorStore": {
+			return "defaultLibrary";
+		}
+		case "Label.Games": {
+			return "defaultGames";
+		}
+		default: {
+			throw Error(
+				`Unrecognized default suggestion, ${JSON.stringify(suggestion)}`,
+			);
+		}
+	}
+};
+
+export const getSuggestionUrl = (
+	suggestion: Suggestion,
+	event: KeyboardEvent<HTMLInputElement>,
+) => {
+	if ("Query" in suggestion) {
+		return links.avatarSearchLink.url + encodeURIComponent(suggestion.Query);
+	}
+	if ("searchQuery" in suggestion) {
+		return (
+			links.gameSearchLink.url + encodeURIComponent(suggestion.searchQuery)
+		);
+	}
+	if (event.currentTarget.value) {
+		return suggestion.url + encodeURIComponent(event.currentTarget.value);
+	}
+
+	return "";
+};
+
+export const getAvatarAutocompleteLanguageCode = () => {
+	let locale =
+		getNavCapability("getLocale")?.() ?? searchConstants.englishLanguageCode;
+	const regionChar = locale.indexOf("-");
+	locale = locale.substring(0, regionChar !== -1 ? regionChar : locale.length);
+	if (locale !== searchConstants.englishLanguageCode) {
+		locale += `,${searchConstants.englishLanguageCode}`;
+	}
+	return locale;
+};
+
+export const serializeSuggestions = (
+	suggestions: readonly Suggestion[],
+	searchInput: string,
+) =>
+	suggestions
+		.map((suggestion) => {
+			if ("Query" in suggestion) {
+				return `${getAutocompleteSearchType(suggestion)}|${suggestion.Query}`;
+			}
+			if ("searchQuery" in suggestion) {
+				return `${getAutocompleteSearchType(suggestion)}|${suggestion.searchQuery}`;
+			}
+			return `${getDefaultSearchType(suggestion)}|${searchInput}`;
+		})
+		.join(",");
