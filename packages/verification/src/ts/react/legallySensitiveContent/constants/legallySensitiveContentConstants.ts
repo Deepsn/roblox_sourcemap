@@ -407,6 +407,11 @@ const legallySensitiveContentConstants = {
 		currentValueParam: "{currentValue}",
 		proposedValueParam: "{proposedValue}",
 	},
+	[ConsentName.consentCenterUpdateSettingParentFacingNoValue]: {
+		textTranslationKey: "Description.UpdateChildSettingParentFacingNoValue",
+		textSourceContentId: "12803144",
+		settingNameParam: "{settingName}",
+	},
 };
 
 export default legallySensitiveContentConstants;

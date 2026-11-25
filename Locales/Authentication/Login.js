@@ -295,6 +295,11 @@ Roblox.LangDynamic["Authentication.Login"] = {
 	"Description.SsoLinkMultiple":
 		"We found multiple Roblox accounts that use this email. Choose one to link with {provider} so you can sign in faster, or create a new account.",
 	"Message.SsoProviderLinked": "You can now sign in with {provider}",
+	"Description.ChooseSignInMethod": "Choose a way to sign in to {username}.",
+	"Description.EnterPassword": "Enter the password for {username}.",
+	"Authentication.Login.Header.SignInToAddProvider":
+		"Sign in to add {provider}",
+	"Header.SignInToAddProvider": "Sign in to add {provider}",
 };
 window.Roblox &&
 	window.Roblox.BundleDetector &&

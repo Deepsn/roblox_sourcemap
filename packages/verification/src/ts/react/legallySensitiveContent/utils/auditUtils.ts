@@ -511,6 +511,20 @@ export const getAuditDataForConsent = (
 					},
 				},
 			];
+		case ConsentName.consentCenterUpdateSettingParentFacingNoValue:
+			content =
+				legallySensitiveContentConstants.consentCenterUpdateSettingParentFacingNoValue;
+			return [
+				{
+					consentStringTemplate: translate(content.textTranslationKey, {
+						settingName: content.settingNameParam,
+					}),
+					sourceContentId: content.textSourceContentId,
+					vars: {
+						settingName: translationArgs?.settingName as string,
+					},
+				},
+			];
 		case ConsentName.allowMarketingEmailNotifications:
 			return [
 				{
