@@ -333,6 +333,7 @@ const EVENT_CONSTANTS = {
 			switchSuccess: "success",
 			invalidSession: "invalidSession",
 			requestFailed: "requestFailed",
+			switchError: "switchError",
 		},
 		signUpV2: {
 			// Why the user reached AddAuthMethodPage.
